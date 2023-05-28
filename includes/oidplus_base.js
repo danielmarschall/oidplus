@@ -218,6 +218,7 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 			console.error(_L("Error: %1",errorThrown));
 		},
 		success:function(data) {
+			// TODO: Use oidplus_ajax_success(), since this checks the existance of "error" in data, and checks if status>=0
 			if ("error" in data) {
 				alertError(_L("Failed to load content: %1",data.error));
 				console.error(data.error);

@@ -37,11 +37,7 @@ if (!$json) {
 
 if (isset($json['error'])) {
 	die($json['error']."\n");
-} else if ($json['status'] == 0/*OK*/) {
-	die("Insert OK\n");
-} else if ($json['status'] == 1/*RaNotExisting*/) {
-	die("Insert OK\n");
-} else if ($json['status'] == 2/*RaNotExistingNoInvitation*/) {
+} else if ($json['status'] >= 0) {
 	die("Insert OK\n");
 } else {
 	die("Error ".print_r($json,true)."\n");

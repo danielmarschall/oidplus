@@ -379,7 +379,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public function action_Update(array $params): array {
+	private function action_Update(array $params): array {
 		_CheckParamExists($params, 'id');
 		$id = $params['id'];
 		$obj = OIDplusObject::parse($id);
@@ -546,7 +546,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public function action_Insert(array $params): array {
+	private function action_Insert(array $params): array {
 		// Check if you have write rights on the parent (to create a new object)
 		_CheckParamExists($params, 'parent');
 		$objParent = OIDplusObject::parse($params['parent']);
@@ -711,6 +711,23 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	}
 
 	/**
+	 * Generate UUID (will be used by a few plugins)
+	 * @param array $params Nothing
+	 * @return array status=0 success, status<0 error. If success, then also uuid, intval
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	private function action_UuidGen(array $params): array {
+		$uuid = gen_uuid(OIDplus::config()->getValue('uuid_prefer_timebased', '1') == '1');
+		if (!$uuid) return array("status" => -1);
+		return array(
+			"status" => 0,
+			"uuid" => $uuid,
+			"intval" => substr(uuid_to_oid($uuid),strlen('2.25.'))
+		);
+	}
+
+	/**
 	 * @param string $actionID
 	 * @param array $params
 	 * @return array
@@ -725,14 +742,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		} else if ($actionID == 'Insert') {
 			return $this->action_Insert($params);
 		} else if ($actionID == 'generate_uuid') {
-			// Generate UUID (will be used by a few plugins)
-			$uuid = gen_uuid(OIDplus::config()->getValue('uuid_prefer_timebased', '1') == '1');
-			if (!$uuid) return array("status" => 1);
-			return array(
-				"status" => 0,
-				"uuid" => $uuid,
-				"intval" => substr(uuid_to_oid($uuid),strlen('2.25.'))
-			);
+			return $this->action_UuidGen($params);
 		} else {
 			return parent::action($actionID, $params);
 		}
