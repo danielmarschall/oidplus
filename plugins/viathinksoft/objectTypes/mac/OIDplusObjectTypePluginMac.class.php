@@ -56,7 +56,7 @@ class OIDplusObjectTypePluginMac extends OIDplusObjectTypePlugin
 			}
 		}
 
-		if ($params['aai_multicast'] == 'true') {
+		if (oidplus_is_true($params['aai_multicast'] ?? false)) {
 			$aai[1] = '3';
 		} else {
 			$aai[1] = '2';

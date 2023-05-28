@@ -478,7 +478,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		}
 
 		if (isset($params['confidential'])) {
-			$confidential = $params['confidential'] == 'true';
+			$confidential = oidplus_is_true($params['confidential']);
 			OIDplus::db()->query("UPDATE ###objects SET confidential = ? WHERE id = ?", array($confidential, $id));
 			OIDplusObject::resetObjectInformationCache();
 		}
@@ -582,8 +582,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 		// Determine absolute OID name
 		// Note: At addString() and parse(), the syntax of the ID will be checked
-		$is_absolute = isset($params['id_fully_qualified']) && $params['id_fully_qualified'] == 'true';;
-		if ($is_absolute) {
+		if (oidplus_is_true($params['id_fully_qualified'] ?? false)) {
 			// For REST API, the ID is absolute (because this is what is in the URL). We need to verify that ID and Parent matches.
 			$id = $params['id'];
 			$obj = OIDplusObject::parse($id);
@@ -647,7 +646,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			OIDplus::logger()->log("V2:[INFO]RA(%2)", "Gained ownership of newly created object '%1'", $id, $ra_email);
 		}
 
-		$confidential = isset($params['confidential']) && $params['confidential'] == 'true';
+		$confidential = oidplus_is_true($params['confidential'] ?? false);
 		$comment = $params['comment'] ?? '';
 		$title = $params['title'] ?? ''; // This is very special (only useable in REST API): The superior RA can set the title during creation, even if they lose their ownership by delegating afterwards!
 		$description = $params['description'] ?? ''; // This is very special (only useable in REST API): The superior RA can set the title during creation, even if they lose their ownership by delegating afterwards!

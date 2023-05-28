@@ -676,3 +676,21 @@ function array_to_html_ul_li(array $struct): string {
 	$res .= '</ul>';
 	return $res;
 }
+
+/**
+ * @param mixed $mixed
+ * @return bool
+ */
+function oidplus_is_true($mixed): bool {
+	if (is_null($mixed)) {
+		return false;
+	} else if (is_string($mixed)) {
+		return (strtolower($mixed) == 'true') || ($mixed == '1') || (strtolower($mixed) == 'y') || (strtolower($mixed) == 't');
+	} else if (is_bool($mixed)) {
+		return $mixed;
+	} else if (is_numeric($mixed)) {
+		return $mixed != 0;
+	} else {
+		return $mixed ? true : false; // let PHP decide...
+	}
+}
