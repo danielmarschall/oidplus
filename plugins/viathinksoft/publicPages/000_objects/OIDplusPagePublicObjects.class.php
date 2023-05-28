@@ -143,11 +143,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 				if (OIDplusObject::exists($id)) {
 					// TODO: Problem: The superior RA cannot set title/description, so they cannot perform the PUT command!
-					$output = self::action('Update', $params);
+					$output = self::action_Update($params);
 				} else {
 					$params['parent'] = $obj->getParent();
 					$params['id_fully_qualified'] = true;
-					$output = self::action('Insert', $params);
+					$output = self::action_Insert($params);
 				}
 
 				$output['status_bits'] = [];
@@ -165,7 +165,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				$params['parent'] = $obj->getParent();
 				$params['id_fully_qualified'] = true;
 				$params['id'] = $id;
-				$output = self::action('Insert', $params);
+				$output = self::action_Insert($params);
 
 				$output['status_bits'] = [];
 				if (($output['status'] & 1) == 1) $output['status_bits'][1] = 'RA is not registered, but it can be invited';
@@ -178,7 +178,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			} else if ($requestMethod == "PATCH"/*Modify*/) {
 				$params = $json_in;
 				$params['id'] = $id;
-				$output = self::action('Update', $params);
+				$output = self::action_Update($params);
 
 				$output['status_bits'] = [];
 				if (($output['status'] & 1) == 1) $output['status_bits'][1] = 'RA is not registered, but it can be invited';
@@ -191,7 +191,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			} else if ($requestMethod == "DELETE"/*Delete*/) {
 				$params = $json_in;
 				$params['id'] = $id;
-				$output = self::action('Delete', $params);
+				$output = self::action_Delete($params);
 
 				$output['status_bits'] = [];
 
@@ -305,6 +305,412 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	}
 
 	/**
+	 * @param array $params id
+	 * @return array status<0 Error, =0 Success
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	private function action_Delete(array $params): array {
+		_CheckParamExists($params, 'id');
+		$id = $params['id'];
+		$obj = OIDplusObject::parse($id);
+		if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','DELETE',$id));
+
+		if (!OIDplusObject::exists($id)) {
+			throw new OIDplusException(_L('Object %1 does not exist',$id), null, 404);
+		}
+
+		// Check if permitted
+		if (!$obj->userHasParentalWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the superior RA to delete this OID.'), null, 401);
+
+		foreach (OIDplus::getAllPlugins() as $plugin) {
+			if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
+				$plugin->beforeObjectDelete($id);
+			}
+		}
+
+		OIDplus::logger()->log("V2:[WARN]OID(%1)+[OK/WARN]SUPOIDRA(%1)+[OK/INFO]A", "Object '%1' (recursively) deleted", $id);
+		OIDplus::logger()->log("V2:[CRIT]OIDRA(%1)", "Lost ownership of object '%1' because it was deleted", $id);
+
+		if ($parentObj = $obj->getParent()) {
+			$parent_oid = $parentObj->nodeId();
+			OIDplus::logger()->log("V2:[WARN]OID(%2)", "Object '%1' (recursively) deleted", $id, $parent_oid);
+		}
+
+		// Delete object
+		OIDplus::db()->query("delete from ###objects where id = ?", array($id));
+		OIDplusObject::resetObjectInformationCache();
+
+		// Delete orphan stuff
+		foreach (OIDplus::getEnabledObjectTypes() as $ot) {
+			do {
+				$res = OIDplus::db()->query("select tchild.id from ###objects tchild " .
+					"left join ###objects tparent on tparent.id = tchild.parent " .
+					"where tchild.parent <> ? and tchild.id like ? and tparent.id is null;", array($ot::root(), $ot::root().'%'));
+				if (!$res->any()) break;
+
+				while ($row = $res->fetch_array()) {
+					$id_to_delete = $row['id'];
+					OIDplus::logger()->log("V2:[CRIT]OIDRA(%2)", "Lost ownership of object '%2' because one of the superior objects ('%1') was recursively deleted", $id, $id_to_delete);
+					OIDplus::db()->query("delete from ###objects where id = ?", array($id_to_delete));
+					OIDplusObject::resetObjectInformationCache();
+				}
+			} while (true);
+		}
+		OIDplus::db()->query("delete from ###asn1id where well_known = ? and oid not in (select id from ###objects where id like 'oid:%')", array(false));
+		OIDplus::db()->query("delete from ###iri    where well_known = ? and oid not in (select id from ###objects where id like 'oid:%')", array(false));
+
+		foreach (OIDplus::getAllPlugins() as $plugin) {
+			if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
+				$plugin->afterObjectDelete($id);
+			}
+		}
+
+		return array("status" => 0);
+	}
+
+	/**
+	 * @param array $params id, ra_email, comment, iris, asn1ids, confidential, title, description
+	 * @return array status<0 Error, =0 Success, with the following bitfields for further information:
+	 *             x+1 = RA is not registered, but it can be invited
+	 *             x+2 = RA is not registered and it cannot be invited
+	 *             x+4 = OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset
+	 *             x+8 = User has write rights to the freshly created OID
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public function action_Update(array $params): array {
+		_CheckParamExists($params, 'id');
+		$id = $params['id'];
+		$obj = OIDplusObject::parse($id);
+		if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','UPDATE',$id));
+
+		if (!OIDplusObject::exists($id)) {
+			throw new OIDplusException(_L('Object %1 does not exist',$id), null, 404);
+		}
+
+		// Check if permitted
+		if (isset($params['title']) || isset($params['description'])) {
+			if (!$obj->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the RA to update this OID.'), null, 401);
+		}
+		if (isset($params['ra_email']) || isset($params['comment']) || isset($params['iris']) || isset($params['asn1ids']) || isset($params['confidential'])) {
+			if (!$obj->userHasParentalWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the superior RA to update this OID.'), null, 401);
+		}
+
+		foreach (OIDplus::getAllPlugins() as $plugin) {
+			if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
+				$plugin->beforeObjectUpdateSuperior($id, $params);
+			}
+		}
+
+		// First, do a simulation for ASN.1 IDs and IRIs to check if there are any problems (then an Exception will be thrown)
+		if ($obj::ns() == 'oid') {
+			assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
+			if (!$obj->isWellKnown()) {
+				if (isset($params['iris'])) {
+					$ids = ($params['iris'] == '') ? array() : (is_array($params['iris']) ? $params['iris'] : explode(',',$params['iris']));
+					$ids = array_map('trim',$ids);
+					$obj->replaceIris($ids, true);
+				}
+
+				if (isset($params['asn1ids'])) {
+					$ids = ($params['asn1ids'] == '') ? array() : (is_array($params['asn1ids']) ? $params['asn1ids'] : explode(',',$params['asn1ids']));
+					$ids = array_map('trim',$ids);
+					$obj->replaceAsn1Ids($ids, true);
+				}
+			}
+		}
+
+		// RA E-Mail change
+		if (isset($params['ra_email'])) {
+			// Validate RA email address
+			$new_ra = $params['ra_email'] ?? '';
+			if ($obj::ns() == 'oid') {
+				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
+				if ($obj->isWellKnown()) {
+					$new_ra = '';
+				}
+			}
+			if (!empty($new_ra) && !OIDplus::mailUtils()->validMailAddress($new_ra)) {
+				throw new OIDplusException(_L('Invalid RA email address'));
+			}
+
+			// Change RA recursively
+			$current_ra = $obj->getRaMail() ?? '';
+			if ($new_ra != $current_ra) {
+				OIDplus::logger()->log("V2:[INFO]OID(%1)+[OK/INFO]SUPOIDRA(%1)+[OK/INFO]A", "RA of object '%1' changed from '%2' to '%3'", $id, $current_ra, $new_ra);
+				if (!empty($current_ra)) OIDplus::logger()->log("V2:[WARN]RA(%2)", "Lost ownership of object '%1' due to RA transfer of superior RA / admin.", $id, $current_ra, $new_ra);
+				if (!empty($new_ra)) OIDplus::logger()->log("V2:[INFO]RA(%3)", "Gained ownership of object '%1' due to RA transfer of superior RA / admin.", $id, $current_ra, $new_ra);
+				if ($parentObj = $obj->getParent()) {
+					$parent_oid = $parentObj->nodeId();
+					OIDplus::logger()->log("V2:[INFO]OID(%4)", "RA of object '%1' changed from '%2' to '%3'", $id, $current_ra, $new_ra, $parent_oid);
+				}
+				$this->ra_change_rec($id, $current_ra, $new_ra); // Recursively change inherited RAs
+			}
+		}
+
+		// Log if confidentially flag was changed
+		OIDplus::logger()->log("V2:[INFO]OID(%1)+[OK/INFO]SUPOIDRA(%1)+[OK/INFO]A", "Identifiers/Confidential flag of object '%1' updated", $id); // TODO: Check if they were ACTUALLY updated!
+		if ($parentObj = $obj->getParent()) {
+			$parent_oid = $parentObj->nodeId();
+			OIDplus::logger()->log("V2:[INFO]OID(%2)", "Identifiers/Confidential flag of object '%1' updated", $id, $parent_oid); // TODO: Check if they were ACTUALLY updated!
+		}
+
+		// Replace ASN.1 IDs und IRIs
+		if ($obj::ns() == 'oid') {
+			assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
+			if (!$obj->isWellKnown()) {
+				if (isset($params['iris'])) {
+					$ids = ($params['iris'] == '') ? array() : (is_array($params['iris']) ? $params['iris'] : explode(',',$params['iris']));
+					$ids = array_map('trim',$ids);
+					$obj->replaceIris($ids, false);
+				}
+
+				if (isset($params['asn1ids'])) {
+					$ids = ($params['asn1ids'] == '') ? array() : (is_array($params['asn1ids']) ? $params['asn1ids'] : explode(',',$params['asn1ids']));
+					$ids = array_map('trim',$ids);
+					$obj->replaceAsn1Ids($ids, false);
+				}
+			}
+
+			// TODO: Check if any identifiers have been actually changed,
+			// and log it to OID($id), OID($parent), ... (see above)
+		}
+
+		if (isset($params['confidential'])) {
+			$confidential = $params['confidential'] == 'true';
+			OIDplus::db()->query("UPDATE ###objects SET confidential = ? WHERE id = ?", array($confidential, $id));
+			OIDplusObject::resetObjectInformationCache();
+		}
+
+		if (isset($params['comment'])) {
+			$comment = $params['comment'];
+			OIDplus::db()->query("UPDATE ###objects SET comment = ? WHERE id = ?", array($comment, $id));
+			OIDplusObject::resetObjectInformationCache();
+		}
+
+		if (isset($params['title']) || isset($params['description'])) {
+			OIDplus::logger()->log("V2:[INFO]OID(%1)+[OK/INFO]OIDRA(%1)+[OK/INFO]A", "Title/Description of object '%1' updated", $id);
+		}
+
+		if (isset($params['title'])) {
+			$title = $params['title'];
+			OIDplus::db()->query("UPDATE ###objects SET title = ? WHERE id = ?", array($title, $id));
+			OIDplusObject::resetObjectInformationCache();
+		}
+
+		if (isset($params['description'])) {
+			$description = $params['description'];
+			OIDplus::db()->query("UPDATE ###objects SET description = ? WHERE id = ?", array($description, $id));
+			OIDplusObject::resetObjectInformationCache();
+		}
+
+		OIDplus::db()->query("UPDATE ###objects SET updated = ".OIDplus::db()->sqlDate()." WHERE id = ?", array($id));
+		OIDplusObject::resetObjectInformationCache();
+
+		$status = 0;
+
+		if (!empty($new_ra)) {
+			$res = OIDplus::db()->query("select ra_name from ###ra where email = ?", array($new_ra));
+			$invitePlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.2.92'); // OIDplusPageRaInvite
+			if (!$res->any()) $status = !is_null($invitePlugin) && OIDplus::config()->getValue('ra_invitation_enabled') ? 1 : 2;
+		}
+
+		if ($obj::ns() == 'oid') {
+			assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
+			if ($obj->isWellKnown()) {
+				$status += 4;
+			}
+		}
+
+		if ($obj->userHasWriteRights()) {
+			$status += 8;
+		}
+
+		foreach (OIDplus::getAllPlugins() as $plugin) {
+			if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
+				$plugin->afterObjectUpdateSuperior($id, $params);
+			}
+		}
+
+		return array("status" => $status);
+	}
+
+	/**
+	 * @param array $params parent, id (relative!), ra_email, comment, iris, asn1ids, confidential, title, description
+	 * @return array status=<0 Error, =0 Success, with the following bitfields for further information:
+	 *             x+1 = RA is not registered, but it can be invited
+	 *             x+2 = RA is not registered and it cannot be invited
+	 *             x+4 = OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset
+	 *             x+8 = User has write rights to the freshly created OID
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	public function action_Insert(array $params): array {
+		// Check if you have write rights on the parent (to create a new object)
+		_CheckParamExists($params, 'parent');
+		$objParent = OIDplusObject::parse($params['parent']);
+		if (!$objParent) throw new OIDplusException(_L('%1 action failed because parent object "%2" cannot be parsed!','INSERT',$params['parent']));
+
+		if (!$objParent->isRoot()) {
+			$idParent = $objParent->nodeId();
+			if (!OIDplusObject::exists($idParent)) {
+				throw new OIDplusException(_L('Parent object %1 does not exist',$idParent), null, 404);
+			}
+		}
+
+		if (!$objParent->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the correct RA to insert an OID at this arc.'), null, 401);
+
+		// Check if the ID is valid
+		_CheckParamExists($params, 'id');
+		if ($params['id'] == '') throw new OIDplusException(_L('ID may not be empty'));
+
+		// For the root objects, let the user also enter a WEID
+		if ($objParent::ns() == 'oid') {
+			assert($objParent instanceof OIDplusOid); //assert(get_class($objParent) === "ViaThinkSoft\OIDplus\OIDplusOid");
+			if (strtolower(substr(trim($params['id']),0,5)) === 'weid:') {
+				if ($objParent->isRoot()) {
+					$params['id'] = \Frdl\Weid\WeidOidConverter::weid2oid($params['id']);
+					if ($params['id'] === false) {
+						throw new OIDplusException(_L('Invalid WEID'));
+					}
+				} else {
+					throw new OIDplusException(_L('You can use the WEID syntax only at your object tree root.'));
+				}
+			}
+		}
+
+		// Determine absolute OID name
+		// Note: At addString() and parse(), the syntax of the ID will be checked
+		$is_absolute = isset($params['id_fully_qualified']) && $params['id_fully_qualified'] == 'true';;
+		if ($is_absolute) {
+			// For REST API, the ID is absolute (because this is what is in the URL). We need to verify that ID and Parent matches.
+			$id = $params['id'];
+			$obj = OIDplusObject::parse($id);
+			$objParentTest = !$obj ? null : $obj->getParent();
+			if (!$objParentTest || !$objParentTest->equals($objParent)) throw new OIDplusException(_L('Cannot verify that %1 has parent %2', $obj->nodeId(), $objParent->nodeId()));
+		} else {
+			// For AJAX/UI, the ID is relative to the parent. The absolute ID will be created by PHP's addString(), because JavaScript cannot know the syntax of the Object Type plugin
+			$id = $objParent->addString($params['id']);
+			$obj = OIDplusObject::parse($id);
+		}
+		if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','INSERT',$id));
+
+		// Check, if the OID exists
+		if (OIDplusObject::exists($id)) {
+			throw new OIDplusException(_L('Object %1 already exists!',$id));
+		}
+
+		foreach (OIDplus::getAllPlugins() as $plugin) {
+			if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
+				$plugin->beforeObjectInsert($id, $params);
+			}
+		}
+
+		// First simulate if there are any problems of ASN.1 IDs und IRIs
+		if ($obj::ns() == 'oid') {
+			assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
+			if (!$obj->isWellKnown()) {
+				if (isset($params['iris'])) {
+					$ids = ($params['iris'] == '') ? array() : (is_array($params['iris']) ? $params['iris'] : explode(',',$params['iris']));
+					$ids = array_map('trim',$ids);
+					$obj->replaceIris($ids, true);
+				}
+
+				if (isset($params['asn1ids'])) {
+					$ids = ($params['asn1ids'] == '') ? array() : (is_array($params['asn1ids']) ? $params['asn1ids'] : explode(',',$params['asn1ids']));
+					$ids = array_map('trim',$ids);
+					$obj->replaceAsn1Ids($ids, true);
+				}
+			}
+		}
+
+		// Apply superior RA change
+		$parent = $params['parent'];
+		$ra_email = $params['ra_email'] ?? '';
+		if ($obj::ns() == 'oid') {
+			assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
+			if ($obj->isWellKnown()) {
+				$ra_email = '';
+			}
+		}
+		if (!empty($ra_email) && !OIDplus::mailUtils()->validMailAddress($ra_email)) {
+			throw new OIDplusException(_L('Invalid RA email address'));
+		}
+
+		if (empty($ra_email)) {
+			OIDplus::logger()->log("V2:[INFO]OID(%2)+[INFO]OID(%1)+[OK/INFO]OIDRA(%2)+[OK/INFO]A", "Object '%1' created, without defined RA, superior object is '%2'", $id, $parent);
+		} else {
+			OIDplus::logger()->log("V2:[INFO]OID(%2)+[INFO]OID(%1)+[OK/INFO]OIDRA(%2)+[OK/INFO]A", "Object '%1' created, given to RA '%3', superior object is '%2'", $id, $parent, $ra_email);
+		}
+		if (!empty($ra_email)) {
+			OIDplus::logger()->log("V2:[INFO]RA(%2)", "Gained ownership of newly created object '%1'", $id, $ra_email);
+		}
+
+		$confidential = isset($params['confidential']) && $params['confidential'] == 'true';
+		$comment = $params['comment'] ?? '';
+		$title = $params['title'] ?? ''; // This is very special (only useable in REST API): The superior RA can set the title during creation, even if they lose their ownership by delegating afterwards!
+		$description = $params['description'] ?? ''; // This is very special (only useable in REST API): The superior RA can set the title during creation, even if they lose their ownership by delegating afterwards!
+
+		if (strlen($id) > OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH')) {
+			$maxlen = OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH');
+			throw new OIDplusException(_L('The identifier %1 is too long (max allowed length: %2)',$id,$maxlen));
+		}
+
+		OIDplus::db()->query("INSERT INTO ###objects (id, parent, ra_email, confidential, comment, created, title, description) VALUES (?, ?, ?, ?, ?, ".OIDplus::db()->sqlDate().", ?, ?)", array($id, $parent, $ra_email, $confidential, $comment, $title, $description));
+		OIDplusObject::resetObjectInformationCache();
+
+		// Set ASN.1 IDs und IRIs
+		if ($obj::ns() == 'oid') {
+			assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
+			if (!$obj->isWellKnown()) {
+				if (isset($params['iris'])) {
+					$ids = ($params['iris'] == '') ? array() : (is_array($params['iris']) ? $params['iris'] : explode(',',$params['iris']));
+					$ids = array_map('trim',$ids);
+					$obj->replaceIris($ids, false);
+				}
+
+				if (isset($params['asn1ids'])) {
+					$ids = ($params['asn1ids'] == '') ? array() : (is_array($params['asn1ids']) ? $params['asn1ids'] : explode(',',$params['asn1ids']));
+					$ids = array_map('trim',$ids);
+					$obj->replaceAsn1Ids($ids, false);
+				}
+			}
+		}
+
+		$status = 0;
+
+		if (!empty($ra_email)) {
+			// Do we need to notify that the RA does not exist?
+			$res = OIDplus::db()->query("select ra_name from ###ra where email = ?", array($ra_email));
+			$invitePlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.2.92'); // OIDplusPageRaInvite
+			if (!$res->any()) $status = !is_null($invitePlugin) && OIDplus::config()->getValue('ra_invitation_enabled') ? 1 : 2;
+		}
+
+		if ($obj::ns() == 'oid') {
+			assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
+			if ($obj->isWellKnown()) {
+				$status += 4;
+			}
+		}
+
+		if ($obj->userHasWriteRights()) {
+			$status += 8;
+		}
+
+		foreach (OIDplus::getAllPlugins() as $plugin) {
+			if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
+				$plugin->afterObjectInsert($id, $params);
+			}
+		}
+
+		return array(
+			"status" => $status,
+			"inserted_id" => $id
+		);
+	}
+
+	/**
 	 * @param string $actionID
 	 * @param array $params
 	 * @return array
@@ -312,410 +718,20 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 * @throws OIDplusException
 	 */
 	public function action(string $actionID, array $params): array {
-
-		// Action:     Delete
-		// Parameters: id
-		// Outputs:    <0 Error, =0 Success
 		if ($actionID == 'Delete') {
-			_CheckParamExists($params, 'id');
-			$id = $params['id'];
-			$obj = OIDplusObject::parse($id);
-			if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','DELETE',$id));
-
-			if (!OIDplusObject::exists($id)) {
-				throw new OIDplusException(_L('Object %1 does not exist',$id), null, 404);
-			}
-
-			// Check if permitted
-			if (!$obj->userHasParentalWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the superior RA to delete this OID.'), null, 401);
-
-			foreach (OIDplus::getAllPlugins() as $plugin) {
-				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
-					$plugin->beforeObjectDelete($id);
-				}
-			}
-
-			OIDplus::logger()->log("V2:[WARN]OID(%1)+[OK/WARN]SUPOIDRA(%1)+[OK/INFO]A", "Object '%1' (recursively) deleted", $id);
-			OIDplus::logger()->log("V2:[CRIT]OIDRA(%1)", "Lost ownership of object '%1' because it was deleted", $id);
-
-			if ($parentObj = $obj->getParent()) {
-				$parent_oid = $parentObj->nodeId();
-				OIDplus::logger()->log("V2:[WARN]OID(%2)", "Object '%1' (recursively) deleted", $id, $parent_oid);
-			}
-
-			// Delete object
-			OIDplus::db()->query("delete from ###objects where id = ?", array($id));
-			OIDplusObject::resetObjectInformationCache();
-
-			// Delete orphan stuff
-			foreach (OIDplus::getEnabledObjectTypes() as $ot) {
-				do {
-					$res = OIDplus::db()->query("select tchild.id from ###objects tchild " .
-					                            "left join ###objects tparent on tparent.id = tchild.parent " .
-					                            "where tchild.parent <> ? and tchild.id like ? and tparent.id is null;", array($ot::root(), $ot::root().'%'));
-					if (!$res->any()) break;
-
-					while ($row = $res->fetch_array()) {
-						$id_to_delete = $row['id'];
-						OIDplus::logger()->log("V2:[CRIT]OIDRA(%2)", "Lost ownership of object '%2' because one of the superior objects ('%1') was recursively deleted", $id, $id_to_delete);
-						OIDplus::db()->query("delete from ###objects where id = ?", array($id_to_delete));
-						OIDplusObject::resetObjectInformationCache();
-					}
-				} while (true);
-			}
-			OIDplus::db()->query("delete from ###asn1id where well_known = ? and oid not in (select id from ###objects where id like 'oid:%')", array(false));
-			OIDplus::db()->query("delete from ###iri    where well_known = ? and oid not in (select id from ###objects where id like 'oid:%')", array(false));
-
-			foreach (OIDplus::getAllPlugins() as $plugin) {
-				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
-					$plugin->afterObjectDelete($id);
-				}
-			}
-
-			return array("status" => 0);
-		}
-
-		// Action:     Update
-		// Parameters: id, ra_email, comment, iris, asn1ids, confidential, title, description
-		// Outputs:    <0 Error, =0 Success, with following bitfields for further information:
-		//             x+1 = RA is not registered, but it can be invited
-		//             x+2 = RA is not registered and it cannot be invited
-		//             x+4 = OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset
-		//             x+8 = User has write rights to the freshly created OID
-		else if ($actionID == 'Update') {
-			_CheckParamExists($params, 'id');
-			$id = $params['id'];
-			$obj = OIDplusObject::parse($id);
-			if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','UPDATE',$id));
-
-			if (!OIDplusObject::exists($id)) {
-				throw new OIDplusException(_L('Object %1 does not exist',$id), null, 404);
-			}
-
-			// Check if permitted
-			if (isset($params['title']) || isset($params['description'])) {
-				if (!$obj->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the RA to update this OID.'), null, 401);
-			}
-			if (isset($params['ra_email']) || isset($params['comment']) || isset($params['iris']) || isset($params['asn1ids']) || isset($params['confidential'])) {
-				if (!$obj->userHasParentalWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the superior RA to update this OID.'), null, 401);
-			}
-
-			foreach (OIDplus::getAllPlugins() as $plugin) {
-				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
-					$plugin->beforeObjectUpdateSuperior($id, $params);
-				}
-			}
-
-			// First, do a simulation for ASN.1 IDs and IRIs to check if there are any problems (then an Exception will be thrown)
-			if ($obj::ns() == 'oid') {
-				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
-				if (!$obj->isWellKnown()) {
-					if (isset($params['iris'])) {
-						$ids = ($params['iris'] == '') ? array() : (is_array($params['iris']) ? $params['iris'] : explode(',',$params['iris']));
-						$ids = array_map('trim',$ids);
-						$obj->replaceIris($ids, true);
-					}
-
-					if (isset($params['asn1ids'])) {
-						$ids = ($params['asn1ids'] == '') ? array() : (is_array($params['asn1ids']) ? $params['asn1ids'] : explode(',',$params['asn1ids']));
-						$ids = array_map('trim',$ids);
-						$obj->replaceAsn1Ids($ids, true);
-					}
-				}
-			}
-
-			// RA E-Mail change
-			if (isset($params['ra_email'])) {
-				// Validate RA email address
-				$new_ra = $params['ra_email'] ?? '';
-				if ($obj::ns() == 'oid') {
-					assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
-					if ($obj->isWellKnown()) {
-						$new_ra = '';
-					}
-				}
-				if (!empty($new_ra) && !OIDplus::mailUtils()->validMailAddress($new_ra)) {
-					throw new OIDplusException(_L('Invalid RA email address'));
-				}
-
-				// Change RA recursively
-				$current_ra = $obj->getRaMail() ?? '';
-				if ($new_ra != $current_ra) {
-					OIDplus::logger()->log("V2:[INFO]OID(%1)+[OK/INFO]SUPOIDRA(%1)+[OK/INFO]A", "RA of object '%1' changed from '%2' to '%3'", $id, $current_ra, $new_ra);
-					if (!empty($current_ra)) OIDplus::logger()->log("V2:[WARN]RA(%2)", "Lost ownership of object '%1' due to RA transfer of superior RA / admin.", $id, $current_ra, $new_ra);
-					if (!empty($new_ra)) OIDplus::logger()->log("V2:[INFO]RA(%3)", "Gained ownership of object '%1' due to RA transfer of superior RA / admin.", $id, $current_ra, $new_ra);
-					if ($parentObj = $obj->getParent()) {
-						$parent_oid = $parentObj->nodeId();
-						OIDplus::logger()->log("V2:[INFO]OID(%4)", "RA of object '%1' changed from '%2' to '%3'", $id, $current_ra, $new_ra, $parent_oid);
-					}
-					$this->ra_change_rec($id, $current_ra, $new_ra); // Recursively change inherited RAs
-				}
-			}
-
-			// Log if confidentially flag was changed
-			OIDplus::logger()->log("V2:[INFO]OID(%1)+[OK/INFO]SUPOIDRA(%1)+[OK/INFO]A", "Identifiers/Confidential flag of object '%1' updated", $id); // TODO: Check if they were ACTUALLY updated!
-			if ($parentObj = $obj->getParent()) {
-				$parent_oid = $parentObj->nodeId();
-				OIDplus::logger()->log("V2:[INFO]OID(%2)", "Identifiers/Confidential flag of object '%1' updated", $id, $parent_oid); // TODO: Check if they were ACTUALLY updated!
-			}
-
-			// Replace ASN.1 IDs und IRIs
-			if ($obj::ns() == 'oid') {
-				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
-				if (!$obj->isWellKnown()) {
-					if (isset($params['iris'])) {
-						$ids = ($params['iris'] == '') ? array() : (is_array($params['iris']) ? $params['iris'] : explode(',',$params['iris']));
-						$ids = array_map('trim',$ids);
-						$obj->replaceIris($ids, false);
-					}
-
-					if (isset($params['asn1ids'])) {
-						$ids = ($params['asn1ids'] == '') ? array() : (is_array($params['asn1ids']) ? $params['asn1ids'] : explode(',',$params['asn1ids']));
-						$ids = array_map('trim',$ids);
-						$obj->replaceAsn1Ids($ids, false);
-					}
-				}
-
-				// TODO: Check if any identifiers have been actually changed,
-				// and log it to OID($id), OID($parent), ... (see above)
-			}
-
-			if (isset($params['confidential'])) {
-				$confidential = $params['confidential'] == 'true';
-				OIDplus::db()->query("UPDATE ###objects SET confidential = ? WHERE id = ?", array($confidential, $id));
-				OIDplusObject::resetObjectInformationCache();
-			}
-
-			if (isset($params['comment'])) {
-				$comment = $params['comment'];
-				OIDplus::db()->query("UPDATE ###objects SET comment = ? WHERE id = ?", array($comment, $id));
-				OIDplusObject::resetObjectInformationCache();
-			}
-
-			if (isset($params['title']) || isset($params['description'])) {
-				OIDplus::logger()->log("V2:[INFO]OID(%1)+[OK/INFO]OIDRA(%1)+[OK/INFO]A", "Title/Description of object '%1' updated", $id);
-			}
-
-			if (isset($params['title'])) {
-				$title = $params['title'];
-				OIDplus::db()->query("UPDATE ###objects SET title = ? WHERE id = ?", array($title, $id));
-				OIDplusObject::resetObjectInformationCache();
-			}
-
-			if (isset($params['description'])) {
-				$description = $params['description'];
-				OIDplus::db()->query("UPDATE ###objects SET description = ? WHERE id = ?", array($description, $id));
-				OIDplusObject::resetObjectInformationCache();
-			}
-
-			OIDplus::db()->query("UPDATE ###objects SET updated = ".OIDplus::db()->sqlDate()." WHERE id = ?", array($id));
-			OIDplusObject::resetObjectInformationCache();
-
-			$status = 0;
-
-			if (!empty($new_ra)) {
-				$res = OIDplus::db()->query("select ra_name from ###ra where email = ?", array($new_ra));
-				$invitePlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.2.92'); // OIDplusPageRaInvite
-				if (!$res->any()) $status = !is_null($invitePlugin) && OIDplus::config()->getValue('ra_invitation_enabled') ? 1 : 2;
-			}
-
-			if ($obj::ns() == 'oid') {
-				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
-				if ($obj->isWellKnown()) {
-					$status += 4;
-				}
-			}
-
-			if ($obj->userHasWriteRights()) {
-				$status += 8;
-			}
-
-			foreach (OIDplus::getAllPlugins() as $plugin) {
-				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
-					$plugin->afterObjectUpdateSuperior($id, $params);
-				}
-			}
-
-			return array("status" => $status);
-		}
-
-		// Generate UUID
-		else if ($actionID == 'generate_uuid') {
+			return $this->action_Delete($params);
+		} else if ($actionID == 'Update') {
+			return $this->action_Update($params);
+		} else if ($actionID == 'Insert') {
+			return $this->action_Insert($params);
+		} else if ($actionID == 'generate_uuid') {
+			// Generate UUID (will be used by a few plugins)
 			$uuid = gen_uuid(OIDplus::config()->getValue('uuid_prefer_timebased', '1') == '1');
 			if (!$uuid) return array("status" => 1);
 			return array(
 				"status" => 0,
 				"uuid" => $uuid,
 				"intval" => substr(uuid_to_oid($uuid),strlen('2.25.'))
-			);
-		}
-
-		// Action:     Insert
-		// Parameters: parent, id (relative!), ra_email, comment, iris, asn1ids, confidential, title, description
-		// Outputs:    status=<0 Error, =0 Success, with following bitfields for further information:
-		//             x+1 = RA is not registered, but it can be invited
-		//             x+2 = RA is not registered and it cannot be invited
-		//             x+4 = OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset
-		//             x+8 = User has write rights to the freshly created OID
-		else if ($actionID == 'Insert') {
-			// Check if you have write rights on the parent (to create a new object)
-			_CheckParamExists($params, 'parent');
-			$objParent = OIDplusObject::parse($params['parent']);
-			if (!$objParent) throw new OIDplusException(_L('%1 action failed because parent object "%2" cannot be parsed!','INSERT',$params['parent']));
-
-			if (!$objParent->isRoot()) {
-				$idParent = $objParent->nodeId();
-				if (!OIDplusObject::exists($idParent)) {
-					throw new OIDplusException(_L('Parent object %1 does not exist',$idParent), null, 404);
-				}
-			}
-
-			if (!$objParent->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as the correct RA to insert an OID at this arc.'), null, 401);
-
-			// Check if the ID is valid
-			_CheckParamExists($params, 'id');
-			if ($params['id'] == '') throw new OIDplusException(_L('ID may not be empty'));
-
-			// For the root objects, let the user also enter a WEID
-			if ($objParent::ns() == 'oid') {
-				assert($objParent instanceof OIDplusOid); //assert(get_class($objParent) === "ViaThinkSoft\OIDplus\OIDplusOid");
-				if (strtolower(substr(trim($params['id']),0,5)) === 'weid:') {
-					if ($objParent->isRoot()) {
-						$params['id'] = \Frdl\Weid\WeidOidConverter::weid2oid($params['id']);
-						if ($params['id'] === false) {
-							throw new OIDplusException(_L('Invalid WEID'));
-						}
-					} else {
-						throw new OIDplusException(_L('You can use the WEID syntax only at your object tree root.'));
-					}
-				}
-			}
-
-			// Determine absolute OID name
-			// Note: At addString() and parse(), the syntax of the ID will be checked
-			if (isset($params['id_fully_qualified']) && is_string($params['id_fully_qualified'])) $params['id_fully_qualified'] = $params['id_fully_qualified'] == 'true';
-			if ($params['id_fully_qualified'] ?? false) {
-				$id = $params['id'];
-				$obj = OIDplusObject::parse($id);
-				$objParentTest = $obj->getParent();
-				if (!$objParentTest || !$objParentTest->equals($objParent)) throw new OIDplusException(_L('Cannot verify that %1 has parent %2', $obj->nodeId(), $objParent->nodeId()));
-			} else {
-				$id = $objParent->addString($params['id']);
-				$obj = OIDplusObject::parse($id);
-			}
-			if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!','INSERT',$id));
-
-			// Check, if the OID exists
-			if (OIDplusObject::exists($id)) {
-				throw new OIDplusException(_L('Object %1 already exists!',$id));
-			}
-
-			foreach (OIDplus::getAllPlugins() as $plugin) {
-				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
-					$plugin->beforeObjectInsert($id, $params);
-				}
-			}
-
-			// First simulate if there are any problems of ASN.1 IDs und IRIs
-			if ($obj::ns() == 'oid') {
-				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
-				if (!$obj->isWellKnown()) {
-					if (isset($params['iris'])) {
-						$ids = ($params['iris'] == '') ? array() : (is_array($params['iris']) ? $params['iris'] : explode(',',$params['iris']));
-						$ids = array_map('trim',$ids);
-						$obj->replaceIris($ids, true);
-					}
-
-					if (isset($params['asn1ids'])) {
-						$ids = ($params['asn1ids'] == '') ? array() : (is_array($params['asn1ids']) ? $params['asn1ids'] : explode(',',$params['asn1ids']));
-						$ids = array_map('trim',$ids);
-						$obj->replaceAsn1Ids($ids, true);
-					}
-				}
-			}
-
-			// Apply superior RA change
-			$parent = $params['parent'];
-			$ra_email = $params['ra_email'] ?? '';
-			if ($obj::ns() == 'oid') {
-				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
-				if ($obj->isWellKnown()) {
-					$ra_email = '';
-				}
-			}
-			if (!empty($ra_email) && !OIDplus::mailUtils()->validMailAddress($ra_email)) {
-				throw new OIDplusException(_L('Invalid RA email address'));
-			}
-
-			if (empty($ra_email)) {
-				OIDplus::logger()->log("V2:[INFO]OID(%2)+[INFO]OID(%1)+[OK/INFO]OIDRA(%2)+[OK/INFO]A", "Object '%1' created, without defined RA, superior object is '%2'", $id, $parent);
-			} else {
-				OIDplus::logger()->log("V2:[INFO]OID(%2)+[INFO]OID(%1)+[OK/INFO]OIDRA(%2)+[OK/INFO]A", "Object '%1' created, given to RA '%3', superior object is '%2'", $id, $parent, $ra_email);
-			}
-			if (!empty($ra_email)) {
-				OIDplus::logger()->log("V2:[INFO]RA(%2)", "Gained ownership of newly created object '%1'", $id, $ra_email);
-			}
-
-			$confidential = isset($params['confidential']) && $params['confidential'] == 'true';
-			$comment = $params['comment'] ?? '';
-			$title = $params['title'] ?? ''; // This is very special (only useable in REST API): The superior RA can set the title during creation, even if they lose their ownership by delegating afterwards!
-			$description = $params['description'] ?? ''; // This is very special (only useable in REST API): The superior RA can set the title during creation, even if they lose their ownership by delegating afterwards!
-
-			if (strlen($id) > OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH')) {
-				$maxlen = OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH');
-				throw new OIDplusException(_L('The identifier %1 is too long (max allowed length: %2)',$id,$maxlen));
-			}
-
-			OIDplus::db()->query("INSERT INTO ###objects (id, parent, ra_email, confidential, comment, created, title, description) VALUES (?, ?, ?, ?, ?, ".OIDplus::db()->sqlDate().", ?, ?)", array($id, $parent, $ra_email, $confidential, $comment, $title, $description));
-			OIDplusObject::resetObjectInformationCache();
-
-			// Set ASN.1 IDs und IRIs
-			if ($obj::ns() == 'oid') {
-				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
-				if (!$obj->isWellKnown()) {
-					if (isset($params['iris'])) {
-						$ids = ($params['iris'] == '') ? array() : (is_array($params['iris']) ? $params['iris'] : explode(',',$params['iris']));
-						$ids = array_map('trim',$ids);
-						$obj->replaceIris($ids, false);
-					}
-
-					if (isset($params['asn1ids'])) {
-						$ids = ($params['asn1ids'] == '') ? array() : (is_array($params['asn1ids']) ? $params['asn1ids'] : explode(',',$params['asn1ids']));
-						$ids = array_map('trim',$ids);
-						$obj->replaceAsn1Ids($ids, false);
-					}
-				}
-			}
-
-			$status = 0;
-
-			if (!empty($ra_email)) {
-				// Do we need to notify that the RA does not exist?
-				$res = OIDplus::db()->query("select ra_name from ###ra where email = ?", array($ra_email));
-				$invitePlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.2.92'); // OIDplusPageRaInvite
-				if (!$res->any()) $status = !is_null($invitePlugin) && OIDplus::config()->getValue('ra_invitation_enabled') ? 1 : 2;
-			}
-
-			if ($obj::ns() == 'oid') {
-				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
-				if ($obj->isWellKnown()) {
-					$status += 4;
-				}
-			}
-
-			if ($obj->userHasWriteRights()) {
-				$status += 8;
-			}
-
-			foreach (OIDplus::getAllPlugins() as $plugin) {
-				if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
-					$plugin->afterObjectInsert($id, $params);
-				}
-			}
-
-			return array(
-				"status" => $status,
-				"inserted_id" => $id
 			);
 		} else {
 			return parent::action($actionID, $params);
