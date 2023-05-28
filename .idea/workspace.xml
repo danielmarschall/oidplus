@@ -9,17 +9,8 @@
   <component name="ChangeListManager">
     <list default="true" id="df2a484b-bed2-4376-a9d2-11f38408a62e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/developer_notes/logger_maskcodes.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/developer_notes/logger_maskcodes.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/includes/classes/OIDplusObject.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/classes/OIDplusObject.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/includes/classes/OIDplusPluginManifest.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/classes/OIDplusPluginManifest.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/adminPages/911_rest_api/OIDplusPageAdminRestApi.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/adminPages/911_rest_api/OIDplusPageAdminRestApi.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/language/dede/messages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/language/dede/messages.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/objectTypes/fourcc/OIDplusFourCC.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/objectTypes/fourcc/OIDplusFourCC.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/objectTypes/guid/OIDplusGuid.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/objectTypes/guid/OIDplusGuid.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/classes/OIDplusLogger.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/classes/OIDplusLogger.class.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/000_objects/OIDplusPagePublicObjects.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/000_objects/OIDplusPagePublicObjects.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/000_objects/OIDplusPagePublicObjects.js" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/000_objects/OIDplusPagePublicObjects.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/002_rest_api/OIDplusPagePublicRestApi.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/002_rest_api/OIDplusPagePublicRestApi.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/raPages/911_rest_api/OIDplusPageRaRestApi.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/raPages/911_rest_api/OIDplusPageRaRestApi.class.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -106,7 +97,7 @@
     &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
     &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;SQL Dialects&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.fileTypes&quot;,
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   },
   &quot;keyToStringList&quot;: {
@@ -273,6 +264,16 @@
       <workItem from="1684007063012" duration="17463000" />
       <workItem from="1684055187110" duration="1320000" />
       <workItem from="1684091114321" duration="12534000" />
+      <workItem from="1684103920638" duration="387000" />
+      <workItem from="1684175756280" duration="4784000" />
+      <workItem from="1684272219667" duration="3098000" />
+      <workItem from="1684345375767" duration="10882000" />
+      <workItem from="1684363545935" duration="442000" />
+      <workItem from="1684427886873" duration="8534000" />
+      <workItem from="1684448630689" duration="431000" />
+      <workItem from="1684449130041" duration="382000" />
+      <workItem from="1685135361714" duration="847000" />
+      <workItem from="1685298683577" duration="1184000" />
     </task>
     <servers />
   </component>
