@@ -75,6 +75,7 @@ var OIDplusPageAdminOIDInfoExport = {
 			error: oidplus_ajax_error,
 			success:function(data) {
 				// TODO XXX: (Future feature) If the user decides that existing OIDs shall be overwritten, then we may not print "Ignored OIDs because they are already existing"
+				// TODO: Use oidplus_ajax_success(), since this checks the existance of "error" in data, and checks if status>=0
 				if (typeof data === "object" && "error" in data) {
 					if (typeof data === "object" && "count_imported_oids" in data) {
 						// TODO: Device if alertSuccess, alertWarning oder alertError is shown

@@ -63,6 +63,7 @@ var OIDplusPageAdminSoftwareUpdate = {
 				}
 			},
 			success: function(data) {
+				// TODO: Use oidplus_ajax_success(), since this checks the existance of "error" in data, and checks if status>=0
 				//hide_waiting_anim();
 				if (typeof data === "object" && "error" in data) {
 					$("#update_header").text(_L("Update failed"));

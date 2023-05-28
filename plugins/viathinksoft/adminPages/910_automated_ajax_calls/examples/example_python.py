@@ -25,11 +25,7 @@ json = requests.post(url, data = myobj).json()
 
 if json['error'] != None:
 	print(json['error']);
-elif json['status'] == 0: # OK
-	print("Insert OK");
-elif json['status'] == 1: # RaNotExisting
-	print("Insert OK");
-elif json['status'] == 2: # RaNotExistingNoInvitation
+elif json['status'] >= 0: # OK
 	print("Insert OK");
 else:
 	print("Error "+json);
