@@ -593,6 +593,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 			// Determine absolute OID name
 			// Note: At addString() and parse(), the syntax of the ID will be checked
+			if (isset($params['id_fully_qualified']) && is_string($params['id_fully_qualified'])) $params['id_fully_qualified'] = $params['id_fully_qualified'] == 'true';
 			if ($params['id_fully_qualified'] ?? false) {
 				$id = $params['id'];
 				$obj = OIDplusObject::parse($id);
