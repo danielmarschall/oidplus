@@ -29,6 +29,31 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusPageRaRestApi extends OIDplusPagePluginRa {
 
 	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	private function action_Blacklist(array $params): array {
+		if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_REST_USER', true)) {
+			throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_REST_USER'));
+		}
+
+		_CheckParamExists($params, 'user');
+		$ra_email = $params['user'];
+
+		if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) {
+			throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as the requested RA %2 or as admin.',OIDplus::gui()->link('oidplus:login$ra$'.$ra_email),'<b>'.htmlentities($ra_email).'</b>'), null, 401);
+		}
+
+		$gen = OIDplusAuthContentStoreJWT::JWT_GENERATOR_REST;
+		$sub = $ra_email;
+
+		OIDplusAuthContentStoreJWT::jwtBlacklist($gen, $sub);
+
+		return array("status" => 0);
+	}
+
+	/**
 	 * @param string $actionID
 	 * @param array $params
 	 * @return array
@@ -36,23 +61,7 @@ class OIDplusPageRaRestApi extends OIDplusPagePluginRa {
 	 */
 	public function action(string $actionID, array $params): array {
 		if ($actionID == 'blacklistJWT') {
-			if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_REST_USER', true)) {
-				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_REST_USER'));
-			}
-
-			_CheckParamExists($params, 'user');
-			$ra_email = $params['user'];
-
-			if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) {
-				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as the requested RA %2 or as admin.',OIDplus::gui()->link('oidplus:login$ra$'.$ra_email),'<b>'.htmlentities($ra_email).'</b>'), null, 401);
-			}
-
-			$gen = OIDplusAuthContentStoreJWT::JWT_GENERATOR_REST;
-			$sub = $ra_email;
-
-			OIDplusAuthContentStoreJWT::jwtBlacklist($gen, $sub);
-
-			return array("status" => 0);
+			return $this->action_Blacklist($params);
 		} else {
 			return parent::action($actionID, $params);
 		}

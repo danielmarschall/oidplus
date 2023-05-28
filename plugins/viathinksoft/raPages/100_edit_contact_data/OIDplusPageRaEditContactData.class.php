@@ -26,6 +26,55 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 
 	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	private function action_Update(array $params): array {
+		_CheckParamExists($params, 'email');
+
+		$email = $params['email'];
+
+		if (!OIDplus::authUtils()->isRaLoggedIn($email) && !OIDplus::authUtils()->isAdminLoggedIn()) {
+			throw new OIDplusException(_L('Authentication error. Please log in as admin, or as the RA to update its data.'), null, 401);
+		}
+
+		$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
+		if (!$res->any()) {
+			throw new OIDplusException(_L('RA does not exist'));
+		}
+
+		OIDplus::logger()->log("V2:[OK/WARN]RA(%1)+[OK/INFO]A", "Changed RA '%1' contact data/details", $email);
+
+		if (isset($params['ra_name']))
+			OIDplus::db()->query("UPDATE ###ra SET ra_name = ? WHERE email = ?", array($params['ra_name'], $email));
+		if (isset($params['organization']))
+			OIDplus::db()->query("UPDATE ###ra SET organization = ? WHERE email = ?", array($params['organization'], $email));
+		if (isset($params['office']))
+			OIDplus::db()->query("UPDATE ###ra SET office = ? WHERE email = ?", array($params['office'], $email));
+		if (isset($params['personal_name']))
+			OIDplus::db()->query("UPDATE ###ra SET personal_name = ? WHERE email = ?", array($params['personal_name'], $email));
+		if (isset($params['privacy']))
+			OIDplus::db()->query("UPDATE ###ra SET privacy = ? WHERE email = ?", array($params['privacy'] == 'true', $email));
+		if (isset($params['street']))
+			OIDplus::db()->query("UPDATE ###ra SET street = ? WHERE email = ?", array($params['street'], $email));
+		if (isset($params['zip_town']))
+			OIDplus::db()->query("UPDATE ###ra SET zip_town = ? WHERE email = ?", array($params['zip_town'], $email));
+		if (isset($params['country']))
+			OIDplus::db()->query("UPDATE ###ra SET country = ? WHERE email = ?", array($params['country'], $email));
+		if (isset($params['phone']))
+			OIDplus::db()->query("UPDATE ###ra SET phone = ? WHERE email = ?", array($params['phone'], $email));
+		if (isset($params['mobile']))
+			OIDplus::db()->query("UPDATE ###ra SET mobile = ? WHERE email = ?", array($params['mobile'], $email));
+		if (isset($params['fax']))
+			OIDplus::db()->query("UPDATE ###ra SET fax = ? WHERE email = ?", array($params['fax'], $email));
+
+		OIDplus::db()->query("UPDATE ###ra SET updated = ".OIDplus::db()->sqlDate()." WHERE email = ?", array($email));
+
+		return array("status" => 0);
+	}
+
+	/**
 	 * @param string $actionID
 	 * @param array $params
 	 * @return array
@@ -33,47 +82,7 @@ class OIDplusPageRaEditContactData extends OIDplusPagePluginRa {
 	 */
 	public function action(string $actionID, array $params): array {
 		if ($actionID == 'change_ra_data') {
-			_CheckParamExists($params, 'email');
-
-			$email = $params['email'];
-
-			if (!OIDplus::authUtils()->isRaLoggedIn($email) && !OIDplus::authUtils()->isAdminLoggedIn()) {
-				throw new OIDplusException(_L('Authentication error. Please log in as admin, or as the RA to update its data.'), null, 401);
-			}
-
-			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
-			if (!$res->any()) {
-				throw new OIDplusException(_L('RA does not exist'));
-			}
-
-			OIDplus::logger()->log("V2:[OK/WARN]RA(%1)+[OK/INFO]A", "Changed RA '%1' contact data/details", $email);
-
-			if (isset($params['ra_name']))
-				OIDplus::db()->query("UPDATE ###ra SET ra_name = ? WHERE email = ?", array($params['ra_name'], $email));
-			if (isset($params['organization']))
-				OIDplus::db()->query("UPDATE ###ra SET organization = ? WHERE email = ?", array($params['organization'], $email));
-			if (isset($params['office']))
-				OIDplus::db()->query("UPDATE ###ra SET office = ? WHERE email = ?", array($params['office'], $email));
-			if (isset($params['personal_name']))
-				OIDplus::db()->query("UPDATE ###ra SET personal_name = ? WHERE email = ?", array($params['personal_name'], $email));
-			if (isset($params['privacy']))
-				OIDplus::db()->query("UPDATE ###ra SET privacy = ? WHERE email = ?", array($params['privacy'] == 'true', $email));
-			if (isset($params['street']))
-				OIDplus::db()->query("UPDATE ###ra SET street = ? WHERE email = ?", array($params['street'], $email));
-			if (isset($params['zip_town']))
-				OIDplus::db()->query("UPDATE ###ra SET zip_town = ? WHERE email = ?", array($params['zip_town'], $email));
-			if (isset($params['country']))
-				OIDplus::db()->query("UPDATE ###ra SET country = ? WHERE email = ?", array($params['country'], $email));
-			if (isset($params['phone']))
-				OIDplus::db()->query("UPDATE ###ra SET phone = ? WHERE email = ?", array($params['phone'], $email));
-			if (isset($params['mobile']))
-				OIDplus::db()->query("UPDATE ###ra SET mobile = ? WHERE email = ?", array($params['mobile'], $email));
-			if (isset($params['fax']))
-				OIDplus::db()->query("UPDATE ###ra SET fax = ? WHERE email = ?", array($params['fax'], $email));
-
-			OIDplus::db()->query("UPDATE ###ra SET updated = ".OIDplus::db()->sqlDate()." WHERE email = ?", array($email));
-
-			return array("status" => 0);
+			return $this->action_Update($params);
 		} else {
 			return parent::action($actionID, $params);
 		}

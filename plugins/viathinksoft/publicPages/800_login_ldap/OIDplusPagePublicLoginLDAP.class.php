@@ -117,6 +117,114 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic
 	}
 
 	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	private function action_Login(array $params): array {
+		if (!OIDplus::baseConfig()->getValue('LDAP_ENABLED', false)) {
+			throw new OIDplusException(_L('LDAP authentication is disabled on this system.'));
+		}
+
+		if (!function_exists('ldap_connect')) throw new OIDplusConfigInitializationException(_L('PHP extension "%1" not installed','LDAP'));
+
+		OIDplus::getActiveCaptchaPlugin()->captchaVerify($params, 'captcha');
+
+		_CheckParamExists($params, 'email');
+		_CheckParamExists($params, 'password');
+
+		$upn = $params['email'];
+		$password = $params['password'];
+
+		$domainNumber = $this->getDomainNumber($upn);
+		if ($domainNumber <= 0) {
+			throw new OIDplusException(_L('The server is not configured to handle this domain (the part behind the at-sign)'));
+		}
+		$cfgSuffix = $domainNumber == 1 ? '' : "__$domainNumber";
+
+		if (empty($upn)) {
+			throw new OIDplusException(_L('Please enter a valid username'));
+		}
+
+		$ldap = new \VtsLDAPUtils();
+
+		try {
+
+			$cfg_ldap_server      = OIDplus::baseConfig()->getValue('LDAP_SERVER'.$cfgSuffix);
+			$cfg_ldap_port        = OIDplus::baseConfig()->getValue('LDAP_PORT'.$cfgSuffix, 389);
+			$cfg_ldap_base_dn     = OIDplus::baseConfig()->getValue('LDAP_BASE_DN'.$cfgSuffix);
+
+			// Note: Will throw an Exception if connect fails
+			$ldap->connect($cfg_ldap_server, $cfg_ldap_port);
+
+			if (!$ldap->login($upn, $password)) {
+				if (OIDplus::config()->getValue('log_failed_ra_logins', false)) {
+					OIDplus::logger()->log("V2:[WARN]A", "Failed login to RA account '%1' using LDAP", $upn);
+				}
+				throw new OIDplusException(_L('Wrong password or user not registered'));
+			}
+
+			$ldap_userinfo = $ldap->getUserInfo($upn, $cfg_ldap_base_dn);
+
+			if (!$ldap_userinfo) {
+				throw new OIDplusException(_L('The LDAP login was successful, but the own user %1 cannot be found. Please check the base configuration setting %2 and %3', $upn, "LDAP_BASE_DN$cfgSuffix", "LDAP_UPN_SUFFIX$cfgSuffix"));
+			}
+
+			$foundSomething = false;
+
+			// ---
+
+			$cfgAdminGroup = OIDplus::baseConfig()->getValue('LDAP_ADMIN_GROUP'.$cfgSuffix,'');
+			if (!empty($cfgAdminGroup)) {
+				$isAdmin = $ldap->isMemberOfRec($ldap_userinfo, $cfgAdminGroup);
+			} else {
+				$isAdmin = false;
+			}
+			if ($isAdmin) {
+				$foundSomething = true;
+				$remember_me = isset($params['remember_me']) && ($params['remember_me']);
+				OIDplus::authUtils()->adminLoginEx($remember_me, 'LDAP login');
+			}
+
+			// ---
+
+			$cfgRaGroup = OIDplus::baseConfig()->getValue('LDAP_RA_GROUP'.$cfgSuffix,'');
+			if (!empty($cfgRaGroup)) {
+				$isRA = $ldap->isMemberOfRec($ldap_userinfo, $cfgRaGroup);
+			} else {
+				$isRA = true;
+			}
+			if ($isRA) {
+				if (OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_UPN'.$cfgSuffix,true)) {
+					$mail = \VtsLDAPUtils::getString($ldap_userinfo, 'userprincipalname');
+					$foundSomething = true;
+					$remember_me = isset($params['remember_me']) && ($params['remember_me']);
+					$this->doLoginRA($remember_me, $mail, $ldap_userinfo);
+				}
+				if (OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_EMAIL'.$cfgSuffix,false)) {
+					$mails = \VtsLDAPUtils::getArray($ldap_userinfo, 'mail');
+					foreach ($mails as $mail) {
+						$foundSomething = true;
+						$remember_me = isset($params['remember_me']) && ($params['remember_me']);
+						$this->doLoginRA($remember_me, $mail, $ldap_userinfo);
+					}
+				}
+			}
+
+		} finally {
+			$ldap->disconnect();
+			$ldap = null;
+		}
+
+		if (!$foundSomething) {
+			throw new OIDplusException(_L("Error: These credentials cannot be used with OIDplus. Please check the base configuration."));
+		}
+
+		return array("status" => 0);
+	}
+
+	/**
 	 * @param string $actionID
 	 * @param array $params
 	 * @return array
@@ -125,105 +233,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic
 	 */
 	public function action(string $actionID, array $params): array {
 		if ($actionID == 'ra_login_ldap') {
-			if (!OIDplus::baseConfig()->getValue('LDAP_ENABLED', false)) {
-				throw new OIDplusException(_L('LDAP authentication is disabled on this system.'));
-			}
-
-			if (!function_exists('ldap_connect')) throw new OIDplusConfigInitializationException(_L('PHP extension "%1" not installed','LDAP'));
-
-			OIDplus::getActiveCaptchaPlugin()->captchaVerify($params, 'captcha');
-
-			_CheckParamExists($params, 'email');
-			_CheckParamExists($params, 'password');
-
-			$upn = $params['email'];
-			$password = $params['password'];
-
-			$domainNumber = $this->getDomainNumber($upn);
-			if ($domainNumber <= 0) {
-				throw new OIDplusException(_L('The server is not configured to handle this domain (the part behind the at-sign)'));
-			}
-			$cfgSuffix = $domainNumber == 1 ? '' : "__$domainNumber";
-
-			if (empty($upn)) {
-				throw new OIDplusException(_L('Please enter a valid username'));
-			}
-
-			$ldap = new \VtsLDAPUtils();
-
-			try {
-
-				$cfg_ldap_server      = OIDplus::baseConfig()->getValue('LDAP_SERVER'.$cfgSuffix);
-				$cfg_ldap_port        = OIDplus::baseConfig()->getValue('LDAP_PORT'.$cfgSuffix, 389);
-				$cfg_ldap_base_dn     = OIDplus::baseConfig()->getValue('LDAP_BASE_DN'.$cfgSuffix);
-
-				// Note: Will throw an Exception if connect fails
-				$ldap->connect($cfg_ldap_server, $cfg_ldap_port);
-
-				if (!$ldap->login($upn, $password)) {
-					if (OIDplus::config()->getValue('log_failed_ra_logins', false)) {
-						OIDplus::logger()->log("V2:[WARN]A", "Failed login to RA account '%1' using LDAP", $upn);
-					}
-					throw new OIDplusException(_L('Wrong password or user not registered'));
-				}
-
-				$ldap_userinfo = $ldap->getUserInfo($upn, $cfg_ldap_base_dn);
-
-				if (!$ldap_userinfo) {
-					throw new OIDplusException(_L('The LDAP login was successful, but the own user %1 cannot be found. Please check the base configuration setting %2 and %3', $upn, "LDAP_BASE_DN$cfgSuffix", "LDAP_UPN_SUFFIX$cfgSuffix"));
-				}
-
-				$foundSomething = false;
-
-				// ---
-
-				$cfgAdminGroup = OIDplus::baseConfig()->getValue('LDAP_ADMIN_GROUP'.$cfgSuffix,'');
-				if (!empty($cfgAdminGroup)) {
-					$isAdmin = $ldap->isMemberOfRec($ldap_userinfo, $cfgAdminGroup);
-				} else {
-					$isAdmin = false;
-				}
-				if ($isAdmin) {
-					$foundSomething = true;
-					$remember_me = isset($params['remember_me']) && ($params['remember_me']);
-					OIDplus::authUtils()->adminLoginEx($remember_me, 'LDAP login');
-				}
-
-				// ---
-
-				$cfgRaGroup = OIDplus::baseConfig()->getValue('LDAP_RA_GROUP'.$cfgSuffix,'');
-				if (!empty($cfgRaGroup)) {
-					$isRA = $ldap->isMemberOfRec($ldap_userinfo, $cfgRaGroup);
-				} else {
-					$isRA = true;
-				}
-				if ($isRA) {
-					if (OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_UPN'.$cfgSuffix,true)) {
-						$mail = \VtsLDAPUtils::getString($ldap_userinfo, 'userprincipalname');
-						$foundSomething = true;
-						$remember_me = isset($params['remember_me']) && ($params['remember_me']);
-						$this->doLoginRA($remember_me, $mail, $ldap_userinfo);
-					}
-					if (OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_EMAIL'.$cfgSuffix,false)) {
-						$mails = \VtsLDAPUtils::getArray($ldap_userinfo, 'mail');
-						foreach ($mails as $mail) {
-							$foundSomething = true;
-							$remember_me = isset($params['remember_me']) && ($params['remember_me']);
-							$this->doLoginRA($remember_me, $mail, $ldap_userinfo);
-						}
-					}
-				}
-
-			} finally {
-				$ldap->disconnect();
-				$ldap = null;
-			}
-
-			if (!$foundSomething) {
-				throw new OIDplusException(_L("Error: These credentials cannot be used with OIDplus. Please check the base configuration."));
-			}
-
-			return array("status" => 0);
+			return $this->action_Login($params);
 		} else {
 			return parent::action($actionID, $params);
 		}

@@ -26,6 +26,72 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 
 	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 * @throws OIDplusMailException
+	 */
+	private function action_Request(array $params): array {
+		_CheckParamExists($params, 'email');
+		$email = $params['email'];
+
+		if (!OIDplus::mailUtils()->validMailAddress($email)) {
+			throw new OIDplusException(_L('Invalid email address'));
+		}
+
+		OIDplus::getActiveCaptchaPlugin()->captchaVerify($params, 'captcha');
+
+		OIDplus::logger()->log("V2:[WARN]RA(%1)", "A new password for '%1' was requested (forgot password)", $email);
+
+		$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:reset_password$'.$email.'$'.OIDplus::authUtils()->makeAuthKey(['93a16dbe-f4fb-11ed-b67e-3c4a92df8582',$email]));
+
+		$message = $this->getForgotPasswordText($params['email']);
+		$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
+
+		OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Password reset request', $message);
+
+		return array("status" => 0);
+	}
+
+	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 * @throws OIDplusMailException
+	 */
+	private function action_Activate(array $params): array {
+		_CheckParamExists($params, 'password1');
+		_CheckParamExists($params, 'password2');
+		_CheckParamExists($params, 'email');
+		_CheckParamExists($params, 'auth');
+
+		$password1 = $params['password1'];
+		$password2 = $params['password2'];
+		$email = $params['email'];
+		$auth = $params['auth'];
+
+		if (!OIDplus::authUtils()->validateAuthKey(['93a16dbe-f4fb-11ed-b67e-3c4a92df8582',$email], $auth, OIDplus::config()->getValue('max_ra_pwd_reset_time',-1))) {
+			throw new OIDplusException(_L('Invalid or expired authentication key'));
+		}
+
+		if ($password1 !== $password2) {
+			throw new OIDplusException(_L('Passwords do not match'));
+		}
+
+		if (strlen($password1) < OIDplus::config()->getValue('ra_min_password_length')) {
+			$minlen = OIDplus::config()->getValue('ra_min_password_length');
+			throw new OIDplusException(_L('Password is too short. Need at least %1 characters',$minlen));
+		}
+
+		OIDplus::logger()->log("V2:[INFO]RA(%1)", "RA '%1' has reset his password (forgot passwort)", $email);
+
+		$ra = new OIDplusRA($email);
+		$ra->change_password($password1);
+
+		return array("status" => 0);
+	}
+
+	/**
 	 * @param string $actionID
 	 * @param array $params
 	 * @return array
@@ -34,57 +100,9 @@ class OIDplusPagePublicForgotPassword extends OIDplusPagePluginPublic {
 	 */
 	public function action(string $actionID, array $params): array {
 		if ($actionID == 'forgot_password') {
-			_CheckParamExists($params, 'email');
-			$email = $params['email'];
-
-			if (!OIDplus::mailUtils()->validMailAddress($email)) {
-				throw new OIDplusException(_L('Invalid email address'));
-			}
-
-			OIDplus::getActiveCaptchaPlugin()->captchaVerify($params, 'captcha');
-
-			OIDplus::logger()->log("V2:[WARN]RA(%1)", "A new password for '%1' was requested (forgot password)", $email);
-
-			$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:reset_password$'.$email.'$'.OIDplus::authUtils()->makeAuthKey(['93a16dbe-f4fb-11ed-b67e-3c4a92df8582',$email]));
-
-			$message = $this->getForgotPasswordText($params['email']);
-			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
-
-			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Password reset request', $message);
-
-			return array("status" => 0);
-
+			return $this->action_Request($params);
 		} else if ($actionID == 'reset_password') {
-
-			_CheckParamExists($params, 'password1');
-			_CheckParamExists($params, 'password2');
-			_CheckParamExists($params, 'email');
-			_CheckParamExists($params, 'auth');
-
-			$password1 = $params['password1'];
-			$password2 = $params['password2'];
-			$email = $params['email'];
-			$auth = $params['auth'];
-
-			if (!OIDplus::authUtils()->validateAuthKey(['93a16dbe-f4fb-11ed-b67e-3c4a92df8582',$email], $auth, OIDplus::config()->getValue('max_ra_pwd_reset_time',-1))) {
-				throw new OIDplusException(_L('Invalid or expired authentication key'));
-			}
-
-			if ($password1 !== $password2) {
-				throw new OIDplusException(_L('Passwords do not match'));
-			}
-
-			if (strlen($password1) < OIDplus::config()->getValue('ra_min_password_length')) {
-				$minlen = OIDplus::config()->getValue('ra_min_password_length');
-				throw new OIDplusException(_L('Password is too short. Need at least %1 characters',$minlen));
-			}
-
-			OIDplus::logger()->log("V2:[INFO]RA(%1)", "RA '%1' has reset his password (forgot passwort)", $email);
-
-			$ra = new OIDplusRA($email);
-			$ra->change_password($password1);
-
-			return array("status" => 0);
+			return $this->action_Activate($params);
 		} else {
 			return parent::action($actionID, $params);
 		}

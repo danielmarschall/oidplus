@@ -26,90 +26,116 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 
 	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	private function action_RaLogin(array $params): array {
+		OIDplus::getActiveCaptchaPlugin()->captchaVerify($params, 'captcha');
+
+		_CheckParamExists($params, 'email');
+		_CheckParamExists($params, 'password');
+
+		$email = $params['email'];
+		$ra = new OIDplusRA($email);
+
+		if (empty($email)) {
+			throw new OIDplusException(_L('Please enter a valid email address'));
+		}
+
+		if ($ra->checkPassword($params['password'])) {
+			$remember_me = isset($params['remember_me']) && ($params['remember_me']);
+			OIDplus::authUtils()->raLoginEx($email, $remember_me, 'Regular login');
+
+			$authInfo = OIDplus::authUtils()->raGeneratePassword($params['password']);
+
+			// Rehash, so that we always have the latest default auth plugin and params
+			// Note that we do it every time (unlike PHPs recommended password_needs_rehash),
+			// because we are not sure which auth plugin created the hash (there might be multiple
+			// auth plugins that can verify this hash). So we just rehash on every login!
+			$new_authkey = $authInfo->getAuthKey();
+
+			OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate().", authkey = ? where email = ?", array($new_authkey, $email));
+
+			return array("status" => 0);
+		} else {
+			if (OIDplus::config()->getValue('log_failed_ra_logins', false)) {
+				if ($ra->existing()) {
+					OIDplus::logger()->log("V2:[WARN]A", "Failed login to RA account '%1' (wrong password)", $email);
+				} else {
+					OIDplus::logger()->log("V2:[WARN]A", "Failed login to RA account '%1' (RA not existing)", $email);
+				}
+			}
+			throw new OIDplusException(_L('Wrong password or user not registered'));
+		}
+	}
+
+	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	private function action_RaLogout(array $params): array {
+		_CheckParamExists($params, 'email');
+
+		$email = $params['email'];
+
+		OIDplus::authUtils()->raLogoutEx($email);
+
+		return array("status" => 0);
+	}
+
+	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	private function action_AdminLogin(array $params): array {
+		OIDplus::getActiveCaptchaPlugin()->captchaVerify($params, 'captcha');
+
+		_CheckParamExists($params, 'password');
+		if (OIDplus::authUtils()->adminCheckPassword($params['password'])) {
+			$remember_me = isset($params['remember_me']) && ($params['remember_me']);
+			OIDplus::authUtils()->adminLoginEx($remember_me, 'Regular login');
+
+			// TODO: Write a "last login" entry in config table?
+
+			return array("status" => 0);
+		} else {
+			if (OIDplus::config()->getValue('log_failed_admin_logins', false)) {
+				OIDplus::logger()->log("V2:[WARN]A", "Failed login to admin account");
+			}
+			throw new OIDplusException(_L('Wrong password'));
+		}
+	}
+
+	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	private function action_AdminLogout(array $params): array {
+		OIDplus::authUtils()->adminLogoutEx();
+
+		return array("status" => 0);
+	}
+
+	/**
 	 * @param string $actionID
 	 * @param array $params
 	 * @return array
 	 * @throws OIDplusException
 	 */
 	public function action(string $actionID, array $params): array {
-		// === RA LOGIN/LOGOUT ===
-
 		if ($actionID == 'ra_login') {
-			OIDplus::getActiveCaptchaPlugin()->captchaVerify($params, 'captcha');
-
-			_CheckParamExists($params, 'email');
-			_CheckParamExists($params, 'password');
-
-			$email = $params['email'];
-			$ra = new OIDplusRA($email);
-
-			if (empty($email)) {
-				throw new OIDplusException(_L('Please enter a valid email address'));
-			}
-
-			if ($ra->checkPassword($params['password'])) {
-				$remember_me = isset($params['remember_me']) && ($params['remember_me']);
-				OIDplus::authUtils()->raLoginEx($email, $remember_me, 'Regular login');
-
-				$authInfo = OIDplus::authUtils()->raGeneratePassword($params['password']);
-
-				// Rehash, so that we always have the latest default auth plugin and params
-				// Note that we do it every time (unlike PHPs recommended password_needs_rehash),
-				// because we are not sure which auth plugin created the hash (there might be multiple
-				// auth plugins that can verify this hash). So we just rehash on every login!
-				$new_authkey = $authInfo->getAuthKey();
-
-				OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate().", authkey = ? where email = ?", array($new_authkey, $email));
-
-				return array("status" => 0);
-			} else {
-				if (OIDplus::config()->getValue('log_failed_ra_logins', false)) {
-					if ($ra->existing()) {
-						OIDplus::logger()->log("V2:[WARN]A", "Failed login to RA account '%1' (wrong password)", $email);
-					} else {
-						OIDplus::logger()->log("V2:[WARN]A", "Failed login to RA account '%1' (RA not existing)", $email);
-					}
-				}
-				throw new OIDplusException(_L('Wrong password or user not registered'));
-			}
-
+			return $this->action_RaLogin($params);
 		} else if ($actionID == 'ra_logout') {
-
-			_CheckParamExists($params, 'email');
-
-			$email = $params['email'];
-
-			OIDplus::authUtils()->raLogoutEx($email);
-
-			return array("status" => 0);
-		}
-
-		// === ADMIN LOGIN/LOGOUT ===
-
-		else if ($actionID == 'admin_login') {
-			OIDplus::getActiveCaptchaPlugin()->captchaVerify($params, 'captcha');
-
-			_CheckParamExists($params, 'password');
-			if (OIDplus::authUtils()->adminCheckPassword($params['password'])) {
-				$remember_me = isset($params['remember_me']) && ($params['remember_me']);
-				OIDplus::authUtils()->adminLoginEx($remember_me, 'Regular login');
-
-				// TODO: Write a "last login" entry in config table?
-
-				return array("status" => 0);
-			} else {
-				if (OIDplus::config()->getValue('log_failed_admin_logins', false)) {
-					OIDplus::logger()->log("V2:[WARN]A", "Failed login to admin account");
-				}
-				throw new OIDplusException(_L('Wrong password'));
-			}
-		}
-		else if ($actionID == 'admin_logout') {
-			OIDplus::authUtils()->adminLogoutEx();
-
-			return array("status" => 0);
-		}
-		else {
+			return $this->action_RaLogout($params);
+		} else if ($actionID == 'admin_login') {
+			return $this->action_AdminLogin($params);
+		}  else if ($actionID == 'admin_logout') {
+			return $this->action_AdminLogout($params);
+		} else {
 			return parent::action($actionID, $params);
 		}
 	}

@@ -26,6 +26,73 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 
 	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 * @throws OIDplusMailException
+	 */
+	private function action_Request(array $params): array {
+		$email = $params['email'];
+
+		if (!OIDplus::mailUtils()->validMailAddress($email)) {
+			throw new OIDplusException(_L('Invalid email address'));
+		}
+
+		OIDplus::getActiveCaptchaPlugin()->captchaVerify($params, 'captcha');
+
+		$this->inviteSecurityCheck($email);
+		// TODO: should we also log who has invited?
+		OIDplus::logger()->log("V2:[INFO]RA(%1)", "RA '%1' has been invited", $email);
+
+		$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:activate_ra$'.$email.'$'.OIDplus::authUtils()->makeAuthKey(['ed840c3e-f4fa-11ed-b67e-3c4a92df8582',$email]));
+
+		$message = $this->getInvitationText($email);
+		$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
+
+		OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Invitation', $message);
+
+		return array("status" => 0);
+	}
+
+	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 * @throws OIDplusMailException
+	 */
+	private function action_Activate(array $params): array {
+		_CheckParamExists($params, 'password1');
+		_CheckParamExists($params, 'password2');
+		_CheckParamExists($params, 'email');
+		_CheckParamExists($params, 'auth');
+
+		$password1 = $params['password1'];
+		$password2 = $params['password2'];
+		$email = $params['email'];
+		$auth = $params['auth'];
+
+		if (!OIDplus::authUtils()->validateAuthKey(['ed840c3e-f4fa-11ed-b67e-3c4a92df8582',$email], $auth, OIDplus::config()->getValue('max_ra_invite_time',-1))) {
+			throw new OIDplusException(_L('Invalid or expired authentication key'));
+		}
+
+		if ($password1 !== $password2) {
+			throw new OIDplusException(_L('Passwords do not match'));
+		}
+
+		if (strlen($password1) < OIDplus::config()->getValue('ra_min_password_length')) {
+			$minlen = OIDplus::config()->getValue('ra_min_password_length');
+			throw new OIDplusException(_L('Password is too short. Need at least %1 characters',$minlen));
+		}
+
+		OIDplus::logger()->log("V2:[OK]RA(%1)", "RA '%1' has been registered due to invitation", $email);
+
+		$ra = new OIDplusRA($email);
+		$ra->register_ra($password1);
+
+		return array("status" => 0);
+	}
+
+	/**
 	 * @param string $actionID
 	 * @param array $params
 	 * @return array
@@ -34,58 +101,9 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 	 */
 	public function action(string $actionID, array $params): array {
 		if ($actionID == 'invite_ra') {
-			$email = $params['email'];
-
-			if (!OIDplus::mailUtils()->validMailAddress($email)) {
-				throw new OIDplusException(_L('Invalid email address'));
-			}
-
-			OIDplus::getActiveCaptchaPlugin()->captchaVerify($params, 'captcha');
-
-			$this->inviteSecurityCheck($email);
-			// TODO: should we also log who has invited?
-			OIDplus::logger()->log("V2:[INFO]RA(%1)", "RA '%1' has been invited", $email);
-
-			$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:activate_ra$'.$email.'$'.OIDplus::authUtils()->makeAuthKey(['ed840c3e-f4fa-11ed-b67e-3c4a92df8582',$email]));
-
-			$message = $this->getInvitationText($email);
-			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
-
-			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Invitation', $message);
-
-			return array("status" => 0);
-
+			return $this->action_Request($params);
 		} else if ($actionID == 'activate_ra') {
-
-			_CheckParamExists($params, 'password1');
-			_CheckParamExists($params, 'password2');
-			_CheckParamExists($params, 'email');
-			_CheckParamExists($params, 'auth');
-
-			$password1 = $params['password1'];
-			$password2 = $params['password2'];
-			$email = $params['email'];
-			$auth = $params['auth'];
-
-			if (!OIDplus::authUtils()->validateAuthKey(['ed840c3e-f4fa-11ed-b67e-3c4a92df8582',$email], $auth, OIDplus::config()->getValue('max_ra_invite_time',-1))) {
-				throw new OIDplusException(_L('Invalid or expired authentication key'));
-			}
-
-			if ($password1 !== $password2) {
-				throw new OIDplusException(_L('Passwords do not match'));
-			}
-
-			if (strlen($password1) < OIDplus::config()->getValue('ra_min_password_length')) {
-				$minlen = OIDplus::config()->getValue('ra_min_password_length');
-				throw new OIDplusException(_L('Password is too short. Need at least %1 characters',$minlen));
-			}
-
-			OIDplus::logger()->log("V2:[OK]RA(%1)", "RA '%1' has been registered due to invitation", $email);
-
-			$ra = new OIDplusRA($email);
-			$ra->register_ra($password1);
-
-			return array("status" => 0);
+			return $this->action_Activate($params);
 		} else {
 			return parent::action($actionID, $params);
 		}

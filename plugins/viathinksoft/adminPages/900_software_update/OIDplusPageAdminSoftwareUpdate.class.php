@@ -49,6 +49,131 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 	}
 
 	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	private function action_Update(array $params): array {
+		@set_time_limit(0);
+
+		if (!OIDplus::authUtils()->isAdminLoggedIn()) {
+			throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), null, 401);
+		}
+
+		if (OIDplus::getInstallType() === 'git-wc') {
+			$cmd = $this->getGitCommand().' 2>&1';
+
+			$ec = -1;
+			$out = array();
+			exec($cmd, $out, $ec);
+
+			$res = _L('Execute command:').' '.$cmd."\n\n".trim(implode("\n",$out));
+			if ($ec === 0) {
+				$rev = 'HEAD'; // do not translate
+				return array("status" => 0, "content" => $res, "rev" => $rev);
+			} else {
+				return array("status" => -1, "error" => $res, "content" => "");
+			}
+		}
+		else if (OIDplus::getInstallType() === 'svn-wc') {
+			$cmd = $this->getSvnCommand().' 2>&1';
+
+			$ec = -1;
+			$out = array();
+			exec($cmd, $out, $ec);
+
+			$res = _L('Execute command:').' '.$cmd."\n\n".trim(implode("\n",$out));
+			if ($ec === 0) {
+				$rev = 'HEAD'; // do not translate
+				return array("status" => 0, "content" => $res, "rev" => $rev);
+			} else {
+				return array("status" => -1, "error" => $res, "content" => "");
+			}
+		}
+		else if (OIDplus::getInstallType() === 'svn-snapshot') {
+
+			$rev = $params['rev'];
+
+			$update_version = $params['update_version'] ?? 1;
+			if (($update_version != 1) && ($update_version != 2)) {
+				throw new OIDplusException(_L('Unknown update version'));
+			}
+
+			// Download and unzip
+
+			$cont = false;
+			for ($retry=1; $retry<=3; $retry++) {
+				if (function_exists('gzdecode')) {
+					$url = sprintf(OIDplus::getEditionInfo()['update_package_gz'], $rev-1, $rev);
+					$cont = url_get_contents($url);
+					if ($cont !== false) $cont = @gzdecode($cont);
+				} else {
+					$url = sprintf(OIDplus::getEditionInfo()['update_package'], $rev-1, $rev);
+					$cont = url_get_contents($url);
+				}
+				if ($cont !== false) {
+					break;
+				} else {
+					sleep(1);
+				}
+			}
+			if ($cont === false) throw new OIDplusException(_L("Update %1 could not be downloaded from ViaThinkSoft server. Please try again later.",$rev));
+
+			// Check signature...
+
+			if (function_exists('openssl_verify')) {
+
+				$m = array();
+				if (!preg_match('@<\?php /\* <ViaThinkSoftSignature>(.+)</ViaThinkSoftSignature> \*/ \?>\n@ismU', $cont, $m)) {
+					throw new OIDplusException(_L("Update package file of revision %1 not digitally signed",$rev));
+				}
+				$signature = base64_decode($m[1]);
+
+				$naked = preg_replace('@<\?php /\* <ViaThinkSoftSignature>(.+)</ViaThinkSoftSignature> \*/ \?>\n@ismU', '', $cont);
+				$hash = hash("sha256", $naked."update_".($rev-1)."_to_".($rev).".txt");
+
+				$public_key = file_get_contents(__DIR__.'/public.pem');
+				if (!openssl_verify($hash, $signature, $public_key, OPENSSL_ALGO_SHA256)) {
+					throw new OIDplusException(_L("Update package file of revision %1: Signature invalid",$rev));
+				}
+
+			}
+
+			// All OK! Now write the file
+
+			$tmp_filename = 'update_'.generateRandomString(10).'.tmp.php';
+			$local_file = OIDplus::localpath().$tmp_filename;
+
+			@file_put_contents($local_file, $cont);
+
+			if (!file_exists($local_file) || (@file_get_contents($local_file) !== $cont)) {
+				throw new OIDplusException(_L('Update file could not written. Probably there are no write-permissions to the root folder.'));
+			}
+
+			if ($update_version == 1) {
+				// Now call the written file
+				// Note: we may not use eval($cont) because the script uses die(),
+				// and things in the script might collide with currently (un)loaded source code files, shutdown procedues, etc.
+				$web_file = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE).$tmp_filename; // NOT canonical URL! This might fail with reverse proxies which can only be executed from outside
+				$res = url_get_contents($web_file);
+				if ($res === false) {
+					throw new OIDplusException(_L('Update-script %1 could not be executed',$web_file));
+				}
+				return array("status" => 0, "content" => $res, "rev" => $rev);
+			} else if ($update_version == 2) {
+				// In this version, the client will call the web-update file.
+				// This has the advantage that it will also work if the system is htpasswd protected
+				return array("status" => 0, "update_file" => $tmp_filename, "rev" => $rev);
+			} else {
+				throw new OIDplusException(_L("Unexpected update version"));
+			}
+		}
+		else {
+			throw new OIDplusException(_L('Multiple version files/directories (oidplus_version.txt, .version.php, .git, or .svn) are existing! Therefore, the version is ambiguous!'));
+		}
+	}
+
+	/**
 	 * @param string $actionID
 	 * @param array $params
 	 * @return array
@@ -56,123 +181,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 	 */
 	public function action(string $actionID, array $params): array {
 		if ($actionID == 'update_now') {
-			@set_time_limit(0);
-
-			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), null, 401);
-			}
-
-			if (OIDplus::getInstallType() === 'git-wc') {
-				$cmd = $this->getGitCommand().' 2>&1';
-
-				$ec = -1;
-				$out = array();
-				exec($cmd, $out, $ec);
-
-				$res = _L('Execute command:').' '.$cmd."\n\n".trim(implode("\n",$out));
-				if ($ec === 0) {
-					$rev = 'HEAD'; // do not translate
-					return array("status" => 0, "content" => $res, "rev" => $rev);
-				} else {
-					return array("status" => -1, "error" => $res, "content" => "");
-				}
-			}
-			else if (OIDplus::getInstallType() === 'svn-wc') {
-				$cmd = $this->getSvnCommand().' 2>&1';
-
-				$ec = -1;
-				$out = array();
-				exec($cmd, $out, $ec);
-
-				$res = _L('Execute command:').' '.$cmd."\n\n".trim(implode("\n",$out));
-				if ($ec === 0) {
-					$rev = 'HEAD'; // do not translate
-					return array("status" => 0, "content" => $res, "rev" => $rev);
-				} else {
-					return array("status" => -1, "error" => $res, "content" => "");
-				}
-			}
-			else if (OIDplus::getInstallType() === 'svn-snapshot') {
-
-				$rev = $params['rev'];
-
-				$update_version = $params['update_version'] ?? 1;
-				if (($update_version != 1) && ($update_version != 2)) {
-					throw new OIDplusException(_L('Unknown update version'));
-				}
-
-				// Download and unzip
-
-				$cont = false;
-				for ($retry=1; $retry<=3; $retry++) {
-					if (function_exists('gzdecode')) {
-						$url = sprintf(OIDplus::getEditionInfo()['update_package_gz'], $rev-1, $rev);
-						$cont = url_get_contents($url);
-						if ($cont !== false) $cont = @gzdecode($cont);
-					} else {
-						$url = sprintf(OIDplus::getEditionInfo()['update_package'], $rev-1, $rev);
-						$cont = url_get_contents($url);
-					}
-					if ($cont !== false) {
-						break;
-					} else {
-						sleep(1);
-					}
-				}
-				if ($cont === false) throw new OIDplusException(_L("Update %1 could not be downloaded from ViaThinkSoft server. Please try again later.",$rev));
-
-				// Check signature...
-
-				if (function_exists('openssl_verify')) {
-
-					$m = array();
-					if (!preg_match('@<\?php /\* <ViaThinkSoftSignature>(.+)</ViaThinkSoftSignature> \*/ \?>\n@ismU', $cont, $m)) {
-						throw new OIDplusException(_L("Update package file of revision %1 not digitally signed",$rev));
-					}
-					$signature = base64_decode($m[1]);
-
-					$naked = preg_replace('@<\?php /\* <ViaThinkSoftSignature>(.+)</ViaThinkSoftSignature> \*/ \?>\n@ismU', '', $cont);
-					$hash = hash("sha256", $naked."update_".($rev-1)."_to_".($rev).".txt");
-
-					$public_key = file_get_contents(__DIR__.'/public.pem');
-					if (!openssl_verify($hash, $signature, $public_key, OPENSSL_ALGO_SHA256)) {
-						throw new OIDplusException(_L("Update package file of revision %1: Signature invalid",$rev));
-					}
-
-				}
-
-				// All OK! Now write the file
-
-				$tmp_filename = 'update_'.generateRandomString(10).'.tmp.php';
-				$local_file = OIDplus::localpath().$tmp_filename;
-
-				@file_put_contents($local_file, $cont);
-
-				if (!file_exists($local_file) || (@file_get_contents($local_file) !== $cont)) {
-					throw new OIDplusException(_L('Update file could not written. Probably there are no write-permissions to the root folder.'));
-				}
-
-				if ($update_version == 1) {
-					// Now call the written file
-					// Note: we may not use eval($cont) because the script uses die(),
-					// and things in the script might collide with currently (un)loaded source code files, shutdown procedues, etc.
-					$web_file = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE).$tmp_filename; // NOT canonical URL! This might fail with reverse proxies which can only be executed from outside
-					$res = url_get_contents($web_file);
-					if ($res === false) {
-						throw new OIDplusException(_L('Update-script %1 could not be executed',$web_file));
-					}
-					return array("status" => 0, "content" => $res, "rev" => $rev);
-				} else if ($update_version == 2) {
-					// In this version, the client will call the web-update file.
-					// This has the advantage that it will also work if the system is htpasswd protected
-					return array("status" => 0, "update_file" => $tmp_filename, "rev" => $rev);
-				} else {
-					throw new OIDplusException(_L("Unexpected update version"));
-				}
-			}
-			else {
-				throw new OIDplusException(_L('Multiple version files/directories (oidplus_version.txt, .version.php, .git, or .svn) are existing! Therefore, the version is ambiguous!'));
-			}
+			return $this->action_Update($params);
 		} else {
 			return parent::action($actionID, $params);
 		}

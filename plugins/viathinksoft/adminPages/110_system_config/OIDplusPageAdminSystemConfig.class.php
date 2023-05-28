@@ -26,6 +26,40 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 
 	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	private function action_Update(array $params): array {
+		if (!OIDplus::authUtils()->isAdminLoggedIn()) {
+			throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), null, 401);
+		}
+
+		_CheckParamExists($params, 'name');
+		_CheckParamExists($params, 'value');
+
+		$name = $params['name'];
+		$value = $params['value'];
+
+		$res = OIDplus::db()->query("select protected, visible from ###config where name = ?", array($name));
+		if (!$res->any()) {
+			throw new OIDplusException(_L('Setting does not exist'));
+		}
+		$row = $res->fetch_array();
+		if (($row['protected'] == 1) || ($row['visible'] == 0)) {
+			throw new OIDplusException(_L("Setting %1 is read-only",$name));
+		}
+
+		$old_value = OIDplus::config()->getValue($name, '');
+		OIDplus::config()->setValue($name, $value);
+		if ($old_value != $value) {
+			OIDplus::logger()->log("V2:[OK/INFO]A", "Changed system config setting '%1' from '%2' to '%3'", $name, $old_value, $value);
+		}
+
+		return array("status" => 0);
+	}
+
+	/**
 	 * @param string $actionID
 	 * @param array $params
 	 * @return array
@@ -33,32 +67,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 	 */
 	public function action(string $actionID, array $params): array {
 		if ($actionID == 'config_update') {
-			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), null, 401);
-			}
-
-			_CheckParamExists($params, 'name');
-			_CheckParamExists($params, 'value');
-
-			$name = $params['name'];
-			$value = $params['value'];
-
-			$res = OIDplus::db()->query("select protected, visible from ###config where name = ?", array($name));
-			if (!$res->any()) {
-				throw new OIDplusException(_L('Setting does not exist'));
-			}
-			$row = $res->fetch_array();
-			if (($row['protected'] == 1) || ($row['visible'] == 0)) {
-				throw new OIDplusException(_L("Setting %1 is read-only",$name));
-			}
-
-			$old_value = OIDplus::config()->getValue($name, '');
-			OIDplus::config()->setValue($name, $value);
-			if ($old_value != $value) {
-				OIDplus::logger()->log("V2:[OK/INFO]A", "Changed system config setting '%1' from '%2' to '%3'", $name, $old_value, $value);
-			}
-
-			return array("status" => 0);
+			return $this->action_Update($params);
 		} else {
 			return parent::action($actionID, $params);
 		}

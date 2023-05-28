@@ -26,141 +26,58 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 
 	/**
-	 * @param string $actionID
 	 * @param array $params
 	 * @return array
 	 * @throws OIDplusException
 	 * @throws OIDplusMailException
 	 */
-	public function action(string $actionID, array $params): array {
-		if ($actionID == 'change_ra_email') {
-			if (!OIDplus::config()->getValue('allow_ra_email_change') && !OIDplus::authUtils()->isAdminLoggedIn()) {
-				throw new OIDplusException(_L('This functionality has been disabled by the administrator.'));
-			}
-
-			_CheckParamExists($params, 'old_email');
-			_CheckParamExists($params, 'new_email');
-
-			$old_email = $params['old_email'];
-			$new_email = $params['new_email'];
-
-			$ra = new OIDplusRA($old_email);
-			if ($ra->isPasswordLess() && !OIDplus::authUtils()->isAdminLoggedIn()) {
-				throw new OIDplusException(_L('E-Mail-Address cannot be changed because this user does not have a password'));
-			}
-
-			if (!OIDplus::authUtils()->isRaLoggedIn($old_email) && !OIDplus::authUtils()->isAdminLoggedIn()) {
-				throw new OIDplusException(_L('Authentication error. Please log in as admin, or as the RA to update its email address.'), null, 401);
-			}
-
-			if (!OIDplus::mailUtils()->validMailAddress($new_email)) {
-				throw new OIDplusException(_L('eMail address is invalid.'));
-			}
-
-			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($old_email));
-			if (!$res->any()) {
-				throw new OIDplusException(_L('eMail address does not exist anymore. It was probably already changed.'));
-			}
-
-			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($new_email));
-			if ($res->any()) {
-				throw new OIDplusException(_L('eMail address is already used by another RA. To merge accounts, please contact the superior RA of your objects and request an owner change of your objects.'));
-			}
-
-			if (OIDplus::authUtils()->isAdminLoggedIn()) {
-				$ra_was_logged_in = OIDplus::authUtils()->isRaLoggedIn($old_email);
-
-				$ra = new OIDplusRA($old_email);
-
-				// Change RA email
-				$ra->change_email($new_email);
-				OIDplus::logger()->log("V2:[WARN]RA(%1)+[INFO]RA(%2)+[OK]A", "Admin changed email address '%1' to '%2'", $old_email, $new_email);
-
-				// Change objects
-				$res = OIDplus::db()->query("select id from ###objects where ra_email = ?", array($old_email));
-				while ($row = $res->fetch_array()) {
-					OIDplus::logger()->log("V2:[INFO]OID(%1)+SUPOID(%1)", "Admin changed email address of RA '%2' (owner of %1) to '%3'", $row['id'], $old_email, $new_email);
-				}
-				OIDplus::db()->query("update ###objects set ra_email = ? where ra_email = ?", array($new_email, $old_email));
-				OIDplusObject::resetObjectInformationCache();
-
-				// Re-login
-				if ($ra_was_logged_in) {
-					OIDplus::authUtils()->raLogout($old_email);
-					OIDplus::authUtils()->raLogin($new_email);
-				}
-
-				return array("status" => 0);
-			} else {
-				OIDplus::logger()->log("V2:[INFO]RA(%1)+RA(%2)", "Requested email address change from '%1' to '%2'", $old_email, $new_email);
-
-				$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:activate_new_ra_email$'.$old_email.'$'.$new_email.'$'.OIDplus::authUtils()->makeAuthKey(['5ef24124-f4fb-11ed-b67e-3c4a92df8582',$old_email,$new_email]));
-
-				$message = file_get_contents(__DIR__ . '/change_request_email.tpl');
-				$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL), $message);
-				$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->getValue('system_title'), $message);
-				$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
-				$message = str_replace('{{OLD_EMAIL}}', $old_email, $message);
-				$message = str_replace('{{NEW_EMAIL}}', $new_email, $message);
-				$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
-				OIDplus::mailUtils()->sendMail($new_email, OIDplus::config()->getValue('system_title').' - Change email request', $message);
-
-				return array("status" => 0);
-			}
+	private function action_Request(array $params): array {
+		if (!OIDplus::config()->getValue('allow_ra_email_change') && !OIDplus::authUtils()->isAdminLoggedIn()) {
+			throw new OIDplusException(_L('This functionality has been disabled by the administrator.'));
 		}
 
-		else if ($actionID == 'activate_new_ra_email') {
-			if (!OIDplus::config()->getValue('allow_ra_email_change')) {
-				throw new OIDplusException(_L('This functionality has been disabled by the administrator.'));
-			}
+		_CheckParamExists($params, 'old_email');
+		_CheckParamExists($params, 'new_email');
 
-			_CheckParamExists($params, 'old_email');
-			_CheckParamExists($params, 'new_email');
-			_CheckParamExists($params, 'password');
-			_CheckParamExists($params, 'auth');
+		$old_email = $params['old_email'];
+		$new_email = $params['new_email'];
 
-			$old_email = $params['old_email'];
-			$new_email = $params['new_email'];
-			$password = $params['password'];
+		$ra = new OIDplusRA($old_email);
+		if ($ra->isPasswordLess() && !OIDplus::authUtils()->isAdminLoggedIn()) {
+			throw new OIDplusException(_L('E-Mail-Address cannot be changed because this user does not have a password'));
+		}
 
-			$auth = $params['auth'];
+		if (!OIDplus::authUtils()->isRaLoggedIn($old_email) && !OIDplus::authUtils()->isAdminLoggedIn()) {
+			throw new OIDplusException(_L('Authentication error. Please log in as admin, or as the RA to update its email address.'), null, 401);
+		}
 
+		if (!OIDplus::mailUtils()->validMailAddress($new_email)) {
+			throw new OIDplusException(_L('eMail address is invalid.'));
+		}
+
+		$res = OIDplus::db()->query("select * from ###ra where email = ?", array($old_email));
+		if (!$res->any()) {
+			throw new OIDplusException(_L('eMail address does not exist anymore. It was probably already changed.'));
+		}
+
+		$res = OIDplus::db()->query("select * from ###ra where email = ?", array($new_email));
+		if ($res->any()) {
+			throw new OIDplusException(_L('eMail address is already used by another RA. To merge accounts, please contact the superior RA of your objects and request an owner change of your objects.'));
+		}
+
+		if (OIDplus::authUtils()->isAdminLoggedIn()) {
 			$ra_was_logged_in = OIDplus::authUtils()->isRaLoggedIn($old_email);
 
 			$ra = new OIDplusRA($old_email);
-			if ($ra->isPasswordLess() && !OIDplus::authUtils()->isAdminLoggedIn()) {
-				throw new OIDplusException(_L('E-Mail-Address cannot be changed because this user does not have a password'));
-			}
 
-			if (!OIDplus::authUtils()->validateAuthKey(['5ef24124-f4fb-11ed-b67e-3c4a92df8582',$old_email,$new_email], $auth, OIDplus::config()->getValue('max_ra_email_change_time', -1))) {
-				throw new OIDplusException(_L('Invalid or expired authentication key'));
-			}
-
-			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($old_email));
-			if (!$res->any()) {
-				throw new OIDplusException(_L('eMail address does not exist anymore. It was probably already changed.'));
-			}
-
-			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($new_email));
-			if ($res->any()) {
-				throw new OIDplusException(_L('eMail address is already used by another RA. To merge accounts, please contact the superior RA of your objects and request an owner change of your objects.'));
-			}
-
-			$ra = new OIDplusRA($old_email);
-			if (!$ra->isPasswordLess()) {
-				if (!$ra->checkPassword($password)) {
-					throw new OIDplusException(_L('Wrong password'));
-				}
-			}
-
-			// Change address of RA
+			// Change RA email
 			$ra->change_email($new_email);
-			OIDplus::logger()->log("V2:[OK]RA(%2)+RA(%1)", "RA '%1' has changed their email address to '%2'", $old_email, $new_email);
+			OIDplus::logger()->log("V2:[WARN]RA(%1)+[INFO]RA(%2)+[OK]A", "Admin changed email address '%1' to '%2'", $old_email, $new_email);
 
 			// Change objects
 			$res = OIDplus::db()->query("select id from ###objects where ra_email = ?", array($old_email));
 			while ($row = $res->fetch_array()) {
-				OIDplus::logger()->log("V2:[INFO]OID(%1)+SUPOID(%1)", "RA '%2' (owner of %1) has changed their email address to '%3'", $row['id'], $old_email, $new_email);
+				OIDplus::logger()->log("V2:[INFO]OID(%1)+SUPOID(%1)", "Admin changed email address of RA '%2' (owner of %1) to '%3'", $row['id'], $old_email, $new_email);
 			}
 			OIDplus::db()->query("update ###objects set ra_email = ? where ra_email = ?", array($new_email, $old_email));
 			OIDplusObject::resetObjectInformationCache();
@@ -171,16 +88,117 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 				OIDplus::authUtils()->raLogin($new_email);
 			}
 
-			// Send email
-			$message = file_get_contents(__DIR__ . '/email_change_confirmation.tpl');
+			return array("status" => 0);
+		} else {
+			OIDplus::logger()->log("V2:[INFO]RA(%1)+RA(%2)", "Requested email address change from '%1' to '%2'", $old_email, $new_email);
+
+			$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:activate_new_ra_email$'.$old_email.'$'.$new_email.'$'.OIDplus::authUtils()->makeAuthKey(['5ef24124-f4fb-11ed-b67e-3c4a92df8582',$old_email,$new_email]));
+
+			$message = file_get_contents(__DIR__ . '/change_request_email.tpl');
 			$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL), $message);
 			$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->getValue('system_title'), $message);
 			$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
 			$message = str_replace('{{OLD_EMAIL}}', $old_email, $message);
 			$message = str_replace('{{NEW_EMAIL}}', $new_email, $message);
-			OIDplus::mailUtils()->sendMail($old_email, OIDplus::config()->getValue('system_title').' - eMail address changed', $message);
+			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
+			OIDplus::mailUtils()->sendMail($new_email, OIDplus::config()->getValue('system_title').' - Change email request', $message);
 
 			return array("status" => 0);
+		}
+	}
+
+	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 * @throws OIDplusMailException
+	 */
+	private function action_Activate(array $params): array {
+		if (!OIDplus::config()->getValue('allow_ra_email_change')) {
+			throw new OIDplusException(_L('This functionality has been disabled by the administrator.'));
+		}
+
+		_CheckParamExists($params, 'old_email');
+		_CheckParamExists($params, 'new_email');
+		_CheckParamExists($params, 'password');
+		_CheckParamExists($params, 'auth');
+
+		$old_email = $params['old_email'];
+		$new_email = $params['new_email'];
+		$password = $params['password'];
+
+		$auth = $params['auth'];
+
+		$ra_was_logged_in = OIDplus::authUtils()->isRaLoggedIn($old_email);
+
+		$ra = new OIDplusRA($old_email);
+		if ($ra->isPasswordLess() && !OIDplus::authUtils()->isAdminLoggedIn()) {
+			throw new OIDplusException(_L('E-Mail-Address cannot be changed because this user does not have a password'));
+		}
+
+		if (!OIDplus::authUtils()->validateAuthKey(['5ef24124-f4fb-11ed-b67e-3c4a92df8582',$old_email,$new_email], $auth, OIDplus::config()->getValue('max_ra_email_change_time', -1))) {
+			throw new OIDplusException(_L('Invalid or expired authentication key'));
+		}
+
+		$res = OIDplus::db()->query("select * from ###ra where email = ?", array($old_email));
+		if (!$res->any()) {
+			throw new OIDplusException(_L('eMail address does not exist anymore. It was probably already changed.'));
+		}
+
+		$res = OIDplus::db()->query("select * from ###ra where email = ?", array($new_email));
+		if ($res->any()) {
+			throw new OIDplusException(_L('eMail address is already used by another RA. To merge accounts, please contact the superior RA of your objects and request an owner change of your objects.'));
+		}
+
+		$ra = new OIDplusRA($old_email);
+		if (!$ra->isPasswordLess()) {
+			if (!$ra->checkPassword($password)) {
+				throw new OIDplusException(_L('Wrong password'));
+			}
+		}
+
+		// Change address of RA
+		$ra->change_email($new_email);
+		OIDplus::logger()->log("V2:[OK]RA(%2)+RA(%1)", "RA '%1' has changed their email address to '%2'", $old_email, $new_email);
+
+		// Change objects
+		$res = OIDplus::db()->query("select id from ###objects where ra_email = ?", array($old_email));
+		while ($row = $res->fetch_array()) {
+			OIDplus::logger()->log("V2:[INFO]OID(%1)+SUPOID(%1)", "RA '%2' (owner of %1) has changed their email address to '%3'", $row['id'], $old_email, $new_email);
+		}
+		OIDplus::db()->query("update ###objects set ra_email = ? where ra_email = ?", array($new_email, $old_email));
+		OIDplusObject::resetObjectInformationCache();
+
+		// Re-login
+		if ($ra_was_logged_in) {
+			OIDplus::authUtils()->raLogout($old_email);
+			OIDplus::authUtils()->raLogin($new_email);
+		}
+
+		// Send email
+		$message = file_get_contents(__DIR__ . '/email_change_confirmation.tpl');
+		$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL), $message);
+		$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->getValue('system_title'), $message);
+		$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
+		$message = str_replace('{{OLD_EMAIL}}', $old_email, $message);
+		$message = str_replace('{{NEW_EMAIL}}', $new_email, $message);
+		OIDplus::mailUtils()->sendMail($old_email, OIDplus::config()->getValue('system_title').' - eMail address changed', $message);
+
+		return array("status" => 0);
+	}
+
+	/**
+	 * @param string $actionID
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 * @throws OIDplusMailException
+	 */
+	public function action(string $actionID, array $params): array {
+		if ($actionID == 'change_ra_email') {
+			return $this->action_Request($params);
+		} else if ($actionID == 'activate_new_ra_email') {
+			return $this->action_Activate($params);
 		} else {
 			return parent::action($actionID, $params);
 		}

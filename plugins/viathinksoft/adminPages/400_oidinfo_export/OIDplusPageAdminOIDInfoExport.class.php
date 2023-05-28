@@ -38,128 +38,145 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 	/*private*/ const QUERY_GET_OIDINFO_DATA_V1  = '1.3.6.1.4.1.37476.2.5.2.1.6.1';
 
 	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	private function action_ImportXml(array $params): array {
+		if (!OIDplus::authUtils()->isAdminLoggedIn()) {
+			throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), null,401);
+		}
+
+		if (!isset($_FILES['userfile'])) {
+			throw new OIDplusException(_L('Please choose a file.'));
+		}
+
+		$xml_contents = file_get_contents($_FILES['userfile']['tmp_name']);
+
+		$errors = array();
+		list($count_imported_oids, $count_already_existing, $count_errors, $count_warnings) = $this->oidinfoImportXML($xml_contents, $errors, $replaceExistingOIDs=false, $orphan_mode=self::ORPHAN_AUTO_DEORPHAN);
+		if (count($errors) > 0) {
+			// Note: These "errors" can also be warnings (partial success)
+			// TODO: since the output can be very long, should we really show it in a JavaScript alert() ?!
+			return array(
+				"status" => -1,
+				"count_imported_oids" => $count_imported_oids,
+				"count_already_existing" => $count_already_existing,
+				"count_errors" => $count_errors,
+				"count_warnings" => $count_warnings,
+				"error" => implode("\n",$errors)
+			);
+		} else {
+			return array(
+				"status" => 0,
+				"count_imported_oids" => $count_imported_oids,
+				"count_already_existing" => $count_already_existing,
+				"count_errors" => $count_errors,
+				"count_warnings" => $count_warnings
+			);
+		}
+	}
+
+	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	private function action_ImportOidInfo(array $params): array {
+		if (!OIDplus::authUtils()->isAdminLoggedIn()) {
+			throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), null, 401);
+		}
+
+		_CheckParamExists($params, 'oid');
+
+		$oid = $params['oid'];
+
+		$query = self::QUERY_GET_OIDINFO_DATA_V1;
+
+		$payload = array(
+			"query" => $query, // we must repeat the query because we want to sign it
+			"system_id" => OIDplus::getSystemId(false),
+			"oid" => $oid
+		);
+
+		$signature = '';
+		if (!OIDplus::getPkiStatus() || !@openssl_sign(json_encode($payload), $signature, OIDplus::getSystemPrivateKey())) {
+			if (!OIDplus::getPkiStatus()) {
+				throw new OIDplusException(_L('Error: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system). Therefore, you cannot register/unregister your OIDplus instance.'));
+			} else {
+				throw new OIDplusException(_L('Signature failed'));
+			}
+		}
+
+		$data = array(
+			"payload" => $payload,
+			"signature" => base64_encode($signature)
+		);
+
+		if (OIDplus::getEditionInfo()['vendor'] != 'ViaThinkSoft') {
+			// The oid-info.com import functionality is a confidential API between ViaThinkSoft and oid-info.com and cannot be used in forks of OIDplus
+			throw new OIDplusException(_L('This feature is only available in the ViaThinkSoft edition of OIDplus'));
+		}
+
+		if (function_exists('gzdeflate')) {
+			$compressed = "1";
+			$data2 = gzdeflate(json_encode($data));
+		} else {
+			$compressed = "0";
+			$data2 = json_encode($data);
+		}
+
+		$res_curl = url_post_contents(
+			'https://oidplus.viathinksoft.com/reg2/query.php',
+			array(
+				"query"      => $query,
+				"compressed" => $compressed,
+				"data"       => base64_encode($data2)
+			)
+		);
+
+		if ($res_curl === false) {
+			throw new OIDplusException(_L('Communication with %1 server failed', 'ViaThinkSoft'));
+		}
+
+		$json = @json_decode($res_curl, true);
+
+		if (!$json) {
+			return array(
+				"status" => -1,
+				"error" => _L('JSON reply from ViaThinkSoft decoding error: %1',$res_curl)
+			);
+		}
+
+		if (isset($json['error']) || ($json['status'] < 0)) {
+			return array(
+				"status" => -1,
+				"error" => $json['error'] ?? _L('Received error status code: %1', $json['status'])
+			);
+		}
+
+		$errors = array();
+		list($count_imported_oids, $count_already_existing, $count_errors, $count_warnings) = $this->oidinfoImportXML('<oid-database>'.$json['xml'].'</oid-database>', $errors, $replaceExistingOIDs=false, $orphan_mode=self::ORPHAN_DISALLOW_ORPHANS);
+		if (count($errors) > 0) {
+			return array("status" => -1, "error" => implode("\n",$errors));
+		} else if ($count_imported_oids <> 1) {
+			return array("status" => -1, "error" => _L('Imported %1, but expected to import 1',$count_imported_oids));
+		} else {
+			return array("status" => 0);
+		}
+	}
+
+	/**
 	 * @param string $actionID
 	 * @param array $params
 	 * @return array
 	 * @throws OIDplusException
 	 */
 	public function action(string $actionID, array $params): array {
-
 		if ($actionID == 'import_xml_file') {
-			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), null,401);
-			}
-
-			if (!isset($_FILES['userfile'])) {
-				throw new OIDplusException(_L('Please choose a file.'));
-			}
-
-			$xml_contents = file_get_contents($_FILES['userfile']['tmp_name']);
-
-			$errors = array();
-			list($count_imported_oids, $count_already_existing, $count_errors, $count_warnings) = $this->oidinfoImportXML($xml_contents, $errors, $replaceExistingOIDs=false, $orphan_mode=self::ORPHAN_AUTO_DEORPHAN);
-			if (count($errors) > 0) {
-				// Note: These "errors" can also be warnings (partial success)
-				// TODO: since the output can be very long, should we really show it in a JavaScript alert() ?!
-				return array(
-					"status" => -1,
-					"count_imported_oids" => $count_imported_oids,
-					"count_already_existing" => $count_already_existing,
-					"count_errors" => $count_errors,
-					"count_warnings" => $count_warnings,
-					"error" => implode("\n",$errors)
-				);
-			} else {
-				return array(
-					"status" => 0,
-					"count_imported_oids" => $count_imported_oids,
-					"count_already_existing" => $count_already_existing,
-					"count_errors" => $count_errors,
-					"count_warnings" => $count_warnings
-				);
-			}
+			return $this->action_ImportXml($params);
 		} else if ($actionID == 'import_oidinfo_oid') {
-			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), null, 401);
-			}
-
-			_CheckParamExists($params, 'oid');
-
-			$oid = $params['oid'];
-
-			$query = self::QUERY_GET_OIDINFO_DATA_V1;
-
-			$payload = array(
-				"query" => $query, // we must repeat the query because we want to sign it
-				"system_id" => OIDplus::getSystemId(false),
-				"oid" => $oid
-			);
-
-			$signature = '';
-			if (!OIDplus::getPkiStatus() || !@openssl_sign(json_encode($payload), $signature, OIDplus::getSystemPrivateKey())) {
-				if (!OIDplus::getPkiStatus()) {
-					throw new OIDplusException(_L('Error: Your system could not generate a private/public key pair. (OpenSSL is probably missing on your system). Therefore, you cannot register/unregister your OIDplus instance.'));
-				} else {
-					throw new OIDplusException(_L('Signature failed'));
-				}
-			}
-
-			$data = array(
-				"payload" => $payload,
-				"signature" => base64_encode($signature)
-			);
-
-			if (OIDplus::getEditionInfo()['vendor'] != 'ViaThinkSoft') {
-				// The oid-info.com import functionality is a confidential API between ViaThinkSoft and oid-info.com and cannot be used in forks of OIDplus
-				throw new OIDplusException(_L('This feature is only available in the ViaThinkSoft edition of OIDplus'));
-			}
-
-			if (function_exists('gzdeflate')) {
-				$compressed = "1";
-				$data2 = gzdeflate(json_encode($data));
-			} else {
-				$compressed = "0";
-				$data2 = json_encode($data);
-			}
-
-			$res_curl = url_post_contents(
-				'https://oidplus.viathinksoft.com/reg2/query.php',
-				array(
-					"query"      => $query,
-					"compressed" => $compressed,
-					"data"       => base64_encode($data2)
-				)
-			);
-
-			if ($res_curl === false) {
-				throw new OIDplusException(_L('Communication with %1 server failed', 'ViaThinkSoft'));
-			}
-
-			$json = @json_decode($res_curl, true);
-
-			if (!$json) {
-				return array(
-					"status" => -1,
-					"error" => _L('JSON reply from ViaThinkSoft decoding error: %1',$res_curl)
-				);
-			}
-
-			if (isset($json['error']) || ($json['status'] < 0)) {
-				return array(
-					"status" => -1,
-					"error" => $json['error'] ?? _L('Received error status code: %1', $json['status'])
-				);
-			}
-
-			$errors = array();
-			list($count_imported_oids, $count_already_existing, $count_errors, $count_warnings) = $this->oidinfoImportXML('<oid-database>'.$json['xml'].'</oid-database>', $errors, $replaceExistingOIDs=false, $orphan_mode=self::ORPHAN_DISALLOW_ORPHANS);
-			if (count($errors) > 0) {
-				return array("status" => -1, "error" => implode("\n",$errors));
-			} else if ($count_imported_oids <> 1) {
-				return array("status" => -1, "error" => _L('Imported %1, but expected to import 1',$count_imported_oids));
-			} else {
-				return array("status" => 0);
-			}
+			return $this->action_ImportOidInfo($params);
 		} else {
 			return parent::action($actionID, $params);
 		}

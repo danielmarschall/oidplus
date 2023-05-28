@@ -25,6 +25,51 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusPageAdminCreateRa extends OIDplusPagePluginAdmin {
 
+
+	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	private function action_Create(array $params): array {
+		if (!OIDplus::authUtils()->isAdminLoggedIn()) {
+			throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), null, 401);
+		}
+
+		_CheckParamExists($params, 'email');
+		_CheckParamExists($params, 'password1');
+		_CheckParamExists($params, 'password2');
+
+		$email = $params['email'];
+		$password1 = $params['password1'];
+		$password2 = $params['password2'];
+
+		if (!OIDplus::mailUtils()->validMailAddress($email)) {
+			throw new OIDplusException(_L('eMail address is invalid.'));
+		}
+
+		$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email)); // TODO: this should be a static function in the RA class
+		if ($res->any()) {
+			throw new OIDplusException(_L('RA does already exist'));
+		}
+
+		if ($password1 !== $password2) {
+			throw new OIDplusException(_L('Passwords do not match'));
+		}
+
+		if (strlen($password1) < OIDplus::config()->getValue('ra_min_password_length')) {
+			$minlen = OIDplus::config()->getValue('ra_min_password_length');
+			throw new OIDplusException(_L('Password is too short. Need at least %1 characters',$minlen));
+		}
+
+		OIDplus::logger()->log("V2:[INFO]RA(%1)+[OK/INFO]A", "RA '%1' was created by the admin, without email address verification or invitation", $email);
+
+		$ra = new OIDplusRA($email);
+		$ra->register_ra($password1);
+
+		return array("status" => 0);
+	}
+
 	/**
 	 * @param string $actionID
 	 * @param array $params
@@ -33,42 +78,7 @@ class OIDplusPageAdminCreateRa extends OIDplusPagePluginAdmin {
 	 */
 	public function action(string $actionID, array $params): array {
 		if ($actionID == 'create_ra') {
-			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), null, 401);
-			}
-
-			_CheckParamExists($params, 'email');
-			_CheckParamExists($params, 'password1');
-			_CheckParamExists($params, 'password2');
-
-			$email = $params['email'];
-			$password1 = $params['password1'];
-			$password2 = $params['password2'];
-
-			if (!OIDplus::mailUtils()->validMailAddress($email)) {
-				throw new OIDplusException(_L('eMail address is invalid.'));
-			}
-
-			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email)); // TODO: this should be a static function in the RA class
-			if ($res->any()) {
-				throw new OIDplusException(_L('RA does already exist'));
-			}
-
-			if ($password1 !== $password2) {
-				throw new OIDplusException(_L('Passwords do not match'));
-			}
-
-			if (strlen($password1) < OIDplus::config()->getValue('ra_min_password_length')) {
-				$minlen = OIDplus::config()->getValue('ra_min_password_length');
-				throw new OIDplusException(_L('Password is too short. Need at least %1 characters',$minlen));
-			}
-
-			OIDplus::logger()->log("V2:[INFO]RA(%1)+[OK/INFO]A", "RA '%1' was created by the admin, without email address verification or invitation", $email);
-
-			$ra = new OIDplusRA($email);
-			$ra->register_ra($password1);
-
-			return array("status" => 0);
+			return $this->action_Create($params);
 		} else {
 			return parent::action($actionID, $params);
 		}

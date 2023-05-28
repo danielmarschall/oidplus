@@ -164,21 +164,27 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 	}
 
 	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	private function action_Search(array $params): array {
+		$ret = $this->doSearch($params);
+		return array("status" => 0, "output" => $ret);
+	}
+
+	/**
 	 * @param string $actionID
 	 * @param array $params
 	 * @return array
 	 * @throws OIDplusException
 	 */
 	public function action(string $actionID, array $params): array {
-
 		if ($actionID == 'search') {
-			// Search with JavaScript/AJAX
-			$ret = $this->doSearch($params);
-			return array("status" => 0, "output" => $ret);
+			return $this->action_Search($params);
 		} else {
 			return parent::action($actionID, $params);
 		}
-
 	}
 
 	/**
