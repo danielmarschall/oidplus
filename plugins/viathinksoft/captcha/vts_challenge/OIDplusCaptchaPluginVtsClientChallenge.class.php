@@ -49,6 +49,37 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 	}
 
 	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	private function action_GetChallenge(array $params): array {
+		$offset = 0; // doesn't matter
+		$min = $offset;
+		$max = $offset + OIDplus::baseConfig()->getValue('VTS_CAPTCHA_COMPLEXITY', 50000);
+		if ($max > mt_getrandmax()) $max = mt_getrandmax();
+
+		$starttime = time();
+		$random = mt_rand($min,$max);
+		$ip_target = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+		$challenge = sha3_512($starttime.'/'.$ip_target.'/'.$random); // $random is secret!
+		$challenge_integrity = OIDplus::authUtils()->makeAuthKey(['797bfc34-f4fa-11ed-86ca-3c4a92df8582',$challenge]);
+		$send_to_client = array($starttime, $ip_target, $challenge, $min, $max, $challenge_integrity);
+
+		$open_trans_file = self::getOpenTransFileName($ip_target, $random);
+		if (@file_put_contents($open_trans_file, '') === false) {
+			throw new OIDplusException(_L('Cannot write file %1', $open_trans_file));
+		}
+
+		return array(
+			"status" => 0,
+			"challenge" => $send_to_client,
+			// Autosolve on=calculate result on page load; off=calculate result on form submit
+			"autosolve" => OIDplus::baseConfig()->getValue('VTS_CAPTCHA_AUTOSOLVE', true)
+		);
+	}
+
+	/**
 	 * @param string $actionID
 	 * @param array $params
 	 * @return array
@@ -56,29 +87,7 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 	 */
 	public function action(string $actionID, array $params): array {
 		if ($actionID == 'get_challenge') {
-			$offset = 0; // doesn't matter
-			$min = $offset;
-			$max = $offset + OIDplus::baseConfig()->getValue('VTS_CAPTCHA_COMPLEXITY', 50000);
-			if ($max > mt_getrandmax()) $max = mt_getrandmax();
-
-			$starttime = time();
-			$random = mt_rand($min,$max);
-			$ip_target = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-			$challenge = sha3_512($starttime.'/'.$ip_target.'/'.$random); // $random is secret!
-			$challenge_integrity = OIDplus::authUtils()->makeAuthKey(['797bfc34-f4fa-11ed-86ca-3c4a92df8582',$challenge]);
-			$send_to_client = array($starttime, $ip_target, $challenge, $min, $max, $challenge_integrity);
-
-			$open_trans_file = self::getOpenTransFileName($ip_target, $random);
-			if (@file_put_contents($open_trans_file, '') === false) {
-				throw new OIDplusException(_L('Cannot write file %1', $open_trans_file));
-			}
-
-			return array(
-				"status" => 0,
-				"challenge" => $send_to_client,
-				// Autosolve on=calculate result on page load; off=calculate result on form submit
-				"autosolve" => OIDplus::baseConfig()->getValue('VTS_CAPTCHA_AUTOSOLVE', true)
-			);
+			return $this->action_GetChallenge($params);
 		} else {
 			return parent::action($actionID, $params);
 		}

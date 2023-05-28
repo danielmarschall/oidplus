@@ -35,6 +35,40 @@ class OIDplusObjectTypePluginMac extends OIDplusObjectTypePlugin
 	}
 
 	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	private function action_GenerateAAI(array $params): array {
+		_CheckParamExists($params, 'aai_bits');
+		_CheckParamExists($params, 'aai_multicast');
+
+		if (($params['aai_bits'] != '48') && ($params['aai_bits'] != '64')) {
+			throw new OIDplusException(_L("Invalid bit amount"));
+		}
+
+		$aai = '';
+		for ($i=0; $i<$params['aai_bits']/4; $i++) {
+			try {
+				$aai .= dechex(random_int(0, 15));
+			} catch (\Exception $e) {
+				$aai .= dechex(mt_rand(0, 15));
+			}
+		}
+
+		if ($params['aai_multicast'] == 'true') {
+			$aai[1] = '3';
+		} else {
+			$aai[1] = '2';
+		}
+
+		$aai = strtoupper($aai);
+		$aai = rtrim(chunk_split($aai, 2, '-'), '-');
+
+		return array("status" => 0, "aai" => $aai);
+	}
+
+	/**
 	 * @param string $actionID
 	 * @param array $params
 	 * @return array
@@ -42,32 +76,7 @@ class OIDplusObjectTypePluginMac extends OIDplusObjectTypePlugin
 	 */
 	public function action(string $actionID, array $params): array {
 		if ($actionID == 'generate_aai') {
-			_CheckParamExists($params, 'aai_bits');
-			_CheckParamExists($params, 'aai_multicast');
-
-			if (($params['aai_bits'] != '48') && ($params['aai_bits'] != '64')) {
-				throw new OIDplusException(_L("Invalid bit amount"));
-			}
-
-			$aai = '';
-			for ($i=0; $i<$params['aai_bits']/4; $i++) {
-				try {
-					$aai .= dechex(random_int(0, 15));
-				} catch (\Exception $e) {
-					$aai .= dechex(mt_rand(0, 15));
-				}
-			}
-
-			if ($params['aai_multicast'] == 'true') {
-				$aai[1] = '3';
-			} else {
-				$aai[1] = '2';
-			}
-
-			$aai = strtoupper($aai);
-			$aai = rtrim(chunk_split($aai, 2, '-'), '-');
-
-			return array("status" => 0, "aai" => $aai);
+			return $this->action_GenerateAAI($params);
 		} else {
 			return parent::action($actionID, $params);
 		}

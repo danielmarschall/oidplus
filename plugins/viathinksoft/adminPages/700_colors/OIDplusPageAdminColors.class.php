@@ -65,6 +65,33 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin
 	}
 
 	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	private function action_Update(array $params): array {
+		if (!OIDplus::authUtils()->isAdminLoggedIn()) {
+			throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), null, 401);
+		}
+
+		_CheckParamExists($params, 'hue_shift');
+		_CheckParamExists($params, 'sat_shift');
+		_CheckParamExists($params, 'val_shift');
+		_CheckParamExists($params, 'invcolors');
+		_CheckParamExists($params, 'theme');
+
+		OIDplus::config()->setValue('color_hue_shift', $params['hue_shift']);
+		OIDplus::config()->setValue('color_sat_shift', $params['sat_shift']);
+		OIDplus::config()->setValue('color_val_shift', $params['val_shift']);
+		OIDplus::config()->setValue('color_invert',    $params['invcolors']);
+		OIDplus::config()->setValue('design',          $params['theme']);
+
+		OIDplus::logger()->log("V2:[OK/INFO]A", "Changed system color theme");
+
+		return array("status" => 0);
+	}
+
+	/**
 	 * @param string $actionID
 	 * @param array $params
 	 * @return array
@@ -72,25 +99,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin
 	 */
 	public function action(string $actionID, array $params): array {
 		if ($actionID == 'color_update') {
-			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), null, 401);
-			}
-
-			_CheckParamExists($params, 'hue_shift');
-			_CheckParamExists($params, 'sat_shift');
-			_CheckParamExists($params, 'val_shift');
-			_CheckParamExists($params, 'invcolors');
-			_CheckParamExists($params, 'theme');
-
-			OIDplus::config()->setValue('color_hue_shift', $params['hue_shift']);
-			OIDplus::config()->setValue('color_sat_shift', $params['sat_shift']);
-			OIDplus::config()->setValue('color_val_shift', $params['val_shift']);
-			OIDplus::config()->setValue('color_invert',    $params['invcolors']);
-			OIDplus::config()->setValue('design',          $params['theme']);
-
-			OIDplus::logger()->log("V2:[OK/INFO]A", "Changed system color theme");
-
-			return array("status" => 0);
+			return $this->action_Update($params);
 		} else {
 			return parent::action($actionID, $params);
 		}

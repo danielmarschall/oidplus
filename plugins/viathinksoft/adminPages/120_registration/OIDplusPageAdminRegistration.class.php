@@ -58,6 +58,28 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 	}
 
 	/**
+	 * This action is called by the ViaThinkSoft server in order to verify that the system is in the ownership of the correct private key
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	private function action_VerifyPubKey(array $params): array {
+		_CheckParamExists($params, 'challenge');
+
+		$payload = 'oidplus-verify-pubkey:'.sha3_512($params['challenge']);
+
+		$signature = '';
+		if (!OIDplus::getPkiStatus() || !@openssl_sign($payload, $signature, OIDplus::getSystemPrivateKey())) {
+			throw new OIDplusException(_L('Signature failed'));
+		}
+
+		return array(
+			"status" => 0,
+			"response" => base64_encode($signature)
+		);
+	}
+
+	/**
 	 * @param string $actionID
 	 * @param array $params
 	 * @return array
@@ -65,21 +87,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 	 */
 	public function action(string $actionID, array $params): array {
 		if ($actionID == 'verify_pubkey') {
-			// This action is called by the ViaThinkSoft server in order to verify that the system is in the ownership of the correct private key
-
-			_CheckParamExists($params, 'challenge');
-
-			$payload = 'oidplus-verify-pubkey:'.sha3_512($params['challenge']);
-
-			$signature = '';
-			if (!OIDplus::getPkiStatus() || !@openssl_sign($payload, $signature, OIDplus::getSystemPrivateKey())) {
-				throw new OIDplusException(_L('Signature failed'));
-			}
-
-			return array(
-				"status" => 0,
-				"response" => base64_encode($signature)
-			);
+			return $this->action_VerifyPubKey($params);
 		} else {
 			return parent::action($actionID, $params);
 		}

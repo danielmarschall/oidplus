@@ -26,6 +26,63 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusPageRaChangePassword extends OIDplusPagePluginRa {
 
 	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	private function action_Update(array $params): array {
+		_CheckParamExists($params, 'email');
+
+		$email = $params['email'];
+
+		$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
+		if (!$res->any()) {
+			throw new OIDplusException(_L('RA does not exist'));
+		}
+
+		if (!OIDplus::authUtils()->isRaLoggedIn($email) && !OIDplus::authUtils()->isAdminLoggedIn()) {
+			throw new OIDplusException(_L('Authentication error. Please log in as admin, or as the RA to update its data.'), null, 401);
+		}
+
+		if (!OIDplus::authUtils()->isAdminLoggedIn()) {
+			_CheckParamExists($params, 'old_password');
+			$old_password = $params['old_password'];
+		} else {
+			$old_password = '';
+		}
+
+		_CheckParamExists($params, 'new_password1');
+		_CheckParamExists($params, 'new_password2');
+
+		$password1 = $params['new_password1'];
+		$password2 = $params['new_password2'];
+
+		if ($password1 !== $password2) {
+			throw new OIDplusException(_L('Passwords do not match'));
+		}
+
+		if (strlen($password1) < OIDplus::config()->getValue('ra_min_password_length')) {
+			$minlen = OIDplus::config()->getValue('ra_min_password_length');
+			throw new OIDplusException(_L('New password is too short. Minimum password length: %1',$minlen));
+		}
+
+		$ra = new OIDplusRA($email);
+		if (!$ra->isPasswordLess()) {
+			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
+				if (!$ra->checkPassword($old_password)) {
+					throw new OIDplusException(_L('Old password incorrect'));
+				}
+			}
+			OIDplus::logger()->log("V2:[OK/WARN]RA(%1)+[OK/INFO]A", "Password of RA '%1' changed", $email);
+		} else {
+			OIDplus::logger()->log("V2:[OK/WARN]RA(%1)+[OK/INFO]A", "Password of RA '%1' created", $email);
+		}
+		$ra->change_password($password1);
+
+		return array("status" => 0);
+	}
+
+	/**
 	 * @param string $actionID
 	 * @param array $params
 	 * @return array
@@ -33,55 +90,7 @@ class OIDplusPageRaChangePassword extends OIDplusPagePluginRa {
 	 */
 	public function action(string $actionID, array $params): array {
 		if ($actionID == 'change_ra_password') {
-			_CheckParamExists($params, 'email');
-
-			$email = $params['email'];
-
-			$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
-			if (!$res->any()) {
-				throw new OIDplusException(_L('RA does not exist'));
-			}
-
-			if (!OIDplus::authUtils()->isRaLoggedIn($email) && !OIDplus::authUtils()->isAdminLoggedIn()) {
-				throw new OIDplusException(_L('Authentication error. Please log in as admin, or as the RA to update its data.'), null, 401);
-			}
-
-			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				_CheckParamExists($params, 'old_password');
-				$old_password = $params['old_password'];
-			} else {
-				$old_password = '';
-			}
-
-			_CheckParamExists($params, 'new_password1');
-			_CheckParamExists($params, 'new_password2');
-
-			$password1 = $params['new_password1'];
-			$password2 = $params['new_password2'];
-
-			if ($password1 !== $password2) {
-				throw new OIDplusException(_L('Passwords do not match'));
-			}
-
-			if (strlen($password1) < OIDplus::config()->getValue('ra_min_password_length')) {
-				$minlen = OIDplus::config()->getValue('ra_min_password_length');
-				throw new OIDplusException(_L('New password is too short. Minimum password length: %1',$minlen));
-			}
-
-			$ra = new OIDplusRA($email);
-			if (!$ra->isPasswordLess()) {
-				if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-					if (!$ra->checkPassword($old_password)) {
-						throw new OIDplusException(_L('Old password incorrect'));
-					}
-				}
-				OIDplus::logger()->log("V2:[OK/WARN]RA(%1)+[OK/INFO]A", "Password of RA '%1' changed", $email);
-			} else {
-				OIDplus::logger()->log("V2:[OK/WARN]RA(%1)+[OK/INFO]A", "Password of RA '%1' created", $email);
-			}
-			$ra->change_password($password1);
-
-			return array("status" => 0);
+			return $this->action_Update($params);
 		} else {
 			return parent::action($actionID, $params);
 		}

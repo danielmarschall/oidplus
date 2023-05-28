@@ -27,44 +27,47 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusPagePublicRaBaseUtils extends OIDplusPagePluginPublic {
 
 	/**
+	 * @param array $params email
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	private function action_Delete(array $params): array {
+		_CheckParamExists($params, 'email');
+
+		$email = $params['email'];
+
+		$ra_logged_in = OIDplus::authUtils()->isRaLoggedIn($email);
+
+		if (!OIDplus::authUtils()->isAdminLoggedIn() && !$ra_logged_in) {
+			throw new OIDplusException(_L('Authentication error. Please log in.'), null, 401);
+		}
+
+		if ($ra_logged_in) OIDplus::authUtils()->raLogout($email);
+
+		$ra = new OIDplusRA($email);
+		if (!$ra->existing()) {
+			throw new OIDplusException(_L('RA "%1" does not exist.',$email));
+		}
+		$ra->delete();
+		$ra = null;
+
+		OIDplus::logger()->log("V2:[OK/WARN]RA(%1)+[OK/INFO]A", "RA '%1' deleted", $email);
+
+		return array("status" => 0);
+	}
+
+	/**
 	 * @param string $actionID
 	 * @param array $params
 	 * @return array
 	 * @throws OIDplusException
 	 */
 	public function action(string $actionID, array $params): array {
-
-		// Action:     delete_ra
-		// Method:     POST
-		// Parameters: email
-		// Outputs:    Text
 		if ($actionID == 'delete_ra') {
-			_CheckParamExists($params, 'email');
-
-			$email = $params['email'];
-
-			$ra_logged_in = OIDplus::authUtils()->isRaLoggedIn($email);
-
-			if (!OIDplus::authUtils()->isAdminLoggedIn() && !$ra_logged_in) {
-				throw new OIDplusException(_L('Authentication error. Please log in.'), null, 401);
-			}
-
-			if ($ra_logged_in) OIDplus::authUtils()->raLogout($email);
-
-			$ra = new OIDplusRA($email);
-			if (!$ra->existing()) {
-				throw new OIDplusException(_L('RA "%1" does not exist.',$email));
-			}
-			$ra->delete();
-			$ra = null;
-
-			OIDplus::logger()->log("V2:[OK/WARN]RA(%1)+[OK/INFO]A", "RA '%1' deleted", $email);
-
-			return array("status" => 0);
+			return $this->action_Delete($params);
 		} else {
 			return parent::action($actionID, $params);
 		}
-
 	}
 
 	/**

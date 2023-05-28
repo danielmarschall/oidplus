@@ -174,6 +174,146 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 		return OIDplus::config()->getValue('attachments_allow_ra_upload', 0);
 	}
 
+
+	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	private function action_Delete(array $params): array {
+		_CheckParamExists($params, 'id');
+		$id = $params['id'];
+		$obj = OIDplusObject::parse($id);
+		if (!$obj) throw new OIDplusException(_L('Invalid object "%1"',$id));
+		if (!$obj->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as admin, or as the RA of "%1" to upload an attachment.',$id), null, 401);
+
+		if (!OIDplus::authUtils()->isAdminLoggedIn() && !$this->raMayDelete()) {
+			throw new OIDplusException(_L('The administrator has disabled deleting attachments by RAs.'));
+		}
+
+		_CheckParamExists($params, 'filename');
+		$req_filename = $params['filename'];
+		if (strpos($req_filename, '/') !== false) throw new OIDplusException(_L('Illegal file name'));
+		if (strpos($req_filename, '\\') !== false) throw new OIDplusException(_L('Illegal file name'));
+		if (strpos($req_filename, '..') !== false) throw new OIDplusException(_L('Illegal file name'));
+		if (strpos($req_filename, chr(0)) !== false) throw new OIDplusException(_L('Illegal file name'));
+
+		$uploaddir = self::getUploadDir($id);
+		$uploadfile = $uploaddir . DIRECTORY_SEPARATOR . basename($req_filename);
+
+		if (!file_exists($uploadfile)) throw new OIDplusException(_L('File does not exist'));
+		@unlink($uploadfile);
+		if (file_exists($uploadfile)) {
+			OIDplus::logger()->log("V2:[ERR]OID(%1)+[ERR]A", "Attachment file '%2' could not be deleted from object '%1' (problem with permissions?)", $id, basename($uploadfile));
+			$msg = _L('Attachment file "%1" could not be deleted from object "%2" (problem with permissions?)',basename($uploadfile),$id);
+			if (OIDplus::authUtils()->isAdminLoggedIn()) {
+				throw new OIDplusException($msg);
+			} else {
+				throw new OIDplusException($msg.'. '._L('Please contact the system administrator.'));
+			}
+		} else {
+			// If it was the last file, delete the empty directory
+			$ary = @glob($uploaddir . DIRECTORY_SEPARATOR . '*');
+			if (is_array($ary) && (count($ary) == 0)) @rmdir($uploaddir);
+		}
+
+		OIDplus::logger()->log("V2:[OK]OID(%1)+[OK/INFO]OIDRA(%1)+[OK/INFO]A", "Deleted attachment '%2' from object '%1'", $id, basename($uploadfile));
+
+		return array("status" => 0);
+	}
+
+	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	private function action_Upload(array $params): array {
+		_CheckParamExists($params, 'id');
+		$id = $params['id'];
+		$obj = OIDplusObject::parse($id);
+		if (!$obj) throw new OIDplusException(_L('Invalid object "%1"',$id));
+		if (!$obj->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as admin, or as the RA of "%1" to upload an attachment.',$id), null, 401);
+
+		if (!OIDplus::authUtils()->isAdminLoggedIn() && !$this->raMayUpload()) {
+			throw new OIDplusException(_L('The administrator has disabled uploading attachments by RAs.'));
+		}
+
+		if (!isset($_FILES['userfile'])) {
+			throw new OIDplusException(_L('Please choose a file.'));
+		}
+
+		if (!OIDplus::authUtils()->isAdminLoggedIn()) {
+			$fname = basename($_FILES['userfile']['name']);
+
+			// 1. If something is on the blacklist, we always block it, even if it is on the whitelist, too
+			$banned = explode(',', OIDplus::config()->getValue('attachments_block_extensions', ''));
+			foreach ($banned as $ext) {
+				$ext = trim($ext);
+				if ($ext == '') continue;
+				if (strtolower(substr($fname, -strlen($ext)-1)) == strtolower('.'.$ext)) {
+					throw new OIDplusException(_L('The file extension "%1" is banned by the administrator (it can be uploaded by the administrator though)',$ext));
+				}
+			}
+
+			// 2. Something on the whitelist is always OK
+			$allowed = explode(',', OIDplus::config()->getValue('attachments_allow_extensions', ''));
+			$is_whitelisted = false;
+			foreach ($allowed as $ext) {
+				$ext = trim($ext);
+				if ($ext == '') continue;
+				if (strtolower(substr($fname, -strlen($ext)-1)) == strtolower('.'.$ext)) {
+					$is_whitelisted = true;
+					break;
+				}
+			}
+
+			// 3. For everything that is neither whitelisted, nor blacklisted, the admin can decide if these grey zone is allowed or blocked
+			if (!$is_whitelisted) {
+				if (!OIDplus::config()->getValue('attachments_allow_grey_extensions', '1')) {
+					$tmp = explode('.', $fname);
+					$ext = array_pop($tmp);
+					throw new OIDplusException(_L('The file extension "%1" is not on the whitelist (it can be uploaded by the administrator though)',$ext));
+				}
+			}
+		}
+
+		$req_filename = $_FILES['userfile']['name'];
+		if (strpos($req_filename, '/') !== false) throw new OIDplusException(_L('Illegal file name'));
+		if (strpos($req_filename, '\\') !== false) throw new OIDplusException(_L('Illegal file name'));
+		if (strpos($req_filename, '..') !== false) throw new OIDplusException(_L('Illegal file name'));
+		if (strpos($req_filename, chr(0)) !== false) throw new OIDplusException(_L('Illegal file name'));
+
+		$uploaddir = self::getUploadDir($id);
+		$uploadfile = $uploaddir . DIRECTORY_SEPARATOR . basename($req_filename);
+
+		if (!is_dir($uploaddir)) {
+			@mkdir($uploaddir, 0777, true);
+			if (!is_dir($uploaddir)) {
+				OIDplus::logger()->log("V2:[ERR]OID(%1)+[ERR]A", "Upload attachment '%2' to object '%1' failed: Cannot create directory '%3' (problem with permissions?)", $id, basename($uploadfile), basename($uploaddir));
+				$msg = _L('Upload attachment "%1" to object "%2" failed',basename($uploadfile),$id).': '._L('Cannot create directory "%1" (problem with permissions?)',basename($uploaddir));
+				if (OIDplus::authUtils()->isAdminLoggedIn()) {
+					throw new OIDplusException($msg);
+				} else {
+					throw new OIDplusException($msg.'. '._L('Please contact the system administrator.'));
+				}
+			}
+		}
+
+		if (!@move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
+			OIDplus::logger()->log("V2:[ERR]OID(%1)+[ERR]A", "Upload attachment '%2' to object '%1' failed: Cannot move uploaded file into directory (problem with permissions?)", $id, basename($uploadfile));
+			$msg = _L('Upload attachment "%1" to object "%2" failed',basename($uploadfile),$id).': '._L('Cannot move uploaded file into directory (problem with permissions?)');
+			if (OIDplus::authUtils()->isAdminLoggedIn()) {
+				throw new OIDplusException($msg);
+			} else {
+				throw new OIDplusException($msg.'. '._L('Please contact the system administrator.'));
+			}
+		}
+
+		OIDplus::logger()->log("V2:[OK]OID(%1)+[OK/INFO]OIDRA(%1)+[OK/INFO]A", "Uploaded attachment '%2' to object '%1'", $id, basename($uploadfile));
+
+		return array("status" => 0);
+	}
+
 	/**
 	 * @param string $actionID
 	 * @param array $params
@@ -181,133 +321,10 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	 * @throws OIDplusException
 	 */
 	public function action(string $actionID, array $params): array {
-
 		if ($actionID == 'deleteAttachment') {
-			_CheckParamExists($params, 'id');
-			$id = $params['id'];
-			$obj = OIDplusObject::parse($id);
-			if (!$obj) throw new OIDplusException(_L('Invalid object "%1"',$id));
-			if (!$obj->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as admin, or as the RA of "%1" to upload an attachment.',$id), null, 401);
-
-			if (!OIDplus::authUtils()->isAdminLoggedIn() && !$this->raMayDelete()) {
-				throw new OIDplusException(_L('The administrator has disabled deleting attachments by RAs.'));
-			}
-
-			_CheckParamExists($params, 'filename');
-			$req_filename = $params['filename'];
-			if (strpos($req_filename, '/') !== false) throw new OIDplusException(_L('Illegal file name'));
-			if (strpos($req_filename, '\\') !== false) throw new OIDplusException(_L('Illegal file name'));
-			if (strpos($req_filename, '..') !== false) throw new OIDplusException(_L('Illegal file name'));
-			if (strpos($req_filename, chr(0)) !== false) throw new OIDplusException(_L('Illegal file name'));
-
-			$uploaddir = self::getUploadDir($id);
-			$uploadfile = $uploaddir . DIRECTORY_SEPARATOR . basename($req_filename);
-
-			if (!file_exists($uploadfile)) throw new OIDplusException(_L('File does not exist'));
-			@unlink($uploadfile);
-			if (file_exists($uploadfile)) {
-				OIDplus::logger()->log("V2:[ERR]OID(%1)+[ERR]A", "Attachment file '%2' could not be deleted from object '%1' (problem with permissions?)", $id, basename($uploadfile));
-				$msg = _L('Attachment file "%1" could not be deleted from object "%2" (problem with permissions?)',basename($uploadfile),$id);
-				if (OIDplus::authUtils()->isAdminLoggedIn()) {
-					throw new OIDplusException($msg);
-				} else {
-					throw new OIDplusException($msg.'. '._L('Please contact the system administrator.'));
-				}
-			} else {
-				// If it was the last file, delete the empty directory
-				$ary = @glob($uploaddir . DIRECTORY_SEPARATOR . '*');
-				if (is_array($ary) && (count($ary) == 0)) @rmdir($uploaddir);
-			}
-
-			OIDplus::logger()->log("V2:[OK]OID(%1)+[OK/INFO]OIDRA(%1)+[OK/INFO]A", "Deleted attachment '%2' from object '%1'", $id, basename($uploadfile));
-
-			return array("status" => 0);
-
+			return $this->action_Delete($params);
 		} else if ($actionID == 'uploadAttachment') {
-			_CheckParamExists($params, 'id');
-			$id = $params['id'];
-			$obj = OIDplusObject::parse($id);
-			if (!$obj) throw new OIDplusException(_L('Invalid object "%1"',$id));
-			if (!$obj->userHasWriteRights()) throw new OIDplusException(_L('Authentication error. Please log in as admin, or as the RA of "%1" to upload an attachment.',$id), null, 401);
-
-			if (!OIDplus::authUtils()->isAdminLoggedIn() && !$this->raMayUpload()) {
-				throw new OIDplusException(_L('The administrator has disabled uploading attachments by RAs.'));
-			}
-
-			if (!isset($_FILES['userfile'])) {
-				throw new OIDplusException(_L('Please choose a file.'));
-			}
-
-			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				$fname = basename($_FILES['userfile']['name']);
-
-				// 1. If something is on the blacklist, we always block it, even if it is on the whitelist, too
-				$banned = explode(',', OIDplus::config()->getValue('attachments_block_extensions', ''));
-				foreach ($banned as $ext) {
-					$ext = trim($ext);
-					if ($ext == '') continue;
-					if (strtolower(substr($fname, -strlen($ext)-1)) == strtolower('.'.$ext)) {
-						throw new OIDplusException(_L('The file extension "%1" is banned by the administrator (it can be uploaded by the administrator though)',$ext));
-					}
-				}
-
-				// 2. Something on the whitelist is always OK
-				$allowed = explode(',', OIDplus::config()->getValue('attachments_allow_extensions', ''));
-				$is_whitelisted = false;
-				foreach ($allowed as $ext) {
-					$ext = trim($ext);
-					if ($ext == '') continue;
-					if (strtolower(substr($fname, -strlen($ext)-1)) == strtolower('.'.$ext)) {
-						$is_whitelisted = true;
-						break;
-					}
-				}
-
-				// 3. For everything that is neither whitelisted, nor blacklisted, the admin can decide if these grey zone is allowed or blocked
-				if (!$is_whitelisted) {
-					if (!OIDplus::config()->getValue('attachments_allow_grey_extensions', '1')) {
-						$tmp = explode('.', $fname);
-						$ext = array_pop($tmp);
-						throw new OIDplusException(_L('The file extension "%1" is not on the whitelist (it can be uploaded by the administrator though)',$ext));
-					}
-				}
-			}
-
-			$req_filename = $_FILES['userfile']['name'];
-			if (strpos($req_filename, '/') !== false) throw new OIDplusException(_L('Illegal file name'));
-			if (strpos($req_filename, '\\') !== false) throw new OIDplusException(_L('Illegal file name'));
-			if (strpos($req_filename, '..') !== false) throw new OIDplusException(_L('Illegal file name'));
-			if (strpos($req_filename, chr(0)) !== false) throw new OIDplusException(_L('Illegal file name'));
-
-			$uploaddir = self::getUploadDir($id);
-			$uploadfile = $uploaddir . DIRECTORY_SEPARATOR . basename($req_filename);
-
-			if (!is_dir($uploaddir)) {
-				@mkdir($uploaddir, 0777, true);
-				if (!is_dir($uploaddir)) {
-					OIDplus::logger()->log("V2:[ERR]OID(%1)+[ERR]A", "Upload attachment '%2' to object '%1' failed: Cannot create directory '%3' (problem with permissions?)", $id, basename($uploadfile), basename($uploaddir));
-					$msg = _L('Upload attachment "%1" to object "%2" failed',basename($uploadfile),$id).': '._L('Cannot create directory "%1" (problem with permissions?)',basename($uploaddir));
-					if (OIDplus::authUtils()->isAdminLoggedIn()) {
-						throw new OIDplusException($msg);
-					} else {
-						throw new OIDplusException($msg.'. '._L('Please contact the system administrator.'));
-					}
-				}
-			}
-
-			if (!@move_uploaded_file($_FILES['userfile']['tmp_name'], $uploadfile)) {
-				OIDplus::logger()->log("V2:[ERR]OID(%1)+[ERR]A", "Upload attachment '%2' to object '%1' failed: Cannot move uploaded file into directory (problem with permissions?)", $id, basename($uploadfile));
-				$msg = _L('Upload attachment "%1" to object "%2" failed',basename($uploadfile),$id).': '._L('Cannot move uploaded file into directory (problem with permissions?)');
-				if (OIDplus::authUtils()->isAdminLoggedIn()) {
-					throw new OIDplusException($msg);
-				} else {
-					throw new OIDplusException($msg.'. '._L('Please contact the system administrator.'));
-				}
-			}
-
-			OIDplus::logger()->log("V2:[OK]OID(%1)+[OK/INFO]OIDRA(%1)+[OK/INFO]A", "Uploaded attachment '%2' to object '%1'", $id, basename($uploadfile));
-
-			return array("status" => 0);
+			return $this->action_Upload($params);
 		} else {
 			return parent::action($actionID, $params);
 		}

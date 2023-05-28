@@ -55,6 +55,158 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 	}
 
 	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 * @throws OIDplusMailException
+	 */
+	private function action_Request(array $params): array {
+		if (empty(self::getFreeRootOid(false))) throw new OIDplusException(_L('FreeOID service not available. Please ask your administrator.'));
+
+		_CheckParamExists($params, 'email');
+		$email = $params['email'];
+
+		if ($already_registered_oid = $this->alreadyHasFreeOid($email, true)) {
+			throw new OIDplusHtmlException(_L('This email address already has a FreeOID registered (%1)', '<a '.OIDplus::gui()->link($already_registered_oid).'>'.htmlentities($already_registered_oid).'</a>'));
+		}
+
+		if (!OIDplus::mailUtils()->validMailAddress($email)) {
+			throw new OIDplusException(_L('Invalid email address'));
+		}
+
+		OIDplus::getActiveCaptchaPlugin()->captchaVerify($params, 'captcha');
+
+		$root_oid = self::getFreeRootOid(false);
+		OIDplus::logger()->log("V2:[INFO]OID(oid:%1)+RA(%2)", "Requested a free OID for email '%2' to be placed into root '%1'", $root_oid, $email);
+
+		$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:com.viathinksoft.freeoid.activate_freeoid$'.$email.'$'.OIDplus::authUtils()->makeAuthKey(['40c87e20-f4fb-11ed-86ca-3c4a92df8582',$email]));
+
+		$message = file_get_contents(__DIR__ . '/request_msg.tpl');
+		$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL), $message);
+		$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->getValue('system_title'), $message);
+		$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
+		$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
+
+		OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Free OID request', $message);
+
+		return array("status" => 0);
+	}
+
+	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 * @throws OIDplusMailException
+	 */
+	private function action_Activate(array $params): array {
+		if (empty(self::getFreeRootOid(false))) throw new OIDplusException(_L('FreeOID service not available. Please ask your administrator.'));
+
+		_CheckParamExists($params, 'email');
+		_CheckParamExists($params, 'auth');
+
+		$email = $params['email'];
+		$auth = $params['auth'];
+
+		if (!OIDplus::authUtils()->validateAuthKey(['40c87e20-f4fb-11ed-86ca-3c4a92df8582',$email], $auth, OIDplus::config()->getValue('max_ra_invite_time', -1))) {
+			throw new OIDplusException(_L('Invalid or expired authentication key'));
+		}
+
+		// 1. step: Check entered data and add the RA to the database
+
+		$ra = new OIDplusRA($email);
+		if (!$ra->existing()) {
+			_CheckParamExists($params, 'password1');
+			_CheckParamExists($params, 'password2');
+			_CheckParamExists($params, 'ra_name');
+
+			$password1 = $params['password1'];
+			$password2 = $params['password2'];
+			$ra_name = $params['ra_name'];
+
+			if ($password1 !== $password2) {
+				throw new OIDplusException(_L('Passwords do not match'));
+			}
+
+			if (strlen($password1) < OIDplus::config()->getValue('ra_min_password_length')) {
+				$minlen = OIDplus::config()->getValue('ra_min_password_length');
+				throw new OIDplusException(_L('Password is too short. Need at least %1 characters',$minlen));
+			}
+
+			if (empty($ra_name)) {
+				throw new OIDplusException(_L('Please enter your personal name or the name of your group.'));
+			}
+
+			$ra->register_ra($password1);
+			$ra->setRaName($ra_name);
+		} else {
+			// RA already exists (e.g. was logged in using Google OAuth)
+			$ra_name = $ra->raName();
+		}
+
+		// 2. step: Add the new OID to the database
+
+		$url = $params['url'] ?? '';
+		$title = $params['title'] ?? '';
+
+		$root_oid = self::getFreeRootOid(false);
+		$new_oid = OIDplusOid::parse('oid:'.$root_oid)->appendArcs($this->freeoid_max_id()+1)->nodeId(false);
+
+		OIDplus::logger()->log("V2:[INFO]OID(oid:%2)+OIDRA(oid:%2)", "Child OID '%1' added automatically by '%3' (RA Name: '%4')", $new_oid, $root_oid, $email, $ra_name);
+		OIDplus::logger()->log("V2:[INFO]OID(oid:%1)+[OK]RA(%3)",    "Free OID '%1' activated (RA Name: '%4')",                    $new_oid, $root_oid, $email, $ra_name);
+
+		if ((!empty($url)) && (substr($url, 0, 4) != 'http')) $url = 'http://'.$url;
+
+		$description = ''; // '<p>'.htmlentities($ra_name).'</p>';
+		if (!empty($url)) {
+			$description .= '<p>'._L('More information at %1','<a href="'.htmlentities($url).'">'.htmlentities($url).'</a>').'</p>';
+		}
+
+		if (empty($title)) $title = $ra_name;
+
+		try {
+			$maxlen = OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH')-strlen('oid:');
+			if (strlen($new_oid) > $maxlen) {
+				throw new OIDplusException(_L('The resulting OID %1 is too long (max allowed length: %2)',$new_oid,$maxlen));
+			}
+
+			OIDplus::db()->query("insert into ###objects (id, ra_email, parent, title, description, confidential, created) values (?, ?, ?, ?, ?, ?, ".OIDplus::db()->sqlDate().")", array('oid:'.$new_oid, $email, self::getFreeRootOid(true), $title, $description, false));
+			OIDplusObject::resetObjectInformationCache();
+		} catch (\Exception $e) {
+			$ra->delete();
+			throw $e;
+		}
+
+		// Send delegation report email to admin
+
+		$message  = "OID delegation report\n";
+		$message .= "\n";
+		$message .= "OID: ".$new_oid."\n";
+		$message .= "\n";
+		$message .= "RA Name: $ra_name\n";
+		$message .= "RA eMail: $email\n";
+		$message .= "URL for more information: $url\n";
+		$message .= "OID Name: $title\n";
+		$message .= "\n";
+		$message .= "More details: ".OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL)."?goto=oid%3A$new_oid\n";
+
+		OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title')." - OID $new_oid registered", $message);
+
+		// Send delegation information to user
+
+		$message = file_get_contents(__DIR__ . '/allocated_msg.tpl');
+		$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL), $message);
+		$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->getValue('system_title'), $message);
+		$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
+		$message = str_replace('{{NEW_OID}}', $new_oid, $message);
+		OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Free OID allocated', $message);
+
+		return array(
+			"new_oid" => $new_oid,
+			"status" => 0
+		);
+	}
+
+	/**
 	 * @param string $actionID
 	 * @param array $params
 	 * @return array
@@ -62,141 +214,10 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 	 * @throws OIDplusMailException
 	 */
 	public function action(string $actionID, array $params): array {
-		if (empty(self::getFreeRootOid(false))) throw new OIDplusException(_L('FreeOID service not available. Please ask your administrator.'));
-
 		if ($actionID == 'request_freeoid') {
-			_CheckParamExists($params, 'email');
-			$email = $params['email'];
-
-			if ($already_registered_oid = $this->alreadyHasFreeOid($email, true)) {
-				throw new OIDplusHtmlException(_L('This email address already has a FreeOID registered (%1)', '<a '.OIDplus::gui()->link($already_registered_oid).'>'.htmlentities($already_registered_oid).'</a>'));
-			}
-
-			if (!OIDplus::mailUtils()->validMailAddress($email)) {
-				throw new OIDplusException(_L('Invalid email address'));
-			}
-
-			OIDplus::getActiveCaptchaPlugin()->captchaVerify($params, 'captcha');
-
-			$root_oid = self::getFreeRootOid(false);
-			OIDplus::logger()->log("V2:[INFO]OID(oid:%1)+RA(%2)", "Requested a free OID for email '%2' to be placed into root '%1'", $root_oid, $email);
-
-			$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:com.viathinksoft.freeoid.activate_freeoid$'.$email.'$'.OIDplus::authUtils()->makeAuthKey(['40c87e20-f4fb-11ed-86ca-3c4a92df8582',$email]));
-
-			$message = file_get_contents(__DIR__ . '/request_msg.tpl');
-			$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL), $message);
-			$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->getValue('system_title'), $message);
-			$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
-			$message = str_replace('{{ACTIVATE_URL}}', $activate_url, $message);
-
-			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Free OID request', $message);
-
-			return array("status" => 0);
-
+			return $this->action_Request($params);
 		} else if ($actionID == 'activate_freeoid') {
-			_CheckParamExists($params, 'email');
-			_CheckParamExists($params, 'auth');
-
-			$email = $params['email'];
-			$auth = $params['auth'];
-
-			if (!OIDplus::authUtils()->validateAuthKey(['40c87e20-f4fb-11ed-86ca-3c4a92df8582',$email], $auth, OIDplus::config()->getValue('max_ra_invite_time', -1))) {
-				throw new OIDplusException(_L('Invalid or expired authentication key'));
-			}
-
-			// 1. step: Check entered data and add the RA to the database
-
-			$ra = new OIDplusRA($email);
-			if (!$ra->existing()) {
-				_CheckParamExists($params, 'password1');
-				_CheckParamExists($params, 'password2');
-				_CheckParamExists($params, 'ra_name');
-
-				$password1 = $params['password1'];
-				$password2 = $params['password2'];
-				$ra_name = $params['ra_name'];
-
-				if ($password1 !== $password2) {
-					throw new OIDplusException(_L('Passwords do not match'));
-				}
-
-				if (strlen($password1) < OIDplus::config()->getValue('ra_min_password_length')) {
-					$minlen = OIDplus::config()->getValue('ra_min_password_length');
-					throw new OIDplusException(_L('Password is too short. Need at least %1 characters',$minlen));
-				}
-
-				if (empty($ra_name)) {
-					throw new OIDplusException(_L('Please enter your personal name or the name of your group.'));
-				}
-
-				$ra->register_ra($password1);
-				$ra->setRaName($ra_name);
-			} else {
-				// RA already exists (e.g. was logged in using Google OAuth)
-				$ra_name = $ra->raName();
-			}
-
-			// 2. step: Add the new OID to the database
-
-			$url = $params['url'] ?? '';
-			$title = $params['title'] ?? '';
-
-			$root_oid = self::getFreeRootOid(false);
-			$new_oid = OIDplusOid::parse('oid:'.$root_oid)->appendArcs($this->freeoid_max_id()+1)->nodeId(false);
-
-			OIDplus::logger()->log("V2:[INFO]OID(oid:%2)+OIDRA(oid:%2)", "Child OID '%1' added automatically by '%3' (RA Name: '%4')", $new_oid, $root_oid, $email, $ra_name);
-			OIDplus::logger()->log("V2:[INFO]OID(oid:%1)+[OK]RA(%3)",    "Free OID '%1' activated (RA Name: '%4')",                    $new_oid, $root_oid, $email, $ra_name);
-
-			if ((!empty($url)) && (substr($url, 0, 4) != 'http')) $url = 'http://'.$url;
-
-			$description = ''; // '<p>'.htmlentities($ra_name).'</p>';
-			if (!empty($url)) {
-				$description .= '<p>'._L('More information at %1','<a href="'.htmlentities($url).'">'.htmlentities($url).'</a>').'</p>';
-			}
-
-			if (empty($title)) $title = $ra_name;
-
-			try {
-				$maxlen = OIDplus::baseConfig()->getValue('LIMITS_MAX_ID_LENGTH')-strlen('oid:');
-				if (strlen($new_oid) > $maxlen) {
-					throw new OIDplusException(_L('The resulting OID %1 is too long (max allowed length: %2)',$new_oid,$maxlen));
-				}
-
-				OIDplus::db()->query("insert into ###objects (id, ra_email, parent, title, description, confidential, created) values (?, ?, ?, ?, ?, ?, ".OIDplus::db()->sqlDate().")", array('oid:'.$new_oid, $email, self::getFreeRootOid(true), $title, $description, false));
-				OIDplusObject::resetObjectInformationCache();
-			} catch (\Exception $e) {
-				$ra->delete();
-				throw $e;
-			}
-
-			// Send delegation report email to admin
-
-			$message  = "OID delegation report\n";
-			$message .= "\n";
-			$message .= "OID: ".$new_oid."\n";
-			$message .= "\n";
-			$message .= "RA Name: $ra_name\n";
-			$message .= "RA eMail: $email\n";
-			$message .= "URL for more information: $url\n";
-			$message .= "OID Name: $title\n";
-			$message .= "\n";
-			$message .= "More details: ".OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL)."?goto=oid%3A$new_oid\n";
-
-			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title')." - OID $new_oid registered", $message);
-
-			// Send delegation information to user
-
-			$message = file_get_contents(__DIR__ . '/allocated_msg.tpl');
-			$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL), $message);
-			$message = str_replace('{{SYSTEM_TITLE}}', OIDplus::config()->getValue('system_title'), $message);
-			$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
-			$message = str_replace('{{NEW_OID}}', $new_oid, $message);
-			OIDplus::mailUtils()->sendMail($email, OIDplus::config()->getValue('system_title').' - Free OID allocated', $message);
-
-			return array(
-				"new_oid" => $new_oid,
-				"status" => 0
-			);
+			return $this->action_Activate($params);
 		} else {
 			return parent::action($actionID, $params);
 		}

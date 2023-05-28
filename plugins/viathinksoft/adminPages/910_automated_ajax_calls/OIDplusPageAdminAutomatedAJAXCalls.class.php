@@ -29,6 +29,28 @@ namespace ViaThinkSoft\OIDplus;
 class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 
 	/**
+	 * @param array $params
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	private function action_Blacklist(array $params): array {
+		if (!OIDplus::authUtils()->isAdminLoggedIn()) {
+			throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), null, 401);
+		}
+
+		if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_AJAX_ADMIN', true)) {
+			throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_AJAX_ADMIN'));
+		}
+
+		$gen = OIDplusAuthContentStoreJWT::JWT_GENERATOR_AJAX;
+		$sub = 'admin';
+
+		OIDplusAuthContentStoreJWT::jwtBlacklist($gen, $sub);
+
+		return array("status" => 0);
+	}
+
+	/**
 	 * @param string $actionID
 	 * @param array $params
 	 * @return array
@@ -36,20 +58,7 @@ class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 	 */
 	public function action(string $actionID, array $params): array {
 		if ($actionID == 'blacklistJWT') {
-			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
-				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), null, 401);
-			}
-
-			if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_AJAX_ADMIN', true)) {
-				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_AJAX_ADMIN'));
-			}
-
-			$gen = OIDplusAuthContentStoreJWT::JWT_GENERATOR_AJAX;
-			$sub = 'admin';
-
-			OIDplusAuthContentStoreJWT::jwtBlacklist($gen, $sub);
-
-			return array("status" => 0);
+			return $this->action_Blacklist($params);
 		} else {
 			return parent::action($actionID, $params);
 		}
