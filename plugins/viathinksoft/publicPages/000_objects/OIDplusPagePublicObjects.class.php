@@ -92,6 +92,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	}
 
 	/**
+	 * REST method for selecting
 	 * @param string $endpoint
 	 * @param array $json_in
 	 * @return array
@@ -132,6 +133,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	}
 
 	/**
+	 * REST method for replacing (re-create)
 	 * @param string $endpoint
 	 * @param array $json_in
 	 * @return array
@@ -141,6 +143,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		$obj = OIDplusObject::parse($id);
 		if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!', 'PUT', $id), null, 400);
 
+		// ATTENTION: Do *not* use $params=$json_in. We intentionally set $params to empty strings if the values do not exist in $json_in,
+		//            because PUT is for re-creating the whole object!
 		$params = array();
 		$params['id'] = $id;
 		$params['ra_email'] = $json_in['ra_email'] ?? '';
@@ -171,6 +175,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	}
 
 	/**
+	 * REST method for inserting (create)
 	 * @param string $endpoint
 	 * @param array $json_in
 	 * @return array
@@ -196,6 +201,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	}
 
 	/**
+	 * REST method for modification
 	 * @param string $endpoint
 	 * @param array $json_in
 	 * @return array
@@ -217,6 +223,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	}
 
 	/**
+	 * REST method for deleting
 	 * @param string $endpoint
 	 * @param array $json_in
 	 * @return array
@@ -244,7 +251,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		if (str_starts_with($endpoint, 'objects/')) {
 			if ($requestMethod == "OPTIONS") {
 				$this->restApiCall_OPTIONS($endpoint, $json_in);
-			}  else if ($requestMethod == "GET"/*Select*/) {
+			} else if ($requestMethod == "GET"/*Select*/) {
 				return $this->restApiCall_GET($endpoint, $json_in);
 			} else if ($requestMethod == "PUT"/*Replace*/) {
 				return $this->restApiCall_PUT($endpoint, $json_in);
