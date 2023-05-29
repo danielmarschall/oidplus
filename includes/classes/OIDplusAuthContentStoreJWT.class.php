@@ -161,9 +161,12 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 			}
 		}
 		else if ($gen === self::JWT_GENERATOR_MANUAL) {
-			// Generator 2 are "hand-crafted" tokens
-			if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_MANUAL', false)) {
-				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_MANUAL'));
+			// Generator: "hand-crafted" tokens
+			if (($has_admin) && !OIDplus::baseConfig()->getValue('JWT_ALLOW_MANUAL_ADMIN', false)) {
+				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_MANUAL_ADMIN'));
+			}
+			if (($has_ra) && !OIDplus::baseConfig()->getValue('JWT_ALLOW_MANUAL_USER', false)) {
+				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_MANUAL_USER'));
 			}
 		} else {
 			throw new OIDplusException(_L('Token generator %1 not recognized',$gen));
@@ -194,7 +197,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 
 		// Optional feature: Limit the JWT to a specific IP address
 		// Currently not used in OIDplus
-		$ip = $contentProvider->getValue('ip','');
+		$ip = $contentProvider->getValue('oidplus_limit_ip','');
 		if ($ip !== '') {
 			if (isset($_SERVER['REMOTE_ADDR']) && ($ip !== $_SERVER['REMOTE_ADDR'])) {
 				throw new OIDplusException(_L('Your IP address is not allowed to use this token'));
@@ -441,11 +444,11 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 	 */
 	public function getJWTToken(): string {
 		$payload = $this->content;
+		$payload["oidplus_ssh"] = self::getSsh(); // SSH = Server Secret Hash
 		$payload["iss"] = OIDplus::getEditionInfo()['jwtaud'];
 		$payload["aud"] = OIDplus::getEditionInfo()['jwtaud'];
 		$payload["jti"] = gen_uuid();
 		$payload["iat"] = time();
-		$payload["oidplus_ssh"] = self::getSsh(); // SSH = Server Secret Hash
 
 		if (OIDplus::getPkiStatus()) {
 			$privKey = OIDplus::getSystemPrivateKey();

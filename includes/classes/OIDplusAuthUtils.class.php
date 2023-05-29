@@ -75,19 +75,14 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 		// TODO: Should we implement these AuthContentStore as plugin type, so that there can be more than just JWT and PHP session?
 
 		// Logged in via JWT
+		// (The JWT can come from a REST Authentication Bearer, an AJAX Cookie, or an Automated AJAX Call GET/POST token.)
 		$tmp = OIDplusAuthContentStoreJWT::getActiveProvider();
 		if ($tmp) return $tmp;
 
-		// For REST, we must only allow JWT from Bearer and nothing else! So disable cookies if we are accessing the REST plugin
-		$rel_url = substr($_SERVER['REQUEST_URI'], strlen(OIDplus::webpath(null, OIDplus::PATH_RELATIVE_TO_ROOT)));
-		if (!str_starts_with($rel_url, 'rest/')) { // <== TODO: Find a way how to move this into the plugin, since REST does not belong to the core. (Maybe some kind of "stateless mode" that is enabled by the REST plugin)
-
-			// Normal login via web-browser
-			// Cookie will only be created once content is stored
-			$tmp = OIDplusAuthContentStoreSession::getActiveProvider();
-			if ($tmp) return $tmp;
-
-		}
+		// Normal login via web-browser
+		// Cookie will only be created once content is stored
+		$tmp = OIDplusAuthContentStoreSession::getActiveProvider();
+		if ($tmp) return $tmp;
 
 		// No active session and no JWT token available. User is not logged in.
 		return null;
