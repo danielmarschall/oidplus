@@ -401,6 +401,15 @@ Do only use this if you have severe problems with the system running.
 It might result in inconsistent data e.g. if you update an OID
 and an error occurs in the middle of that process.
 
+### DISABLE_REST_TRANSACTIONS
+
+    OIDplus::baseConfig()->setValue('DISABLE_REST_TRANSACTIONS', false);
+
+This will disable the usage of database transactions in rest/* calls.
+Do only use this if you have severe problems with the system running.
+It might result in inconsistent data e.g. if you update an OID
+and an error occurs in the middle of that process.
+
 ### CANONICAL_SYSTEM_URL
 
     OIDplus::baseConfig()->setValue('CANONICAL_SYSTEM_URL', '');
