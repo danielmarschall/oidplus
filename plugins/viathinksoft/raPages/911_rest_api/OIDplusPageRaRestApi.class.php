@@ -91,8 +91,8 @@ class OIDplusPageRaRestApi extends OIDplusPagePluginRa {
 				$out['title'] = _L('REST API').' - '.$plugin->getManifest()->getName() . ' ' . _L('Endpoints');
 				$out['icon'] = file_exists(__DIR__.'/img/endpoints_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/endpoints_icon.png' : '';
 				$out['text'] = '';
-				if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) {
-					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:rest_api_information_ra').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
+				if (OIDplus::authUtils()->isRaLoggedIn($ra_email) || OIDplus::authUtils()->isAdminLoggedIn()) {
+					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:rest_api_information_ra$'.$ra_email).'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
 				}
 				$out['text'] .= $plugin->restApiInfo('html');
 			} else {
