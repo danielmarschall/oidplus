@@ -30,6 +30,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		"Server Secret" was changed; therefore the JWT is not valid anymore
+		]]></source>
+		<target><![CDATA[
+		Das "Server Secret" wurde geändert; deshalb ist der JWT-Schlüssel nicht mehr gültig
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		%1 action failed because object "%2" cannot be parsed!
 		]]></source>
 		<target><![CDATA[

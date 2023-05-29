@@ -97,6 +97,15 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 	}
 
 	/**
+	 * We include a hash of the server-secret here (ssh = server-secret-hash), so that the JWT can be invalidated by changing the server-secret
+	 * @return string
+	 * @throws OIDplusException
+	 */
+	private static function getSsh(): string {
+		return OIDplus::authUtils()->makeSecret(['bb1aebd6-fe6a-11ed-a553-3c4a92df8582']);
+	}
+
+	/**
 	 * Do various checks if the token is allowed and not blacklisted
 	 * @param OIDplusAuthContentStore $contentProvider
 	 * @param int|null $validGenerators Bitmask which generators to allow (null = allow all)
@@ -108,6 +117,11 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 		if ($contentProvider->getValue('aud','') !== OIDplus::getEditionInfo()['jwtaud']) {
 			throw new OIDplusException(_L('Token has wrong audience'));
 		}
+
+		if ($contentProvider->getValue('oidplus_ssh', '') !== self::getSsh()) {
+			throw new OIDplusException(_L('"Server Secret" was changed; therefore the JWT is not valid anymore'));
+		}
+
 		$gen = $contentProvider->getValue('oidplus_generator', -1);
 
 		$has_admin = $contentProvider->isAdminLoggedIn();
@@ -411,7 +425,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 		\Firebase\JWT\JWT::$leeway = 60; // leeway in seconds
 		if (OIDplus::getPkiStatus()) {
 			$pubKey = OIDplus::getSystemPublicKey();
-			$k = new \Firebase\JWT\Key($pubKey, 'RS256'); // RSA+SHA256 ist hardcoded in getPkiStatus() generation
+			$k = new \Firebase\JWT\Key($pubKey, 'RS256'); // RSA+SHA256 is hardcoded in getPkiStatus() generation
 			$this->content = (array) \Firebase\JWT\JWT::decode($jwt, $k);
 		} else {
 			$key = OIDplus::authUtils()->makeSecret(['0be35e52-f4ef-11ed-b67e-3c4a92df8582']);
@@ -431,10 +445,11 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 		$payload["aud"] = OIDplus::getEditionInfo()['jwtaud'];
 		$payload["jti"] = gen_uuid();
 		$payload["iat"] = time();
+		$payload["oidplus_ssh"] = self::getSsh(); // SSH = Server Secret Hash
 
 		if (OIDplus::getPkiStatus()) {
 			$privKey = OIDplus::getSystemPrivateKey();
-			return \Firebase\JWT\JWT::encode($payload, $privKey, 'RS256'); // RSA+SHA256 ist hardcoded in getPkiStatus() generation
+			return \Firebase\JWT\JWT::encode($payload, $privKey, 'RS256'); // RSA+SHA256 is hardcoded in getPkiStatus() generation
 		} else {
 			$key = OIDplus::authUtils()->makeSecret(['0be35e52-f4ef-11ed-b67e-3c4a92df8582']);
 			$key = hash_pbkdf2('sha512', $key, '', 10000, 32/*256bit*/, false);
