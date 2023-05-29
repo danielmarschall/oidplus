@@ -97,6 +97,12 @@ class OIDplusAuthContentStoreSession extends OIDplusAuthContentStore {
 	public static function getActiveProvider()/*: ?OIDplusAuthContentStore*/ {
 		static $contentProvider = null;
 
+		$rel_url = substr($_SERVER['REQUEST_URI'], strlen(OIDplus::webpath(null, OIDplus::PATH_RELATIVE_TO_ROOT)));
+		if (str_starts_with($rel_url, 'rest/')) { // <== TODO: Find a way how to move this into the plugin, since REST does not belong to the core. (Maybe some kind of "stateless mode" that is enabled by the REST plugin)
+			// For REST, we must only allow JWT from Bearer and nothing else! So disable cookies if we are accessing the REST plugin
+			return null;
+		}
+
 		if (!$contentProvider) {
 			if (self::getSessionHandler()->isActive()) {
 				$contentProvider = new OIDplusAuthContentStoreSession();

@@ -670,13 +670,14 @@ Allow "Remember me" logins for the administrator account.
 
 Allow "Remember me" logins for a RA.
 
-### JWT_ALLOW_MANUAL
- 
-    OIDplus::baseConfig()->setValue('JWT_ALLOW_MANUAL', false);
+### JWT_ALLOW_MANUAL_ADMIN and JWT_ALLOW_MANUAL_ADMIN_USER
+
+    OIDplus::baseConfig()->setValue('JWT_ALLOW_MANUAL_ADMIN', false);
+    OIDplus::baseConfig()->setValue('JWT_ALLOW_MANUAL_USER', false);
 
 Allow JWT tokens which were manually created "by hand".
 These can have any content you like, but they must
-contain the claim "oidplus_generator" with value "2".
+contain the claim `oidplus_generator` with value `OIDplusAuthContentStoreJWT::JWT_GENERATOR_MANUAL`.
 
 ### JWT_TTL_LOGIN_USER
     
