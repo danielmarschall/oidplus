@@ -35,6 +35,10 @@ System / Core:
   * If a private/public key pair exists: Sign the JWT using that private key.
   * Otherwise sign it using PBKDF2+HMAC:
     `JWT = HS512(hash_pbkdf2("sha512", OIDplus::authUtils()->makeSecret(["0be35e52-f4ef-11ed-b67e-3c4a92df8582"]), "", 10000, 64/*256bit*/, false))`
+- The JWT additionally contains a member `oidplus_ssh = OIDplus::authUtils()->makeSecret(["bb1aebd6-fe6a-11ed-a553-3c4a92df8582"]` (SSH = Server Secret Hash)
+  with the sole purpose of allowing to invalidate all issued JWT by changing the server secret.
+  (This would be more secure than the Blacklist feature, since changing the server secret)
+  also invalidates JWT which might have been maliciously postdated).
 - Session Handler (OIDplusSessionHandler.class.php):
   Encryption of session contents (regular logins)
   * if OpenSSL is installed:        sha512-pbkdf2 + AES-256-CBC + sha3-512-hmac
