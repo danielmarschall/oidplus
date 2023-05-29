@@ -38,10 +38,16 @@ class OIDplusPagePublicRestApi extends OIDplusPagePluginPublic {
 		$rel_url = substr($_SERVER['REQUEST_URI'], strlen(OIDplus::webpath(null, OIDplus::PATH_RELATIVE_TO_ROOT)));
 		$expect = 'rest/v1/';
 		if (str_starts_with($rel_url, $expect)) {
+			originHeaders(); // Allows queries from other domains
+			OIDplus::authUtils()->disableCSRF(); // allow access to ajax.php without valid CSRF token
+
 			$rel_url = ltrim($rel_url, $expect);
 
 			$requestMethod = $_SERVER["REQUEST_METHOD"];
 
+			if (!OIDplus::baseconfig()->getValue('DISABLE_REST_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
+				OIDplus::db()->transaction_begin();
+			}
 			try {
 				$cont = @file_get_contents('php://input');
 				$json_in = empty($cont) ? [] : @json_decode($cont, true);
@@ -62,7 +68,13 @@ class OIDplusPagePublicRestApi extends OIDplusPagePluginPublic {
 					if (!isset($json_out['error'])) $json_out['error'] = _L('The plugin did not return a status value');
 				}
 				if (!isset($json_out['status_bits'])) $json_out['status_bits'] = [];
+				if (!OIDplus::baseconfig()->getValue('DISABLE_REST_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
+					OIDplus::db()->transaction_commit();
+				}
 			} catch (\Exception $e) {
+				if (!OIDplus::baseconfig()->getValue('DISABLE_REST_TRANSACTIONS',false) && OIDplus::db()->transaction_supported()) {
+					if (OIDplus::db()->transaction_supported()) OIDplus::db()->transaction_rollback();
+				}
 				http_response_code($e instanceof OIDplusException ? $e->getHttpStatus() : 500);
 				$json_out = array("status" => -2, "status_bits" => [], "error" => $e->getMessage());
 			}
