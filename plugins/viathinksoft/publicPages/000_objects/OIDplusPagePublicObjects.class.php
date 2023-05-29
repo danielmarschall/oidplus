@@ -77,6 +77,163 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	}
 
 	/**
+	 * @param string $endpoint
+	 * @param array $json_in
+	 * @return never-return
+	 */
+	private function restApiCall_OPTIONS(string $endpoint, array $json_in) {
+		header("access-control-allow-credentials: true");
+		header("access-control-allow-headers: Keep-Alive,User-Agent,Authorization");
+		header("access-control-allow-methods: GET, PUT, POST, DELETE, PATCH, OPTIONS");
+		header("access-control-allow-origin: *");
+		http_response_code(204/*No content*/);
+		OIDplus::invoke_shutdown();
+		die(); // return array();
+	}
+
+	/**
+	 * @param string $endpoint
+	 * @param array $json_in
+	 * @return array
+	 */
+	private function restApiCall_GET(string $endpoint, array $json_in): array {
+		$id = substr($endpoint, strlen('objects/'));
+		$obj = OIDplusObject::findFitting($id);
+		if (!$obj) throw new OIDplusException(_L('The object %1 was not found in this database.', $id), null, 404);
+
+		if (!$obj->userHasReadRights()) throw new OIDplusException('Insufficient authorization to read information about this object.', null, 401);
+
+		$output = array();
+
+		$output['status'] = 0/*OK*/;
+		$output['status_bits'] = [];
+
+		//$output['id'] = $obj->nodeId(true);
+		$output['ra_email'] = $obj->getRaMail();
+		$output['comment'] = $obj->getComment();
+		$output['confidential'] = $obj->isConfidential();
+		$output['title'] = $obj->getTitle();
+		$output['description'] = $obj->getDescription();
+
+		if ($obj instanceof OIDplusOid) {
+			$output['asn1ids'] = array(); // TODO: Rename to oid-alphanum-id ?
+			foreach ($obj->getAsn1Ids() as $asn) {
+				$output['asn1ids'][] = $asn->getName();
+			}
+
+			$output['iris'] = array(); // TODO: Rename to oid-unicode-label ?
+			foreach ($obj->getIris() as $iri) {
+				$output['iris'][] = $iri->getName();
+			}
+		}
+
+		http_response_code(200);
+		return $output;
+	}
+
+	/**
+	 * @param string $endpoint
+	 * @param array $json_in
+	 * @return array
+	 */
+	private function restApiCall_PUT(string $endpoint, array $json_in): array {
+		$id = substr($endpoint, strlen('objects/'));
+		$obj = OIDplusObject::parse($id);
+		if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!', 'PUT', $id), null, 400);
+
+		$params = array();
+		$params['id'] = $id;
+		$params['ra_email'] = $json_in['ra_email'] ?? '';
+		$params['comment'] = $json_in['comment'] ?? '';
+		$params['confidential'] = $json_in['confidential'] ?? false;
+		$params['title'] = $json_in['title'] ?? '';
+		$params['description'] = $json_in['description'] ?? '';
+		$params['asn1ids'] = $json_in['asn1ids'] ?? array();
+		$params['iris'] = $json_in['iris'] ?? array();
+
+		if (OIDplusObject::exists($id)) {
+			// TODO: Problem: The superior RA cannot set title/description, so they cannot perform the PUT command!
+			$output = self::action_Update($params);
+		} else {
+			$params['parent'] = $obj->getParent();
+			$params['id_fully_qualified'] = true;
+			$output = self::action_Insert($params);
+		}
+
+		$output['status_bits'] = [];
+		if (($output['status'] & 1) == 1) $output['status_bits'][1] = 'RA is not registered, but it can be invited';
+		if (($output['status'] & 2) == 2) $output['status_bits'][2] = 'RA is not registered and it cannot be invited';
+		if (($output['status'] & 4) == 4) $output['status_bits'][4] = 'OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset';
+		if (($output['status'] & 8) == 8) $output['status_bits'][8] = 'User has write rights to the freshly created OID';
+
+		http_response_code(200);
+		return $output;
+	}
+
+	/**
+	 * @param string $endpoint
+	 * @param array $json_in
+	 * @return array
+	 */
+	private function restApiCall_POST(string $endpoint, array $json_in): array {
+		$id = substr($endpoint, strlen('objects/'));
+		$obj = OIDplusObject::parse($id);
+		if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!', 'GET', $id), null, 400);
+		$params = $json_in;
+		$params['parent'] = $obj->getParent();
+		$params['id_fully_qualified'] = true;
+		$params['id'] = $id;
+		$output = self::action_Insert($params);
+
+		$output['status_bits'] = [];
+		if (($output['status'] & 1) == 1) $output['status_bits'][1] = 'RA is not registered, but it can be invited';
+		if (($output['status'] & 2) == 2) $output['status_bits'][2] = 'RA is not registered and it cannot be invited';
+		if (($output['status'] & 4) == 4) $output['status_bits'][4] = 'OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset';
+		if (($output['status'] & 8) == 8) $output['status_bits'][8] = 'User has write rights to the freshly created OID';
+
+		http_response_code(200);
+		return $output;
+	}
+
+	/**
+	 * @param string $endpoint
+	 * @param array $json_in
+	 * @return array
+	 */
+	private function restApiCall_PATCH(string $endpoint, array $json_in): array {
+		$id = substr($endpoint, strlen('objects/'));
+		$params = $json_in;
+		$params['id'] = $id;
+		$output = self::action_Update($params);
+
+		$output['status_bits'] = [];
+		if (($output['status'] & 1) == 1) $output['status_bits'][1] = 'RA is not registered, but it can be invited';
+		if (($output['status'] & 2) == 2) $output['status_bits'][2] = 'RA is not registered and it cannot be invited';
+		if (($output['status'] & 4) == 4) $output['status_bits'][4] = 'OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset';
+		if (($output['status'] & 8) == 8) $output['status_bits'][8] = 'User has write rights to the freshly created OID';
+
+		http_response_code(200);
+		return $output;
+	}
+
+	/**
+	 * @param string $endpoint
+	 * @param array $json_in
+	 * @return array
+	 */
+	private function restApiCall_DELETE(string $endpoint, array $json_in): array {
+		$id = substr($endpoint, strlen('objects/'));
+		$params = $json_in;
+		$params['id'] = $id;
+		$output = self::action_Delete($params);
+
+		$output['status_bits'] = [];
+
+		http_response_code(200);
+		return $output;
+	}
+
+	/**
 	 * Implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9
 	 * @param string $requestMethod
 	 * @param string $endpoint
@@ -85,118 +242,18 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 */
 	public function restApiCall(string $requestMethod, string $endpoint, array $json_in) {
 		if (str_starts_with($endpoint, 'objects/')) {
-			$id = substr($endpoint, strlen('objects/'));
 			if ($requestMethod == "OPTIONS") {
-				header("access-control-allow-credentials: true");
-				header("access-control-allow-headers: Keep-Alive,User-Agent,Authorization");
-				header("access-control-allow-methods: GET, PUT, POST, DELETE, PATCH, OPTIONS");
-				header("access-control-allow-origin: *");
-				http_response_code(204/*No content*/);
-				OIDplus::invoke_shutdown();
-				die(); // return array();
-			}
-			else if ($requestMethod == "GET"/*Select*/) {
-				$obj = OIDplusObject::findFitting($id);
-				if (!$obj) throw new OIDplusException(_L('The object %1 was not found in this database.', $id), null, 404);
-
-				if (!$obj->userHasReadRights()) throw new OIDplusException('Insufficient authorization to read information about this object.', null, 401);
-
-				$output = array();
-
-				$output['status'] = 0/*OK*/;
-				$output['status_bits'] = [];
-
-				//$output['id'] = $obj->nodeId(true);
-				$output['ra_email'] = $obj->getRaMail();
-				$output['comment'] = $obj->getComment();
-				$output['confidential'] = $obj->isConfidential();
-				$output['title'] = $obj->getTitle();
-				$output['description'] = $obj->getDescription();
-
-				if ($obj instanceof OIDplusOid) {
-					$output['asn1ids'] = array(); // TODO: Rename to oid-alphanum-id ?
-					foreach ($obj->getAsn1Ids() as $asn) {
-						$output['asn1ids'][] = $asn->getName();
-					}
-
-					$output['iris'] = array(); // TODO: Rename to oid-unicode-label ?
-					foreach ($obj->getIris() as $iri) {
-						$output['iris'][] = $iri->getName();
-					}
-				}
-
-				http_response_code(200);
-				return $output;
+				$this->restApiCall_OPTIONS($endpoint, $json_in);
+			}  else if ($requestMethod == "GET"/*Select*/) {
+				return $this->restApiCall_GET($endpoint, $json_in);
 			} else if ($requestMethod == "PUT"/*Replace*/) {
-				$obj = OIDplusObject::parse($id);
-				if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!', 'PUT', $id), null, 400);
-
-				$params = array();
-				$params['id'] = $id;
-				$params['ra_email'] = $json_in['ra_email'] ?? '';
-				$params['comment'] = $json_in['comment'] ?? '';
-				$params['confidential'] = $json_in['confidential'] ?? false;
-				$params['title'] = $json_in['title'] ?? '';
-				$params['description'] = $json_in['description'] ?? '';
-				$params['asn1ids'] = $json_in['asn1ids'] ?? array();
-				$params['iris'] = $json_in['iris'] ?? array();
-
-				if (OIDplusObject::exists($id)) {
-					// TODO: Problem: The superior RA cannot set title/description, so they cannot perform the PUT command!
-					$output = self::action_Update($params);
-				} else {
-					$params['parent'] = $obj->getParent();
-					$params['id_fully_qualified'] = true;
-					$output = self::action_Insert($params);
-				}
-
-				$output['status_bits'] = [];
-				if (($output['status'] & 1) == 1) $output['status_bits'][1] = 'RA is not registered, but it can be invited';
-				if (($output['status'] & 2) == 2) $output['status_bits'][2] = 'RA is not registered and it cannot be invited';
-				if (($output['status'] & 4) == 4) $output['status_bits'][4] = 'OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset';
-				if (($output['status'] & 8) == 8) $output['status_bits'][8] = 'User has write rights to the freshly created OID';
-
-				http_response_code(200);
-				return $output;
+				return $this->restApiCall_PUT($endpoint, $json_in);
 			} else if ($requestMethod == "POST"/*Insert*/) {
-				$params = $json_in;
-				$obj = OIDplusObject::parse($id);
-				if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!', 'GET', $id), null, 400);
-				$params['parent'] = $obj->getParent();
-				$params['id_fully_qualified'] = true;
-				$params['id'] = $id;
-				$output = self::action_Insert($params);
-
-				$output['status_bits'] = [];
-				if (($output['status'] & 1) == 1) $output['status_bits'][1] = 'RA is not registered, but it can be invited';
-				if (($output['status'] & 2) == 2) $output['status_bits'][2] = 'RA is not registered and it cannot be invited';
-				if (($output['status'] & 4) == 4) $output['status_bits'][4] = 'OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset';
-				if (($output['status'] & 8) == 8) $output['status_bits'][8] = 'User has write rights to the freshly created OID';
-
-				http_response_code(200);
-				return $output;
+				return $this->restApiCall_POST($endpoint, $json_in);
 			} else if ($requestMethod == "PATCH"/*Modify*/) {
-				$params = $json_in;
-				$params['id'] = $id;
-				$output = self::action_Update($params);
-
-				$output['status_bits'] = [];
-				if (($output['status'] & 1) == 1) $output['status_bits'][1] = 'RA is not registered, but it can be invited';
-				if (($output['status'] & 2) == 2) $output['status_bits'][2] = 'RA is not registered and it cannot be invited';
-				if (($output['status'] & 4) == 4) $output['status_bits'][4] = 'OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset';
-				if (($output['status'] & 8) == 8) $output['status_bits'][8] = 'User has write rights to the freshly created OID';
-
-				http_response_code(200);
-				return $output;
+				return $this->restApiCall_PATCH($endpoint, $json_in);
 			} else if ($requestMethod == "DELETE"/*Delete*/) {
-				$params = $json_in;
-				$params['id'] = $id;
-				$output = self::action_Delete($params);
-
-				$output['status_bits'] = [];
-
-				http_response_code(200);
-				return $output;
+				return $this->restApiCall_DELETE($endpoint, $json_in);
 			} else {
 				//throw new OIDplusException(_L("Not implemented"), null, 501);
 				throw new OIDplusException(_L("Unsupported request method"), null, 400);
