@@ -183,7 +183,7 @@ abstract class OIDplusAuthContentStore extends OIDplusBaseClass implements OIDpl
 	 * @return bool
 	 */
 	public function isAdminLoggedIn(): bool {
-		return $this->getValue('oidplus_admin_logged_in') == 1;
+		return $this->getValue('oidplus_admin_logged_in', 0) == 1;
 	}
 
 }

@@ -23,7 +23,7 @@ namespace ViaThinkSoft\OIDplus;
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
+class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStore {
 
 	/**
 	 * Cookie name for the JWT auth token
@@ -213,6 +213,45 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStoreDummy {
 	}
 
 	// Override abstract functions
+
+	/**
+	 * @var array
+	 */
+	protected $content = array();
+
+	/**
+	 * @param string $name
+	 * @param mixed|null $default
+	 * @return mixed|null
+	 */
+	public function getValue(string $name, $default = NULL) {
+		return $this->content[$name] ?? $default;
+	}
+
+	/**
+	 * @param string $name
+	 * @param mixed $value
+	 * @return void
+	 */
+	public function setValue(string $name, $value) {
+		$this->content[$name] = $value;
+	}
+
+	/**
+	 * @param string $name
+	 * @return bool
+	 */
+	public function exists(string $name): bool {
+		return isset($this->content[$name]);
+	}
+
+	/**
+	 * @param string $name
+	 * @return void
+	 */
+	public function delete(string $name) {
+		unset($this->content[$name]);
+	}
 
 	/**
 	 * @return void

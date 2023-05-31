@@ -198,9 +198,11 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 		$loginfo = '';
 		$acs = $this->getAuthContentStore();
 		if (!is_null($acs)) {
+			// User is already logged in (a session or JWT exists), so we modify their login status
 			$acs->raLoginEx($email, $loginfo);
 			$acs->activate();
 		} else {
+			// No user is logged in (no session or JWT exists). We now create a auth content store and activate it (cookies will be set etc.)
 			if ($remember_me) {
 				if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_USER', true)) {
 					throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_LOGIN_USER'));
@@ -328,9 +330,11 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 		$loginfo = '';
 		$acs = $this->getAuthContentStore();
 		if (!is_null($acs)) {
+			// User is already logged in (a session or JWT exists), so we modify their login status
 			$acs->adminLoginEx($loginfo);
 			$acs->activate();
 		} else {
+			// No user is logged in (no session or JWT exists). We now create a auth content store and activate it (cookies will be set etc.)
 			if ($remember_me) {
 				if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_ADMIN', true)) {
 					throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_LOGIN_ADMIN'));
