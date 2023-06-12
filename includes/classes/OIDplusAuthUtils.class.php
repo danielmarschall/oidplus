@@ -208,16 +208,14 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 					throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_LOGIN_USER'));
 				}
 				$ttl = OIDplus::baseConfig()->getValue('JWT_TTL_LOGIN_USER', 10*365*24*60*60);
-				$authSimulation = new OIDplusAuthContentStoreJWT();
-				$authSimulation->raLoginEx($email, $loginfo);
-				$authSimulation->setValue('oidplus_generator', OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN);
-				$authSimulation->setValue('exp', time()+$ttl); // JWT "exp" attribute
-				$authSimulation->activate();
+				$newAuthStore = new OIDplusAuthContentStoreJWT();
+				$newAuthStore->setValue('oidplus_generator', OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN);
+				$newAuthStore->setValue('exp', time()+$ttl); // JWT "exp" attribute
 			} else {
-				$authSimulation = new OIDplusAuthContentStoreSession();
-				$authSimulation->raLoginEx($email, $loginfo);
-				$authSimulation->activate();
+				$newAuthStore = new OIDplusAuthContentStoreSession();
 			}
+			$newAuthStore->raLoginEx($email, $loginfo);
+			$newAuthStore->activate();
 		}
 		$logmsg = "RA '$email' logged in";
 		if ($origin != '') $logmsg .= " via $origin";
@@ -340,16 +338,14 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 					throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_LOGIN_ADMIN'));
 				}
 				$ttl = OIDplus::baseConfig()->getValue('JWT_TTL_LOGIN_ADMIN', 10*365*24*60*60);
-				$authSimulation = new OIDplusAuthContentStoreJWT();
-				$authSimulation->adminLoginEx($loginfo);
-				$authSimulation->setValue('oidplus_generator', OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN);
-				$authSimulation->setValue('exp', time()+$ttl); // JWT "exp" attribute
-				$authSimulation->activate();
+				$newAuthStore = new OIDplusAuthContentStoreJWT();
+				$newAuthStore->setValue('oidplus_generator', OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN);
+				$newAuthStore->setValue('exp', time()+$ttl); // JWT "exp" attribute
 			} else {
-				$authSimulation = new OIDplusAuthContentStoreSession();
-				$authSimulation->adminLoginEx($loginfo);
-				$authSimulation->activate();
+				$newAuthStore = new OIDplusAuthContentStoreSession();
 			}
+			$newAuthStore->adminLoginEx($loginfo);
+			$newAuthStore->activate();
 		}
 		$logmsg = "Admin logged in";
 		if ($origin != '') $logmsg .= " via $origin";

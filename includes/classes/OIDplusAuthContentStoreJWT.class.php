@@ -23,6 +23,9 @@ namespace ViaThinkSoft\OIDplus;
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+/**
+ * Auth content store for JWT tokens ("Remember me" cookies, Automated AJAX argument, or REST Bearer)
+ */
 class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStore {
 
 	/**
