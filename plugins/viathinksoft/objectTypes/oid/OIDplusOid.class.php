@@ -535,7 +535,7 @@ class OIDplusOid extends OIDplusObject {
 
 			// Check if the (real) parent has any conflict
 			// Unlike IRI identifiers, ASN.1 identifiers may be used multiple times (not recommended), except if one of them is standardized
-			$res = OIDplus::db()->query("select oid from ###asn1id where name = ? and standardized = ?", array($asn1,true));
+			$res = OIDplus::db()->query("select oid from ###asn1id where name = ? and standardized = ?", array($asn1,true)); // Attention: Requires case-SENSITIVE database collation!!
 			while ($row = $res->fetch_array()) {
 				$check_oid = OIDplusOid::parse($row['oid'])->oid;
 				if ((oid_up($check_oid) === oid_up($this->oid)) && // same parent
@@ -579,7 +579,7 @@ class OIDplusOid extends OIDplusObject {
 			if (!iri_arc_valid($iri, false)) throw new OIDplusException(_L('"%1" is not a valid IRI!',$iri));
 
 			// Check if the (real) parent has any conflict
-			$res = OIDplus::db()->query("select oid from ###iri where name = ?", array($iri));
+			$res = OIDplus::db()->query("select oid from ###iri where name = ?", array($iri)); // Attention: Requires case-SENSITIVE database collation!!
 			while ($row = $res->fetch_array()) {
 				$check_oid = OIDplusOid::parse($row['oid'])->oid;
 				if ((oid_up($check_oid) === oid_up($this->oid)) && // same parent

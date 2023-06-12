@@ -312,7 +312,7 @@ var OIDplusPagePublicObjects = {
 			$(to_control).val("");
 		} else {
 			var x = WeidOidConverter.base_convert_bigint(inp, from_base, to_base);
-			if (x == false) {
+			if (x === false) {
 				$(to_control).val("");
 			} else {
 				$(to_control).val(x);
@@ -331,7 +331,7 @@ var OIDplusPagePublicObjects = {
 			$(to_control).val("");
 		} else {
 			var x = WeidOidConverter.base_convert_bigint(inp, from_base, to_base);
-			if (x == false) {
+			if (x === false) {
 				$(to_control).val("");
 			} else {
 				$(to_control).val(x.toUpperCase());

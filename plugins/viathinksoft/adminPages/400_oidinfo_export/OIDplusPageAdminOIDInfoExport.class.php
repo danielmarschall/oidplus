@@ -1104,7 +1104,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 					$errors[] = _L('Warning').' ['._L('OID %1',$dot_notation).']: '._L('Ignored alphanumeric identifier %1, because it is invalid',$asn1id);
 					$this_oid_has_warnings = true;
 				} else {
-					OIDplus::db()->query("delete from ###asn1id where oid = ? and name = ?", array($id, $asn1id));
+					OIDplus::db()->query("delete from ###asn1id where oid = ? and name = ?", array($id, $asn1id)); // Attention: Requires case-SENSITIVE database collation!!
 					OIDplus::db()->query("insert into ###asn1id (oid, name) values (?, ?)", array($id, $asn1id));
 				}
 			}
@@ -1122,7 +1122,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 						$errors[] = _L('Warning').' ['._L('OID %1',$dot_notation).']: '._L('Ignored Unicode label %1, because it is invalid',$iri);
 						$this_oid_has_warnings = true;
 					} else {
-						OIDplus::db()->query("delete from ###iri where oid = ? and name = ?", array($id, $iri));
+						OIDplus::db()->query("delete from ###iri where oid = ? and name = ?", array($id, $iri)); // Attention: Requires case-SENSITIVE database collation!!
 						OIDplus::db()->query("insert into ###iri (oid, name) values (?, ?)", array($id, $iri));
 					}
 				}
