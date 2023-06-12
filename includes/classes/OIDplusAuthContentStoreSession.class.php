@@ -23,6 +23,9 @@ namespace ViaThinkSoft\OIDplus;
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+/**
+ * Auth content store for PHP sessions (Regular login, without "remember me")
+ */
 class OIDplusAuthContentStoreSession extends OIDplusAuthContentStore {
 
 	// Override abstract functions
