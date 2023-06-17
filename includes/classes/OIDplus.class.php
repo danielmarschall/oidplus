@@ -1411,10 +1411,6 @@ class OIDplus extends OIDplusBaseClass {
 					"object-src" => array(
 						"'none'"
 					),
-					"prefetch-src" => array(
-						"'self'",
-						"blob:"
-					),
 					"script-src" => array(
 						"'self'",
 						"'unsafe-inline'",

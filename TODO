@@ -81,6 +81,11 @@ Databases:
 - Let plugins create tables for all DBMS by including a "create table" function with abstract types in the SQL slang plugins (similar to Medoo)
 
 Ideas
+- Let users have their own settings. This could be achieved by the ###_config table, by having a key with the name scheme "<settingname>(<useremail>)".
+	Example settings:
+	* Own color settings
+	* Newly created OIDs: Always open, Never open, Ask (default)
+	But what do we do if multiple users are logged in??
 - "Download Backup" plugin (contains SQL backup, as well as everything inside "userdata" and "userdata_pub")
 - if a third-party plugin throws an exception in the init() method, maybe OIDplus should avoid loading the plugin?
 - "hidden" alt ids which are not shown in the GUI, but can be used for reverse-Alt-ID ? (I believe we have excluded some AltIDs which are "not neccessary", e.g. an GUID already is a GUID and therefore does not need a Namespace GUID, or something like that)
