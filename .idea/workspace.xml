@@ -9,8 +9,8 @@
   <component name="ChangeListManager">
     <list default="true" id="df2a484b-bed2-4376-a9d2-11f38408a62e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/includes/classes/OIDplusLogger.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/classes/OIDplusLogger.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/000_objects/OIDplusPagePublicObjects.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/000_objects/OIDplusPagePublicObjects.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/classes/OIDplus.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/classes/OIDplus.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/includes/classes/OIDplusAuthUtils.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/classes/OIDplusAuthUtils.class.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -31,6 +31,7 @@
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/vendor/danielmarschall/uuid_mac_utils/includes/mac_utils.inc.php" root0="FORCE_HIGHLIGHTING" root1="SKIP_INSPECTION" />
+    <setting file="file://$PROJECT_DIR$/vendor/danielmarschall/vnag/framework/vnag_framework.inc.php" root0="FORCE_HIGHLIGHTING" root1="SKIP_INSPECTION" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -273,7 +274,20 @@
       <workItem from="1684448630689" duration="431000" />
       <workItem from="1684449130041" duration="382000" />
       <workItem from="1685135361714" duration="847000" />
-      <workItem from="1685298683577" duration="1184000" />
+      <workItem from="1685298683577" duration="1281000" />
+      <workItem from="1685303685832" duration="6486000" />
+      <workItem from="1685316159760" duration="1291000" />
+      <workItem from="1685383054332" duration="13814000" />
+      <workItem from="1685399823713" duration="1604000" />
+      <workItem from="1685401683358" duration="682000" />
+      <workItem from="1685405290990" duration="653000" />
+      <workItem from="1685555805238" duration="6267000" />
+      <workItem from="1685570942903" duration="25000" />
+      <workItem from="1686422946750" duration="2328000" />
+      <workItem from="1686505053393" duration="1215000" />
+      <workItem from="1686612033234" duration="2252000" />
+      <workItem from="1686692839054" duration="780000" />
+      <workItem from="1687029431078" duration="406000" />
     </task>
     <servers />
   </component>

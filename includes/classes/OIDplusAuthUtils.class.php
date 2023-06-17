@@ -72,8 +72,6 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	protected function getAuthContentStore()/*: ?OIDplusAuthContentStore*/ {
-		// TODO: Should we implement these AuthContentStore as plugin type, so that there can be more than just JWT and PHP session?
-
 		// Logged in via JWT
 		// (The JWT can come from a REST Authentication Bearer, an AJAX Cookie, or an Automated AJAX Call GET/POST token.)
 		$tmp = OIDplusAuthContentStoreJWT::getActiveProvider();
