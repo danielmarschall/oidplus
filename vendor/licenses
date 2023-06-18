@@ -18,21 +18,21 @@ danielmarschall/php_utils        9999999-dev 4a41123 Apache-2.0
 danielmarschall/php_utils        dev-master 4a41123  Apache-2.0            
 danielmarschall/uuid_mac_utils   9999999-dev 5276a39 Apache-2.0            
 danielmarschall/uuid_mac_utils   dev-master 5276a39  Apache-2.0            
-danielmarschall/vnag             9999999-dev 4187cba Apache-2.0            
-danielmarschall/vnag             dev-master 4187cba  Apache-2.0            
+danielmarschall/vnag             9999999-dev edb07ec Apache-2.0            
+danielmarschall/vnag             dev-master edb07ec  Apache-2.0            
 dcodeio/bcrypt.js                master master       BSD-3-Clause, MIT     
 emn178/js-sha3                   master master       MIT                   
 firebase/php-jwt                 v5.5.1              BSD-3-Clause          
 gedmarc/layout                   master master       GPL-3.0-or-later, MIT 
-matthiasmullie/minify            1.3.70              MIT                   
+matthiasmullie/minify            1.3.71              MIT                   
 matthiasmullie/path-converter    1.1.3               MIT                   
 paragonie/constant_time_encoding v2.6.3              MIT                   
 paragonie/random_compat          v9.99.100           MIT                   
-phpseclib/phpseclib              3.0.x-dev 2097656   MIT                   
+phpseclib/phpseclib              3.0.x-dev 862b966   MIT                   
 script47/bs5-utils               master master       MIT                   
 spamspan/spamspan                master              GPL-2.0-only          
 symfony/polyfill-mbstring        v1.19.0             MIT                   
 tinymce/tinymce                  5.x-dev f078d8e     LGPL-2.1-only         
-twbs/bootstrap                   v5.3.0-alpha3       MIT                   
+twbs/bootstrap                   v5.3.0              MIT                   
 tweeb/tinymce-i18n               2.0.4               MIT                   
 vakata/jstree                    3.3.15              MIT                   

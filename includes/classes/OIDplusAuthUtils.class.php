@@ -72,6 +72,9 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	protected function getAuthContentStore()/*: ?OIDplusAuthContentStoreJWT*/ {
+		// Sitemap may not make use of any login/logout state
+		if ($this->forceAllLoggedOut()) return null;
+
 		// Logged in via JWT
 		// (The JWT can come from a login cookie, an REST Authentication Bearer, an AJAX Cookie, or an Automated AJAX Call GET/POST token.)
 		$tmp = OIDplusAuthContentStoreJWT::getActiveProvider();
@@ -96,6 +99,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	// RA authentication functions
 
 	/**
+	 * "Low level" method for RA Login
 	 * @param string $email
 	 * @return void
 	 * @throws OIDplusException
@@ -107,6 +111,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	}
 
 	/**
+	 * "Low level" method for RA Logout
 	 * @param string $email
 	 * @return void
 	 * @throws OIDplusException
@@ -157,13 +162,9 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	public function loggedInRaList(): array {
-		if ($this->forceAllLoggedOut()) {
-			return array();
-		} else {
-			$acs = $this->getAuthContentStore();
-			if (is_null($acs)) return array();
-			return $acs->loggedInRaList();
-		}
+		$acs = $this->getAuthContentStore();
+		if (is_null($acs)) return [];
+		return $acs->loggedInRaList();
 	}
 
 	/**
@@ -178,9 +179,10 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 		return $acs->isRaLoggedIn($email);
 	}
 
-	// "High level" function including logging and checking for valid JWT alternations
+	// "High level" function including logging and checking for valid JWT updates
 
 	/**
+	 * "High level" method for RA Login
 	 * @param string $email
 	 * @param string $origin
 	 * @return void
@@ -207,6 +209,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	}
 
 	/**
+	 * "High level" method for RA Logout
 	 * @param string $email
 	 * @return void
 	 * @throws OIDplusException
@@ -232,6 +235,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	// Admin authentication functions
 
 	/**
+	 * "Low level" method for Admin Login
 	 * @return void
 	 * @throws OIDplusException
 	 */
@@ -242,6 +246,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	}
 
 	/**
+	 * "Low level" method for RA Logout
 	 * @return void
 	 * @throws OIDplusException
 	 */
@@ -291,17 +296,13 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	public function isAdminLoggedIn(): bool {
-		if ($this->forceAllLoggedOut()) {
-			return false;
-		} else {
-			$acs = $this->getAuthContentStore();
-			if (is_null($acs)) return false;
-			return $acs->isAdminLoggedIn();
-		}
+		$acs = $this->getAuthContentStore();
+		if (is_null($acs)) return false;
+		return $acs->isAdminLoggedIn();
 	}
 
 	/**
-	 * "High level" function including logging and checking for valid JWT alternations
+	 * "High level" method for Admin Login
 	 * @param string $origin
 	 * @return void
 	 * @throws OIDplusException
@@ -327,6 +328,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	}
 
 	/**
+	 * "High level" method for Admin Logout
 	 * @return void
 	 * @throws OIDplusException
 	 */
