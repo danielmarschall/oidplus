@@ -7254,6 +7254,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The claim "%1" of the JWT token is missing or invalid
+		]]></source>
+		<target><![CDATA[
+		Der claim "%1" des JWT-Tokens fehlt oder ist ungültig
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The database driver has problems with "%1"
 		]]></source>
 		<target><![CDATA[
@@ -7842,6 +7850,14 @@
 		]]></source>
 		<target><![CDATA[
 		Der Token hat das falsche Publikum (aud)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Token not valid before %1
+		]]></source>
+		<target><![CDATA[
+		Token ist nicht vor %1 gültig
 		]]></target>
 	</message>
 	<message>

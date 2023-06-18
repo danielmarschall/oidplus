@@ -138,14 +138,17 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	 */
 	private static function jwtSecurityCheck(OIDplusAuthContentStoreJWT $contentProvider, int $validGenerators=null) {
 		// Check if the token is intended for us
+		// Note 'aud' is mandatory, so we do not check of exists()
 		if ($contentProvider->getValue('aud','') !== OIDplus::getEditionInfo()['jwtaud']) {
 			throw new OIDplusException(_L('Token has wrong audience'));
 		}
 
+		// Note CLAIM_SSH is mandatory, so we do not check of exists()
 		if ($contentProvider->getValue(self::CLAIM_SSH, '') !== self::getSsh()) {
 			throw new OIDplusException(_L('"Server Secret" was changed; therefore the JWT is not valid anymore'));
 		}
 
+		// Note CLAIM_GENERATOR is mandatory, so we do not check of exists()
 		$gen = $contentProvider->getValue(self::CLAIM_GENERATOR, -1);
 
 		$has_admin = $contentProvider->isAdminLoggedIn();
@@ -196,10 +199,33 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 			throw new OIDplusException(_L('Token generator %1 not recognized',$gen));
 		}
 
+		// Every token must have and issued timestamp
+		$iat = $contentProvider->getValue('iat',null);
+		if (is_null($iat)) {
+			throw new OIDplusException(_L('The claim "%1" of the JWT token is missing or invalid','iat'));
+		}
+
+		// Verify that IAT has a valid value
+		// Note: This check is already done in Firebase\JWT. However, we do it again, just to be 100% sure.
+		if (($iat-120/*leeway 2min*/) > time()) {
+			// Token was created in the future. Something is wrong!
+			throw new OIDplusException(_L('JWT Token cannot be verified because the server time is wrong'));
+		}
+
+		// Check if token is not yet valid
+		// Note: This check is already done in Firebase\JWT. However, we do it again, just to be 100% sure.
+		$nbf = $contentProvider->getValue('nbf',null);
+		if (!is_null($nbf)) {
+			if (time() < $nbf-120/*leeway 2min*/) {
+				throw new OIDplusException(_L('Token not valid before %1',date('d F Y, H:i:s',$nbf)));
+			}
+		}
+
 		// Check if token has expired
+		// Note: This check is already done in Firebase\JWT. However, we do it again, just to be 100% sure.
 		$exp = $contentProvider->getValue('exp',null);
 		if (!is_null($exp)) {
-			if (time() > $exp) {
+			if (time() > $exp+120/*leeway 2min*/) {
 				throw new OIDplusException(_L('Token has expired on %1',date('d F Y, H:i:s',$exp)));
 			}
 		}
@@ -208,11 +234,6 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 		// When an user believes that a token was compromised, then they can blacklist the tokens identified by their "iat" ("Issued at") property
 		// When a user logs out of a web browser session, the JWT token will be blacklisted as well
 		// Small side effect: All web browser login sessions of that user will be revoked then
-		$iat = $contentProvider->getValue('iat',0);
-		if (($iat-120/*leeway 2min*/) > time()) {
-			// Token was created in the future. Something is wrong!
-			throw new OIDplusException(_L('JWT Token cannot be verified because the server time is wrong'));
-		}
 		$sublist = $contentProvider->loggedInRaList();
 		$usernames = array();
 		foreach ($sublist as $sub) {
@@ -602,10 +623,12 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	public function getJWTToken(): string {
 		$payload = $this->content;
 		$payload[self::CLAIM_SSH] = self::getSsh(); // SSH = Server Secret Hash
-		$payload["iss"] = OIDplus::getEditionInfo()['jwtaud'];
+		// see also https://www.iana.org/assignments/jwt/jwt.xhtml#claims for some generic claims
+		$payload["iss"] = OIDplus::getEditionInfo()['jwtaud']; // sic: jwtaud
 		$payload["aud"] = OIDplus::getEditionInfo()['jwtaud'];
 		$payload["jti"] = gen_uuid();
 		$payload["iat"] = time();
+		if (!isset($payload["nbf"])) $payload["nbf"] = time();
 		if (!isset($payload["exp"])) $payload["exp"] = time()+3600/*1h*/;
 
 		uksort($payload, "strnatcmp"); // this is natsort on the key. Just to make the JWT look nicer.
