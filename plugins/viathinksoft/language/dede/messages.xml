@@ -7830,6 +7830,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Token has expired on %1
+		]]></source>
+		<target><![CDATA[
+		Token ist am %1 abgelaufen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Token has wrong audience
 		]]></source>
 		<target><![CDATA[
