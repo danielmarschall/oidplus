@@ -26,7 +26,7 @@ namespace ViaThinkSoft\OIDplus;
 /**
  * Auth content store for JWT tokens (web browser login cookies, Automated AJAX argument, or REST Bearer)
  */
-class OIDplusAuthContentStoreJWT {
+class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 
 	/**
 	 * Cookie name for the JWT auth token
@@ -194,6 +194,14 @@ class OIDplusAuthContentStoreJWT {
 			}
 		} else {
 			throw new OIDplusException(_L('Token generator %1 not recognized',$gen));
+		}
+
+		// Check if token has expired
+		$exp = $contentProvider->getValue('exp',null);
+		if (!is_null($exp)) {
+			if (time() > $exp) {
+				throw new OIDplusException(_L('Token has expired on %1',date('d F Y, H:i:s',$exp)));
+			}
 		}
 
 		// Make sure that the IAT (issued at time) isn't in a blacklisted timeframe
@@ -482,7 +490,7 @@ class OIDplusAuthContentStoreJWT {
 				}
 
 			} catch (\Exception $e) {
-				if (!$silent_error) {
+				if (!$silent_error || OIDplus::baseConfig()->getValue('DEBUG',false)) {
 					// Most likely an AJAX request. We can throw an Exception
 					throw new OIDplusException(_L('The JWT token was rejected: %1',$e->getMessage()));
 				} else {
@@ -528,6 +536,8 @@ class OIDplusAuthContentStoreJWT {
 			$this->raLogin($email);
 			$loginfo = 'into existing JWT session';
 		}
+		$ttl = OIDplus::baseConfig()->getValue('JWT_TTL_LOGIN_USER', 10*365*24*60*60);
+		$this->setValue('exp', time()+$ttl); // JWT "exp" attribute
 	}
 
 	/**
@@ -559,6 +569,8 @@ class OIDplusAuthContentStoreJWT {
 			$this->adminLogin();
 			$loginfo = 'into existing JWT session';
 		}
+		$ttl = OIDplus::baseConfig()->getValue('JWT_TTL_LOGIN_ADMIN', 10*365*24*60*60);
+		$this->setValue('exp', time()+$ttl); // JWT "exp" attribute
 	}
 
 	// Individual functions
@@ -594,6 +606,9 @@ class OIDplusAuthContentStoreJWT {
 		$payload["aud"] = OIDplus::getEditionInfo()['jwtaud'];
 		$payload["jti"] = gen_uuid();
 		$payload["iat"] = time();
+		if (!isset($payload["exp"])) $payload["exp"] = time()+3600/*1h*/;
+
+		uksort($payload, "strnatcmp"); // this is natsort on the key. Just to make the JWT look nicer.
 
 		if (OIDplus::getPkiStatus()) {
 			$privKey = OIDplus::getSystemPrivateKey();
