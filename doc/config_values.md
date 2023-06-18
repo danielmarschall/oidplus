@@ -323,12 +323,6 @@ Set this setting to a filename where all queries including timestamps would be w
 This is used for performance analysis.
 Please choose a directory that cannot be accessed by world-wide.
 
-### SESSION_LIFETIME
-
-    OIDplus::baseConfig()->setValue('SESSION_LIFETIME', 30*60);
-
-Session lifetime in seconds.
-
 ### OBJECT_CACHING
 
     OIDplus::baseConfig()->setValue('OBJECT_CACHING',         true);
@@ -662,13 +656,13 @@ Allow JWT tokens that were created using the RA-plugin
 
     OIDplus::baseConfig()->setValue('JWT_ALLOW_LOGIN_ADMIN', true);
 
-Allow "Remember me" logins for the administrator account.
+Allow browser logins for the administrator account.
 
 ### JWT_ALLOW_LOGIN_USER
     
     OIDplus::baseConfig()->setValue('JWT_ALLOW_LOGIN_USER', true);
 
-Allow "Remember me" logins for a RA.
+Allow browser logins for a RA.
 
 ### JWT_ALLOW_MANUAL_ADMIN and JWT_ALLOW_MANUAL_ADMIN_USER
 
@@ -677,20 +671,20 @@ Allow "Remember me" logins for a RA.
 
 Allow JWT tokens which were manually created "by hand".
 These can have any content you like, but they must
-contain the claim `oidplus_generator` with value `OIDplusAuthContentStoreJWT::JWT_GENERATOR_MANUAL`.
+contain the claim `OIDplusAuthContentStoreJWT::CLAIM_GENERATOR` with value `OIDplusAuthContentStoreJWT::JWT_GENERATOR_MANUAL`.
 
 ### JWT_TTL_LOGIN_USER
     
     OIDplus::baseConfig()->setValue('JWT_TTL_LOGIN_USER', 10*365*24*60*60);
 
-How many seconds will a "remember me" login JWT token be valid?
+How many seconds will a login JWT token be valid?
 (RA login)
 
 ### JWT_TTL_LOGIN_ADMIN
 
     OIDplus::baseConfig()->setValue('JWT_TTL_LOGIN_ADMIN', 10*365*24*60*60);
 
-How many seconds will a "remember me" login JWT token be valid?
+How many seconds will a login JWT token be valid?
 (Administrator login)
 
 

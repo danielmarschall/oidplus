@@ -20,7 +20,7 @@
 
 <body>
 	<h1>Procedural documentation related to privacy</h1>
-	<p><em>Revision: 18 October 2022</em></p>
+	<p><em>Revision: 18 June 2023</em></p>
 	<p><strong><em>Important</em></strong><em>: This document is written by ViaThinkSoft (the developer of the software "OIDplus") and gives general information on how OIDplus works regarding privacy-related topics. Since OIDplus is a web application that can be downloaded, installed, and operated by anyone on their server systems, this document DOES NOT describe how the owners/administrators of this particular installation of OIDplus are handling your data. Therefore, the owner of this system should provide an additional/individual privacy statement.</em></p>
 
 	<a id="terminology"></a><h2>Parties / Terminology</h2>
@@ -316,17 +316,10 @@
 		</thead>
 		<tbody>
 			<tr>
-				<td valign="top">Login-Cookie<br>(Regular login)</td>
+				<td valign="top">Login-Cookie</td>
 				<td valign="top">Essential</td>
-				<td valign="top">Contains a session key that is used to determine the user's log-in state and permissions.</td>
-				<td valign="top">During the login of a user or administrator using their password, if the "remember me" option is NOT selected.</td>
-				<td valign="top">When the user is logged out, or the browser session is closed.</td>
-			</tr>
-			<tr>
-				<td valign="top">Login-Cookie<br>("Remember me" option)</td>
-				<td valign="top">Essential</td>
-				<td valign="top">Contains a server-signed "JSON Web Token" that contains the username.</td>
-				<td valign="top">During the login of a user or administrator using their password, if the "remember me" option is selected.</td>
+				<td valign="top">Contains a server-signed "JSON Web Token" (JWT) that contains the username.</td>
+				<td valign="top">During the login of a user or administrator using their password.</td>
 				<td valign="top">When the user logs out.</td>
 			</tr>
 			<tr>

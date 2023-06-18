@@ -24,14 +24,34 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * Auth content store for JWT tokens ("Remember me" cookies, Automated AJAX argument, or REST Bearer)
+ * Auth content store for JWT tokens (web browser login cookies, Automated AJAX argument, or REST Bearer)
  */
-class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStore {
+class OIDplusAuthContentStoreJWT {
 
 	/**
 	 * Cookie name for the JWT auth token
 	 */
 	const COOKIE_NAME = 'OIDPLUS_AUTH_JWT';
+
+	/**
+	 * Token generator; must be one of OIDplusAuthContentStoreJWT::JWT_GENERATOR_*
+	 */
+	const CLAIM_GENERATOR = 'urn:oid:1.3.6.1.4.1.37476.2.5.2.7.1';
+
+	/**
+	 * List of logged-in users
+	 */
+	const CLAIM_LOGIN_LIST = 'urn:oid:1.3.6.1.4.1.37476.2.5.2.7.2';
+
+	/**
+	 * SSH = Server Secret Hash
+	 */
+	const CLAIM_SSH = 'urn:oid:1.3.6.1.4.1.37476.2.5.2.7.3';
+
+	/**
+	 * IP-Adress limit
+	 */
+	const CLAIM_LIMIT_IP = 'urn:oid:1.3.6.1.4.1.37476.2.5.2.7.4';
 
 	/**
 	 * "Automated AJAX" plugin
@@ -42,7 +62,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStore {
 	 */
 	const JWT_GENERATOR_REST   = 20;
 	/**
-	 * "Remember me" login method
+	 * Web browser login method
 	 */
 	const JWT_GENERATOR_LOGIN  = 40;
 	/**
@@ -67,7 +87,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStore {
 		// Note: The strings are not translated, because the name is used in config keys or logs
 		if ($gen === self::JWT_GENERATOR_AJAX)   return 'Automated AJAX calls';
 		if ($gen === self::JWT_GENERATOR_REST)   return 'REST API';
-		if ($gen === self::JWT_GENERATOR_LOGIN)  return 'Login ("Remember me")';
+		if ($gen === self::JWT_GENERATOR_LOGIN)  return 'Browser login';
 		if ($gen === self::JWT_GENERATOR_MANUAL) return 'Manually created';
 		return 'Unknown generator';
 	}
@@ -84,7 +104,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStore {
 
 		$gen_desc = self::generatorName($gen);
 
-		OIDplus::config()->prepareConfigKey($cfg, 'Revoke timestamp of all JWT tokens for $sub with generator $gen ($gen_desc)', "$bl_time", OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
+		OIDplus::config()->prepareConfigKey($cfg, "Revoke timestamp of all JWT tokens for $sub with generator $gen ($gen_desc)", "$bl_time", OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
 		OIDplus::config()->setValue($cfg, $bl_time);
 	}
 
@@ -105,27 +125,28 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStore {
 	 * @throws OIDplusException
 	 */
 	private static function getSsh(): string {
-		return OIDplus::authUtils()->makeSecret(['bb1aebd6-fe6a-11ed-a553-3c4a92df8582']);
+		$hexadecimal_string = OIDplus::authUtils()->makeSecret(['bb1aebd6-fe6a-11ed-a553-3c4a92df8582']);
+		return base64_encode(pack('H*',$hexadecimal_string));
 	}
 
 	/**
 	 * Do various checks if the token is allowed and not blacklisted
-	 * @param OIDplusAuthContentStore $contentProvider
+	 * @param OIDplusAuthContentStoreJWT $contentProvider
 	 * @param int|null $validGenerators Bitmask which generators to allow (null = allow all)
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	private static function jwtSecurityCheck(OIDplusAuthContentStore $contentProvider, int $validGenerators=null) {
+	private static function jwtSecurityCheck(OIDplusAuthContentStoreJWT $contentProvider, int $validGenerators=null) {
 		// Check if the token is intended for us
 		if ($contentProvider->getValue('aud','') !== OIDplus::getEditionInfo()['jwtaud']) {
 			throw new OIDplusException(_L('Token has wrong audience'));
 		}
 
-		if ($contentProvider->getValue('oidplus_ssh', '') !== self::getSsh()) {
+		if ($contentProvider->getValue(self::CLAIM_SSH, '') !== self::getSsh()) {
 			throw new OIDplusException(_L('"Server Secret" was changed; therefore the JWT is not valid anymore'));
 		}
 
-		$gen = $contentProvider->getValue('oidplus_generator', -1);
+		$gen = $contentProvider->getValue(self::CLAIM_GENERATOR, -1);
 
 		$has_admin = $contentProvider->isAdminLoggedIn();
 		$has_ra = $contentProvider->raNumLoggedIn() > 0;
@@ -152,7 +173,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStore {
 			}
 		}
 		else if ($gen === self::JWT_GENERATOR_LOGIN) {
-			// Used for feature "Remember me" (use JWT token in a cookie as alternative to PHP session):
+			// Used for web browser login (use JWT token in a cookie as alternative to PHP session):
 			// - No PHP session will be used
 			// - Session will not be bound to IP address (therefore, you can switch between mobile/WiFi for example)
 			// - No server-side session needed
@@ -177,8 +198,8 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStore {
 
 		// Make sure that the IAT (issued at time) isn't in a blacklisted timeframe
 		// When an user believes that a token was compromised, then they can blacklist the tokens identified by their "iat" ("Issued at") property
-		// When a user logs out of a "remember me" session, the JWT token will be blacklisted as well
-		// Small side effect: All "remember me" sessions of that user will be revoked then
+		// When a user logs out of a web browser session, the JWT token will be blacklisted as well
+		// Small side effect: All web browser login sessions of that user will be revoked then
 		$iat = $contentProvider->getValue('iat',0);
 		if (($iat-120/*leeway 2min*/) > time()) {
 			// Token was created in the future. Something is wrong!
@@ -200,8 +221,8 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStore {
 
 		// Optional feature: Limit the JWT to a specific IP address
 		// Currently not used in OIDplus
-		$ip = $contentProvider->getValue('oidplus_limit_ip','');
-		if ($ip !== '') {
+		$ip = $contentProvider->getValue(self::CLAIM_LIMIT_IP, null);
+		if (!is_null($ip)) {
 			if (isset($_SERVER['REMOTE_ADDR']) && ($ip !== $_SERVER['REMOTE_ADDR'])) {
 				throw new OIDplusException(_L('Your IP address is not allowed to use this token'));
 			}
@@ -282,15 +303,71 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStore {
 		OIDplus::cookieUtils()->unsetcookie(self::COOKIE_NAME);
 	}
 
+	// RA authentication functions (low-level)
+
+	/**
+	 * @param string $email
+	 * @return void
+	 */
+	public function raLogin(string $email) {
+		if ($email == 'admin') return;
+
+		$list = $this->getValue(self::CLAIM_LOGIN_LIST, null);
+		if (is_null($list)) $list = [];
+		if (!in_array($email, $list)) $list[] = $email;
+		$this->setValue(self::CLAIM_LOGIN_LIST, $list);
+	}
+
+	/**
+	 * @return int
+	 */
+	public function raNumLoggedIn(): int {
+		return count($this->loggedInRaList());
+	}
+
+	/**
+	 * @return OIDplusRA[]
+	 */
+	public function loggedInRaList(): array {
+		$list = $this->getValue(self::CLAIM_LOGIN_LIST, null);
+		if (is_null($list)) $list = [];
+
+		$res = array();
+		foreach (array_unique($list) as $username) {
+			if ($username == '') continue; // should not happen
+			if ($username == 'admin') continue;
+			$res[] = new OIDplusRA($username);
+		}
+		return $res;
+	}
+
+	/**
+	 * @param string $email
+	 * @return bool
+	 */
+	public function isRaLoggedIn(string $email): bool {
+		foreach ($this->loggedInRaList() as $ra) {
+			if ($email == $ra->raEmail()) return true;
+		}
+		return false;
+	}
+
 	/**
 	 * @param string $email
 	 * @return void
 	 * @throws OIDplusException
 	 */
 	public function raLogout(string $email) {
-		$gen = $this->getValue('oidplus_generator', -1);
+		if ($email == 'admin') return;
+
+		$gen = $this->getValue(self::CLAIM_GENERATOR, -1);
 		if ($gen >= 0) self::jwtBlacklist($gen, $email);
-		parent::raLogout($email);
+
+		$list = $this->getValue(self::CLAIM_LOGIN_LIST, null);
+		if (is_null($list)) $list = [];
+		$key = array_search($email, $list);
+		if ($key !== false) unset($list[$key]);
+		$this->setValue(self::CLAIM_LOGIN_LIST, $list);
 	}
 
 	/**
@@ -304,14 +381,40 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStore {
 		$loginfo = 'from JWT session';
 	}
 
+	// Admin authentication functions (low-level)
+
+	/**
+	 * @return void
+	 */
+	public function adminLogin() {
+		$list = $this->getValue(self::CLAIM_LOGIN_LIST, null);
+		if (is_null($list)) $list = [];
+		if (!in_array('admin', $list)) $list[] = 'admin';
+		$this->setValue(self::CLAIM_LOGIN_LIST, $list);
+	}
+
+	/**
+	 * @return bool
+	 */
+	public function isAdminLoggedIn(): bool {
+		$list = $this->getValue(self::CLAIM_LOGIN_LIST, null);
+		if (is_null($list)) $list = [];
+		return in_array('admin', $list);
+	}
+
 	/**
 	 * @return void
 	 * @throws OIDplusException
 	 */
 	public function adminLogout() {
-		$gen = $this->getValue('oidplus_generator', -1);
+		$gen = $this->getValue(self::CLAIM_GENERATOR, -1);
 		if ($gen >= 0) self::jwtBlacklist($gen, 'admin');
-		parent::adminLogout();
+
+		$list = $this->getValue(self::CLAIM_LOGIN_LIST, null);
+		if (is_null($list)) $list = [];
+		$key = array_search('admin', $list);
+		if ($key !== false) unset($list[$key]);
+		$this->setValue(self::CLAIM_LOGIN_LIST, $list);
 	}
 
 	/**
@@ -327,10 +430,10 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStore {
 	private static $contentProvider = null;
 
 	/**
-	 * @return OIDplusAuthContentStore|null
+	 * @return OIDplusAuthContentStoreJWT|null
 	 * @throws OIDplusException
 	 */
-	public static function getActiveProvider()/*: ?OIDplusAuthContentStore*/ {
+	public static function getActiveProvider()/*: ?OIDplusAuthContentStoreJWT*/ {
 		if (!self::$contentProvider) {
 
 			$tmp = null;
@@ -352,7 +455,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStore {
 
 				} else {
 
-					// A web-visitor (HTML and AJAX, but not REST) can use a JWT "remember me" Cookie
+					// A web-visitor (HTML and AJAX, but not REST) can use a JWT Cookie
 					if (isset($_COOKIE[self::COOKIE_NAME])) {
 						$silent_error = true;
 						$tmp = new OIDplusAuthContentStoreJWT();
@@ -360,7 +463,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStore {
 						self::jwtSecurityCheck($tmp, self::JWT_GENERATOR_LOGIN | self::JWT_GENERATOR_MANUAL);
 					}
 
-					// AJAX may additionally use GET/POST automated AJAX (in addition to the normal JWT "remember me" Cookie)
+					// AJAX may additionally use GET/POST automated AJAX (in addition to the normal web browser login Cookie)
 					if (isset($_SERVER['SCRIPT_FILENAME']) && (strtolower(basename($_SERVER['SCRIPT_FILENAME'])) !== 'ajax.php')) {
 						if (isset($_POST[self::COOKIE_NAME])) {
 							$silent_error = false;
@@ -407,7 +510,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStore {
 			$loginfo = 'into new JWT session';
 			self::$contentProvider = $this;
 		} else {
-			$gen = $this->getValue('oidplus_generator',-1);
+			$gen = $this->getValue(self::CLAIM_GENERATOR,-1);
 			switch ($gen) {
 				case OIDplusAuthContentStoreJWT::JWT_GENERATOR_AJAX :
 				case OIDplusAuthContentStoreJWT::JWT_GENERATOR_REST :
@@ -415,7 +518,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStore {
 					throw new OIDplusException(_L('This kind of JWT token cannot be altered. Therefore you cannot do this action.'));
 				case OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN :
 					if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_USER', true)) {
-						throw new OIDplusException(_L('You cannot add this login credential to your existing "remember me" session. You need to log-out first.'));
+						throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_LOGIN_USER'));
 					}
 					break;
 				default:
@@ -438,7 +541,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStore {
 			$loginfo = 'into new JWT session';
 			self::$contentProvider = $this;
 		} else {
-			$gen = $this->getValue('oidplus_generator',-1);
+			$gen = $this->getValue(self::CLAIM_GENERATOR,-1);
 			switch ($gen) {
 				case OIDplusAuthContentStoreJWT::JWT_GENERATOR_AJAX :
 				case OIDplusAuthContentStoreJWT::JWT_GENERATOR_REST :
@@ -446,7 +549,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStore {
 					throw new OIDplusException(_L('This kind of JWT token cannot be altered. Therefore you cannot do this action.'));
 				case OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN :
 					if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_ADMIN', true)) {
-						throw new OIDplusException(_L('You cannot add this login credential to your existing "remember me" session. You need to log-out first.'));
+						throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_LOGIN_ADMIN'));
 					}
 					break;
 				default:
@@ -486,7 +589,7 @@ class OIDplusAuthContentStoreJWT extends OIDplusAuthContentStore {
 	 */
 	public function getJWTToken(): string {
 		$payload = $this->content;
-		$payload["oidplus_ssh"] = self::getSsh(); // SSH = Server Secret Hash
+		$payload[self::CLAIM_SSH] = self::getSsh(); // SSH = Server Secret Hash
 		$payload["iss"] = OIDplus::getEditionInfo()['jwtaud'];
 		$payload["aud"] = OIDplus::getEditionInfo()['jwtaud'];
 		$payload["jti"] = gen_uuid();

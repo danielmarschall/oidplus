@@ -110,7 +110,7 @@ class OIDplusPageAdminRestApi extends OIDplusPagePluginAdmin {
 
 				$authSimulation = new OIDplusAuthContentStoreJWT();
 				$authSimulation->adminLogin();
-				$authSimulation->setValue('oidplus_generator', $gen);
+				$authSimulation->setValue(OIDplusAuthContentStoreJWT::CLAIM_GENERATOR, $gen);
 				$token = $authSimulation->getJWTToken();
 
 				$out['text'] .= '<p>'._L('You can make automated calls to your OIDplus account by calling an REST API.').'</p>';

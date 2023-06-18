@@ -50,7 +50,7 @@ var OIDplusPagePublicLogin = {
 		});
 	},
 
-	raLogin: function(email, password, remember_me) {
+	raLogin: function(email, password) {
 		$.ajax({
 			url:"ajax.php",
 			method:"POST",
@@ -67,7 +67,6 @@ var OIDplusPagePublicLogin = {
 				action:"ra_login",
 				email:email,
 				password:password,
-				remember_me:remember_me?1:0,
 				captcha: oidplus_captcha_response()
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
@@ -87,14 +86,13 @@ var OIDplusPagePublicLogin = {
 	},
 
 	raLoginOnSubmit: function() {
-		var remember_me = $("#remember_me_ra").length == 0 ? false : $("#remember_me_ra")[0].checked;
-		OIDplusPagePublicLogin.raLogin($("#raLoginEMail")[0].value, $("#raLoginPassword")[0].value, remember_me);
+		OIDplusPagePublicLogin.raLogin($("#raLoginEMail")[0].value, $("#raLoginPassword")[0].value);
 		return false;
 	},
 
 	/* Admin */
 
-	adminLogin: function(password, remember_me) {
+	adminLogin: function(password) {
 		$.ajax({
 			url:"ajax.php",
 			method:"POST",
@@ -110,7 +108,6 @@ var OIDplusPagePublicLogin = {
 				plugin:OIDplusPagePublicLogin.oid,
 				action:"admin_login",
 				password:password,
-				remember_me:remember_me?1:0,
 				captcha: oidplus_captcha_response()
 			},
 			error: function (jqXHR, textStatus, errorThrown) {
@@ -158,8 +155,7 @@ var OIDplusPagePublicLogin = {
 	},
 
 	adminLoginOnSubmit: function() {
-		var remember_me = $("#remember_me_admin").length == 0 ? false : $("#remember_me_admin")[0].checked;
-		OIDplusPagePublicLogin.adminLogin($("#adminLoginPassword")[0].value, remember_me);
+		OIDplusPagePublicLogin.adminLogin($("#adminLoginPassword")[0].value);
 		return false;
 	}
 

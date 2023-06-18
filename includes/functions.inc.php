@@ -694,3 +694,70 @@ function oidplus_is_true($mixed): bool {
 		return (bool)$mixed; // let PHP decide...
 	}
 }
+
+/**
+ * @param string $data
+ * @param string $key
+ * @return string
+ * @throws \Exception
+ */
+function encrypt_str(string $data, string $key): string {
+	if (function_exists('openssl_encrypt')) {
+		$iv = random_bytes(16); // AES block size in CBC mode
+		// Encryption
+		$ciphertext = openssl_encrypt(
+			$data,
+			'AES-256-CBC',
+			hash_pbkdf2('sha512', $key, '', 10000, 32/*256bit*/, true),
+			OPENSSL_RAW_DATA,
+			$iv
+		);
+		// Authentication
+		$hmac = sha3_512_hmac($iv . $ciphertext, $key, true);
+		return $hmac . $iv . $ciphertext;
+	} else {
+		// When OpenSSL is not available, then we just do a HMAC
+		$hmac = sha3_512_hmac($data, $key, true);
+		return $hmac . $data;
+	}
+}
+
+/**
+ * @param string $data
+ * @param string $key
+ * @return string
+ * @throws OIDplusException
+ */
+function decrypt_str(string $data, string $key): string {
+	if (function_exists('openssl_decrypt')) {
+		$hmac       = mb_substr($data, 0, 64, '8bit');
+		$iv         = mb_substr($data, 64, 16, '8bit');
+		$ciphertext = mb_substr($data, 80, null, '8bit');
+		// Authentication
+		$hmacNew = sha3_512_hmac($iv . $ciphertext, $key, true);
+		if (!hash_equals($hmac, $hmacNew)) {
+			throw new OIDplusException(_L('Authentication failed'));
+		}
+		// Decryption
+		$cleartext = openssl_decrypt(
+			$ciphertext,
+			'AES-256-CBC',
+			hash_pbkdf2('sha512', $key, '', 10000, 32/*256bit*/, true),
+			OPENSSL_RAW_DATA,
+			$iv
+		);
+		if ($cleartext === false) {
+			throw new OIDplusException(_L('Decryption failed'));
+		}
+		return $cleartext;
+	} else {
+		// When OpenSSL is not available, then we just do a HMAC
+		$hmac       = mb_substr($data, 0, 64, '8bit');
+		$cleartext  = mb_substr($data, 64, null, '8bit');
+		$hmacNew    = sha3_512_hmac($cleartext, $key, true);
+		if (!hash_equals($hmac, $hmacNew)) {
+			throw new OIDplusException(_L('Authentication failed'));
+		}
+		return $cleartext;
+	}
+}

@@ -20,7 +20,7 @@
 
 <body>
 	<h1>Datenschutz Verfahrensbeschreibung</h1>
-	<p><em>Revision: 18. Oktober 2022</em></p>
+	<p><em>Revision: 18. Juni 2023</em></p>
 	<p><strong><em>Wichtig</em></strong><em>: Dieses Dokument wurde von ViaThinkSoft (dem Entwickler der Software OIDplus) verfasst und enthält allgemeine Informationen zur Funktionsweise von OIDplus in Bezug auf datenschutzbezogene Themen. Da OIDplus eine Web-Software ist, die heruntergeladen und auf einem eigenen Server betrieben werden kann, beschreibt dieses Dokument NICHT, wie die Eigentümer / Administratoren dieser Installation von OIDplus mit Ihren Daten umgehen. Daher sollte der Eigentümer dieses Systems eine zusätzliche / individuelle Datenschutzerklärung vorlegen.</em></p>
 
 	<a id="terminology"></a><h2>Parteien / Terminologie</h2>
@@ -316,17 +316,10 @@
 		</thead>
 		<tbody>
 			<tr>
-				<td valign="top">Login-Cookie<br>(Regulärer Login)</td>
+				<td valign="top">Login-Cookie</td>
 				<td valign="top">Essentiell</td>
-				<td valign="top">Enthält einen Sitzungsschlüssel, mit dem der Anmeldestatus des Benutzers und die Berechtigungen ermittelt werden.</td>
-				<td valign="top">Während der Anmeldung eines Benutzers oder Administrators mit seinem Passwort, wenn die Option "Angemeldet bleiben" nicht aktiviert ist.</td>
-				<td valign="top">Wenn der Benutzer abgemeldet und / oder die Browsersitzung geschlossen wird.</td>
-			</tr>
-			<tr>
-				<td valign="top">Login-Cookie<br>("Angemeldet bleiben" Option)</td>
-				<td valign="top">Essentiell</td>
-				<td valign="top">Enthält einen vom Server signierten "JSON Web Token", der den Benutzernamen enthält.</td>
-				<td valign="top">Während der Anmeldung eines Benutzers oder Administrators mit seinem Passwort, wenn die Option "Angemeldet bleiben" aktiviert ist.</td>
+				<td valign="top">Enthält einen vom Server signierten "JSON Web Token" (JWT), der den Benutzernamen enthält.</td>
+				<td valign="top">Während der Anmeldung eines Benutzers oder Administrators mit seinem Passwort.</td>
 				<td valign="top">Wenn der Benutzer sich abmeldet.</td>
 			</tr>
 			<tr>
