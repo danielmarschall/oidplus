@@ -138,17 +138,17 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	 */
 	private static function jwtSecurityCheck(OIDplusAuthContentStoreJWT $contentProvider, int $validGenerators=null) {
 		// Check if the token is intended for us
-		// Note 'aud' is mandatory, so we do not check of exists()
+		// Note 'aud' is mandatory, so we do not check for exists()
 		if ($contentProvider->getValue('aud','') !== OIDplus::getEditionInfo()['jwtaud']) {
 			throw new OIDplusException(_L('Token has wrong audience'));
 		}
 
-		// Note CLAIM_SSH is mandatory, so we do not check of exists()
+		// Note CLAIM_SSH is mandatory, so we do not check for exists()
 		if ($contentProvider->getValue(self::CLAIM_SSH, '') !== self::getSsh()) {
 			throw new OIDplusException(_L('"Server Secret" was changed; therefore the JWT is not valid anymore'));
 		}
 
-		// Note CLAIM_GENERATOR is mandatory, so we do not check of exists()
+		// Note CLAIM_GENERATOR is mandatory, so we do not check for exists()
 		$gen = $contentProvider->getValue(self::CLAIM_GENERATOR, -1);
 
 		$has_admin = $contentProvider->isAdminLoggedIn();

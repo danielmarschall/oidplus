@@ -106,7 +106,7 @@
         'danielmarschall/vnag' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '4187cbaf037c95e81cefbef119ee1ab35908abe2',
+            'reference' => 'edb07ec3759d0d9112c498778b83663832424eb4',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/vnag',
             'aliases' => array(
@@ -151,9 +151,9 @@
             'dev_requirement' => false,
         ),
         'matthiasmullie/minify' => array(
-            'pretty_version' => '1.3.70',
-            'version' => '1.3.70.0',
-            'reference' => '2807d9f9bece6877577ad44acb5c801bb3ae536b',
+            'pretty_version' => '1.3.71',
+            'version' => '1.3.71.0',
+            'reference' => 'ae42a47d7fecc1fbb7277b2f2d84c37a33edc3b1',
             'type' => 'library',
             'install_path' => __DIR__ . '/../matthiasmullie/minify',
             'aliases' => array(),
@@ -189,7 +189,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => '2097656b4a968a5ccde692a4d56755aa829f8962',
+            'reference' => '862b9662a20ef7a4aff720b68ffba790ed02878f',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),
@@ -232,9 +232,9 @@
             'dev_requirement' => false,
         ),
         'twbs/bootstrap' => array(
-            'pretty_version' => 'v5.3.0-alpha3',
-            'version' => '5.3.0.0-alpha3',
-            'reference' => 'ac576614a5515e429f27e756fad81d5aa05e95a6',
+            'pretty_version' => 'v5.3.0',
+            'version' => '5.3.0.0',
+            'reference' => '60098ac499d30aa50575b0b7137391c06ef25429',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twbs/bootstrap',
             'aliases' => array(),
@@ -252,7 +252,7 @@
         'twitter/bootstrap' => array(
             'dev_requirement' => false,
             'replaced' => array(
-                0 => 'v5.3.0-alpha3',
+                0 => 'v5.3.0',
             ),
         ),
         'vakata/jstree' => array(
