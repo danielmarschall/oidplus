@@ -87,8 +87,7 @@ function oidplus_get_missing_dependencies(): array {
 	}
 
 	if (!extension_loaded('mbstring') && !extension_loaded('iconv')) {
-		// Required for includes/classes/OIDplusAuthContentStoreSession.class.php
-		//              includes/oid_utils.inc.php
+		// Required for includes/oid_utils.inc.php
 		//              vendor/matthiasmullie/path-converter/src/Converter.php
 		//              vendor/n-other/php-sha3/src/Sha3.php
 		//              includes/functions.inc.php (convert_to_utf8_no_bom)

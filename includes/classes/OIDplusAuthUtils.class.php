@@ -68,18 +68,13 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @return OIDplusAuthContentStore|null
+	 * @return OIDplusAuthContentStoreJWT|null
 	 * @throws OIDplusException
 	 */
 	protected function getAuthContentStore()/*: ?OIDplusAuthContentStore*/ {
 		// Logged in via JWT
-		// (The JWT can come from a REST Authentication Bearer, an AJAX Cookie, or an Automated AJAX Call GET/POST token.)
+		// (The JWT can come from a login cookie, an REST Authentication Bearer, an AJAX Cookie, or an Automated AJAX Call GET/POST token.)
 		$tmp = OIDplusAuthContentStoreJWT::getActiveProvider();
-		if ($tmp) return $tmp;
-
-		// Normal login via web-browser
-		// Cookie will only be created once content is stored
-		$tmp = OIDplusAuthContentStoreSession::getActiveProvider();
 		if ($tmp) return $tmp;
 
 		// No active session and no JWT token available. User is not logged in.
@@ -187,12 +182,11 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 
 	/**
 	 * @param string $email
-	 * @param bool $remember_me
 	 * @param string $origin
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function raLoginEx(string $email, bool $remember_me, string $origin='') {
+	public function raLoginEx(string $email, string $origin='') {
 		$loginfo = '';
 		$acs = $this->getAuthContentStore();
 		if (!is_null($acs)) {
@@ -201,17 +195,13 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 			$acs->activate();
 		} else {
 			// No user is logged in (no session or JWT exists). We now create a auth content store and activate it (cookies will be set etc.)
-			if ($remember_me) {
-				if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_USER', true)) {
-					throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_LOGIN_USER'));
-				}
-				$ttl = OIDplus::baseConfig()->getValue('JWT_TTL_LOGIN_USER', 10*365*24*60*60);
-				$newAuthStore = new OIDplusAuthContentStoreJWT();
-				$newAuthStore->setValue('oidplus_generator', OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN);
-				$newAuthStore->setValue('exp', time()+$ttl); // JWT "exp" attribute
-			} else {
-				$newAuthStore = new OIDplusAuthContentStoreSession();
+			if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_USER', true)) {
+				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_LOGIN_USER'));
 			}
+			$ttl = OIDplus::baseConfig()->getValue('JWT_TTL_LOGIN_USER', 10*365*24*60*60);
+			$newAuthStore = new OIDplusAuthContentStoreJWT();
+			$newAuthStore->setValue(OIDplusAuthContentStoreJWT::CLAIM_GENERATOR, OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN);
+			$newAuthStore->setValue('exp', time()+$ttl); // JWT "exp" attribute
 			$newAuthStore->raLoginEx($email, $loginfo);
 			$newAuthStore->activate();
 		}
@@ -317,12 +307,11 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 
 	/**
 	 * "High level" function including logging and checking for valid JWT alternations
-	 * @param bool $remember_me
 	 * @param string $origin
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function adminLoginEx(bool $remember_me, string $origin='') {
+	public function adminLoginEx(string $origin='') {
 		$loginfo = '';
 		$acs = $this->getAuthContentStore();
 		if (!is_null($acs)) {
@@ -331,17 +320,13 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 			$acs->activate();
 		} else {
 			// No user is logged in (no session or JWT exists). We now create a auth content store and activate it (cookies will be set etc.)
-			if ($remember_me) {
-				if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_ADMIN', true)) {
-					throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_LOGIN_ADMIN'));
-				}
-				$ttl = OIDplus::baseConfig()->getValue('JWT_TTL_LOGIN_ADMIN', 10*365*24*60*60);
-				$newAuthStore = new OIDplusAuthContentStoreJWT();
-				$newAuthStore->setValue('oidplus_generator', OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN);
-				$newAuthStore->setValue('exp', time()+$ttl); // JWT "exp" attribute
-			} else {
-				$newAuthStore = new OIDplusAuthContentStoreSession();
+			if (!OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_ADMIN', true)) {
+				throw new OIDplusException(_L('The administrator has disabled this feature. (Base configuration setting %1).','JWT_ALLOW_LOGIN_ADMIN'));
 			}
+			$ttl = OIDplus::baseConfig()->getValue('JWT_TTL_LOGIN_ADMIN', 10*365*24*60*60);
+			$newAuthStore = new OIDplusAuthContentStoreJWT();
+			$newAuthStore->setValue(OIDplusAuthContentStoreJWT::CLAIM_GENERATOR, OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN);
+			$newAuthStore->setValue('exp', time()+$ttl); // JWT "exp" attribute
 			$newAuthStore->adminLoginEx($loginfo);
 			$newAuthStore->activate();
 		}

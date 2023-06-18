@@ -44,8 +44,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 		}
 
 		if ($ra->checkPassword($params['password'])) {
-			$remember_me = isset($params['remember_me']) && ($params['remember_me']);
-			OIDplus::authUtils()->raLoginEx($email, $remember_me, 'Regular login');
+			OIDplus::authUtils()->raLoginEx($email, 'Regular login');
 
 			$authInfo = OIDplus::authUtils()->raGeneratePassword($params['password']);
 
@@ -95,8 +94,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 
 		_CheckParamExists($params, 'password');
 		if (OIDplus::authUtils()->adminCheckPassword($params['password'])) {
-			$remember_me = isset($params['remember_me']) && ($params['remember_me']);
-			OIDplus::authUtils()->adminLoginEx($remember_me, 'Regular login');
+			OIDplus::authUtils()->adminLoginEx('Regular login');
 
 			// TODO: Write a "last login" entry in config table?
 
@@ -211,20 +209,6 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			$tabcont .= '<form action="javascript:void(0);" onsubmit="return OIDplusPagePublicLogin.raLoginOnSubmit(this);">';
 			$tabcont .= '<div><label class="padding_label">'._L('E-Mail').':</label><input type="text" name="email" value="'.htmlentities($desired_ra).'" id="raLoginEMail"></div>';
 			$tabcont .= '<div><label class="padding_label">'._L('Password').':</label><input type="password" name="password" value="" id="raLoginPassword"></div>';
-			if (OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_USER', true)) {
-				if ((OIDplus::authUtils()->getAuthMethod() === OIDplusAuthContentStoreJWT::class)) {
-					if (OIDplus::authUtils()->getExtendedAttribute('oidplus_generator',-1) === OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN) {
-						$att = 'disabled checked';
-					} else {
-						$att = 'disabled';
-					}
-				} else if ((OIDplus::authUtils()->getAuthMethod() === OIDplusAuthContentStoreSession::class)) {
-					$att = 'disabled';
-				} else {
-					$att = '';
-				}
-				$tabcont .= '<div><input '.$att.' type="checkbox" value="1" id="remember_me_ra" name="remember_me_ra"> <label for="remember_me_ra">'._L('Remember me').'</label></div>';
-			}
 			$tabcont .= '<br><input type="submit" value="'._L('Login').'"><br><br>';
 			$tabcont .= '</form>';
 			$tabcont .= '<p><a '.OIDplus::gui()->link('oidplus:forgot_password').'>'._L('Forgot password?').'</a><br>';
@@ -269,20 +253,6 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			} else {
 				$tabcont .= '<form action="javascript:void(0);" onsubmit="return OIDplusPagePublicLogin.adminLoginOnSubmit(this);">';
 				$tabcont .= '<div><label class="padding_label">'._L('Password').':</label><input type="password" name="password" value="" id="adminLoginPassword"></div>';
-				if (OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_ADMIN', true)) {
-					if ((OIDplus::authUtils()->getAuthMethod() === OIDplusAuthContentStoreJWT::class)) {
-						if (OIDplus::authUtils()->getExtendedAttribute('oidplus_generator',-1) === OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN) {
-							$att = 'disabled checked';
-						} else {
-							$att = 'disabled';
-						}
-					} else if ((OIDplus::authUtils()->getAuthMethod() === OIDplusAuthContentStoreSession::class)) {
-						$att = 'disabled';
-					} else {
-						$att = '';
-					}
-					$tabcont .= '<div><input '.$att.' type="checkbox" value="1" id="remember_me_admin" name="remember_me_admin"> <label for="remember_me_admin">'._L('Remember me').'</label></div>';
-				}
 				$tabcont .= '<br><input type="submit" value="'._L('Login').'"><br><br>';
 				$tabcont .= '</form>';
 				$tabcont .= '<p><a '.OIDplus::gui()->link('oidplus:forgot_password_admin').'>'._L('Forgot password?').'</a><br>';
@@ -293,8 +263,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 
 			$out['text'] .= '</div><br>';
 
-			$mins = ceil(OIDplus::baseConfig()->getValue('SESSION_LIFETIME', 30*60)/60);
-			$out['text'] .= '<p><font size="-1">'._L('<i>Privacy information</i>: By using the login functionality, you are accepting that a "session cookie" is temporarily stored in your browser. The session cookie is a small text file that is sent to this website every time you visit it, to identify you as an already logged in user. It does not track any of your online activities outside OIDplus. The cookie will be destroyed when you log out or after an inactivity of %1 minutes (except if the "Remember me" option is used).', $mins);
+			$out['text'] .= '<p><font size="-1">'._L('<i>Privacy information</i>: By using the login functionality, you are accepting that a "session cookie" is temporarily stored in your browser. The session cookie is a small text file that is sent to this website every time you visit it, to identify you as an already logged in user. It does not track any of your online activities outside OIDplus. The cookie will be destroyed when you log out.');
 			$privacy_document_file = 'OIDplus/privacy_documentation.html';
 			$resourcePlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.1.500'); // OIDplusPagePublicResources
 			if (!is_null($resourcePlugin) && file_exists(OIDplus::localpath().'res/'.$privacy_document_file)) {

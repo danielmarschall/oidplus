@@ -254,10 +254,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		<i>Privacy information</i>: By using the login functionality, you are accepting that a "session cookie" is temporarily stored in your browser. The session cookie is a small text file that is sent to this website every time you visit it, to identify you as an already logged in user. It does not track any of your online activities outside OIDplus. The cookie will be destroyed when you log out or after an inactivity of %1 minutes (except if the "Remember me" option is used).
+		<i>Privacy information</i>: By using the login functionality, you are accepting that a "session cookie" is temporarily stored in your browser. The session cookie is a small text file that is sent to this website every time you visit it, to identify you as an already logged in user. It does not track any of your online activities outside OIDplus. The cookie will be destroyed when you log out.
 		]]></source>
 		<target><![CDATA[
-		<i>Datenschutz-Hinweis</i>: Durch das Benutzen der Login-Funktion erklären Sie sich einverstanden, dass ein Sitzungs-Cookie temporär in Ihrem Browser abgespeichert wird. Ein Sitzungs-Cookie ist eine kleine Textdatei, die bei jedem Aufruf dieser Seite an den Webserver gesendet wird, um Sie als eingeloggten Benutzer zu identifizieren. Das Sitzungs-Cookie wird nicht Ihre Surfverhalten außerhalb OIDplus verfolgen. Das Cookie wird zerstört, wenn Sie sich ausloggen oder nach einer Inaktivität von %1 Minuten (außer wenn die "Angemeldet bleiben" Option genutzt wird).
+		<i>Datenschutz-Hinweis</i>: Durch das Benutzen der Login-Funktion erklären Sie sich einverstanden, dass ein Sitzungs-Cookie temporär in Ihrem Browser abgespeichert wird. Ein Sitzungs-Cookie ist eine kleine Textdatei, die bei jedem Aufruf dieser Seite an den Webserver gesendet wird, um Sie als eingeloggten Benutzer zu identifizieren. Das Sitzungs-Cookie wird nicht Ihre Surfverhalten außerhalb OIDplus verfolgen. Das Cookie wird zerstört, wenn Sie sich ausloggen.
 		]]></target>
 	</message>
 	<message>
@@ -3310,14 +3310,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Internal error with session. Please reload the page and log-in again. %1
-		]]></source>
-		<target><![CDATA[
-		Interner Fehler beim Laden der Sitzung. Bitte laden Sie die Seite neu und loggen Sie sich erneut ein. %1
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Invalid
 		]]></source>
 		<target><![CDATA[
@@ -6166,14 +6158,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Remember me
-		]]></source>
-		<target><![CDATA[
-		Angemeldet bleiben
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Remove
 		]]></source>
 		<target><![CDATA[
@@ -6586,14 +6570,6 @@
 		]]></source>
 		<target><![CDATA[
 		Server-Zeit
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Session could not be started
-		]]></source>
-		<target><![CDATA[
-		Sitzung konnte nicht gestartet werden
 		]]></target>
 	</message>
 	<message>
@@ -8538,14 +8514,6 @@
 		]]></source>
 		<target><![CDATA[
 		Die WEID-Syntax kann nur im Objekt-Wurzelbereich als Eingabehilfe verwendet werden.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		You cannot add this login credential to your existing "remember me" session. You need to log-out first.
-		]]></source>
-		<target><![CDATA[
-		Sie können die Anmeldedaten nicht zu Ihrer bestehenden "Angemeldet bleiben" Sitzung hinzufügen. Sie müssen sich zuerst abmelden.
 		]]></target>
 	</message>
 	<message>

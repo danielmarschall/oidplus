@@ -125,7 +125,7 @@ try {
 			OIDplus::logger()->log("V2:[INFO]RA(%1)", "RA '%1' was created because of successful Google OAuth2 login", $email);
 		}
 
-		OIDplus::authUtils()->raLoginEx($email, $remember_me=false, 'Google-OAuth2');
+		OIDplus::authUtils()->raLoginEx($email, 'Google-OAuth2');
 
 		OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate()." where email = ?", array($email));
 

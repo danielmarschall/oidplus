@@ -31,7 +31,7 @@ Where are makeAuthKey and makeSecret being used?
 
 System / Core:
 - Auth content Store (OIDplusAuthContentStoreJWT.class.php):
-  Key to sign JWT tokens (used for Automated AJAX requests, REST API and logins with "Remember me")
+  Key to sign JWT tokens (used for Automated AJAX requests, REST API and web browser logins)
   * If a private/public key pair exists: Sign the JWT using that private key.
   * Otherwise sign it using PBKDF2+HMAC:
     `JWT = HS512(hash_pbkdf2("sha512", OIDplus::authUtils()->makeSecret(["0be35e52-f4ef-11ed-b67e-3c4a92df8582"]), "", 10000, 64/*256bit*/, false))`

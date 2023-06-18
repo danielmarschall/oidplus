@@ -83,20 +83,19 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic
 	}
 
 	/**
-	 * @param bool $remember_me
 	 * @param string $email
 	 * @param array $ldap_userinfo
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	private function doLoginRA(bool $remember_me, string $email, array $ldap_userinfo) {
+	private function doLoginRA(string $email, array $ldap_userinfo) {
 		$ra = new OIDplusRA($email);
 		if (!$ra->existing()) {
 			$this->registerRA($ra, $ldap_userinfo);
 			OIDplus::logger()->log("V2:[INFO]RA(%1)", "RA '%1' was created because of successful LDAP login", $email);
 		}
 
-		OIDplus::authUtils()->raLoginEx($email, $remember_me, 'LDAP');
+		OIDplus::authUtils()->raLoginEx($email, 'LDAP');
 
 		OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate()." where email = ?", array($email));
 	}
@@ -183,8 +182,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic
 			}
 			if ($isAdmin) {
 				$foundSomething = true;
-				$remember_me = isset($params['remember_me']) && ($params['remember_me']);
-				OIDplus::authUtils()->adminLoginEx($remember_me, 'LDAP login');
+				OIDplus::authUtils()->adminLoginEx('LDAP login');
 			}
 
 			// ---
@@ -199,15 +197,13 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic
 				if (OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_UPN'.$cfgSuffix,true)) {
 					$mail = \VtsLDAPUtils::getString($ldap_userinfo, 'userprincipalname');
 					$foundSomething = true;
-					$remember_me = isset($params['remember_me']) && ($params['remember_me']);
-					$this->doLoginRA($remember_me, $mail, $ldap_userinfo);
+					$this->doLoginRA($mail, $ldap_userinfo);
 				}
 				if (OIDplus::baseConfig()->getValue('LDAP_AUTHENTICATE_EMAIL'.$cfgSuffix,false)) {
 					$mails = \VtsLDAPUtils::getArray($ldap_userinfo, 'mail');
 					foreach ($mails as $mail) {
 						$foundSomething = true;
-						$remember_me = isset($params['remember_me']) && ($params['remember_me']);
-						$this->doLoginRA($remember_me, $mail, $ldap_userinfo);
+						$this->doLoginRA($mail, $ldap_userinfo);
 					}
 				}
 			}
@@ -306,28 +302,13 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic
 			$out['text'] .= '</select>';
 			$out['text'] .= '</div>';
 			$out['text'] .= '<div><label class="padding_label">'._L('Password').':</label><input type="password" name="password" value="" id="raLoginLdapPassword"></div>';
-			if (OIDplus::baseConfig()->getValue('JWT_ALLOW_LOGIN_USER', true)) {
-				if ((OIDplus::authUtils()->getAuthMethod() === OIDplusAuthContentStoreJWT::class)) {
-					if (OIDplus::authUtils()->getExtendedAttribute('oidplus_generator',-1) === OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN) {
-						$att = 'disabled checked';
-					} else {
-						$att = 'disabled';
-					}
-				} else if ((OIDplus::authUtils()->getAuthMethod() === OIDplusAuthContentStoreSession::class)) {
-					$att = 'disabled';
-				} else {
-					$att = '';
-				}
-				$out['text'] .= '<div><input '.$att.' type="checkbox" value="1" id="remember_me_ldap" name="remember_me_ldap"> <label for="remember_me_ldap">'._L('Remember me').'</label></div>';
-			}
 			$out['text'] .= '<br><input type="submit" value="'._L('Login').'"><br><br>';
 			$out['text'] .= '</form>';
 
 			$invitePlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.2.92'); // OIDplusPageRaInvite
 			$out['text'] .= '<p><b>'._L('How to register?').'</b> '._L('You don\'t need to register. Just enter your Windows/Company credentials.').'</p>';
 
-			$mins = ceil(OIDplus::baseConfig()->getValue('SESSION_LIFETIME', 30*60)/60);
-			$out['text'] .= '<p><font size="-1">'._L('<i>Privacy information</i>: By using the login functionality, you are accepting that a "session cookie" is temporarily stored in your browser. The session cookie is a small text file that is sent to this website every time you visit it, to identify you as an already logged in user. It does not track any of your online activities outside OIDplus. The cookie will be destroyed when you log out or after an inactivity of %1 minutes (except if the "Remember me" option is used).', $mins);
+			$out['text'] .= '<p><font size="-1">'._L('<i>Privacy information</i>: By using the login functionality, you are accepting that a "session cookie" is temporarily stored in your browser. The session cookie is a small text file that is sent to this website every time you visit it, to identify you as an already logged in user. It does not track any of your online activities outside OIDplus. The cookie will be destroyed when you log out.');
 			$privacy_document_file = 'OIDplus/privacy_documentation.html';
 			$resourcePlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.1.500'); // OIDplusPagePublicResources
 			if (!is_null($resourcePlugin) && file_exists(OIDplus::localpath().'res/'.$privacy_document_file)) {
