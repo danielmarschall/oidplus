@@ -54,6 +54,11 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	const CLAIM_LIMIT_IP = 'urn:oid:1.3.6.1.4.1.37476.2.5.2.7.4';
 
 	/**
+	 * Trace JTI, IP, and UserAgent
+	 */
+	const CLAIM_TRACE = 'urn:oid:1.3.6.1.4.1.37476.2.5.2.7.5';
+
+	/**
 	 * "Automated AJAX" plugin
 	 */
 	const JWT_GENERATOR_AJAX   = 10;
@@ -630,6 +635,24 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 		$payload["iat"] = time();
 		if (!isset($payload["nbf"])) $payload["nbf"] = time();
 		if (!isset($payload["exp"])) $payload["exp"] = time()+3600/*1h*/;
+
+		if (!isset($payload[self::CLAIM_TRACE])) {
+			// "Trace" can be used for later updates
+			// For example, if the IP changes "too much" (different country, different AS, etc.)
+			// Or revoke all tokens from a single login flow (sequence 1, 2, 3, ...)
+			$payload[self::CLAIM_TRACE] = array();
+			$payload[self::CLAIM_TRACE]['jti_1st'] = $payload["jti"];
+			$payload[self::CLAIM_TRACE]['seq'] = 1;
+			$payload[self::CLAIM_TRACE]['ip'] = $_SERVER['REMOTE_ADDR'] ?? '';
+			$payload[self::CLAIM_TRACE]['ip_1st'] = $payload[self::CLAIM_TRACE]['ip'];
+			$payload[self::CLAIM_TRACE]['ua'] = $_SERVER['HTTP_USER_AGENT'] ?? '';
+			$payload[self::CLAIM_TRACE]['ua_1st'] = $payload[self::CLAIM_TRACE]['ua'];
+		} else {
+			assert(is_numeric($payload[self::CLAIM_TRACE]['seq']));
+			$payload[self::CLAIM_TRACE]['seq']++;
+			$payload[self::CLAIM_TRACE]['ip'] = $_SERVER['REMOTE_ADDR'] ?? '';
+			$payload[self::CLAIM_TRACE]['ua'] = $_SERVER['HTTP_USER_AGENT'] ?? '';
+		}
 
 		uksort($payload, "strnatcmp"); // this is natsort on the key. Just to make the JWT look nicer.
 
