@@ -67,7 +67,9 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 	 * @return string
 	 */
 	private function highlight_match(string $html, string $term): string {
-		return str_replace(htmlentities($term), '<font color="red">'.htmlentities($term).'</font>', $html);
+		//return str_replace(htmlentities($term), '<font color="red">'.htmlentities($term).'</font>', $html);
+		// Case insensitive:
+		return preg_replace('@('.preg_quote(htmlentities($term),'@').')@i', '<font color="red">\\1</font>', $html);
 	}
 
 	/**
@@ -89,14 +91,13 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 		} else if (strlen($params['term']) < $min_length) {
 			$output .= '<p><font color="red">'._L('Error: Search term minimum length is %1 characters.',$min_length).'</font></p>';
 		} else {
-			// TODO: case insensitive comparison (or should we leave that to the DBMS?)
-
 			if ($params['namespace'] == 'oidplus:ra') {
 				$output .= '<h2>'._L('Search results for RA %1','<font color="red">'.htmlentities($params['term']).'</font>').'</h2>';
 
 				$sql_where = array(); $prep_where = array();
-				$sql_where[] = "email like ?";   $prep_where[] = '%'.$params['term'].'%';
-				$sql_where[] = "ra_name like ?"; $prep_where[] = '%'.$params['term'].'%';
+
+				$sql_where[] = OIDplus::db()->getSlang()->lowerCase('email')." like ?";   $prep_where[] = '%'.$params['term'].'%';
+				$sql_where[] = OIDplus::db()->getSlang()->lowerCase('ra_name')." like ?"; $prep_where[] = '%'.$params['term'].'%';
 
 				if (count($sql_where) == 0) $sql_where[] = '1=0';
 				$res = OIDplus::db()->query("select * from ###ra where (".implode(' or ', $sql_where).")", $prep_where);
@@ -114,19 +115,19 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 				$output .= '<h2>'._L('Search results for %1 (%2)','<font color="red">'.htmlentities($params['term']).'</font>',htmlentities($params['namespace'])).'</h2>';
 
 				$sql_where = array(); $prep_where = array();
-				$sql_where[] = "id like ?"; $prep_where[] = '%'.$params['term'].'%'; // TODO: should we rather do findFitting(), so we can e.g. find GUIDs with different notation?
-				if ($params["search_title"])       { $sql_where[] = "title like ?";       $prep_where[] = '%'.$params['term'].'%'; }
-				if ($params["search_description"]) { $sql_where[] = "description like ?"; $prep_where[] = '%'.$params['term'].'%'; }
+				$sql_where[] = OIDplus::db()->getSlang()->lowerCase('id')." like ?"; $prep_where[] = '%'.$params['term'].'%'; // TODO: should we rather do findFitting(), so we can e.g. find GUIDs with different notation?
+				if ($params["search_title"])       { $sql_where[] = OIDplus::db()->getSlang()->lowerCase('title')." like ?";       $prep_where[] = '%'.$params['term'].'%'; }
+				if ($params["search_description"]) { $sql_where[] = OIDplus::db()->getSlang()->lowerCase('description')." like ?"; $prep_where[] = '%'.$params['term'].'%'; }
 
 				if ($params["search_asn1id"]) {
-					$res = OIDplus::db()->query("select * from ###asn1id where name like ?", array('%'.$params['term'].'%'));
+					$res = OIDplus::db()->query("select * from ###asn1id where ".OIDplus::db()->getSlang()->lowerCase('name')." like ?", array('%'.$params['term'].'%'));
 					while ($row = $res->fetch_object()) {
 						$sql_where[] = "id = ?"; $prep_where[] = $row->oid;
 					}
 				}
 
 				if ($params["search_iri"]) {
-					$res = OIDplus::db()->query("select * from ###iri where name like ?", array('%'.$params['term'].'%'));
+					$res = OIDplus::db()->query("select * from ###iri where ".OIDplus::db()->getSlang()->lowerCase('name')." like ?", array('%'.$params['term'].'%'));
 					while ($row = $res->fetch_object()) {
 						$sql_where[] = "id = ?"; $prep_where[] = $row->oid;
 					}
@@ -135,7 +136,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 				if (count($sql_where) == 0) $sql_where[] = '1=0';
 				array_unshift($prep_where, $params['namespace'].':%');
 
-				$res = OIDplus::db()->query("select * from ###objects where id like ? and (".implode(' or ', $sql_where).")", $prep_where);
+				$res = OIDplus::db()->query("select * from ###objects where ".OIDplus::db()->getSlang()->lowerCase('id')." like ? and (".implode(' or ', $sql_where).")", $prep_where);
 
 				$count = 0;
 				while ($row = $res->fetch_object()) {
