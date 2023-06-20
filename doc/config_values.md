@@ -675,17 +675,33 @@ contain the claim `OIDplusAuthContentStoreJWT::CLAIM_GENERATOR` with value `OIDp
 
 ### JWT_TTL_LOGIN_USER
     
-    OIDplus::baseConfig()->setValue('JWT_TTL_LOGIN_USER', 10*365*24*60*60);
+    OIDplus::baseConfig()->setValue('JWT_TTL_LOGIN_USER', 30*24*60*60);
 
 How many seconds will a login JWT token be valid?
 (RA login)
 
 ### JWT_TTL_LOGIN_ADMIN
 
-    OIDplus::baseConfig()->setValue('JWT_TTL_LOGIN_ADMIN', 10*365*24*60*60);
+    OIDplus::baseConfig()->setValue('JWT_TTL_LOGIN_ADMIN', 30*24*60*60);
 
 How many seconds will a login JWT token be valid?
 (Administrator login)
+
+### JWT_FIXED_IP_USER
+
+    OIDplus::baseConfig()->setValue('JWT_FIXED_IP_USER', false);
+
+Should the login session only be valid for the same IP address used during
+the first login? If set to true, users need to login again if their IP address
+changes. This is secure against session hijacking / cookie stealing. (RA login)
+
+### JWT_FIXED_IP_ADMIN
+
+    OIDplus::baseConfig()->setValue('JWT_FIXED_IP_ADMIN', false);
+
+Should the login session only be valid for the same IP address used during
+the first login? If set to true, users need to login again if their IP address
+changes. This is secure against session hijacking / cookie stealing. (Administrator login)
 
 
 (8) Third-party plugins
