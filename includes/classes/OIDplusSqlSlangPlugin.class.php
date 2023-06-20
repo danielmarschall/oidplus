@@ -109,6 +109,18 @@ abstract class OIDplusSqlSlangPlugin extends OIDplusPlugin {
 	public abstract function isNullFunction(string $expr1, string $expr2): string;
 
 	/**
+	 * @param string $sql
+	 * @return string
+	 */
+	public abstract function lowerCase(string $sql): string;
+
+	/**
+	 * @param string $sql
+	 * @return string
+	 */
+	public abstract function upperCase(string $sql): string;
+
+	/**
 	 * This gives the SQL slang plugin the chance to review the result before it is passed to the application.
 	 * @param OIDplusQueryResult $res
 	 * @param string $sql

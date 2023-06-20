@@ -178,4 +178,20 @@ class OIDplusSqlSlangPluginFirebird extends OIDplusSqlSlangPlugin {
 	public function escapeString(string $str): string {
 		return str_replace("'", "''", $str);
 	}
+
+	/**
+	 * @param string $sql
+	 * @return string
+	 */
+	public function lowerCase(string $sql): string {
+		return "lower($sql)";
+	}
+
+	/**
+	 * @param string $sql
+	 * @return string
+	 */
+	public function upperCase(string $sql): string {
+		return "upper($sql)";
+	}
 }
