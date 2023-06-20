@@ -253,8 +253,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 			}
 		}
 
-		// Optional feature: Limit the JWT to a specific IP address
-		// Currently not used in OIDplus
+		// Optional feature: Limit the JWT to a specific IP address (used if JWT_FIXED_IP_USER or JWT_FIXED_IP_ADMIN is true)
 		$ip = $contentProvider->getValue(self::CLAIM_LIMIT_IP, null);
 		if (!is_null($ip)) {
 			if (isset($_SERVER['REMOTE_ADDR']) && ($ip !== $_SERVER['REMOTE_ADDR'])) {
@@ -562,8 +561,11 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 			$this->raLogin($email);
 			$loginfo = 'into existing JWT session';
 		}
-		$ttl = OIDplus::baseConfig()->getValue('JWT_TTL_LOGIN_USER', 10*365*24*60*60);
+		$ttl = OIDplus::baseConfig()->getValue('JWT_TTL_LOGIN_USER', 30*24*60*60);
 		$this->setValue('exp', time()+$ttl); // JWT "exp" attribute
+		if (OIDplus::baseConfig()->getValue('JWT_FIXED_IP_USER', false) && isset($_SERVER['REMOTE_ADDR'])) {
+			$this->setValue(self::CLAIM_LIMIT_IP, $_SERVER['REMOTE_ADDR']);
+		}
 	}
 
 	/**
@@ -595,8 +597,11 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 			$this->adminLogin();
 			$loginfo = 'into existing JWT session';
 		}
-		$ttl = OIDplus::baseConfig()->getValue('JWT_TTL_LOGIN_ADMIN', 10*365*24*60*60);
+		$ttl = OIDplus::baseConfig()->getValue('JWT_TTL_LOGIN_ADMIN', 30*24*60*60);
 		$this->setValue('exp', time()+$ttl); // JWT "exp" attribute
+		if (OIDplus::baseConfig()->getValue('JWT_FIXED_IP_ADMIN', false) && isset($_SERVER['REMOTE_ADDR'])) {
+			$this->setValue(self::CLAIM_LIMIT_IP, $_SERVER['REMOTE_ADDR']);
+		}
 	}
 
 	// Individual functions
@@ -641,6 +646,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 			// For example, if the IP changes "too much" (different country, different AS, etc.)
 			// Or revoke all tokens from a single login flow (sequence 1, 2, 3, ...)
 			$payload[self::CLAIM_TRACE] = array();
+			$payload[self::CLAIM_TRACE]['iat_1st'] = $payload["iat"];
 			$payload[self::CLAIM_TRACE]['jti_1st'] = $payload["jti"];
 			$payload[self::CLAIM_TRACE]['seq'] = 1;
 			$payload[self::CLAIM_TRACE]['ip'] = $_SERVER['REMOTE_ADDR'] ?? '';
