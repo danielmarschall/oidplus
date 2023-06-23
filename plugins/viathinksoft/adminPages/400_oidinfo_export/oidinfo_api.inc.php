@@ -605,6 +605,7 @@ class OIDInfoAPI {
 					throw new OIDInfoException("Unexpected soft-correction behavior for ASN.1 IDs");
 				}
 			}
+			unset($synid);
 		}
 
 		// ATTENTION: the XML-generator will always add <dotted-oid> , but what will happen if additionally an
@@ -622,6 +623,7 @@ class OIDInfoAPI {
 				// Do not allow Numeric-only. It would only be valid in an IRI path, but not in a single identifier
 				if (!iri_arc_valid($iri, false)) $iri = null;
 			}
+			unset($iri);
 		}
 
 		if (isset($elements['first-registrant']['phone']))

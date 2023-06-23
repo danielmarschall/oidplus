@@ -146,7 +146,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 
 		$root = OIDplus::localpath().'userdata/resources/';
 		$res = $onlydir ? @glob($root.ltrim($reldir,'/'), GLOB_ONLYDIR) : @glob($root.ltrim($reldir,'/'));
-		if ($res) foreach ($res as &$x) {
+		if ($res) foreach ($res as $x) {
 			$x = substr($x, strlen($root));
 			if (strpos($x,'$') !== false) continue;
 			$out[] = $x;

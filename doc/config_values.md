@@ -323,6 +323,8 @@ Set this setting to a filename where all queries including timestamps would be w
 This is used for performance analysis.
 Please choose a directory that cannot be accessed by world-wide.
 
+Note: Writing to "/tmp/..." might be redirected to "/tmp/systemd-private-*/tmp/..." by the system.
+
 ### OBJECT_CACHING
 
     OIDplus::baseConfig()->setValue('OBJECT_CACHING',         true);

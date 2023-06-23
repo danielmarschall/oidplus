@@ -77,6 +77,7 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 			foreach ($prepared_args as &$value) {
 				if (is_bool($value)) $value = $value ? '1' : '0';
 			}
+			unset($value);
 
 			$ps = pg_execute($this->conn, $prepare_name, $prepared_args);
 			if ($ps === false) {

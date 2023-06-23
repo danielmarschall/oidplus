@@ -437,6 +437,7 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 		foreach ($out as &$tmp) {
 			$tmp['value'] = trim($tmp['value']);
 		}
+		unset($tmp);
 
 		// Step 2: Format output
 
@@ -784,6 +785,7 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 				assert(false);
 			}
 		}
+		unset($line);
 	}
 
 }

@@ -62,6 +62,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin
 				}
 			}
 		}
+		unset($line);
 	}
 
 	/**

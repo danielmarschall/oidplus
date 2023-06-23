@@ -202,6 +202,7 @@ class OIDplusLogger extends OIDplusBaseClass {
 			}
 			$component[0] = $sev_fixed;
 		}
+		unset($component);
 
 		// Step 3: Process target (split to type and value)
 		// 'OID(2.999)' becomes ['OID', '2.999']
@@ -216,6 +217,7 @@ class OIDplusLogger extends OIDplusBaseClass {
 				$component[1] = [$component[1]];
 			}
 		}
+		unset($component);
 
 		// Some other checks (it makes it easier to validate the maskcodes with dev tools)
 		foreach ($out as list($severity,$target)) {

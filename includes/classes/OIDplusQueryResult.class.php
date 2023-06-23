@@ -98,6 +98,7 @@ abstract class OIDplusQueryResult extends OIDplusBaseClass {
 			if ($value === chr(0)) $value = 0;
 			if ($value === chr(1)) $value = 1;
 		}
+		unset($value);
 
 		// Oracle and Firebird returns $ret['VALUE'] because unquoted column-names are always upper-case
 		// We can't quote every single column throughout the whole program, so we use this workaround...

@@ -107,6 +107,7 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 				if (is_array($item['children'])) $this->addHrefIfRequired($item['children']);
 			}
 		}
+		unset($item);
 	}
 
 	/**

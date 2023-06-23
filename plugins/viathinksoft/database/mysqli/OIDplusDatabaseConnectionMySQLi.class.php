@@ -68,6 +68,7 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 				// It seems to be the same issue as in PDO reported 14 years ago at https://bugs.php.net/bug.php?id=57157
 				if (is_bool($value)) $value = $value ? '1' : '0';
 			}
+			unset($value);
 
 			if (isset($this->prepare_cache[$sql])) {
 				$ps = $this->prepare_cache[$sql];

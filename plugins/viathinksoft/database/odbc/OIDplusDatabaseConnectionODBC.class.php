@@ -78,6 +78,7 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 				}
 			}
 		}
+		unset($value);
 
 		$ps = @odbc_prepare($this->conn, $sql);
 		if (!$ps) {

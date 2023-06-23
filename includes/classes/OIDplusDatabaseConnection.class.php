@@ -181,6 +181,7 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 				$log_session_id = rand(10000,99999);
 			}
 			$file = isset($_SERVER['REQUEST_URI']) ? ' | '.$_SERVER['REQUEST_URI'] : '';
+			// file_put_contents($query_logfile, "$ts <$log_session_id$file> $sql ".print_r($prepared_args,true)."\n", FILE_APPEND);
 			file_put_contents($query_logfile, "$ts <$log_session_id$file> $sql\n", FILE_APPEND);
 		}
 

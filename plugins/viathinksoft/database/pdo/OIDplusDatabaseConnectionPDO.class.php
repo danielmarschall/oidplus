@@ -71,6 +71,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 					}
 				}
 			}
+			unset($value);
 
 			$ps = $this->conn->prepare($sql);
 			if (!$ps) {

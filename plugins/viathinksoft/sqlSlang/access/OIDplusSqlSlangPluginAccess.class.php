@@ -149,6 +149,7 @@ class OIDplusSqlSlangPluginAccess extends OIDplusSqlSlangPlugin {
 			} while ($count > 0);
 			$x = str_replace($INVALIDATE_SEQUENCE,'',$x);
 		}
+		unset($x);
 		return implode(' union ', $ary);
 	}
 
