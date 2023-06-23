@@ -108,10 +108,7 @@ class OIDplusPageAdminRestApi extends OIDplusPagePluginAdmin {
 				$gen = OIDplusAuthContentStoreJWT::JWT_GENERATOR_REST;
 				$sub = 'admin';
 
-				$authSimulation = new OIDplusAuthContentStoreJWT();
-				$authSimulation->adminLogin();
-				$authSimulation->setValue(OIDplusAuthContentStoreJWT::CLAIM_GENERATOR, $gen);
-				$token = $authSimulation->getJWTToken();
+				$token = OIDplusAuthContentStoreJWT::craftJWT([], true, $gen);
 
 				$out['text'] .= '<p>'._L('You can make automated calls to your OIDplus account by calling an REST API.').'</p>';
 				$out['text'] .= '<h2>'._L('Endpoints').'</h2>';
@@ -135,7 +132,6 @@ class OIDplusPageAdminRestApi extends OIDplusPagePluginAdmin {
 				$out['text'] .= '</pre></p>';
 				$out['text'] .= '<p><input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(oidplus_auth_jwt)"></p>';
 				$out['text'] .= '<p>'._L('Please keep this information confidential!').'</p>';
-				$out['text'] .= '<p>'._L('The JWT-token (secret!) will automatically perform a one-time-login to fulfill the request. The other fields are the normal fields which are called during the usual operation of OIDplus.').'</p>';
 
 				$out['text'] .= '<h2>'._L('Blacklisted tokens').'</h2>';
 				$bl_time = OIDplusAuthContentStoreJWT::jwtGetBlacklistTime($gen, $sub);

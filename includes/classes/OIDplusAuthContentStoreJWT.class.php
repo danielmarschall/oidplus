@@ -336,6 +336,29 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 		OIDplus::cookieUtils()->unsetcookie(self::COOKIE_NAME);
 	}
 
+	/**
+	 * @param string[] $ra RAs
+	 * @param bool $admin Admin yes or no?
+	 * @param int $gen Generator
+	 * @param bool $limit_ip Limit IP to the current IP address?
+	 * @param int $ttl How many seconds valid?
+	 * @return string JWT token
+	 */
+	public static function craftJWT(array $ra, bool $admin, int $gen, bool $limit_ip=false, int $ttl=10*365*24*60*60): string {
+		$authSimulation = new OIDplusAuthContentStoreJWT();
+		foreach ($ra as $username) {
+			if ($username == 'admin') continue;
+			$authSimulation->raLogin($username);
+		}
+		if ($admin) $authSimulation->adminLogin();
+		$authSimulation->setValue(OIDplusAuthContentStoreJWT::CLAIM_GENERATOR, $gen);
+		$authSimulation->setValue('exp', time()+$ttl);
+		if ($limit_ip && isset($_SERVER['REMOTE_ADDR'])) {
+			$authSimulation->setValue(self::CLAIM_LIMIT_IP, $_SERVER['REMOTE_ADDR']);
+		}
+		return $authSimulation->getJWTToken();
+	}
+
 	// RA authentication functions (low-level)
 
 	/**
