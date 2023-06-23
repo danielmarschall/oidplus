@@ -121,17 +121,7 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 
 		$parentObj = OIDplusObject::parse($parent);
 
-		@list($namespace, $oid) = explode(':', $parent, 2);
-		if ($namespace == 'oid') $oid = substr($oid, 1); // Remove leading dot
-
 		if (is_array($goto_path)) array_shift($goto_path);
-
-		$confidential_oids = array();
-
-		$res = OIDplus::db()->query("select id from ###objects where confidential = ?", array(true));
-		while ($row = $res->fetch_array()) {
-			$confidential_oids[] = $row['id'];
-		}
 
 		$res = OIDplus::db()->query("select * from ###objects where parent = ?", array($parent));
 		$res->naturalSortByField('id');
@@ -148,10 +138,8 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 			$child['text'] = $parentObj ? $obj->jsTreeNodeName($parentObj) : '';
 			$child['text'] .= empty($row['title']) ? /*' -- <i>'.htmlentities('Title missing').'</i>'*/ '' : ' -- <b>' . htmlentities($row['title']) . '</b>';
 
-			$is_confidential = false;
-			foreach ($confidential_oids as $test) {
-				$is_confidential |= ($row['id'] === $test) || (strpos($row['id'],$test.'.') === 0);
-			}
+			// Check if node is confidential, or if one of its parent was confidential
+			$is_confidential = $obj->isConfidential();
 			if ($is_confidential) {
 				$child['text'] = '<font color="gray"><i>'.$child['text'].'</i></font>';
 			}
