@@ -7086,10 +7086,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		The JWT-token (secret!) will automatically perform a one-time-login to fulfill the request. The other fields are the normal fields which are called during the usual operation of OIDplus.
+		The JWT-token (secret!) will automatically perform a login to fulfill the request. The other fields are the normal fields which are called during the usual operation of OIDplus.
 		]]></source>
 		<target><![CDATA[
-		Der JWT-Token (Geheim!) werden eine automatische Kurzzeit-Anmeldung veranlassen. Die anderen Felder sind die Felder, die im normalen Betrieb von OIDplus gesendet werden.
+		Der JWT-Token (Geheim!) werden eine automatische Anmeldung veranlassen. Die anderen Felder sind die Felder, die im normalen Betrieb von OIDplus gesendet werden.
 		]]></target>
 	</message>
 	<message>
