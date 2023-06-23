@@ -73,6 +73,7 @@ class OIDplusQueryResultOci extends OIDplusQueryResult {
 		foreach ($this->prefetchedArray as &$row) { /** @phpstan-ignore-line */
 			$this->fixFields($row);
 		}
+		unset($row);
 	}
 
 	/**

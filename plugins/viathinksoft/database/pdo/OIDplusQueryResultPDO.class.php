@@ -74,6 +74,7 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 		foreach ($this->prefetchedArray as &$row) {
 			$this->fixFields($row);
 		}
+		unset($row);
 	}
 
 	/**

@@ -545,12 +545,13 @@ class OIDplusOid extends OIDplusObject {
 				}
 			}
 		}
+		unset($asn1); // Very important, otherwise we would modify the array if we later use "foreach ($demandedASN1s as $asn1)"
 
 		// Now do the real replacement
 		if (!$simulate) {
 			OIDplus::db()->query("delete from ###asn1id where oid = ?", array("oid:".$this->oid));
 			foreach ($demandedASN1s as $asn1) {
-				OIDplus::db()->query("insert into ###asn1id (oid, name) values (?, ?)", array("oid:".$this->oid, $asn1));
+				OIDplus::db()->query("insert into ###asn1id (oid, name, well_known, standardized) values (?, ?, ?, ?)", array("oid:".$this->oid, $asn1, false, false));
 			}
 		}
 	}
@@ -589,12 +590,13 @@ class OIDplusOid extends OIDplusObject {
 				}
 			}
 		}
+		unset($iri); // Very important, otherwise we would modify the array if we later use "foreach ($demandedIris as $iri)"
 
 		// Now do the real replacement
 		if (!$simulate) {
 			OIDplus::db()->query("delete from ###iri where oid = ?", array("oid:".$this->oid));
 			foreach ($demandedIris as $iri) {
-				OIDplus::db()->query("insert into ###iri (oid, name) values (?, ?)", array("oid:".$this->oid, $iri));
+				OIDplus::db()->query("insert into ###iri (oid, name, longarc, well_known) values (?, ?, ?, ?)", array("oid:".$this->oid, $iri, false, false));
 			}
 		}
 	}

@@ -41,6 +41,7 @@ class WeidOidConverter extends OIDplusBaseClass {
 			$a = ltrim($a, '0');
 			if ($a === '') $a = '0';
 		}
+		unset($a);
 		$str = implode('-', $ary);
 
 		// remove separators of the WEID string
@@ -91,6 +92,7 @@ class WeidOidConverter extends OIDplusBaseClass {
 					$elem = ltrim($elem, "0");
 				}
 			}
+			unset($elem);
 			$oid = implode('.', $elements);
 
 			if ((count($elements) > 0) && ($elements[0] != '0') && ($elements[0] != '1') && ($elements[0] != '2')) return false;
@@ -154,6 +156,7 @@ class WeidOidConverter extends OIDplusBaseClass {
 			//$arc = strtoupper(base_convert($arc, 36, 10));
 			$arc = strtoupper(self::base_convert_bigint($arc, 36, 10));
 		}
+		unset($arc);
 		$oid = implode('.', $elements);
 
 		$weid = strtolower($namespace) . strtoupper($weid); // add namespace again
@@ -180,6 +183,7 @@ class WeidOidConverter extends OIDplusBaseClass {
 				//$arc = strtoupper(base_convert($arc, 10, 36));
 				$arc = strtoupper(self::base_convert_bigint($arc, 10, 36));
 			}
+			unset($arc);
 			$weidstr = implode('-', $elements);
 		} else {
 			$weidstr = '';

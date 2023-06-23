@@ -89,6 +89,7 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 				if (is_bool($value)) $value = $value ? '1' : '0';
 				$stmt->bindValue(':param'.$i, $value, SQLITE3_TEXT);
 			}
+			unset($value);
 
 			try {
 				$ps = $stmt->execute();
