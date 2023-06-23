@@ -191,17 +191,13 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	public function raLoginEx(string $email, string $origin='') {
 		$loginfo = '';
 		$acs = $this->getAuthContentStore();
-		if (!is_null($acs)) {
-			// User is already logged in (a session or JWT exists), so we modify their login status
-			$acs->raLoginEx($email, $loginfo);
-			$acs->activate();
-		} else {
+		if (is_null($acs)) {
 			// No user is logged in (no JWT exists). We now create a auth content store and activate it (cookies will be set etc.)
-			$newAuthStore = new OIDplusAuthContentStoreJWT();
-			$newAuthStore->setValue(OIDplusAuthContentStoreJWT::CLAIM_GENERATOR, OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN);
-			$newAuthStore->raLoginEx($email, $loginfo);
-			$newAuthStore->activate();
+			$acs = new OIDplusAuthContentStoreJWT();
+			$acs->setValue(OIDplusAuthContentStoreJWT::CLAIM_GENERATOR, OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN);
 		}
+		$acs->raLoginEx($email, $loginfo);
+		$acs->activate(); // create or update JWT token
 		$logmsg = "RA '$email' logged in";
 		if ($origin != '') $logmsg .= " via $origin";
 		if ($loginfo != '') $logmsg .= " ($loginfo)";
@@ -310,17 +306,13 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	public function adminLoginEx(string $origin='') {
 		$loginfo = '';
 		$acs = $this->getAuthContentStore();
-		if (!is_null($acs)) {
-			// User is already logged in (a session or JWT exists), so we modify their login status
-			$acs->adminLoginEx($loginfo);
-			$acs->activate();
-		} else {
+		if (is_null($acs)) {
 			// No user is logged in (no JWT exists). We now create a auth content store and activate it (cookies will be set etc.)
-			$newAuthStore = new OIDplusAuthContentStoreJWT();
-			$newAuthStore->setValue(OIDplusAuthContentStoreJWT::CLAIM_GENERATOR, OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN);
-			$newAuthStore->adminLoginEx($loginfo);
-			$newAuthStore->activate();
+			$acs = new OIDplusAuthContentStoreJWT();
+			$acs->setValue(OIDplusAuthContentStoreJWT::CLAIM_GENERATOR, OIDplusAuthContentStoreJWT::JWT_GENERATOR_LOGIN);
 		}
+		$acs->adminLoginEx($loginfo);
+		$acs->activate();
 		$logmsg = "Admin logged in";
 		if ($origin != '') $logmsg .= " via $origin";
 		if ($loginfo != '') $logmsg .= " ($loginfo)";

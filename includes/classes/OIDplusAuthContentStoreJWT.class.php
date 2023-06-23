@@ -562,7 +562,6 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	 */
 	public function raLoginEx(string $email, string &$loginfo) {
 		if (is_null(self::getActiveProvider())) {
-			$this->raLogin($email);
 			$loginfo = 'into new JWT session';
 			self::$contentProvider = $this;
 		} else {
@@ -581,9 +580,9 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 					assert(false); // This cannot happen because jwtSecurityCheck will check for unknown generators
 					break;
 			}
-			$this->raLogin($email);
 			$loginfo = 'into existing JWT session';
 		}
+		$this->raLogin($email);
 		$ttl = OIDplus::baseConfig()->getValue('JWT_TTL_LOGIN_USER', 30*24*60*60);
 		$this->setValue('exp', time()+$ttl); // JWT "exp" attribute
 		if (OIDplus::baseConfig()->getValue('JWT_FIXED_IP_USER', false) && isset($_SERVER['REMOTE_ADDR'])) {
@@ -598,7 +597,6 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	 */
 	public function adminLoginEx(string &$loginfo) {
 		if (is_null(self::getActiveProvider())) {
-			$this->adminLogin();
 			$loginfo = 'into new JWT session';
 			self::$contentProvider = $this;
 		} else {
@@ -617,9 +615,9 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 					assert(false); // This cannot happen because jwtSecurityCheck will check for unknown generators
 					break;
 			}
-			$this->adminLogin();
 			$loginfo = 'into existing JWT session';
 		}
+		$this->adminLogin();
 		$ttl = OIDplus::baseConfig()->getValue('JWT_TTL_LOGIN_ADMIN', 30*24*60*60);
 		$this->setValue('exp', time()+$ttl); // JWT "exp" attribute
 		if (OIDplus::baseConfig()->getValue('JWT_FIXED_IP_ADMIN', false) && isset($_SERVER['REMOTE_ADDR'])) {
