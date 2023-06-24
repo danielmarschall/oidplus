@@ -9,30 +9,12 @@
   <component name="ChangeListManager">
     <list default="true" id="df2a484b-bed2-4376-a9d2-11f38408a62e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/config_values.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/config_values.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/doc/developer_notes/auth_methods.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/developer_notes/auth_methods.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/developer_notes/class_diagram.drawio" beforeDir="false" afterPath="$PROJECT_DIR$/doc/developer_notes/class_diagram.drawio" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/developer_notes/class_diagram.png" beforeDir="false" afterPath="$PROJECT_DIR$/doc/developer_notes/class_diagram.png" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/developer_notes/server_secret.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/developer_notes/server_secret.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/includes/classes/OIDplusAuthContentStore.class.php" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/developer_notes/compatibility_notes.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/developer_notes/compatibility_notes.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/includes/classes/OIDplusAuthContentStoreJWT.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/classes/OIDplusAuthContentStoreJWT.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/includes/classes/OIDplusAuthContentStoreSession.class.php" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/includes/classes/OIDplusAuthUtils.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/classes/OIDplusAuthUtils.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/includes/functions.inc.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/functions.inc.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/includes/oidplus_dependency.inc.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/oidplus_dependency.inc.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/adminPages/910_automated_ajax_calls/OIDplusPageAdminAutomatedAJAXCalls.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/adminPages/910_automated_ajax_calls/OIDplusPageAdminAutomatedAJAXCalls.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/adminPages/911_rest_api/OIDplusPageAdminRestApi.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/adminPages/911_rest_api/OIDplusPageAdminRestApi.class.php" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/language/dede/messages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/language/dede/messages.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/090_login/OIDplusPagePublicLogin.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/090_login/OIDplusPagePublicLogin.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/090_login/OIDplusPagePublicLogin.js" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/090_login/OIDplusPagePublicLogin.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/800_login_ldap/OIDplusPagePublicLoginLDAP.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/800_login_ldap/OIDplusPagePublicLoginLDAP.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/800_login_ldap/OIDplusPagePublicLoginLDAP.js" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/800_login_ldap/OIDplusPagePublicLoginLDAP.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/810_login_google/oauth.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/810_login_google/oauth.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/820_login_facebook/oauth.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/publicPages/820_login_facebook/oauth.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/raPages/910_automated_ajax_calls/OIDplusPageRaAutomatedAJAXCalls.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/raPages/910_automated_ajax_calls/OIDplusPageRaAutomatedAJAXCalls.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/raPages/911_rest_api/OIDplusPageRaRestApi.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/raPages/911_rest_api/OIDplusPageRaRestApi.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/OIDplus/privacy_documentation$dede.html" beforeDir="false" afterPath="$PROJECT_DIR$/res/OIDplus/privacy_documentation$dede.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/res/OIDplus/privacy_documentation.html" beforeDir="false" afterPath="$PROJECT_DIR$/res/OIDplus/privacy_documentation.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/objectTypes/mac/OIDplusObjectTypePluginMac.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/objectTypes/mac/OIDplusObjectTypePluginMac.class.php" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -311,6 +293,11 @@
       <workItem from="1686692839054" duration="780000" />
       <workItem from="1687029431078" duration="406000" />
       <workItem from="1687089709708" duration="5214000" />
+      <workItem from="1687112634236" duration="3685000" />
+      <workItem from="1687289478320" duration="5628000" />
+      <workItem from="1687549660663" duration="33000" />
+      <workItem from="1687553303039" duration="1409000" />
+      <workItem from="1687644919266" duration="2036000" />
     </task>
     <servers />
   </component>

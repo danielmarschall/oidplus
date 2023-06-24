@@ -21,7 +21,7 @@ https://www.oidplus.com/
     git clone https://github.com/danielmarschall/oidplus.git
 
 ##### Method C - Download SVN snapshot:
-Download a TAR.GZ file here: https://www.viathinksoft.com/projects/oidplus
+Download a TAR.GZ file here: https://oidplus.com/download.php
 
 ### System requirements
 - PHP compatible web server (tested with Apache 2, nginx, and Microsoft IIS)
@@ -31,8 +31,8 @@ Download a TAR.GZ file here: https://www.viathinksoft.com/projects/oidplus
         MySQL/MariaDB,
         PostgreSQL,
         SQLite3,
-        Oracle,
         Microsoft SQL Server,
+        Oracle,
         Microsoft Access,
         Firebird
 - Independent of operating systems (tested with Windows, Linux and macOS X)

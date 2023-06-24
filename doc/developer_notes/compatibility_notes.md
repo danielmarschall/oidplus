@@ -27,7 +27,7 @@ When a new PHP extension is required, then please change the following:
 Notes about the required PHP Version
 ------------------------------------
 
-Currently, OIDplus supports all PHP versions between 7.0.0 and 8.2.0.
+Currently, OIDplus supports all PHP versions between 7.0.0 and 8.2.x.
 
 Reasons why we currently require **at least** PHP 7.0:
 - Return values (e.g. "function foo(): array") are used in many places

@@ -126,7 +126,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 
 	/**
 	 * @param int $gen OIDplusAuthContentStoreJWT::JWT_GENERATOR_...
-	 * @param string $sub
+	 * @param string $sub E-Mail-Adress of RA or 'admin'
 	 * @return int
 	 * @throws OIDplusException
 	 */
@@ -154,17 +154,17 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	 */
 	private static function jwtSecurityCheck(OIDplusAuthContentStoreJWT $contentProvider, int $validGenerators=null) {
 		// Check if the token is intended for us
-		// Note 'aud' is mandatory, so we do not check for exists()
+		// Note 'aud' is mandatory for OIDplus, so we do not check for exists()
 		if ($contentProvider->getValue('aud','') !== $contentProvider->getAudIss()) {
 			throw new OIDplusException(_L('Token has wrong audience: Given %1 but expected %2.', $contentProvider->getValue('aud',''), $contentProvider->getAudIss()));
 		}
 
-		// Note CLAIM_SSH is mandatory, so we do not check for exists()
+		// Note CLAIM_SSH is mandatory for OIDplus, so we do not check for exists()
 		if ($contentProvider->getValue(self::CLAIM_SSH, '') !== self::getSsh()) {
 			throw new OIDplusException(_L('"Server Secret" was changed; therefore the JWT is not valid anymore'));
 		}
 
-		// Note CLAIM_GENERATOR is mandatory, so we do not check for exists()
+		// Note CLAIM_GENERATOR is mandatory for OIDplus, so we do not check for exists()
 		$gen = $contentProvider->getValue(self::CLAIM_GENERATOR, -1);
 
 		$has_admin = $contentProvider->isAdminLoggedIn();
@@ -671,8 +671,8 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 		// see also https://www.iana.org/assignments/jwt/jwt.xhtml#claims for some generic claims
 		if (!isset($payload["iss"])) $payload["iss"] = $this->getAudIss();
 		if (!isset($payload["aud"])) $payload["aud"] = $this->getAudIss();
-		$payload["jti"] = gen_uuid();
-		$payload["iat"] = time();
+		$payload["jti"] = gen_uuid(); // always set/renew it; therefore not checking isset()
+		$payload["iat"] = time(); // always set/renew it; therefore not checking isset()
 		if (!isset($payload["nbf"])) $payload["nbf"] = time();
 		if (!isset($payload["exp"])) $payload["exp"] = time()+3600/*1h*/;
 

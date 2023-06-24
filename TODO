@@ -330,7 +330,6 @@ IDEAS
 	                  - strike unnecessary bits that are not defined in the netmask (also at the whois output)
 - let the sysadmin decide if they want the title be "systemtitle - object title" or "object title - systemtitle"
 - should a RA be able to mark their own oid as confidential, instead of asking the superior RA?
-- should there be an OIDplus project page at oidplus.viathinksoft.com instead of a "naked" system?
 - vendor signature to plugins + viathinksoft signatures + "check" program if all signatures match
 	Why do we need it?
 		We want to make sure that the OIDplus files aren't modified by hackers (e.g. replaced by a webshell)

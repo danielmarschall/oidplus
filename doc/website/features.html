@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title>OIDplus - Features</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="style.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <header>
+      <nav class="site-header sticky-top py-1">
+        <div class="container d-flex flex-column flex-md-row justify-content-between">
+          <!--<a class="py-2" href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="d-block mx-auto"><circle cx="12" cy="12" r="10"></circle><line x1="14.31" y1="8" x2="20.05" y2="17.94"></line><line x1="9.69" y1="8" x2="21.17" y2="8"></line><line x1="7.38" y1="12" x2="13.12" y2="2.06"></line><line x1="9.69" y1="16" x2="3.95" y2="6.06"></line><line x1="14.31" y1="16" x2="2.83" y2="16"></line><line x1="16.62" y1="12" x2="10.88" y2="21.94"></line></svg>
+          </a>-->
+          <!-- DM 19.11.2020 : d-none auskommentiert, da sonst die Links verschwinden wenn das Fenster zu schmal wird -->
+          <a class="py-2 d-md-inline-block menuactive" href="features.html">Features</a>
+          <a class="py-2 d-md-inline-block" href="examples.html">Examples</a>
+          <a class="py-2 d-md-inline-block" href="download.html">Download and Install</a>
+          <a class="py-2 d-md-inline-block" href="support.html">Support</a>
+          <a class="py-2 d-md-inline-block" target="_blank" href="https://www.github.com/danielmarschall/oidplus/">Source code at GitHub</a>
+          <a class="py-2 d-md-inline-block" target="_blank" href="https://www.viathinksoft.com/">Other products by ViaThinkSoft</a>
+        </div>
+      </nav>
+    </header>
+
+    <main role="main">
+
+      <div id="myCarousel" class="carousel slide" data-ride="carousel">
+        <ol class="carousel-indicators">
+          <li data-target="#myCarousel" data-slide-to="0" class="active"></li>
+          <li data-target="#myCarousel" data-slide-to="1"></li>
+          <li data-target="#myCarousel" data-slide-to="2"></li>
+        </ol>
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <img class="first-slide" src="img/intro_1.jpg" alt="First slide">
+            <div class="container">
+              <div class="carousel-caption text-left">
+                <br><h1 class="dropshadow"><!--Manage your Object Identifiers online-->OIDplus 2.0</h1>
+                <p class="dropshadow">OIDplus is a free OpenSource software solution that can be used by Registration Authorities to manage and publish information about Object Identifiers (OIDs), Globally Unique Identifiers (GUIDs), and much more.</p>
+                <p><a class="btn btn-lg btn-primary" href="examples.html" role="button">See some examples</a></p>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img class="second-slide" src="img/intro_2.jpg" alt="Second slide">
+            <div class="container">
+              <div class="carousel-caption">
+                <h1 class="dropshadow">Operate your own copy of OIDplus</h1>
+                <p class="dropshadow">You can download and install OIDplus on any webserver having a database and PHP support.</p>
+                <p><a class="btn btn-lg btn-primary" href="download.html" role="button">Download</a></p>
+              </div>
+            </div>
+          </div>
+          <div class="carousel-item">
+            <img class="third-slide" src="img/intro_3.jpg" alt="Third slide">
+            <div class="container">
+              <div class="carousel-caption text-right">
+                <h1 class="dropshadow">Coordinate your identifier allocations</h1>
+                <p class="dropshadow">Each Registration Authority gets its own user account and can therefore work autonomously.<br>
+                You can delegate permissions for subsequent Object Identifiers in your object tree (teams, products, ...).</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+          <span class="sr-only">Previous</span>
+        </a>
+        <a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+          <span class="carousel-control-next-icon" aria-hidden="true"></span>
+          <span class="sr-only">Next</span>
+        </a>
+      </div>
+
+	<!--<center><img src="img/logo_with_text.png" alt="ViaThinkSoft OIDplus" width="25%"></center>-->
+	<img src="img/logo_with_text_white.png" alt="ViaThinkSoft OIDplus" id="logo">
+
+      <!-- Marketing messaging and featurettes
+      ================================================== -->
+      <!-- Wrap the rest of the page in another container to center all the content. -->
+
+      <div class="container marketing">
+
+        <!-- START THE FEATURETTES -->
+
+        <hr class="featurette-divider">
+        <div class="row featurette">
+          <div class="col-md-7">
+            <h2 class="featurette-heading">Manage all your <span class="text-muted">Object Identifiers</span> in a single place.</h2>
+            <p class="lead">
+With OIDplus, you can manage all your Object Identifiers (OIDs).
+You can browse through the OID tree and allocate subsequent object identifiers
+together with ASN.1 identifiers, Unicode labels, and descriptions.
+You can either allocate subsequent OIDs to yourself, or to other persons,
+who can log in to your OIDplus system to manage their OID independently.
+</p>
+          </div>
+          <div class="col-md-5">
+            <img class="featurette-image img-fluid mx-auto" src="img/feature-1.png" alt="Generic placeholder image">
+          </div>
+        </div>
+        <hr class="featurette-divider">
+        <div class="row featurette">
+          <div class="col-md-7 order-md-2">
+            <h2 class="featurette-heading">You decide. <span class="text-muted">Choose and modify designs.</span></h2>
+            <p class="lead">
+The design of OIDplus can be defined by plugins.
+By default, there are two different basic design plugins installed.
+For each basic design, you can invert the colors, and change hue, saturation, and lightness.
+</p>
+          </div>
+          <div class="col-md-5 order-md-1">
+            <img class="featurette-image img-fluid mx-auto" src="img/feature-2.png" alt="Generic placeholder image">
+          </div>
+        </div>
+
+
+
+
+
+        <hr class="featurette-divider">
+        <div class="row featurette">
+          <div class="col-md-7">
+            <h2 class="featurette-heading"><span class="text-muted">OID Information Protocol</span>: The WHOIS for Object Identifiers</h2>
+            <p class="lead">
+OIDplus supports the <a href="https://datatracker.ietf.org/doc/draft-viathinksoft-oidip/">OID Information Protocol</a>
+(currently a RFC draft). It allows exchanging information about OIDs in a way that is both human-readable and machine-readable.
+The access can be via WHOIS (TCP port 43) with prefix "oid:" or via WebWHOIS (HTTP/HTTPS GET request). The output
+can be text based, XML or JSON.</p>
+          </div>
+          <div class="col-md-5">
+            <img class="featurette-image img-fluid mx-auto" src="img/feature-3.png" alt="Generic placeholder image">
+          </div>
+        </div>
+        <hr class="featurette-divider">
+        <div class="row featurette">
+          <div class="col-md-7 order-md-2">
+            <h2 class="featurette-heading">Include <span class="text-muted">documents</span> and <span class="text-muted">resources</span></h2>
+            <p class="lead">
+To display additional content in OIDplus, you can place HTML and URL files in a resource directory.
+This way, you can include things like an impress, privacy statement, user manual, guidelines,
+hyperlinks to your websites and products, and so on.
+</p>
+          </div>
+          <div class="col-md-5 order-md-1">
+            <img class="featurette-image img-fluid mx-auto" src="img/feature-4.png" alt="Generic placeholder image">
+          </div>
+        </div>
+
+
+
+
+        <hr class="featurette-divider">
+        <div class="row featurette">
+          <div class="col-md-7">
+            <h2 class="featurette-heading">Many <span class="text-muted">plugins</span></h2>
+            <p class="lead">
+A large amount of functionality is put into plugins.
+With this plugin framework, you can extend OIDplus in many ways.
+There are more than 10 plugin types!</p>
+          </div>
+          <div class="col-md-5">
+            <img class="featurette-image img-fluid mx-auto" src="img/feature-9.png" alt="Generic placeholder image">
+          </div>
+        </div>
+        <hr class="featurette-divider">
+        <div class="row featurette">
+          <div class="col-md-7 order-md-2">
+            <h2 class="featurette-heading">Import and export OIDs from and to <span class="text-muted">oid-info.com</span></h2>
+            <p class="lead">
+oid-info.com is the world's largest repository for Object Identifiers.
+If you start using OIDplus and have already OIDs of yours listed at oid-info.com, you can import them into OIDplus.
+Once OIDplus is fully operational, OIDs you allocate can be automatically exported to oid-info.com (this feature can be disabled, of course).
+</p>
+          </div>
+          <div class="col-md-5 order-md-1">
+            <img class="featurette-image img-fluid mx-auto" src="img/feature-10.png" alt="Generic placeholder image">
+          </div>
+        </div>
+
+
+
+
+
+        <hr class="featurette-divider">
+        <div class="row featurette">
+          <div class="col-md-7">
+            <h2 class="featurette-heading">Many different <span class="text-muted">Object Types</span></h2>
+            <p class="lead">
+The "plus" in name of OIDplus refers to alternative object types that can be managed beside
+Object Identifiers.
+In OIDplus, you can manage things like GUIDs (used for the Microsoft Common Object Model),
+IP addresses, Java package names, and much more.
+In case you have an Object Type which is not yet included,
+you can easily write an "Object Type" plugin.
+</p>
+          </div>
+          <div class="col-md-5">
+            <img class="featurette-image img-fluid mx-auto" src="img/feature-7.png" alt="Generic placeholder image">
+          </div>
+        </div>
+        <hr class="featurette-divider">
+        <div class="row featurette">
+          <div class="col-md-7 order-md-2">
+            <h2 class="featurette-heading">Log in using password or <span class="text-muted">OAuth</span></h2>
+            <p class="lead">
+The Registration Authorities can log in using a normal password, or using alternative login methods like OAuth (Google, Facebook) or LDAP (e.g. ActiveDirectory).
+<br><br>
+If you already have a database table that contains users and passwords
+of a different software solution,
+you can re-use the existing password hashes of the users!
+OIDplus supports various hash formats like MD5, SHA1, SHA2, SHA3, or BCrypt, salted, and unsalted.
+In case your existing hashes have a foreign format, you can also create individual
+"Auth" plugins to support them (these plugins decide wheater a hash fits a password or not).
+</p>
+          </div>
+          <div class="col-md-5 order-md-1">
+            <img class="featurette-image img-fluid mx-auto" src="img/feature-8.png" alt="Generic placeholder image">
+          </div>
+        </div>
+
+
+
+
+
+        <hr class="featurette-divider">
+        <div class="row featurette">
+          <div class="col-md-7">
+            <h2 class="featurette-heading">Automatic OID allocation plugin</h2>
+            <p class="lead">
+The functionalities of OIDplus can be extended by installing plugins.
+For example, the "Free OID" plugin is a plugin that automatically
+allocates OIDs to persons who verify their email address.
+</p>
+          </div>
+          <div class="col-md-5">
+            <img class="featurette-image img-fluid mx-auto" src="img/feature-5.png" alt="Generic placeholder image">
+          </div>
+        </div>
+        <hr class="featurette-divider">
+        <div class="row featurette">
+          <div class="col-md-7 order-md-2">
+            <h2 class="featurette-heading">Integrated search</h2>
+            <p class="lead">You easily find an Object Identifier in the system by using the integrated search</p>
+          </div>
+          <div class="col-md-5 order-md-1">
+            <img class="featurette-image img-fluid mx-auto" src="img/feature-6.png" alt="Generic placeholder image">
+          </div>
+        </div>
+
+
+
+
+
+
+
+
+        <hr class="featurette-divider">
+        <div class="row featurette">
+          <div class="col-md-7">
+            <h2 class="featurette-heading"><span class="text-muted">RESTful API</span> and Automated AJAX calls</h2>
+            <p class="lead">Third-party applications can update or create OIDs and many other things by invoking automated AJAX calls (this is similar to RPC) or by using the RESTful API. Third-party plugins can provide their own REST API endpoints.</p>
+          </div>
+          <div class="col-md-5">
+            <img class="featurette-image img-fluid mx-auto" src="img/feature-11.png" alt="Generic placeholder image">
+          </div>
+        </div>
+        <hr class="featurette-divider">
+        <div class="row featurette">
+          <div class="col-md-7 order-md-2">
+            <h2 class="featurette-heading"><span class="text-muted">Multilingual</span> interface</h2>
+            <p class="lead">OIDplus can be translated very easily since all messages and user interface texts are stored in an XML file in of language plugin. Currently, OIDplus is fully translated into German and English (USA).</p>
+          </div>
+          <div class="col-md-5 order-md-1">
+            <img class="featurette-image img-fluid mx-auto" src="img/feature-12.png" alt="Generic placeholder image">
+          </div>
+        </div>
+
+
+
+        <hr class="featurette-divider">
+
+
+
+        <div class="row featurette">
+          <div class="col-md-7">
+            <h2 class="featurette-heading">Append <span class="text-muted">file attachments</span></h2>
+            <p class="lead">At each OID, the system administrator or Registration Authority can append files, for example, if an OID identifies a
+            Management Information Base, then the MIB file, as well as any additional resources, can be attached and downloaded by visitors or employees.
+            </p>
+          </div>
+          <div class="col-md-5">
+            <img class="featurette-image img-fluid mx-auto" src="img/feature-13.png" alt="Generic placeholder image">
+          </div>
+        </div>
+
+        <hr class="featurette-divider">
+        <div class="row featurette">
+          <div class="col-md-7 order-md-2">
+            <h2 class="featurette-heading">Supports many <span class="text-muted">Database Management Systems</span></h2>
+            <p class="lead">
+To make sure that OIDplus runs on most systems,
+we have decided to support as many Database Management Systems (DBMS) as possible.
+Currently, OIDplus supports MySQL/MariaDB, Microsoft SQL Server, PostgreSQL, Oracle, Microsoft Access, SQLite3, and Firebird,
+either via native PHP extensions, ADO, ODBC, or PDO.
+</p>
+          </div>
+          <div class="col-md-5 order-md-1">
+            <img class="featurette-image img-fluid mx-auto" src="img/feature-14.png" alt="Generic placeholder image">
+          </div>
+        </div>
+
+
+
+        <hr class="featurette-divider">
+
+        <!-- /END THE FEATURETTES -->
+
+      </div><!-- /.container -->
+
+      <footer class="container">
+        <p class="float-right"><a href="#">Back to top</a></p>
+        <p>&copy; 2019-2023ViaThinkSoft
+        &middot; <a href="https://www.viathinksoft.com/imprint/" target="_blank">Imprint</a>
+        &middot; <a href="https://www.viathinksoft.com/privacy/" target="_blank">Privacy</a>
+        &middot; <a href="https://www.viathinksoft.com/disclaimer/" target="_blank">Disclaimer</a></p>
+      </footer>
+    </main>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <!--<script>window.jQuery || document.write('<script src="bootstrap/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="bootstrap/assets/js/vendor/popper.min.js"></script> -->
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+    <!-- Just to make our placeholder images work. Don't actually copy the next line! -->
+    <!-- <script src="bootstrap/assets/js/vendor/holder.min.js"></script> -->
+  </body>
+</html>
