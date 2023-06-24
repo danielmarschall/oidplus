@@ -594,8 +594,8 @@ function hotfix_dir(int $rev, string $dir) {
 		// Exception is thrown when audience is wrong; therefore the user must clear their browset cache after update to get rid of the error message
 		$file = $dir.'/includes/classes/OIDplusAuthContentStoreJWT.class.php';
 		$cont = file_get_contents($file);
-		$wrong = 'throw new OIDplusException(_L(\'Token has wrong audience: Given %1 but expected %2.\'), $contentProvider->getValue(\'aud\',\'\'), $contentProvider->getAudIss());'
-		$correct = 'throw new OIDplusException(_L(\'Token has wrong audience: Given %1 but expected %2.\', $contentProvider->getValue(\'aud\',\'\'), $contentProvider->getAudIss()));'
+		$wrong = 'throw new OIDplusException(_L(\'Token has wrong audience: Given %1 but expected %2.\'), $contentProvider->getValue(\'aud\',\'\'), $contentProvider->getAudIss());';
+		$correct = 'throw new OIDplusException(_L(\'Token has wrong audience: Given %1 but expected %2.\', $contentProvider->getValue(\'aud\',\'\'), $contentProvider->getAudIss()));';
 		$cont = str_replace($wrong, $correct, $cont);
 		file_put_contents($file, $cont);
 	}
