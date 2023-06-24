@@ -2149,7 +2149,7 @@ class OIDplus extends OIDplusBaseClass {
 
 		// Third part: File name
 		$tmp = $_SERVER['SCRIPT_NAME'];
-		$tmp = rtrim($tmp, 'index.php');
+		$tmp = preg_replace('@index\\.php$@ismU', '', $tmp);
 		$tmp = explode('/',$tmp);
 		$tmp = end($tmp);
 

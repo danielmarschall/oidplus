@@ -7846,10 +7846,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Token has wrong audience
+		Token has wrong audience: Given %1 but expected %2.
 		]]></source>
 		<target><![CDATA[
-		Der Token hat das falsche Publikum (aud)
+		Der Token hat das falsche Publikum (aud): Gegeben %1 aber erwartet %2.
 		]]></target>
 	</message>
 	<message>

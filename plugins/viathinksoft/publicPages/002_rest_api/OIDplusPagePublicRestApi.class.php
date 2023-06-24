@@ -41,7 +41,7 @@ class OIDplusPagePublicRestApi extends OIDplusPagePluginPublic {
 			originHeaders(); // Allows queries from other domains
 			OIDplus::authUtils()->disableCSRF(); // allow access to ajax.php without valid CSRF token
 
-			$rel_url = ltrim($rel_url, $expect);
+			$rel_url = preg_replace('@^'.preg_quote($expect,'@').'@', '', $rel_url);
 
 			$requestMethod = $_SERVER["REQUEST_METHOD"];
 
