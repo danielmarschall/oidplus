@@ -76,6 +76,17 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	const JWT_GENERATOR_MANUAL = 80;
 
 	/**
+	 * @return string
+	 */
+	public static function getAudIss(): string {
+		$oid = OIDplus::getSystemId(true);
+		if ($oid !== false) return 'urn:oid:'.$oid;
+		$url = OIDplus::webpath(null, OIDplus::PATH_ABSOLUTE_CANONICAL);
+		if ($url) return $url;
+		return 'http://oidplus.com/';
+	}
+
+	/**
 	 * @param int $gen OIDplusAuthContentStoreJWT::JWT_GENERATOR_...
 	 * @param string $sub
 	 * @return string
@@ -144,8 +155,8 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	private static function jwtSecurityCheck(OIDplusAuthContentStoreJWT $contentProvider, int $validGenerators=null) {
 		// Check if the token is intended for us
 		// Note 'aud' is mandatory, so we do not check for exists()
-		if ($contentProvider->getValue('aud','') !== OIDplus::getEditionInfo()['jwtaud']) {
-			throw new OIDplusException(_L('Token has wrong audience'));
+		if ($contentProvider->getValue('aud','') !== $contentProvider->getAudIss()) {
+			throw new OIDplusException(_L('Token has wrong audience: Given %1 but expected %2.'), $contentProvider->getValue('aud',''), $contentProvider->getAudIss());
 		}
 
 		// Note CLAIM_SSH is mandatory, so we do not check for exists()
@@ -540,6 +551,9 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 			} catch (\Exception $e) {
 				if (!$silent_error || OIDplus::baseConfig()->getValue('DEBUG',false)) {
 					// Most likely an AJAX request. We can throw an Exception
+					if (OIDplus::baseConfig()->getValue('DEBUG',false)) {
+						OIDplus::cookieUtils()->unsetcookie(self::COOKIE_NAME);
+					}
 					throw new OIDplusException(_L('The JWT token was rejected: %1',$e->getMessage()));
 				} else {
 					// Most likely an expired Cookie/Login session. We must not throw an Exception, otherwise we will break jsTree
@@ -655,8 +669,8 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 		$payload = $this->content;
 		$payload[self::CLAIM_SSH] = self::getSsh(); // SSH = Server Secret Hash
 		// see also https://www.iana.org/assignments/jwt/jwt.xhtml#claims for some generic claims
-		$payload["iss"] = OIDplus::getEditionInfo()['jwtaud']; // sic: jwtaud
-		$payload["aud"] = OIDplus::getEditionInfo()['jwtaud'];
+		if (!isset($payload["iss"])) $payload["iss"] = $this->getAudIss();
+		if (!isset($payload["aud"])) $payload["aud"] = $this->getAudIss();
 		$payload["jti"] = gen_uuid();
 		$payload["iat"] = time();
 		if (!isset($payload["nbf"])) $payload["nbf"] = time();
