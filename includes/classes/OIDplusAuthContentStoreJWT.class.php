@@ -156,7 +156,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 		// Check if the token is intended for us
 		// Note 'aud' is mandatory, so we do not check for exists()
 		if ($contentProvider->getValue('aud','') !== $contentProvider->getAudIss()) {
-			throw new OIDplusException(_L('Token has wrong audience: Given %1 but expected %2.'), $contentProvider->getValue('aud',''), $contentProvider->getAudIss());
+			throw new OIDplusException(_L('Token has wrong audience: Given %1 but expected %2.', $contentProvider->getValue('aud',''), $contentProvider->getAudIss()));
 		}
 
 		// Note CLAIM_SSH is mandatory, so we do not check for exists()
