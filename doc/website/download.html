@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="icon" href="favicon.ico">
+
+    <title>OIDplus - Download and Install</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="style.css" rel="stylesheet">
+  </head>
+
+  <body>
+
+    <header>
+      <nav class="site-header sticky-top py-1">
+        <div class="container d-flex flex-column flex-md-row justify-content-between">
+          <!--<a class="py-2" href="#">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="d-block mx-auto"><circle cx="12" cy="12" r="10"></circle><line x1="14.31" y1="8" x2="20.05" y2="17.94"></line><line x1="9.69" y1="8" x2="21.17" y2="8"></line><line x1="7.38" y1="12" x2="13.12" y2="2.06"></line><line x1="9.69" y1="16" x2="3.95" y2="6.06"></line><line x1="14.31" y1="16" x2="2.83" y2="16"></line><line x1="16.62" y1="12" x2="10.88" y2="21.94"></line></svg>
+          </a>-->
+          <!-- DM 19.11.2020 : d-none auskommentiert, da sonst die Links verschwinden wenn das Fenster zu schmal wird -->
+          <a class="py-2 d-md-inline-block" href="features.html">Features</a>
+          <a class="py-2 d-md-inline-block" href="examples.html">Examples</a>
+          <a class="py-2 d-md-inline-block menuactive" href="download.html">Download and Install</a>
+          <a class="py-2 d-md-inline-block" href="support.html">Support</a>
+          <a class="py-2 d-md-inline-block" target="_blank" href="https://www.github.com/danielmarschall/oidplus/">Source code at GitHub</a>
+          <a class="py-2 d-md-inline-block" target="_blank" href="https://www.viathinksoft.com/">Other products by ViaThinkSoft</a>
+        </div>
+      </nav>
+    </header>
+
+    <!-- Begin page content -->
+    <main role="main" class="container">
+		<h1 class="mt-5">Install OIDplus on your server</h1>
+
+		<p>We are grateful for every person that wants to install OIDplus on their systems,
+		as we love to see our product spreading and receive feedback about the user experience.
+		Therefore, if we can help you with installing OIDplus and migrating your data into OIDplus,
+		<a href="https://www.viathinksoft.de/contact/daniel-marschall" target="_blank">please let us know</a>.
+		We will support you with this, free of charge!</p>
+
+		<h2>Installation method A: Download using SVN</h2>
+
+		<p>Downloading and updating OIDplus via a Subversion (SVN) client.
+		In Windows, you can use the tool <b>TortoiseSVN</b> to check out the repository.
+		On Linux systems, you can use the <b>svn</b> command to download the contents.</p>
+
+		<code>sudo apt-get update<br>
+		sudo apt-get install svn<br>
+		svn co https://svn.viathinksoft.com/svn/oidplus/trunk/</code></p>
+
+		<p>After that, you can regularly run <code>svn update</code> to keep OIDplus up-to-date. This command can also be executed in the "Software Update" menu item in the administrator login area.</p>
+
+		<h2>Installation method B: Download using Git</h2>
+
+		<p>Downloading and updating OIDplus via GitHub is an alternative method.
+		<!--In Windows, you can use the tool <b>???</b> to check out the repository.-->
+		On Linux systems, you can use the <b>git</b> command to download the contents.</p>
+
+		<code>sudo apt-get update<br>
+		sudo apt-get install git<br>
+		git clone https://github.com/danielmarschall/oidplus.git</code></p>
+
+		<p>There are various other GIT clients; for example, Plesk has a GIT plugin that lets you manage a GIT repository without a command line.</p>
+
+		<p>After that, you can regularly run <code>git pull</code> to keep OIDplus up-to-date. This command can also be executed in the "Software Update" menu item in the administrator login area.</p>
+
+		<h2>Installation method C: Download SVN snapshot</h2>
+
+		<p>Alternatively, you can download an SVN snapshot in the TAR.GZ format.
+		Just extract the contents of the TAR.GZ files after downloading.</p>
+
+		<p><a class="btn btn-lg btn-primary" href="https://www.viathinksoft.com/download/235/oidplus2_svn.tar.gz" role="button">Download TAR.GZ</a></p>
+
+		<p>Updates can be installed through the "Software Update" menu item in the administrator login area.</p>
+
+		<h2>System requirements</h2>
+
+		<ul>
+			<li>PHP compatible web-server (tested with Apache 2, nginx, and Microsoft IIS)</li>
+			<li>PHP 7.0 or higher (tested till PHP version 8.2 inclusive)<ul>
+				<!--<li>with extension GMP or BCMath (usually part of every PHP installation)</li>
+				<li>with extension MBString or iconv (usually part of every PHP installation)</li>-->
+				<li>with extension MySQLi, PostgreSQL, SQLite3, PDO, OCI8, or ODBC, depending on your database</li>
+			</ul></li>
+			<li>Supported databases:<ul>
+				<li>MySQL/MariaDB</li>
+				<li>PostgreSQL</li>
+				<li>SQLite3</li>
+				<li>Microsoft SQL Server</li>
+				<li>Oracle</li>
+				<li>Microsoft Access</li>
+				<li>Firebird</li>
+			</ul></li>
+			<li>Independent of operating systems (tested with Windows, Linux, and macOS X)</li>
+		</ul>
+
+		<h2>Prefer hosting?</h2>
+
+		<p>If it is too inconvenient for you to set up an individual OIDplus instance, or if you have no server,
+		then we can host a copy of OIDplus for you.<!-- The organizations <a href="https://hickelsoft.de/">HickelSOFT Huth GmbH</a>, <a href="https://www.webfan.de/">Webfan</a>, or <a href="https://viathinksoft.com/contact/daniel-marschall">ViaThinkSoft</a>
+		can set up a hosting plan for you.--></p>
+    </main>
+
+    <footer class="footer">
+      <div class="container">
+        <p class="float-right">
+          <a href="#">Back to top</a>
+        </p>
+        <p>&copy; 2019-2023ViaThinkSoft
+        &middot; <a href="https://www.viathinksoft.com/imprint/" target="_blank">Imprint</a>
+        &middot; <a href="https://www.viathinksoft.com/privacy/" target="_blank">Privacy</a>
+        &middot; <a href="https://www.viathinksoft.com/disclaimer/" target="_blank">Disclaimer</a></p>
+      </div>
+    </footer>
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <!--<script>window.jQuery || document.write('<script src="bootstrap/assets/js/vendor/jquery-slim.min.js"><\/script>')</script>
+    <script src="bootstrap/assets/js/vendor/popper.min.js"></script>-->
+    <script src="bootstrap/js/bootstrap.min.js"></script>
+  </body>
+</html>

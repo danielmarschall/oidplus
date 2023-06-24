@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0 RDAP
- * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
  * Authors               Daniel Marschall, ViaThinkSoft
  *                       Till Wehowski, Frdlweb
  *

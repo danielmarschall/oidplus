@@ -2694,10 +2694,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Generate a random AAI:
+		Generate a random <abbr title="Administratively Assigned Identifier (not world-wide unique!)">AAI</abbr>
 		]]></source>
 		<target><![CDATA[
-		Zufällige AAI erzeugen:
+		Zufällige <abbr title="Administratively Assigned Identifier (nicht weltweit einzigartig!)">AAI</abbr> erzeugen
 		]]></target>
 	</message>
 	<message>

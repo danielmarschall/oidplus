@@ -90,7 +90,7 @@ class OIDplusObjectTypePluginMac extends OIDplusObjectTypePlugin
 	public function gridGeneratorLinks(OIDplusObject $objParent): string {
 		if (!$objParent->isRoot()) return '';
 		return
-			'<br>'._L('Generate a random AAI:').
+			'<br>'._L('Generate a random <abbr title="Administratively Assigned Identifier (not world-wide unique!)">AAI</abbr>').':'.
 			'<br>- <abbr title="'._L('Random hexadecimal string, but second nibble must be %1','2').'">Unicast</abbr> <a href="javascript:OIDplusObjectTypePluginMac.generateRandomAAI(48, false)">(AAI-48)</a> | <a href="javascript:OIDplusObjectTypePluginMac.generateRandomAAI(64, false)">(AAI-64)</a>'.
 			'<br>- <abbr title="'._L('Random hexadecimal string, but second nibble must be %1','3').'">Multicast</abbr> <a href="javascript:OIDplusObjectTypePluginMac.generateRandomAAI(48, true)">(AAI-48)</a> | <a href="javascript:OIDplusObjectTypePluginMac.generateRandomAAI(64, true)">(AAI-64)</a>'.
 			'<br><a href="https://standards.ieee.org/products-programs/regauth/" target="_blank">('._L('Buy an OUI or CID from IEEE').')</a>';
