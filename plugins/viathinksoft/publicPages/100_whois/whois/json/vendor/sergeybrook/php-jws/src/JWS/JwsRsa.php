@@ -15,8 +15,7 @@ use SBrook\JWS\Exception\JwsException;
  *  41. Public key is not set
  *  49. Forwarded openssl error(s)
  */
-class JwsRsa extends Jws implements Asymmetric
-{
+class JwsRsa extends Jws implements Asymmetric {
 	/**
 	 * JWS signature private key.
 	 * @var resource
@@ -54,8 +53,7 @@ class JwsRsa extends Jws implements Asymmetric
 	/**
 	 * JwsRsa destructor.
 	 */
-	public function __destruct()
-	{
+	public function __destruct() {
 		if ($this->privateKey) {
 			if (version_compare(PHP_VERSION, '8.0.0') < 0) openssl_pkey_free($this->privateKey);
 		}

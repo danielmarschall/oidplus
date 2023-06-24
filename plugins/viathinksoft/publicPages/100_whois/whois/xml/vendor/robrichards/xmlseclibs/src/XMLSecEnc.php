@@ -202,7 +202,7 @@ class XMLSecEnc
             try {
                 $encNode = $this->encryptNode($objKey);
                 $this->references[$name]["encnode"] = $encNode;
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $this->rawNode = $curRawNode;
                 $this->type = $curType;
                 throw $e;
@@ -393,7 +393,7 @@ class XMLSecEnc
                    $attrAlgorithm = $encmeth->getAttribute("Algorithm");
                 try {
                     $objKey = new XMLSecurityKey($attrAlgorithm, array('type' => 'private'));
-                } catch (\Exception $e) {
+                } catch (Exception $e) {
                     return null;
                 }
                 return $objKey;

@@ -37,11 +37,11 @@ class Utils
 
         if ($number < 1e+21 && $number >= 1e-6) {
             $formatted = sprintf('%F', $number);
-            $formatted = rtrim($formatted, '.0');
+            $formatted = rtrim($formatted, '0');$formatted = rtrim($formatted, '.'); //Hotfix: https://github.com/aywan/php-json-canonicalization/issues/1
         } else {
             $formatted = sprintf('%e', $number);
             $parts = explode('e', $formatted);
-            $parts[0] = rtrim($parts[0], '.0');
+            $parts[0] = rtrim($parts[0], '0');$parts[0] = rtrim($parts[0], '.'); //Hotfix: https://github.com/aywan/php-json-canonicalization/issues/1
             $formatted = implode('e', $parts);
         }
 

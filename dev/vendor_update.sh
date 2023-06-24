@@ -92,21 +92,28 @@ composer license > vendor/licenses
 # Update composer dependencies of plugins
 # -------
 
+rm -rf plugins/viathinksoft/publicPages/100_whois/whois/xml/vendor/
 composer update --no-dev -d plugins/viathinksoft/publicPages/100_whois/whois/xml/
 composer license -d plugins/viathinksoft/publicPages/100_whois/whois/xml/ > plugins/viathinksoft/publicPages/100_whois/whois/xml/vendor/licenses
 remove_vendor_rubbish plugins/viathinksoft/publicPages/100_whois/whois/xml/
 
+rm -rf plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/
 composer update --no-dev -d plugins/viathinksoft/publicPages/100_whois/whois/json/
 composer license -d plugins/viathinksoft/publicPages/100_whois/whois/json/ > plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/licenses
 remove_vendor_rubbish plugins/viathinksoft/publicPages/100_whois/whois/json/
+
+# !!! Great tool for escaping these hotfixes: https://dwaves.de/tools/escape/ !!!
 
 # Change the PHP 7.2 requirement to PHP 7.0
 # Since this is no official packagist package, composer does not know the required php version,
 # so we do not need to patch platform_check.php
 sed -i 's@private function serialize($item): void@private function serialize($item)/*: void*/  // ViaThinkSoft: Removed ": void" for PHP 7.0 compatibility@g' plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/aywan/php-json-canonicalization/src/Canonicalizator.php
 
+# Apply hotfix: https://github.com/aywan/php-json-canonicalization/issues/1
+sed -i 's@\$formatted = rtrim(\$formatted, \x27\.0\x27);@\$formatted = rtrim(\$formatted, \x270\x27);\$formatted = rtrim(\$formatted, \x27\.\x27); \/\/Hotfix: https:\/\/github\.com\/aywan\/php-json-canonicalization\/issues\/1@g' plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/aywan/php-json-canonicalization/src/Utils.php
+sed -i 's@\$parts\[0\] = rtrim(\$parts\[0\], \x27\.0\x27);@\$parts\[0\] = rtrim(\$parts\[0\], \x270\x27);\$parts\[0\] = rtrim(\$parts\[0\], \x27\.\x27); \/\/Hotfix: https:\/\/github\.com\/aywan\/php-json-canonicalization\/issues\/1@g' plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/aywan/php-json-canonicalization/src/Utils.php
+
 # Fix symfony/polyfill-mbstring to make it compatible with PHP 8.2
 # The author does know about the problem (I have opened a GitHub issue), but they did not sync it from the symfony main repo (as polyfill-mbstring is just a fraction of it, for composer)
 # see https://github.com/symfony/polyfill-mbstring/pull/11
-# Great tool for escaping: https://dwaves.de/tools/escape/
 sed -i 's@if (\\is_array(\$fromEncoding) || false !== strpos(\$fromEncoding, \x27,\x27)) {@if (\\is_array(\$fromEncoding) || (null !== \$fromEncoding \&\& false !== strpos(\$fromEncoding, \x27,\x27))) {@g' vendor/symfony/polyfill-mbstring/Mbstring.php

@@ -29,12 +29,14 @@
             'dev_requirement' => false,
         ),
         'sergeybrook/php-jws' => array(
-            'pretty_version' => 'v1.0.1',
-            'version' => '1.0.1.0',
-            'reference' => '7fee8b56e88fc429e0cdf71bbf6c2dcf6dd61eed',
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => 'e1efec3247c1f5b58ecb108cffae6f55da4f4339',
             'type' => 'library',
             'install_path' => __DIR__ . '/../sergeybrook/php-jws',
-            'aliases' => array(),
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
             'dev_requirement' => false,
         ),
     ),

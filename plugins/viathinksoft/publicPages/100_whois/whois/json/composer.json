@@ -26,7 +26,7 @@
 	},
 	"require": {
 		"aywan/php-json-canonicalization": "*",
-		"sergeybrook/php-jws": "^1.0"
+		"sergeybrook/php-jws": "*"
 	},
 	"config": {
 		"secure-http": false,
