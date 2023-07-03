@@ -39,11 +39,6 @@ System / Core:
   with the sole purpose of allowing to invalidate all issued JWT by changing the server secret.
   (This would be more secure than the Blacklist feature, since changing the server secret)
   also invalidates JWT which might have been maliciously postdated).
-- Session Handler (OIDplusSessionHandler.class.php):
-  Encryption of session contents (regular logins)
-  * if OpenSSL is installed:        sha512-pbkdf2 + AES-256-CBC + sha3-512-hmac
-  * if OpenSSL is not installed:    sha3-512-hmac
-  * In both cases, the key is `OIDplus::authUtils()->makeSecret(["b118abc8-f4ec-11ed-86ca-3c4a92df8582"])`.
 
 Temporary auth keys (sent via email etc.):
 * used at plugin forgot RA password (public/091):
