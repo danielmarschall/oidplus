@@ -28,7 +28,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	/**
 	 *
 	 */
-	const UUID_NAMEBASED_NS_OidPlusMisc = 'ad1654e6-7e15-11e4-9ef6-78e3b5fc7f22';
+	//const UUID_NAMEBASED_NS_OidPlusMisc = 'ad1654e6-7e15-11e4-9ef6-78e3b5fc7f22';
 
 	/**
 	 * Please overwrite this function!
@@ -87,8 +87,41 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		// ... exclude GUID, because a GUID is already a GUID
 		// ... exclude OID, because an OID already has a record UUID_NAMEBASED_NS_OID (defined by IETF) set by class OIDplusOid
 		if (($this->ns() != 'guid') && ($this->ns() != 'oid')) {
-			$ids[] = new OIDplusAltId('guid', gen_uuid_md5_namebased(self::UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), _L('Name based version 3 / MD5 UUID with namespace %1','UUID_NAMEBASED_NS_OidPlusMisc'));
-			$ids[] = new OIDplusAltId('guid', gen_uuid_sha1_namebased(self::UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), _L('Name based version 5 / SHA1 UUID with namespace %1','UUID_NAMEBASED_NS_OidPlusMisc'));
+			//$ids[] = new OIDplusAltId('guid', gen_uuid_md5_namebased(self::UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), _L('Name based version 3 / MD5 UUID with namespace %1','UUID_NAMEBASED_NS_OidPlusMisc'));
+			//$ids[] = new OIDplusAltId('guid', gen_uuid_sha1_namebased(self::UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), _L('Name based version 5 / SHA1 UUID with namespace %1','UUID_NAMEBASED_NS_OidPlusMisc'));
+
+			/*
+			OIDplus Information Object GUID format since 7/2023
+
+			1  bit   Reserved, must be 0
+			31 bit   OIDplus SystemID (lower SHA1 of Public Key); 0 if not available
+
+			16 bit   Creation timestamp: Days since 01.01.1970 00:00 GMT; 0 if unknown
+
+			4 bit    UUID Version, must be 0x8 [Custom]
+			12 bit   Reserved
+
+			2 bit    UUID Variant, must be 0b10 (RFC 4122)
+			14 bit   Namespace (lower SHA1 of Namespace OID)
+
+			48 bit   Object name (lower SHA1 of canonical object name)
+			*/
+
+			$sysid = OIDplus::getSystemId(false);
+			$sysid_int = $sysid ? $sysid : 0;
+			$unix_ts = $this->getCreatedTime() ? strtotime($this->getCreatedTime()) : 0;
+			$ns_oid = $this->getPlugin()->getManifest()->getOid();
+			$obj_name = $this->nodeId(false);
+			$ids[] = new OIDplusAltId('guid',
+				gen_uuid_v8(
+					dechex($sysid_int),
+					dechex($unix_ts/60/60/24),
+					dechex(0),
+					sha1($ns_oid), // Note: No 14bit collission between 1.3.6.1.4.1.37476.2.5.2.4.8.[0-185]
+					sha1($obj_name)
+				),
+				_L('OIDplus Information Object Custom UUID (RFC4122bis)')
+				);
 		}
 
 		// Make a AID based on ViaThinkSoft schema
