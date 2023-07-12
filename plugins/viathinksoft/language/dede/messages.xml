@@ -4558,6 +4558,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		OIDplus Information Object Custom UUID (RFC4122bis)
+		]]></source>
+		<target><![CDATA[
+		OIDplus Information Object Individuelle UUID (RFC4122bis)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		OIDplus Information Object OID
 		]]></source>
 		<target><![CDATA[

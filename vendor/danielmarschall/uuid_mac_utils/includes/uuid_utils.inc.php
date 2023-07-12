@@ -658,3 +658,21 @@ if ( !function_exists( 'hex2bin' ) ) {
         return $sbin;
     }
 }
+
+
+
+function gen_uuid_v8($block1_32bit, $block2_16bit, $block3_12bit, $block4_14bit, $block5_48bit) {
+        return gen_uuid_custom($block1_32bit, $block2_16bit, $block3_12bit, $block4_14bit, $block5_48bit);
+}
+function gen_uuid_custom($block1_32bit, $block2_16bit, $block3_12bit, $block4_14bit, $block5_48bit) {
+        $block1 = str_pad(substr($block1_32bit, -8),  8, '0', STR_PAD_LEFT);
+        $block2 = str_pad(substr($block2_16bit, -4),  4, '0', STR_PAD_LEFT);
+        $block3 = str_pad(substr($block3_12bit, -4),  4, '0', STR_PAD_LEFT);
+        $block4 = str_pad(substr($block4_14bit, -4),  4, '0', STR_PAD_LEFT);
+        $block5 = str_pad(substr($block5_48bit,-12), 12, '0', STR_PAD_LEFT);
+
+        $block3[0] = '8'; // Version 8 = Custom
+        $block4[0] = dechex((hexdec($block4[0])&3) + 0b1000); // Variant 0b10__ = RFC4122
+
+        return strtolower($block1.'-'.$block2.'-'.$block3.'-'.$block4.'-'.$block5);
+}
