@@ -170,6 +170,42 @@ class OIDplusMac extends OIDplusObject {
 	}
 
 	/**
+	 * @return array
+	 */
+	private function getTechInfo(): array {
+		$tech_info = array();
+
+		ob_start();
+		try {
+			// TODO: OIDplus should download the *.txt files at "web-data"
+			decode_mac(mac_canonize($this->nodeId(false)));
+			$tech_info = ob_get_contents();
+
+
+			$lines = explode("\n", $tech_info);
+			$tech_info = [];
+			$key = '';
+			foreach ($lines as $line) {
+				$m1 = explode(':', $line);
+				if (!isset($m1[1])) $m1 = array($key, $m1[0]);
+				$key = $m1[0];
+				if (isset($tech_info[$key])) {
+					$value = $tech_info[$key].'<br>'.$m1[1];
+				} else {
+					$value = $m1[1];
+				}
+				$tech_info[$key] = $value;
+			}
+
+		} catch (\Exception $e) {
+			$tech_info = [];
+		}
+		ob_end_clean();
+
+		return $tech_info;
+	}
+
+	/**
 	 * @param string $title
 	 * @param string $content
 	 * @param string $icon
@@ -200,18 +236,17 @@ class OIDplusMac extends OIDplusObject {
 		} else {
 			$title = $this->getTitle();
 
-			// TODO: OIDplus should download the *.txt files at "web-data"
-			// TODO: Use getTechInfo(), so we can show a nice table. (Caveat: "Address of registrant" is multi-line)
-			ob_start();
-			try {
-				decode_mac(mac_canonize($this->nodeId(false)));
-				$tech_info = ob_get_contents();
-				$tech_info_html = '<h2>'._L('Technical information').'</h2>';
-				$tech_info_html .= '<pre>'.$tech_info.'</pre>';
-			} catch (\Exception $e) {
-				$tech_info_html = '';
+			$tech_info = $this->getTechInfo();
+			$tech_info_html = '';
+			if (count($tech_info) > 0) {
+				$tech_info_html .= '<h2>'._L('Technical information').'</h2>';
+				$tech_info_html .= '<table border="0">';
+				foreach ($tech_info as $key => $value) {
+					$tech_info_html .= '<tr><td valign="top">'.$key.': </td><td><code>'.$value.'</code></td></tr>';
+				}
+				$tech_info_html .= '</table>';
 			}
-			ob_end_clean();
+			$content = $tech_info_html;
 
 			$chunked = $this->chunkedNotation(true);
 			if (!mac_valid($this->number)) {
