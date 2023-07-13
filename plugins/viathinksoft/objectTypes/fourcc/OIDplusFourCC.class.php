@@ -241,7 +241,7 @@ class OIDplusFourCC extends OIDplusObject {
 					$tech_info_html .= '<h2>'._L('Technical information').'</h2>';
 					$tech_info_html .= '<table border="0">';
 					foreach ($tech_info as $key => $value) {
-						$tech_info_html .= '<tr><td>'.$key.': </td><td><code>'.str_replace(' ','&nbsp;',$value).'</code></td></tr>';
+						$tech_info_html .= '<tr><td valign="top">'.$key.': </td><td><code>'.str_replace(' ','&nbsp;',$value).'</code></td></tr>';
 					}
 					$tech_info_html .= '</table>';
 				}

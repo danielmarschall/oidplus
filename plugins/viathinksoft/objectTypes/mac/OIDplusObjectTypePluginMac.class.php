@@ -47,25 +47,7 @@ class OIDplusObjectTypePluginMac extends OIDplusObjectTypePlugin
 			throw new OIDplusException(_L("Invalid bit amount"));
 		}
 
-		$aai = '';
-		for ($i=0; $i<$params['aai_bits']/4; $i++) {
-			try {
-				$aai .= dechex(random_int(0, 15));
-			} catch (\Exception $e) {
-				$aai .= dechex(mt_rand(0, 15));
-			}
-		}
-
-		if (oidplus_is_true($params['aai_multicast'] ?? false)) {
-			$aai[1] = '3';
-		} else {
-			$aai[1] = '2';
-		}
-
-		$aai = strtoupper($aai);
-		$aai = rtrim(chunk_split($aai, 2, '-'), '-');
-
-		return array("status" => 0, "aai" => $aai);
+		return array("status" => 0, "aai" => gen_aai((int)$params['aai_bits'], oidplus_is_true($params['aai_multicast'] ?? false)));
 	}
 
 	/**

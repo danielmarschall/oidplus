@@ -162,13 +162,22 @@ class OIDplusGuid extends OIDplusObject {
 		ob_start();
 		uuid_info($this->guid);
 		$info = ob_get_contents();
-		preg_match_all('@([^:]+):\s*(.+)\n@ismU', $info, $m, PREG_SET_ORDER);
-		foreach ($m as $m1) {
-			$key = $m1[1];
-			$value = $m1[2];
+		ob_end_clean();
+
+		$lines = explode("\n", $info);
+		$key = '';
+		foreach ($lines as $line) {
+			$m1 = explode(':', $line);
+			if (!isset($m1[1])) $m1 = array($key, $m1[0]);
+			$key = $m1[0];
+			if (str_starts_with($key, '<u>')) continue;
+			if (isset($tech_info[$key])) {
+				$value = $tech_info[$key].'<br>'.$m1[1];
+			} else {
+				$value = $m1[1];
+			}
 			$tech_info[$key] = $value;
 		}
-		ob_end_clean();
 
 		return $tech_info;
 	}
@@ -211,7 +220,7 @@ class OIDplusGuid extends OIDplusObject {
 					$tech_info_html .= '<h2>'._L('Technical information').'</h2>';
 					$tech_info_html .= '<table border="0">';
 					foreach ($tech_info as $key => $value) {
-						$tech_info_html .= '<tr><td>'.$key.': </td><td><code>'.$value.'</code></td></tr>';
+						$tech_info_html .= '<tr><td valign="top">'.$key.': </td><td><code>'.$value.'</code></td></tr>';
 					}
 					$tech_info_html .= '</table>';
 				}
