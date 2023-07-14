@@ -43,16 +43,22 @@ class OIDplusAltId extends OIDplusBaseClass {
 	private $suffix;
 
 	/**
+	 * @var string
+	 */
+	private $moreInfoUrl;
+
+	/**
 	 * @param string $ns
 	 * @param string $id
 	 * @param string $desc
 	 * @param string $suffix
 	 */
-	function __construct(string $ns, string $id, string $desc, string $suffix='') {
+	function __construct(string $ns, string $id, string $desc, string $suffix='', string $moreInfoUrl='') {
 		$this->ns = $ns;
 		$this->id = $id;
 		$this->desc = $desc;
 		$this->suffix = $suffix;
+		$this->moreInfoUrl = $moreInfoUrl;
 	}
 
 	/**
@@ -81,6 +87,13 @@ class OIDplusAltId extends OIDplusBaseClass {
 	 */
 	function getSuffix(): string {
 		return $this->suffix;
+	}
+
+	/**
+	 * @return string
+	 */
+	function getMoreInfoUrl(): string {
+		return $this->moreInfoUrl;
 	}
 
 }

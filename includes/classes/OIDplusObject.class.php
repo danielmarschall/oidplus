@@ -100,7 +100,9 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 						sha1($ns_oid), // Note: No 14bit collission between 1.3.6.1.4.1.37476.2.5.2.4.8.[0-185]
 						sha1($obj_name)
 					),
-					'<a href="https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md" target="_blank">'._L('OIDplus Information Object Custom UUID (RFC4122bis)').'</a>'
+					_L('OIDplus Information Object Custom UUID (RFC4122bis)'),
+					'',
+					'https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md'
 					);
 			}
 
@@ -114,7 +116,10 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 					$sid_hex = strtoupper(str_pad(dechex((int)$sid),8,'0',STR_PAD_LEFT));
 					$obj_hex = strtoupper(str_pad(dechex(smallhash($hash_payload)),8,'0',STR_PAD_LEFT));
 					$aid = 'D276000186B20005'.$sid_hex.$obj_hex;
-					$ids[] = new OIDplusAltId('aid', $aid, '<a href="https://oidplus.viathinksoft.com/oidplus/?goto=aid%3AD276000186B20005" target="_blank">'._L('OIDplus Information Object Application Identifier (ISO/IEC 7816)').'</a>', ' ('._L('No PIX allowed').')');
+					$ids[] = new OIDplusAltId('aid', $aid,
+_L('OIDplus Information Object Application Identifier (ISO/IEC 7816)'),
+' ('._L('No PIX allowed').')',
+'https://oidplus.viathinksoft.com/oidplus/?goto=aid%3AD276000186B20005');
 				}
 			}
 		}
