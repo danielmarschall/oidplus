@@ -95,7 +95,7 @@
         'danielmarschall/uuid_mac_utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'a8af334fab65b2ff3178360297b8323c16d3dda8',
+            'reference' => '1f55567ef6ed5c2ae49fb575c8ab975377002cac',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/uuid_mac_utils',
             'aliases' => array(
