@@ -628,7 +628,7 @@ class OIDplusOid extends OIDplusObject {
 		if ($this->isRoot()) return array();
 		$ids = parent::getAltIds();
 
-		if ($uuid = oid_to_uuid($this->oid)) {
+		if ($uuid = oid_to_uuid($this->oid, true)) {
 			// UUID-OIDs are representation of an UUID
 			$ids[] = new OIDplusAltId('guid', $uuid, _L('GUID representation of this OID'));
 		} else {
