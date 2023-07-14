@@ -63,51 +63,59 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 
 		$ids = array();
 
-		// Creates an OIDplus-Hash-OID
-		if ($this->ns() != 'oid') {
-			$sid = OIDplus::getSystemId(true);
-			if (!empty($sid)) {
-				$ns_oid = $this->getPlugin()->getManifest()->getOid();
-				$hash_payload = $ns_oid.':'.$this->nodeId(false);
-				$oid = $sid . '.' . smallhash($hash_payload);
-				$ids[] = new OIDplusAltId('oid', $oid, _L('OIDplus Information Object OID'));
+		// Create Information Object OID/AID/UUID
+		// ... but not for OIDs below oid:1.3.6.1.4.1.37476.30.9, because these are the definition of these Information Object AID/OID/UUID (which will be decoded in the OID object type plugin)
+		if (!str_starts_with($this->nodeId(true), 'oid:1.3.6.1.4.1.37476.30.9.')) {
+			// Creates an OIDplus-Hash-OID
+			// ... exclude OIDs, because an OID is already an OID
+			if ($this->ns() != 'oid') {
+				$sid = OIDplus::getSystemId(true);
+				if (!empty($sid)) {
+					$ns_oid = $this->getPlugin()->getManifest()->getOid();
+					$hash_payload = $ns_oid.':'.$this->nodeId(false);
+					$oid = $sid . '.' . smallhash($hash_payload);
+					$ids[] = new OIDplusAltId('oid', $oid, _L('OIDplus Information Object OID'));
+				}
 			}
-		}
 
-		// Make a namebased UUID, but...
-		// ... exclude GUID, because a GUID is already a GUID
-		// ... exclude OID, because an OID already has a record UUID_NAMEBASED_NS_OID (defined by IETF) set by class OIDplusOid
-		if (($this->ns() != 'guid') && ($this->ns() != 'oid')) {
-			//$ids[] = new OIDplusAltId('guid', gen_uuid_md5_namebased(self::UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), _L('Name based version 3 / MD5 UUID with namespace %1','UUID_NAMEBASED_NS_OidPlusMisc'));
-			//$ids[] = new OIDplusAltId('guid', gen_uuid_sha1_namebased(self::UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), _L('Name based version 5 / SHA1 UUID with namespace %1','UUID_NAMEBASED_NS_OidPlusMisc'));
-			$sysid = OIDplus::getSystemId(false);
-			$sysid_int = $sysid ? $sysid : 0;
-			$unix_ts = $this->getCreatedTime() ? strtotime($this->getCreatedTime()) : 0;
-			$ns_oid = $this->getPlugin()->getManifest()->getOid();
-			$obj_name = $this->nodeId(false);
-			$ids[] = new OIDplusAltId('guid',
-				gen_uuid_v8(
-					dechex($sysid_int),
-					dechex($unix_ts/60/60/24),
-					dechex(0),
-					sha1($ns_oid), // Note: No 14bit collission between 1.3.6.1.4.1.37476.2.5.2.4.8.[0-185]
-					sha1($obj_name)
-				),
-				'<a href="https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md" target="_blank">'._L('OIDplus Information Object Custom UUID (RFC4122bis)').'</a>'
-				);
-		}
-
-		// Make a AID based on ViaThinkSoft schema
-		// ... but not for OIDs below oid:1.3.6.1.4.1.37476.30.9, because these are the definition of these Information Object AIDs (which will be decoded in the OID object type plugin)
-		if (($this->ns() != 'aid') && !str_starts_with($this->nodeId(true), 'oid:1.3.6.1.4.1.37476.30.9.')) {
-			$sid = OIDplus::getSystemId(false);
-			if ($sid !== false) {
+			// Make a OIDplus-UUID, but...
+			// ... exclude GUID, because a GUID is already a GUID
+			// ... exclude OIDs which are 2.25, because these are basically GUIDs (but 2nd, 3rd, 4th, ... level is OK)
+			// Previously, we excluded OID, because an OID already has a record UUID_NAMEBASED_NS_OID (defined by IETF) set by class OIDplusOid
+			if (($this->ns() != 'guid') && ($this->ns() != 'oid' || $this->one_up()->nodeId(true) != 'oid:2.25') /*&& ($this->ns() != 'oid')*/) {
+				// Obsolete custom namespace for UUIDv3 and UUIDv5:
+				//$ids[] = new OIDplusAltId('guid', gen_uuid_md5_namebased(self::UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), _L('Name based version 3 / MD5 UUID with namespace %1','UUID_NAMEBASED_NS_OidPlusMisc'));
+				//$ids[] = new OIDplusAltId('guid', gen_uuid_sha1_namebased(self::UUID_NAMEBASED_NS_OidPlusMisc, $this->nodeId()), _L('Name based version 5 / SHA1 UUID with namespace %1','UUID_NAMEBASED_NS_OidPlusMisc'));
+				// New custom UUIDv8:
+				$sysid = OIDplus::getSystemId(false);
+				$sysid_int = $sysid ? $sysid : 0;
+				$unix_ts = $this->getCreatedTime() ? strtotime($this->getCreatedTime()) : 0;
 				$ns_oid = $this->getPlugin()->getManifest()->getOid();
-				$hash_payload = $ns_oid.':'.$this->nodeId(false);
-				$sid_hex = strtoupper(str_pad(dechex((int)$sid),8,'0',STR_PAD_LEFT));
-				$obj_hex = strtoupper(str_pad(dechex(smallhash($hash_payload)),8,'0',STR_PAD_LEFT));
-				$aid = 'D276000186B20005'.$sid_hex.$obj_hex;
-				$ids[] = new OIDplusAltId('aid', $aid, '<a href="https://oidplus.viathinksoft.com/oidplus/?goto=aid%3AD276000186B20005" target="_blank">'._L('OIDplus Information Object Application Identifier (ISO/IEC 7816)').'</a>', ' ('._L('No PIX allowed').')');
+				$obj_name = $this->nodeId(false);
+				$ids[] = new OIDplusAltId('guid',
+					gen_uuid_v8(
+						dechex($sysid_int),
+						dechex($unix_ts/60/60/24),
+						dechex(0),
+						sha1($ns_oid), // Note: No 14bit collission between 1.3.6.1.4.1.37476.2.5.2.4.8.[0-185]
+						sha1($obj_name)
+					),
+					'<a href="https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md" target="_blank">'._L('OIDplus Information Object Custom UUID (RFC4122bis)').'</a>'
+					);
+			}
+
+			// Make a AID based on ViaThinkSoft schema
+			// ... exclude AIDs, because an AID is already an AID
+			if ($this->ns() != 'aid') {
+				$sid = OIDplus::getSystemId(false);
+				if ($sid !== false) {
+					$ns_oid = $this->getPlugin()->getManifest()->getOid();
+					$hash_payload = $ns_oid.':'.$this->nodeId(false);
+					$sid_hex = strtoupper(str_pad(dechex((int)$sid),8,'0',STR_PAD_LEFT));
+					$obj_hex = strtoupper(str_pad(dechex(smallhash($hash_payload)),8,'0',STR_PAD_LEFT));
+					$aid = 'D276000186B20005'.$sid_hex.$obj_hex;
+					$ids[] = new OIDplusAltId('aid', $aid, '<a href="https://oidplus.viathinksoft.com/oidplus/?goto=aid%3AD276000186B20005" target="_blank">'._L('OIDplus Information Object Application Identifier (ISO/IEC 7816)').'</a>', ' ('._L('No PIX allowed').')');
+				}
 			}
 		}
 
