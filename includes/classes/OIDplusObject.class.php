@@ -117,10 +117,25 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 					$obj_hex = strtoupper(str_pad(dechex(smallhash($hash_payload)),8,'0',STR_PAD_LEFT));
 					$aid = 'D276000186B20005'.$sid_hex.$obj_hex;
 					$ids[] = new OIDplusAltId('aid', $aid,
-_L('OIDplus Information Object Application Identifier (ISO/IEC 7816)'),
-' ('._L('No PIX allowed').')',
-'https://oidplus.viathinksoft.com/oidplus/?goto=aid%3AD276000186B20005');
+						_L('OIDplus Information Object Application Identifier (ISO/IEC 7816)'),
+						' ('._L('No PIX allowed').')',
+						'https://oidplus.viathinksoft.com/oidplus/?goto=aid%3AD276000186B20005');
 				}
+			}
+
+			// Make a MAC based on AAI (not 100% worldwide unique!)
+			// ... exclude MACs, because an MAC is already a MAC
+			if ($this->ns() != 'mac') {
+				$ns_oid = $this->getPlugin()->getManifest()->getOid();
+				$obj_name = $this->nodeId(false);
+				$mac = strtoupper(substr(sha1($ns_oid.':'.$obj_name),-12));
+				$mac = rtrim(chunk_split($mac, 2, '-'),'-');
+
+				$mac[1] = '2'; // 2=AAI Unicast
+				$ids[] = new OIDplusAltId('mac', $mac, _L('OIDplus Information Object MAC address, Unicast (AAI)'));
+
+				$mac[1] = '3'; // 3=AAI Multicast
+				$ids[] = new OIDplusAltId('mac', $mac, _L('OIDplus Information Object MAC address, Multicast (AAI)'));
 			}
 		}
 

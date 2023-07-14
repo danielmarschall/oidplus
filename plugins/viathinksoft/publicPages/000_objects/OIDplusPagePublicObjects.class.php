@@ -1099,7 +1099,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					$aiddesc = $alt_id->getDescription();
 					$suffix = $alt_id->getSuffix();
 					$info = $alt_id->getMoreInfoUrl();
-					if ($info) $info = ' <a href="'.$info.'" target="_blank">'._L('More information').'</a>'; // TODO: as icon
+					if ($info) $info = ' <a href="'.$info.'" target="_blank"><img src="img/info.png" style="width:16px;height:16px" alt="'._L('More information').'"></a>';
 					$out['text'] .= '<tr><td>'.htmlentities($ns.':'.$aid).($suffix ? '<br/><font size="-1">'.htmlentities($suffix).'</font>' : '').'</td><td>'.htmlentities($aiddesc).$info.'</td></tr>';
 				}
 				$out['text'] .= '</tbody>';
