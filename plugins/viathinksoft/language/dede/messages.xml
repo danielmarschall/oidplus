@@ -4566,6 +4566,22 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		OIDplus Information Object MAC address, Multicast (AAI)
+		]]></source>
+		<target><![CDATA[
+		OIDplus Information Objekt Multicast MAC-Adresse (AAI)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OIDplus Information Object MAC address, Unicast (AAI)
+		]]></source>
+		<target><![CDATA[
+		OIDplus Information Objekt Unicast MAC-Adresse (AAI)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		OIDplus Information Object OID
 		]]></source>
 		<target><![CDATA[
