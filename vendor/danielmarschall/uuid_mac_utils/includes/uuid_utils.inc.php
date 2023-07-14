@@ -691,7 +691,7 @@ function uuid_canonize($uuid) {
 }
 
 function oid_to_uuid($oid) {
-	if (!is_uuid_oid($oid)) return false;
+	if (!is_uuid_oid($oid,true)) return false;
 
 	if (substr($oid,0,1) == '.') {
 		$oid = substr($oid, 1);
