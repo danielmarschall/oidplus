@@ -94,17 +94,17 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			OIDplus Information Object GUID format since 7/2023
 
 			1  bit   Reserved, must be 0
-			31 bit   OIDplus SystemID (lower SHA1 of Public Key); 0 if not available
+			31 bit   OIDplus SystemID (lower 31 bits of SHA1 of Public Key); 0 if not available
 
 			16 bit   Creation timestamp: Days since 01.01.1970 00:00 GMT; 0 if unknown
 
 			4 bit    UUID Version, must be 0x8 [Custom]
-			12 bit   Reserved
+			12 bit   Reserved, must be 0x0000
 
 			2 bit    UUID Variant, must be 0b10 (RFC 4122)
-			14 bit   Namespace (lower SHA1 of Namespace OID)
+			14 bit   Namespace (lower 14 bits of SHA1 of Namespace OID)
 
-			48 bit   Object name (lower SHA1 of canonical object name)
+			48 bit   Object name (lower 48 bits of SHA1 of canonical object name)
 			*/
 
 			$sysid = OIDplus::getSystemId(false);

@@ -164,10 +164,13 @@ class OIDplusGuid extends OIDplusObject {
 		$info = ob_get_contents();
 		ob_end_clean();
 
+		$p = strpos($info, "<u>Interpretation");
+		if ($p !== false) $info = substr($info, $p);
+
 		$lines = explode("\n", $info);
 		$key = '';
 		foreach ($lines as $line) {
-			$m1 = explode(':', $line);
+			$m1 = explode(':', $line, 2);
 			if (!isset($m1[1])) $m1 = array($key, $m1[0]);
 			$key = $m1[0];
 			if (str_starts_with($key, '<u>')) continue;
