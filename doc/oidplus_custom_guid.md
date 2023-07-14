@@ -26,7 +26,7 @@ It contains the information as follows:
 |--|--|--|--|
 | 1 | System ID         | [0x6E932DD7]     | SHA1(PubKey) & 0x7FFF.FFFF = 1855139287 |
 | 2 | Timestamp         | [0x458C]         | 30 September 2018 (17804 days since 1 January 1970) |
-| 3 | Reserved+Version  | [0x0000]         | 0 \| 0x8000 |
+| 3 | Reserved+Version  | [0x8000]         | 0x0000 \| 0x8000 |
 | 4 | Namespace+Variant | [0xB9E9]         | SHA1('1.3.6.1.4.1.37476.2.5.2.4.8.6') & 0x3FFF \| 0x8000 |
 | 5 | Object Name       | [0xC1E3894D1105] | SHA1('com.example') & 0xFFFF.FFFF.FFFF |
 
@@ -40,7 +40,7 @@ It contains the information as follows:
 | ViaThinkSoft | ipv4   | 1.3.6.1.4.1.37476.2.5.2.4.8.4  | 0x...5AF9 | 0x9AF9 |
 | ViaThinkSoft | ipv6   | 1.3.6.1.4.1.37476.2.5.2.4.8.5  | 0x...55DB | 0x95DB |
 | ViaThinkSoft | java   | 1.3.6.1.4.1.37476.2.5.2.4.8.6  | 0x...79E9 | 0xB9E9 |
-| ViaThinkSoft | oid    | 1.3.6.1.4.1.37476.2.5.2.4.8.7  | 0x...66D3 | 0xA6D3 | In OIDplus only UUIDv3/UUIDv5 with the official OID namespace will be shown
+| ViaThinkSoft | oid    | 1.3.6.1.4.1.37476.2.5.2.4.8.7  | 0x...66D3 | 0xA6D3 |
 | ViaThinkSoft | other  | 1.3.6.1.4.1.37476.2.5.2.4.8.8  | 0x...D068 | 0x9068 |
 | ViaThinkSoft | domain | 1.3.6.1.4.1.37476.2.5.2.4.8.9  | 0x...D982 | 0x9982 |
 | ViaThinkSoft | fourcc | 1.3.6.1.4.1.37476.2.5.2.4.8.10 | 0x...B648 | 0xB648 |
@@ -57,5 +57,8 @@ It contains the information as follows:
 | ViaThinkSoft | (Unused) | 1.3.6.1.4.1.37476.2.5.2.4.8.20 | 0x...1DE3 | 0x9DE3 |
 -->
 
-Note: When a new object type plugin is developed, the plugin author should check if their plugin OID does conflict with plugin OIDs of other vendors, and consider using a different Plugin OID in that case.
-Between ViaThinkSoft OIDs, the lowest collision is `1.3.6.1.4.1.37476.2.5.2.4.8.186` which collides with `1.3.6.1.4.1.37476.2.5.2.4.8.48`.
+Note: When a new object type plugin is developed, the plugin author should check
+if their plugin OID does conflict with plugin OIDs of other vendors, and consider
+using a different plugin OID in that case.
+Between ViaThinkSoft OIDs, the lowest collision is `1.3.6.1.4.1.37476.2.5.2.4.8.186`
+which collides with `1.3.6.1.4.1.37476.2.5.2.4.8.48`.
