@@ -278,6 +278,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		A third-party vendor object type plugin with OID %1 has a hash-conflict with a ViaThinkSoft plugin. Please recommend to the developer to pick a different OID for their plugin. More information here: %2
+		]]></source>
+		<target><![CDATA[
+		Ein Drittanbieter-Objekttyp-Plugin hat OID %1, die einen Hash-Konflikt mit einem ViaThinkSoft-Plugin aufweist. Bitte empfehlen Sie dem Plugin-Autor, eine andere OID zu wählen. Mehr Informationen hier: %2
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		ADO ConnectionString
 		]]></source>
 		<target><![CDATA[

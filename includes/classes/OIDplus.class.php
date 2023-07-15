@@ -835,6 +835,22 @@ class OIDplus extends OIDplusBaseClass {
 	private static function registerObjectTypePlugin(OIDplusObjectTypePlugin $plugin) {
 		self::$objectTypePlugins[] = $plugin;
 
+		if (OIDplus::baseConfig()->getValue('DEBUG')) {
+			// Avoid a namespace hash conflict of the OIDplus Information Object Custom UUIDs
+			// see here https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md
+			if (!str_starts_with($plugin->getManifest()->getOid(), '1.3.6.1.4.1.37476.2.5.2.4.8.')) {
+				$coll = [];
+				for ($i = 1; $i <= 185; $i++) {
+					$block4 = dechex(hexdec(substr(sha1('1.3.6.1.4.1.37476.2.5.2.4.8.'.$i), -4)) & 0x3FFF | 0x8000);
+					$coll[] = $block4;
+				}
+				$block4 = dechex(hexdec(substr(sha1($plugin->getManifest()->getOid()), -4)) & 0x3FFF | 0x8000);
+				if (in_array($block4, $coll)) {
+					throw new OIDplusException(_L("A third-party vendor object type plugin with OID %1 has a hash-conflict with a ViaThinkSoft plugin. Please recommend to the developer to pick a different OID for their plugin. More information here: %2",$plugin->getManifest()->getOid(),'https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md'));
+				}
+			}
+		}
+
 		$ot = $plugin::getObjectTypeClassName();
 		self::registerObjectType($ot);
 	}
