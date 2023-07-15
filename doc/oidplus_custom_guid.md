@@ -227,9 +227,9 @@ It contains the information as follows:
 | ViaThinkSoft | (Unused) | 1.3.6.1.4.1.37476.2.5.2.4.8.185 | 0x...4854 | 0x8854 |
 -->
 
-### Block 4 hash conflicts
+### Notes for new object type plugins
 
-Note: When a new object type plugin is developed, the plugin author should check
+(1) When new object types are developed, the plugin author should check
 if their "Block 4" hash based on their plugin OID conflicts with the
 "Block 4" hashes of plugins from other vendors, and consider
 using a different plugin OID in that case.
@@ -267,3 +267,11 @@ As an alternative, the following script can help you check
 	}
 
     ?>
+
+(2) After the release of the object type plugin, please extend this table.
+
+(3) Please also change the array with known namespaces at "UUID Utils":
+https://github.com/danielmarschall/uuid_mac_utils/blob/master/includes/uuid_utils.inc.php
+
+This allows the interpretation of OIDplus Information Object UUIDs using this tool:
+https://misc.daniel-marschall.de/tools/uuid_mac_decoder/interprete_uuid.php?uuid=6e932dd7-458c-8000-b9e9-c1e3894d1105

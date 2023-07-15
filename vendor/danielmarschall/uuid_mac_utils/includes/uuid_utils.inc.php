@@ -652,11 +652,52 @@ function uuid_info($uuid, $echo=true) {
 					$custom_block4[0] = dechex(hexdec($custom_block4[0]) & 0b0011); // remove variant
 
 					echo sprintf("%-32s %s\n", "Custom data:", "[0x$custom_data]");
-					echo sprintf("%-32s %s\n", "Custom block1 (32 bit):", "[0x$custom_block1]");
-					echo sprintf("%-32s %s\n", "Custom block2 (16 bit):", "[0x$custom_block2]");
-					echo sprintf("%-32s %s\n", "Custom block3 (12 bit):", "[0x$custom_block3]");
-					echo sprintf("%-32s %s\n", "Custom block4 (14 bit):", "[0x$custom_block4]");
-					echo sprintf("%-32s %s\n", "Custom block5 (48 bit):", "[0x$custom_block5]");
+					echo sprintf("%-32s %s\n", "Custom data block1 (32 bit):", "[0x$custom_block1]");
+					echo sprintf("%-32s %s\n", "Custom data block2 (16 bit):", "[0x$custom_block2]");
+					echo sprintf("%-32s %s\n", "Custom data block3 (12 bit):", "[0x$custom_block3]");
+					echo sprintf("%-32s %s\n", "Custom data block4 (14 bit):", "[0x$custom_block4]");
+					echo sprintf("%-32s %s\n", "Custom data block5 (48 bit):", "[0x$custom_block5]");
+
+					// Check if Custom UUIDv8 is likely an OIDplus 2.0 Information Object UUID
+					// Details here: https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md
+					$min_day = 14609; // 1 Jan 2010
+					$max_day = floor(time()/24/60/60); // Today
+					if (($custom_block3 == '000') && (hexdec($custom_block2) >= $min_day) && (hexdec($custom_block2) <= $max_day)) {
+						echo "\n<u>Interpretation of <a href=\"https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md\">OIDplus 2.0 Information Object UUID</a></u>\n\n";
+
+						$known_objecttype_plugins = array(
+							// Latest list here: https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md
+							'1.3.6.1.4.1.37476.2.5.2.4.8.1' => 'doi (ViaThinkSoft plugin)',
+							'1.3.6.1.4.1.37476.2.5.2.4.8.2' => 'gs1 (ViaThinkSoft plugin)',
+							'1.3.6.1.4.1.37476.2.5.2.4.8.3' => 'guid (ViaThinkSoft plugin)',
+							'1.3.6.1.4.1.37476.2.5.2.4.8.4' => 'ipv4 (ViaThinkSoft plugin)',
+							'1.3.6.1.4.1.37476.2.5.2.4.8.5' => 'ipv6 (ViaThinkSoft plugin)',
+							'1.3.6.1.4.1.37476.2.5.2.4.8.6' => 'java (ViaThinkSoft plugin)',
+							'1.3.6.1.4.1.37476.2.5.2.4.8.7' => 'oid (ViaThinkSoft plugin)',
+							'1.3.6.1.4.1.37476.2.5.2.4.8.8' => 'other (ViaThinkSoft plugin)',
+							'1.3.6.1.4.1.37476.2.5.2.4.8.9' => 'domain (ViaThinkSoft plugin)',
+							'1.3.6.1.4.1.37476.2.5.2.4.8.10' => 'fourcc (ViaThinkSoft plugin)',
+							'1.3.6.1.4.1.37476.2.5.2.4.8.11' => 'aid (ViaThinkSoft plugin)',
+							'1.3.6.1.4.1.37476.2.5.2.4.8.12' => 'php (ViaThinkSoft plugin)',
+							'1.3.6.1.4.1.37476.2.5.2.4.8.13' => 'mac (ViaThinkSoft plugin)',
+							'1.3.6.1.4.1.37553.8.1.8.8.53354196964.27255728261' => 'circuit (Frdlweb plugin)',
+							'1.3.6.1.4.1.37476.9000.108.19361.856' => 'ns (Frdlweb plugin)',
+							'1.3.6.1.4.1.37553.8.1.8.8.53354196964.32927' => 'pen (Frdlweb plugin)',
+							'1.3.6.1.4.1.37553.8.1.8.8.53354196964.39870' => 'uri (Frdlweb plugin)',
+							'1.3.6.1.4.1.37553.8.1.8.8.53354196964.1958965295' => 'web+fan (Frdlweb plugin)'
+						);
+						$namespace_desc = 'Unknown';
+						foreach ($known_objecttype_plugins as $oid => $name) {
+							if ((hexdec(substr(sha1($oid),-4)) & 0x3fff) == hexdec($custom_block4)) $namespace_desc = $name;
+						}
+
+						echo sprintf("%-32s %s\n", "System ID:", "[0x$custom_block1] ".hexdec($custom_block1));
+						echo sprintf("%-32s %s\n", "Creation time:", "[0x$custom_block2] ".date('Y-m-d', hexdec($custom_block2)*24*60*60));
+						echo sprintf("%-32s %s\n", "Reserved:", "[0x$custom_block3]");
+						echo sprintf("%-32s %s\n", "Namespace hash:", "[0x$custom_block4] $namespace_desc");
+						echo sprintf("%-32s %s\n", "Object ID hash:", "[0x$custom_block5] SHA1 = ????????????????????????????$custom_block5");
+
+					}
 
 					break;
 				default:
