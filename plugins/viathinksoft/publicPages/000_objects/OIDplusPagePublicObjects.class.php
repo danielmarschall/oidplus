@@ -781,7 +781,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 * @throws OIDplusException
 	 */
 	private function action_UuidGen(array $params): array {
-		$uuid = gen_uuid(OIDplus::config()->getValue('uuid_prefer_timebased', '1') == '1');
+		$uuid = gen_uuid(OIDplus::config()->getValue('uuidgen_expose_mac', '0') == '1');
 		if (!$uuid) return array("status" => -1);
 		return array(
 			"status" => 0,
@@ -823,9 +823,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				throw new OIDplusException(_L('Please enter a valid value (0=no, 1=yes).'));
 			}
 		});
-		OIDplus::config()->prepareConfigKey('uuid_prefer_timebased', 'Preferred UUID Generator version? 1=Timebased (Very secure, but reveals the MAC address of the server); 4=Random (has a very, very tiny change to generate duplicates)', '1', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
-			if (($value != '1') && ($value != '4')) {
-				throw new OIDplusException(_L('Please enter a valid value (1=Timebased, 4=Random).'));
+		OIDplus::config()->delete('uuid_prefer_timebased'); // deprecated
+		OIDplus::config()->prepareConfigKey('uuidgen_expose_mac', '1=UUID Generator may expose the MAC address of the system, 0=Use random bits instead of MAC address', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			if (!is_numeric($value) || ($value < 0) || ($value > 1)) {
+				throw new OIDplusException(_L('Please enter a valid value (0=no, 1=yes).'));
 			}
 		});
 	}

@@ -112,7 +112,7 @@ class OIDplus extends OIDplusBaseClass {
 		'captcha'
 	);
 
-	const UUID_NAMEBASED_NS_Base64PubKey = 'fd16965c-8bab-11ed-8744-3c4a92df8582';
+	//const UUID_NAMEBASED_NS_Base64PubKey = 'fd16965c-8bab-11ed-8744-3c4a92df8582';
 
 	/**
 	 * Private constructor (Singleton)
@@ -844,6 +844,7 @@ class OIDplus extends OIDplusBaseClass {
 					$block4 = dechex(hexdec(substr(sha1('1.3.6.1.4.1.37476.2.5.2.4.8.'.$i), -4)) & 0x3FFF | 0x8000);
 					$coll[] = $block4;
 				}
+				$coll[] = dechex(0x8000); // System UUID
 				$block4 = dechex(hexdec(substr(sha1($plugin->getManifest()->getOid()), -4)) & 0x3FFF | 0x8000);
 				if (in_array($block4, $coll)) {
 					throw new OIDplusException(_L("A third-party vendor object type plugin with OID %1 has a hash-conflict with a ViaThinkSoft plugin. Please recommend to the developer to pick a different OID for their plugin. More information here: %2",$plugin->getManifest()->getOid(),'https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md'));
@@ -1650,10 +1651,23 @@ class OIDplus extends OIDplusBaseClass {
 	 * @return false|string
 	 */
 	private static function getSystemGuidFromPubKey(string $pubKey) {
+		/*
 		$rawData = self::pubKeyToRaw($pubKey);
 		if ($rawData === false) return false;
 		$normalizedBase64 = base64_encode($rawData);
 		return gen_uuid_sha1_namebased(self::UUID_NAMEBASED_NS_Base64PubKey, $normalizedBase64);
+		*/
+
+		// https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md
+		$sysid = OIDplus::getSystemId(false);
+		$sysid_int = $sysid ? $sysid : 0;
+		return gen_uuid_v8(
+			dechex($sysid_int),
+			dechex(0), // Creation time of the system unknown
+			dechex(0), // Reserved
+			dechex(0), // 0=System, otherwise Object Namespace
+			sha1('') // Objectname, empty string for system UUID
+		);
 	}
 
 	private static $system_id_cache = null;

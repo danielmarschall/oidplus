@@ -170,7 +170,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 
 			$sysid_guid = OIDplus::getSystemGuid();
 			$out['text'] .= '	<tr>';
-			$out['text'] .= '		<td>'._L('System GUID').' <abbr title="'._L('SHA1-Namebased UUID based on the public key of your OIDplus system.').'">(?)</abbr></td>';
+			$out['text'] .= '		<td>'._L('System GUID').' <abbr title="'._L('UUIDv8 based on the System ID of your OIDplus system.').'">(?)</abbr></td>';
 			$out['text'] .= '		<td>'.(!$sysid_guid ? '<i>'._L('unknown').'</i>' : htmlentities($sysid_guid)).'</td>';
 			$out['text'] .= '	</tr>';
 

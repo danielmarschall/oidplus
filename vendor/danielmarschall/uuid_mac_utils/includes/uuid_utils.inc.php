@@ -3,7 +3,7 @@
 /*
  * UUID utils for PHP
  * Copyright 2011 - 2023 Daniel Marschall, ViaThinkSoft
- * Version 2023-07-13
+ * Version 2023-07-18
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -658,45 +658,58 @@ function uuid_info($uuid, $echo=true) {
 					echo sprintf("%-32s %s\n", "Custom data block4 (14 bit):", "[0x$custom_block4]");
 					echo sprintf("%-32s %s\n", "Custom data block5 (48 bit):", "[0x$custom_block5]");
 
-					// Check if Custom UUIDv8 is likely an OIDplus 2.0 Information Object UUID
+					// Check if Custom UUIDv8 is likely an OIDplus 2.0 System UUID
 					// Details here: https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md
-					$min_day = 14609; // 1 Jan 2010
-					$max_day = floor(time()/24/60/60); // Today
-					if (($custom_block3 == '000') && (hexdec($custom_block2) >= $min_day) && (hexdec($custom_block2) <= $max_day)) {
-						echo "\n<u>Interpretation of <a href=\"https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md\">OIDplus 2.0 Information Object UUID</a></u>\n\n";
-
-						$known_objecttype_plugins = array(
-							// Latest list here: https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md
-							'1.3.6.1.4.1.37476.2.5.2.4.8.1' => 'doi (ViaThinkSoft plugin)',
-							'1.3.6.1.4.1.37476.2.5.2.4.8.2' => 'gs1 (ViaThinkSoft plugin)',
-							'1.3.6.1.4.1.37476.2.5.2.4.8.3' => 'guid (ViaThinkSoft plugin)',
-							'1.3.6.1.4.1.37476.2.5.2.4.8.4' => 'ipv4 (ViaThinkSoft plugin)',
-							'1.3.6.1.4.1.37476.2.5.2.4.8.5' => 'ipv6 (ViaThinkSoft plugin)',
-							'1.3.6.1.4.1.37476.2.5.2.4.8.6' => 'java (ViaThinkSoft plugin)',
-							'1.3.6.1.4.1.37476.2.5.2.4.8.7' => 'oid (ViaThinkSoft plugin)',
-							'1.3.6.1.4.1.37476.2.5.2.4.8.8' => 'other (ViaThinkSoft plugin)',
-							'1.3.6.1.4.1.37476.2.5.2.4.8.9' => 'domain (ViaThinkSoft plugin)',
-							'1.3.6.1.4.1.37476.2.5.2.4.8.10' => 'fourcc (ViaThinkSoft plugin)',
-							'1.3.6.1.4.1.37476.2.5.2.4.8.11' => 'aid (ViaThinkSoft plugin)',
-							'1.3.6.1.4.1.37476.2.5.2.4.8.12' => 'php (ViaThinkSoft plugin)',
-							'1.3.6.1.4.1.37476.2.5.2.4.8.13' => 'mac (ViaThinkSoft plugin)',
-							'1.3.6.1.4.1.37553.8.1.8.8.53354196964.27255728261' => 'circuit (Frdlweb plugin)',
-							'1.3.6.1.4.1.37476.9000.108.19361.856' => 'ns (Frdlweb plugin)',
-							'1.3.6.1.4.1.37553.8.1.8.8.53354196964.32927' => 'pen (Frdlweb plugin)',
-							'1.3.6.1.4.1.37553.8.1.8.8.53354196964.39870' => 'uri (Frdlweb plugin)',
-							'1.3.6.1.4.1.37553.8.1.8.8.53354196964.1958965295' => 'web+fan (Frdlweb plugin)'
-						);
-						$namespace_desc = 'Unknown';
-						foreach ($known_objecttype_plugins as $oid => $name) {
-							if ((hexdec(substr(sha1($oid),-4)) & 0x3fff) == hexdec($custom_block4)) $namespace_desc = $name;
-						}
+					if (($custom_block4 == '0000') && (strtolower($custom_block5) == '1890afd80709')) {
+						echo "\n<u>Interpretation of <a href=\"https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md\">OIDplus 2.0 System UUID</a></u>\n\n";
 
 						echo sprintf("%-32s %s\n", "System ID:", "[0x$custom_block1] ".hexdec($custom_block1));
-						echo sprintf("%-32s %s\n", "Creation time:", "[0x$custom_block2] ".date('Y-m-d', hexdec($custom_block2)*24*60*60));
+						echo sprintf("%-32s %s\n", "Creation time:", "[0x$custom_block2] ".($custom_block2 == '0000' ? 'Unknown' : date('Y-m-d', hexdec($custom_block2)*24*60*60)));
 						echo sprintf("%-32s %s\n", "Reserved:", "[0x$custom_block3]");
-						echo sprintf("%-32s %s\n", "Namespace hash:", "[0x$custom_block4] $namespace_desc");
-						echo sprintf("%-32s %s\n", "Object ID hash:", "[0x$custom_block5] SHA1 = ????????????????????????????$custom_block5");
+						echo sprintf("%-32s %s\n", "Namespace:", "[0x$custom_block4] 0=System");
+						echo sprintf("%-32s %s\n", "Object ID hash:", "[0x$custom_block5] SHA1('') = ????????????????????????????$custom_block5");
+					} else {
+						// Check if Custom UUIDv8 is likely an OIDplus 2.0 Information Object UUID
+						// Details here: https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md
+						// NOTE: Actually, the date 0x0000 is OK for objects which have an unknown creation date. However, we disallow it, otherwise there is a risk that Non-OIDplus UUID gets confused with OIDplus UUIDs
+						$min_day = 14610; // 1 Jan 2010
+						$max_day = floor(time()/24/60/60); // Today
+						if (($custom_block3 == '000') && (hexdec($custom_block2) >= $min_day) && (hexdec($custom_block2) <= $max_day)) {
+							echo "\n<u>Interpretation of <a href=\"https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md\">OIDplus 2.0 Information Object UUID</a></u>\n\n";
 
+							$known_objecttype_plugins = array(
+								// Latest list here: https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md
+								'1.3.6.1.4.1.37476.2.5.2.4.8.1' => 'doi (ViaThinkSoft plugin)',
+								'1.3.6.1.4.1.37476.2.5.2.4.8.2' => 'gs1 (ViaThinkSoft plugin)',
+								'1.3.6.1.4.1.37476.2.5.2.4.8.3' => 'guid (ViaThinkSoft plugin)',
+								'1.3.6.1.4.1.37476.2.5.2.4.8.4' => 'ipv4 (ViaThinkSoft plugin)',
+								'1.3.6.1.4.1.37476.2.5.2.4.8.5' => 'ipv6 (ViaThinkSoft plugin)',
+								'1.3.6.1.4.1.37476.2.5.2.4.8.6' => 'java (ViaThinkSoft plugin)',
+								'1.3.6.1.4.1.37476.2.5.2.4.8.7' => 'oid (ViaThinkSoft plugin)',
+								'1.3.6.1.4.1.37476.2.5.2.4.8.8' => 'other (ViaThinkSoft plugin)',
+								'1.3.6.1.4.1.37476.2.5.2.4.8.9' => 'domain (ViaThinkSoft plugin)',
+								'1.3.6.1.4.1.37476.2.5.2.4.8.10' => 'fourcc (ViaThinkSoft plugin)',
+								'1.3.6.1.4.1.37476.2.5.2.4.8.11' => 'aid (ViaThinkSoft plugin)',
+								'1.3.6.1.4.1.37476.2.5.2.4.8.12' => 'php (ViaThinkSoft plugin)',
+								'1.3.6.1.4.1.37476.2.5.2.4.8.13' => 'mac (ViaThinkSoft plugin)',
+								'1.3.6.1.4.1.37553.8.1.8.8.53354196964.27255728261' => 'circuit (Frdlweb plugin)',
+								'1.3.6.1.4.1.37476.9000.108.19361.856' => 'ns (Frdlweb plugin)',
+								'1.3.6.1.4.1.37553.8.1.8.8.53354196964.32927' => 'pen (Frdlweb plugin)',
+								'1.3.6.1.4.1.37553.8.1.8.8.53354196964.39870' => 'uri (Frdlweb plugin)',
+								'1.3.6.1.4.1.37553.8.1.8.8.53354196964.1958965295' => 'web+fan (Frdlweb plugin)'
+							);
+							$namespace_desc = 'Unknown object type';
+							foreach ($known_objecttype_plugins as $oid => $name) {
+								if ((hexdec(substr(sha1($oid),-4)) & 0x3fff) == hexdec($custom_block4)) $namespace_desc = "$oid = $name";
+							}
+
+							echo sprintf("%-32s %s\n", "System ID:", "[0x$custom_block1] ".hexdec($custom_block1));
+							echo sprintf("%-32s %s\n", "Creation time:", "[0x$custom_block2] ".($custom_block2 == '0000' ? 'Unknown' : date('Y-m-d', hexdec($custom_block2)*24*60*60)));
+							echo sprintf("%-32s %s\n", "Reserved:", "[0x$custom_block3]");
+							echo sprintf("%-32s %s\n", "Namespace (Obj.type OID) hash:", "[0x$custom_block4] $namespace_desc");
+							echo sprintf("%-32s %s\n", "Object ID hash:", "[0x$custom_block5] SHA1 = ????????????????????????????$custom_block5");
+
+						}
 					}
 
 					break;
@@ -900,7 +913,13 @@ function gen_uuid_timebased($force_php_implementation=false) {
 		}
 	} else {
 		// If we cannot get a MAC address, then generate a random AAI
-		$uuid['node'] = explode('-', gen_aai(48, false));
+		// RFC 4122 requires the multicast bit to be set, to make sure
+		// that a UUID from a system with network card never conflicts
+		// with a UUID from a system without network ard.
+		// We are additionally defining the other 3 bits as AAI,
+		// to avoid that we are misusing the CID or OUI from other vendors
+		// if we would create multicast ELI (based on CID) or EUI (based on OUI).
+		$uuid['node'] = explode('-', gen_aai(48, true/*Multicast*/));
 		$uuid['node'] = array_map('hexdec', $uuid['node']);
 	}
 

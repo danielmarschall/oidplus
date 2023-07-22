@@ -5414,14 +5414,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Please enter a valid value (1=Timebased, 4=Random).
-		]]></source>
-		<target><![CDATA[
-		Bitte geben Sie einen gültigen Wert ein (1=Zeitbasiert, 4=Zufällig).
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Please enter a valid value.
 		]]></source>
 		<target><![CDATA[
@@ -6314,14 +6306,6 @@
 		]]></source>
 		<target><![CDATA[
 		Wurzel-OIDs
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		SHA1-Namebased UUID based on the public key of your OIDplus system.
-		]]></source>
-		<target><![CDATA[
-		SHA1-Namensbasierte UUID basierend auf dem öffentlichen Schlüssel Ihres OIDplus-Systems.
 		]]></target>
 	</message>
 	<message>
@@ -7930,6 +7914,14 @@
 		]]></source>
 		<target><![CDATA[
 		UUID
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		UUIDv8 based on the System ID of your OIDplus system.
+		]]></source>
+		<target><![CDATA[
+		UUIDv8 basierend auf der System ID dieses OIDplus-Systems.
 		]]></target>
 	</message>
 	<message>
