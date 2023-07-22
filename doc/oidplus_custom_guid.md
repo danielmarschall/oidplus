@@ -1,11 +1,13 @@
 # OIDplus Information Object GUID format
 
+## OIDplus Information Object GUID
+
 OIDplus automatically assigns a UUID to every object it manages. It is based on the custom UUID type (UUIDv8) which was defined in the new version of RFC 4122.
 
 |Block| Byte | Length  | Description          |
 |-----|------|---------|----------------------|
 |  1  | 0-3  |  1 bit  | Reserved, must be 0.
-|     |      | 31 bits | OIDplus SystemID (lower 31 bits of SHA1 of Public Key); 0 if not available
+|     |      | 31 bits | OIDplus SystemID (lower 31 bits of SHA1 of Public Key)
 |  2  | 4-5  | 16 bits | Creation timestamp: Days since 01.01.1970 00:00 GMT; 0 if unknown. Max possible: 0xFFFF = 06 June 2149
 |  3  | 6-7  |  4 bits | UUID Version, must be 0x8 (Custom UUID)
 |     |      | 12 bits | Reserved, must be 0x0000
@@ -13,8 +15,7 @@ OIDplus automatically assigns a UUID to every object it manages. It is based on 
 |     |      | 14 bits | Namespace (lower 14 bits of SHA1 of Namespace OID)
 |  5  |10-15 | 48 bits | Object name (lower 48 bits of SHA1 of canonical object name)
 
-
-## Example
+### Example
 
 The object **java:com.example**, created 30 September 2018 on system #1855139287 has the following UUID:
 
@@ -30,10 +31,44 @@ It contains the information as follows:
 |  4  | Namespace+Variant | 0xB9E9         | SHA1('1.3.6.1.4.1.37476.2.5.2.4.8.6') & 0x3FFF \| 0x8000
 |  5  | Object Name       | 0xC1E3894D1105 | SHA1('com.example') & 0xFFFF.FFFF.FFFF
 
+
+## OIDplus System GUID
+
+Every OIDplus system can be identified by a UUID generated using this schema based on the Information Object UUID.
+
+|Block| Byte | Length  | Description          |
+|-----|------|---------|----------------------|
+|  1  | 0-3  |  1 bit  | Reserved, must be 0.
+|     |      | 31 bits | OIDplus SystemID (lower 31 bits of SHA1 of Public Key)
+|  2  | 4-5  | 16 bits | Reserved for system creation timestamp. Currently 0 because OIDplus does not track the timestamp of a new system.
+|  3  | 6-7  |  4 bits | UUID Version, must be 0x8 (Custom UUID)
+|     |      | 12 bits | Reserved, must be 0x0000
+|  4  | 8-9  |  2 bits | UUID Variant, must be 0b10 (RFC 4122)
+|     |      | 14 bits | Namespace: Fix value of 0.
+|  5  |10-15 | 48 bits | Object name: Fix 0x1890afd80709 (lower 48 bits of SHA1 of an empty string)
+
+### Example
+
+The system #1855139287 has the following UUID:
+
+    6e932dd7-0000-8000-8000-1890afd80709
+
+It contains the information as follows:
+
+|Block| Description       | Value          | Interpretation |
+|-----|-------------------|----------------|----------------|
+|  1  | System ID         | 0x6E932DD7     | SHA1(PubKey) & 0x7FFF.FFFF = 1855139287
+|  2  | Timestamp         | 0x0000         | Unknown
+|  3  | Reserved+Version  | 0x8000         | 0x0000 \| 0x8000
+|  4  | Namespace+Variant | 0x8000         | 0x0000 \| 0x8000
+|  5  | Object Name       | 0xC1E3894D1105 | SHA1('') & 0xFFFF.FFFF.FFFF
+
+
 ## Known namespaces
 
 | Vendor       |Namespace| OID                            | SHA1 hash | Block 4| Notes        |
 |--------------|---------|--------------------------------|-----------|--------|--------------|
+| n/a          | n/a     | n/a                            | n/a       | 0x8000 | System
 | ViaThinkSoft | doi     | 1.3.6.1.4.1.37476.2.5.2.4.8.1  | 0x...2259 | 0xA259 |
 | ViaThinkSoft | gs1     | 1.3.6.1.4.1.37476.2.5.2.4.8.2  | 0x...021E | 0x821E |
 | ViaThinkSoft | guid    | 1.3.6.1.4.1.37476.2.5.2.4.8.3  | 0x...B924 | 0xB924 | In OIDplus, only the UUID itself will be shown
@@ -255,6 +290,7 @@ As an alternative, the following script can help you check
 			$block4 = dechex(hexdec(substr(sha1('1.3.6.1.4.1.37476.2.5.2.4.8.'.$i), -4)) & 0x3FFF | 0x8000);
 			$coll[] = $block4;
 		}
+		$coll[] = dechex(0x8000); // System
 		$block4 = dechex(hexdec(substr(sha1($plugin_oid), -4)) & 0x3FFF | 0x8000);
 		if (in_array($block4, $coll)) {
 			echo "HASH CONFLICT\n";
