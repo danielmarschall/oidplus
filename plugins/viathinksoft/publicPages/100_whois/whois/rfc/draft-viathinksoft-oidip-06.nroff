@@ -1,0 +1,2188 @@
+.\" This document was created using "Nroff Internet Draft Editor"
+.\" Note that a hotfix is required to use this program after 1st January 2020:
+.\" https://misc.daniel-marschall.de/patches/nroffedit/
+.\"
+.\" Alternative, you can compile this document on Linux, using the following command:
+.\"        nroff -T ascii -ms draft-viathinksoft-oidip-06.nroff | ./fix_formfeed.pl > draft-viathinksoft-oidip-06.txt
+.\" Note that "-ms" only works if the package "groff" is installed.
+.\" fix.pl needs to be executed to replace FORMFEED.
+.\" Note that the Linux command does not auto-generate the Table of Contents, since this is a NroffEdit feature!
+.\"
+.\" Note about section titles: According to RFC7322, the section capitalization should be Chicago Manual of Style
+.\" Use this tool: https://titlecaseconverter.com/ 
+.\"
+.\" These values are required for my Debian Linux system (nroff) so that it outputs the same lines like NroffEdit
+.pl 95n
+.nr HM 6n
+.nr FM 8n
+.\" Page length
+.\".pl 10.0i
+.\" Page offset
+.po 0
+.\" Length of line
+.ll 7.2i
+.\" Length of title
+.lt 7.2i
+.\" Line Length (ms macro)
+.nr LL 7.2i
+.\" Title line length
+.nr LT 7.2i
+.\" Left footer text
+.ds LF Marschall
+.\" Right footer text. "FORMFEED" will be replaced by a post-processing script.
+.ds RF FORMFEED[Page %]
+.\" Left header text
+.ds LH INTERNET DRAFT
+.\" Right header text
+.ds RH 26 July 2023
+.\" Center header text
+.ds CH OID Information Protocol
+.\" Center footer text
+.ds CF Expires 27 January 2024
+.\" Hyphenation mode set to 0
+.hy 0
+.\" Disable hyphenation
+.nh
+.\" Adjust text left
+.ad l
+.\" Set indent (can be overridden for a single line using .ti = temporary indent)
+.in 0
+
+.nf
+.tl 'INTERNET-DRAFT''D. Marschall'
+.tl 'Intended Status: Informational''ViaThinkSoft'
+.tl 'Expires: 27 January 2024''26 July 2023'
+.fi
+
+.\" Note. The ".tl" directive is used to generate the leading header 
+.\" in Internet drafts. The information specified after ".tl" provides
+.\" left, center and right components of a line separated by the ' character
+.\" in the following manner:
+.\" 
+.\"  .tl '<left component>'<center component>'<right component>'
+.\"
+.\" Only the left and right components are used in Internet-draft headers
+.\" This and other comments in this template can safely be deleted.
+
+.ce 3
+Retrieving information about Object Identifiers
+using a text-based protocol
+draft-viathinksoft-oidip-06
+.fi
+.in 3
+
+
+.ti 0
+Abstract
+
+This document defines a method for retrieving information about Object Identifiers (OIDs) and their associated Registration Authorities (RAs) through a text-based protocol, in a way that is both human-readable and machine-readable.  Besides a text output format, OID-IP also supports sending information in JSON and XML.
+
+.ti 0
+Status of This Memo
+
+This Internet-Draft is submitted in full conformance with the
+provisions of BCP\078 and BCP\079.
+
+Internet-Drafts are working documents of the Internet Engineering
+Task Force (IETF).  Note that other groups may also distribute
+working documents as Internet-Drafts.  The list of current Internet-
+.br
+Drafts is at https://datatracker.ietf.org/drafts/current/.
+
+Internet-Drafts are draft documents valid for a maximum of six months
+and may be updated, replaced, or obsoleted by other documents at any
+time.  It is inappropriate to use Internet-Drafts as reference
+material or to cite them other than as "work in progress."
+
+This Internet-Draft will expire on 27 January 2024.
+
+.ti 0
+Copyright Notice
+
+Copyright (c) 2023 IETF Trust and the persons identified as the
+document authors.  All rights reserved.
+
+This document is subject to BCP\078 and the IETF Trust's Legal
+Provisions Relating to IETF Documents (https://trustee.ietf.org/
+.br
+license-info)
+in effect on the date of publication of this document.
+Please review these documents carefully, as they describe your rights
+and restrictions with respect to this document.  Code Components
+extracted from this document must include Revised BSD License text as
+described in Section 4.e of the Trust Legal Provisions and are
+provided without warranty as described in the Revised BSD License.
+.\" These values are required for my Debian Linux system (nroff) so that it outputs the same lines like NroffEdit
+.nr HM 8n
+.nr FM 8n
+.bp
+.pl 96n
+.\" \# TD4  -- Set TOC depth by altering this value (TD5 = depth 5)
+.\" \# TOC  -- Beginning of auto updated Table of Contents
+.in 0
+Table of Contents
+
+.nf
+   1  Introduction  . . . . . . . . . . . . . . . . . . . . . . . . .  4
+     1.1  Terminology . . . . . . . . . . . . . . . . . . . . . . . .  5
+   2  Request . . . . . . . . . . . . . . . . . . . . . . . . . . . .  6
+     2.1  Input Parameters  . . . . . . . . . . . . . . . . . . . . .  6
+       2.1.1  Format ("format" Argument)  . . . . . . . . . . . . . .  7
+       2.1.2  Authentication Tokens ("auth" Argument) . . . . . . . .  8
+       2.1.3  Preferred Language ("lang" Argument)  . . . . . . . . .  8
+       2.1.4  Custom Input Parameters . . . . . . . . . . . . . . . .  9
+     2.2  Request ABNF Notation . . . . . . . . . . . . . . . . . . .  9
+   3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . . 11
+     3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . . 11
+       3.1.1 "text" Format  . . . . . . . . . . . . . . . . . . . . . 11
+       3.1.2 "json" Format  . . . . . . . . . . . . . . . . . . . . . 11
+       3.1.3 "xml" Format . . . . . . . . . . . . . . . . . . . . . . 12
+     3.2  Sections  . . . . . . . . . . . . . . . . . . . . . . . . . 12
+       3.2.1  Query-Section (Information about Query and Result)  . . 12
+       3.2.2  Object-Section (Information about the OID)  . . . . . . 13
+       3.2.3  RA-Section (Information about the Current RA) . . . . . 17
+       3.2.4  Sections for Previous Registration Authorities  . . . . 19
+     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 19
+       3.3.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 19
+       3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 19
+       3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 20
+     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 20
+       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 21
+       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 21
+   4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 22
+   5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 23
+     5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 23
+     5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 23
+   6  Alternative Namespaces  . . . . . . . . . . . . . . . . . . . . 24
+     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 25
+   7  Internationalization Considerations . . . . . . . . . . . . . . 25
+   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 26
+   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 26
+   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 27
+     10.1  Normative References . . . . . . . . . . . . . . . . . . . 27
+     10.2  Informative References . . . . . . . . . . . . . . . . . . 28
+   Appendix A.  JSON Format Schema and Example  . . . . . . . . . . . 30
+   Appendix A.1.  JSON Format Schema  . . . . . . . . . . . . . . . . 30
+   Appendix A.2.  JSON Format Example of Output . . . . . . . . . . . 39
+   Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 41
+   Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 41
+   Appendix B.2.  XML Format Example of Output  . . . . . . . . . . . 50
+   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 52
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 52
+.fi
+.in 3
+
+.\" \# ETC -- End of auto updated Table of Contents
+
+.bp
+.ti 0
+1  Introduction
+
+An Object Identifier (OID) is an extensively used identification mechanism jointly developed by ITU-T and ISO/IEC for naming any type of object with a globally unambiguous name.  OIDs provide a persistent identification of objects based on a hierarchical structure of Registration Authorities (RA), where each parent has an Object Identifier and allocates Object Identifiers to child nodes.  More information about Object Identifiers can be found in Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-1:2012 [X660].
+
+There are a few methods of retrieving information about an OID, like:
+
+(A) Searching through web repositories like <http://www.oid-info.com> or <http://www.alvestrand.no/objectid/>.  This has the disadvantage that the information is usually not machine-readable without functionalities like an API.
+
+(B) Retrieving information using the Object Identifier Resolution System (ORS) as defined in Recommendation ITU-T X.672 (2010) | ISO/IEC 29168-1:2011 [X672].  This has the disadvantage that Registration Authorities need to include specific DNS Resource Records to their domains, and additionally, all RAs of the superior OIDs must implement the ORS.
+
+This document describes an additional method for retrieving information about OIDs, which is both human-readable and machine-readable.
+
+Three of many possible use-case scenarios are:
+
+(1) Many web browsers and Operating Systems can handle ITU-T X.509 certificates [X509] and usually contain a viewer application that shows the contents of these certificates.  Attributes that are unknown by the application are either only displayed by their OID, or hidden to avoid confusion for the user.  With OID-IP, the application could query the name of these unknown OIDs or even retrieve instructions on how the data described by this OID can be parsed and displayed.
+
+(2) Applications that handle SNMP (Simple Network Management Protocol) [RFC1157] might need information about additional MIB files or their OIDs.  OID-IP could aid these applications in gathering the required information.
+
+(3) In directory services like LDAP (Lightweight Directory Access Protocol) [RFC4511], applications could query the name of attributes that are described by an OID the application doesn't know.
+
+
+.ti 0
+1.1  Terminology
+
+The key words "MUST", "MUST NOT", "REQUIRED", "SHALL", "SHALL NOT", "SHOULD", "SHOULD NOT", "RECOMMENDED", "NOT RECOMMENDED", "MAY", and "OPTIONAL" in this document are to be interpreted as described in BCP\014 [RFC2119] [RFC8174] when, and only when, they appear in all capitals, as shown here.
+
+The following list describes terminology and definitions used throughout this document:
+
+.in 18
+.ti 6
+ABNF        Augmented Backus-Naur Form, a format used to represent permissible strings in a protocol or language, as defined in [RFC5234].
+
+.ti 6
+arc         Synonymous for "node" in the terminology of Object Identifiers.
+
+.ti 6
+ASCII       American Standard Code for Information Interchange
+
+.ti 6
+JSON        JavaScript Object Notation, an open standard file format and data interchange format, as defined in [RFC8259].
+
+.ti 6
+OID         Object Identifier, an identifier mechanism standardized by the International Telecommunication Union (ITU) and ISO/IEC.
+
+.ti 6
+OID-IP      Object Identifier Information Protocol, as defined in this document.
+
+.ti 6
+RA          Registration Authority, an entity responsible for allocating arcs to sub-nodes and recording that allocation (together with the organization the subordinate node has been allocated to).
+
+.ti 6
+TCP         Transmission Control Protocol
+
+.ti 6
+UTF-8       8-bit Unicode Transformation Format, as defined in [RFC3629].
+
+.ti 6
+XML         Extensible Markup Language, a markup language and file format for storing, transmitting, and reconstructing arbitrary data ([XML]).
+.bp
+.in 3
+.ti 0
+2  Request
+OID-IP is a text-based protocol.
+
+By default, an OID-IP server listens on TCP port 43 (WHOIS) for requests from OID-IP clients.  Due to the compatibility, existing WHOIS clients can be re-used and existing WHOIS servers can add the functionalities described in this document in addition to their usual operation.
+
+The OID-IP client makes a text request to the OID-IP server, then the OID-IP server replies with text content.  All requests are terminated with ASCII CR followed by ASCII LF.  The response contains multiple lines of text, separated by ASCII CR followed by ASCII LF.  The OID-IP server closes its connection as soon as the output is finished.  The closed TCP connection indicates to the client that the response has been received.
+
+During the request, the client sends a query beginning with "oid:", followed by an OID in dot-notation, as defined in RFC\03061, section\02 [RFC3061], but with the following differences:
+
+(1) The OID MAY contain a leading dot.
+
+(2) To query the root of the OID tree, the OID MUST be either missing or consisting only of a single dot.
+
+Examples of valid queries are:
+
+.in 7
+.nf
+oid:
+oid:.
+oid:2.999
+oid:.2.999
+.fi
+.in 3
+
+All OIDs MUST be interpreted as absolute OIDs.  Relative OIDs (e.g. relative to the OID of the Registration Authority operating the OID-IP service) are not allowed.
+
+The namespace identifier (i.e. "oid") MUST be written in lower-case.
+
+.ti 0
+2.1  Input Parameters
+
+The client can send additional information to the server using "input parameters".
+
+Names MUST be treated as case-sensitive.
+
+A request can contain multiple input parameters which are each prepended by a dollar sign ("$").
+
+An equal sign ("=") divides the "name" from the "value".
+
+Each name MUST only appear a single time in the list of input parameters.
+
+This document describes the following input parameters:
+
+(1) Format ("format" argument), which is described in section\02.1.1.
+
+(2) Authentication tokens ("auth" argument), which is described in section\02.1.2.
+
+(3) Preferred language ("lang" argument), which is described in section\02.1.3.
+
+Constraints for custom input parameters are described in section\02.1.4.
+
+The following request is an example of a valid query where the client sends a "format" argument with the value "json":
+
+.in 7
+.nf
+oid:2.999$format=json
+.fi
+.in 3
+
+.ti 0
+2.1.1  Format ("format" Argument)
+
+The "format" argument defines the desired output format.
+
+This document defines 3 formats:
+
+(1) "text": A text representation as defined in section\03.1.1 (MANDATORY).
+
+(2) "json": The JavaScript Object Notation (JSON, [RFC8259]) representation as defined in section\03.1.2 (RECOMMENDED).
+
+(3) "xml": Extensible Markup Language (XML, [XML]) representation as defined in section\03.1.3 (RECOMMENDED).
+
+The default format is "text", which is assumed if the "format" argument is omitted.
+
+Besides these 3 formats, the server can accept other formats not defined in this document.  The name of the formats MUST be alphanumeric, lower-case, and non-empty, and SHOULD be written in the English language (e.g. "text") or be common abbreviations (e.g. "json").
+
+If the client requests a format that is not implemented, then the server MUST respond with the "text" format, and the output MUST consist of the "query" field, "result: Service error", and a fitting "message" field (as described in section\03.2.1).
+
+The usage of the argument "format" is OPTIONAL.
+
+.ti 0
+2.1.2  Authentication Tokens ("auth" Argument)
+
+Some organizations might not want to present their OID information (or part of it) to the public, e.g. for reasons like privacy or confidentiality.  Therefore, one or more "authentication tokens" can be sent to control the display of confidential information returned by the OID-IP service.
+
+Authentication tokens MUST be case-sensitive and non-empty, and MUST NOT contain a dollar sign ("$"), an equal sign ("="), or a comma sign (",").
+
+If multiple authentication tokens need to be submitted, then the "auth" argument MUST NOT be repeated.  Instead, the tokens are separated using a comma sign (",").  A token MUST NOT be used multiple times in the same query.
+
+Examples of valid queries are:
+
+.in 7
+.nf
+oid:2.999$auth=firstToken
+oid:2.999$auth=firstToken,secondToken
+.fi
+.in 3
+
+Please note that authentication tokens are only weak protection.  For more information, see section\08 "Security Considerations".
+
+The usage of the argument "auth" is OPTIONAL.
+
+.ti 0
+2.1.3  Preferred Language ("lang" Argument)
+
+The client can request the preferred language of human-readable descriptions, names, comments, and error messages using the "lang" argument.
+
+If the server has data in different languages, it should try to find the best-fitting language according to the client's request.
+
+The value of the "lang" argument MUST be a list of language tags as defined by [RFC5646], separated by a comma sign, sorted by preference, and containing at least one element.
+
+The translation SHALL only affect the "message", "name", "description", and "information" fields, as well as additional fields and comments if their translation makes sense.  Field names MUST NOT be translated.  For example, the field name "description" will always be in the English language, even if the client requests a response in the German language.
+
+The following request is an example of a valid query where the client asks for information written in the English language, preferring US American English:
+
+.in 7
+.nf
+oid:2.999$lang=en-US,en
+.fi
+.in 3
+
+The usage of the argument "lang" is OPTIONAL.
+
+.ti 0
+2.1.4  Custom Input Parameters
+
+The usage of input parameters not described in this document is individual for each implementation.
+
+Names MUST be alphanumeric, lower-case, and non-empty, and SHOULD be written in the English language (e.g. "database") or be common abbreviations (e.g. "db").
+
+Values MUST be case-sensitive and non-empty, and MUST NOT contain a dollar sign ("$") or an equal sign ("=").
+
+The usage of the custom input parameters MUST be OPTIONAL.
+
+.ti 0
+2.2  Request ABNF Notation
+
+To define the query string, the following Augmented BNF definitions will be used.  They are based on the ABNF styles of RFC\05234 [RFC5234].
+
+.\" Tool for verification of ABNF: https://tools.ietf.org/tools/bap/abnf.cgi
+.nf
+query           = object optional-args
+
+object          = ( str-oid       ":" optional-oid ) /
+                  ( other-ns-name ":" other-ns-val )
+str-oid         = %x6F.69.64           ; %s"oid"    in RFC\07405
+
+; Additional constraint: Query MUST NOT contain more than one
+;                        argument with the same name.
+optional-args   = *( "$" argument )
+
+argument        = ( str-format     "=" format ) /
+                  ( str-auth       "=" tokens ) /
+                  ( str-lang       "=" languages ) /
+                  ( other-arg-name "=" other-arg-val )
+str-format      = %x66.6F.72.6D.61.74  ; %s"format" in RFC\07405
+str-auth        = %x61.75.74.68        ; %s"auth"   in RFC\07405
+str-lang        = %x6C.61.6E.67        ; %s"lang"   in RFC\07405
+
+optional-oid    = [ "." ] [ oid ]
+
+oid             = unsigned-number *( "." unsigned-number )
+
+format          = str-text /
+                  str-json /
+                  str-xml  /
+                  1*( lowercase-char / digit )
+str-text        = %x74.65.78.74        ; %s"text"   in RFC\07405
+str-json        = %x6A.73.6F.6E        ; %s"json"   in RFC\07405
+str-xml         = %x78.6D.6C           ; %s"xml"    in RFC\07405
+
+; Language-Tag is defined in RFC 5646
+languages       = Language-Tag *( "," Language-Tag )
+
+; Additional constraint: Tokens MUST NOT be used more than one time
+;                        in the same query.
+tokens          = token *( "," token )
+
+; Printable characters (%x21-7E), excluding dollar sign (%x24 "$"),
+; equal sign (%x3D "="), and comma sign (%x2C ",").
+token           = 1*( %x21-23 / %x25-2B / %x2D-3C / %x3E-7E )
+
+; Additional constraint: MUST NOT be <str-format> or <str-auth>.
+other-arg-name  = 1*( lowercase-char / digit )
+
+; Printable characters (%x21-7E), excluding dollar sign (%x24 "$")
+; and equal sign (%x3D "=").
+other-arg-val   = 1*( %x21-23 / %x25-3C / %x3E-7E )
+
+; Additional constraint: MUST NOT be <str-oid>.
+other-ns-name   = 1*( lowercase-char / digit )
+
+; Printable characters (%x21-7E), excluding dollar sign (%x24 "$").
+other-ns-val    = *( %x21-23 / %x25-7E )
+
+unsigned-number = "0" / ( nonzero-digit *digit )
+
+digit           = %x30-39  ; 0-9
+nonzero-digit   = %x31-39  ; 1-9
+lowercase-char  = %x61-7A  ; a-z
+.fi
+.bp
+.ti 0
+3  Response
+
+.ti 0
+3.1  Format and Encoding
+
+.ti 0
+3.1.1 "text" Format
+
+(1) The response MUST be UTF-8 encoded (as defined in RFC\03629 [RFC3629]), without Byte-Order-Mark (BOM).
+
+(2) The response contains multiple lines with field names and values, which MUST be separated by a double colon (":").  Whitespace characters after the double colon are allowed.
+
+(3) If possible, each line SHOULD be limited to 80 characters, including the field name, double colon, value, and whitespaces.
+
+(4) Field names and values MUST be treated as case-sensitive.
+
+(5) If a value needs to be split into multiple lines, e.g. if the line would exceed the length limit, the same field name including double colon MUST be repeated at the beginning of the next line.
+
+(6) If an attribute has multiple values (e.g. multiple Unicode labels, alternative email addresses, etc.), each value MUST be written in a new line with the same field name.
+
+(7) Lines with the same field name SHALL be kept together.
+
+(8) Comment lines MUST start with a percent sign ("%") at the beginning of a line, without prepending whitespaces.  They MUST NOT be evaluated by machines (except for signature validation, as mentioned in section\03.3 "Digital Signature").
+
+(9) A response consists of sections, which MUST be separated by at least one empty line and/or comment line. 
+
+(10) Custom sections CAN be added after any section defined in this document.  The query section MUST be the first section in the response.
+
+.ti 0
+3.1.2 "json" Format
+
+(1) The response MUST be UTF-8 encoded (as defined in RFC\03629 [RFC3629]), without Byte-Order-Mark (BOM).
+
+(2) A response consists of sections, which MUST be named "querySection", "objectSection", "raSection", "ra1Section", etc. which SHOULD stay in this order.
+
+(3) Custom sections CAN be added.  The name of these custom sections MUST be the name of the first field, appended by the string "Section".
+
+(4) The JavaScript Object Notation (JSON, [RFC8259]) output MUST match the schema defined in Appendix\0A.1 of this document.
+
+.ti 0
+3.1.3 "xml" Format
+
+(1) The response MUST be UTF-8 encoded (as defined in RFC\03629 [RFC3629]), without Byte-Order-Mark (BOM).
+
+(2) A response consists of sections, which MUST be named "querySection", "objectSection", "raSection", "ra1Section", etc. which MUST stay in this order.
+
+(3) Custom sections CAN be added.  The name of these custom sections MUST be the name of the first field, appended by the string "Section".  These custom sections MUST be specified in a different XML namespace at the end of the last RA section.
+
+(4) The Extensible Markup Language (XML, [XML]) output MUST match the schema defined in Appendix\0B.1 of this document.
+
+.ti 0
+3.2  Sections
+
+This document specifies the following sections:
+
+(1) Query-Section which contains the request and the result, as described in section\03.2.1.
+
+(2) Object-Section which contains information about the OID, as described in section\03.2.2.
+
+(3) RA-Section which contains information about the current Registration Authority, as described in section\03.2.3.
+
+(4) Optional RA-Sections containing information about RAs that were previously in charge of managing the OID, as described in section\03.2.4.
+
+.ti 0
+3.2.1  Query-Section (Information about Query and Result)
+
+This section MUST always be present and MUST start with the field "query".  It MUST be the first section in the response.
+
+Possible fields are:
+
+(1) "query" MUST be present and contains the request string the client has sent.  Canonization or sanitation (like removing a leading dot in front of the OID) SHOULD NOT be applied at this step.  Authentication tokens SHOULD be omitted, though.
+
+(2) "result" MUST be present and SHALL be one of the following values:
+
+.in 7
+"Found" means that the OID-IP service can verify that the requested OID exists.  The following sections will contain information about this OID.
+
+"Not found; superior object found" means that the OID-IP service cannot verify that the requested OID exists, or it denies that the OID exists (e.g. because it is confidential).  However, the OID-IP service knows a superior OID which does exist.  The following sections will contain information about that superior OID instead.
+
+"Not found" means that the OID-IP service cannot verify that the requested OID exists, or it denies that the OID exists (e.g. because it is confidential).  Additionally, the OID-IP service does not have information about any superior OID, or their existence is also denied.
+
+"Service error" means that an internal error occurred, or that the system is in maintenance mode.  The client should try again later.
+.in 3
+
+(3) "distance" SHOULD be present if it is applicable in the requested namespace (it is always applicable for OIDs) and if the result is "Not found; superior object found".  A distance of 1 means that the direct parent was found.  A distance of 2 means that the grand-parent was found, etc.
+
+(4) "message" SHOULD be present if the result is "Service error".  It contains a message explaining why the service is not available (e.g. displaying an error message).  It MUST NOT be present if the result has a different value.
+
+(5) "lang" (OPTIONAL) contains the language of the field "message".  The language should be a language tag as defined in [RFC5646].
+
+The OID-IP service SHOULD NOT add additional fields to this section.
+
+.ti 0
+3.2.2  Object-Section (Information about the OID)
+
+This section MUST be present if the result is "Found" or "Not found; superior object found".  It MUST start with the field "object".  It MUST NOT be present if the result is "Not found" or "Service error".
+
+Possible fields are:
+
+(1) "object" contains the OID in dot-notation, prepended by the namespace identifier and double colon ("oid:").  This field MUST be present.
+
+(2) "status" MUST be present and SHALL be one of the following values:
+
+.in 7
+"Information available" means that information about the OID is fully available.
+
+"Information partially available" means that part of the information about the OID is not available.  Possible reasons could be that part of the information is redacted due to confidentiality, or the OID-IP service only knows basic information, while the full information can be found somewhere else (e.g. at a referred OID-IP service).  The field "attribute" MAY be used with the value "confidential".
+
+"Information unavailable" means that the information about the OID is missing, redacted due to confidentiality, or otherwise unavailable.  The field "attribute" MAY be used with the value "confidential".
+.in 3
+
+(3) "lang" (OPTIONAL) contains the language of the fields "name", "description", "information", and additional fields if their translation makes sense.  The language should be a language tag as defined in [RFC5646].
+
+(4) "name" (OPTIONAL) contains the name of the OID.  It SHOULD be as short as possible.
+
+(5) "description" (OPTIONAL) contains a short description of the OID.  The description SHOULD only be a single sentence.
+
+(6) "information" (OPTIONAL) contains additional information, e.g. Management Information Base (MIB) definitions.
+
+(7) "url" (OPTIONAL, multiple values allowed) contains a URL (as defined in RFC\03986 [RFC3986]) leading to more information about the OID.
+
+(8) "asn1-notation" (OPTIONAL, multiple values allowed) contains one or more possible notations in the ASN.1 syntax, as defined in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 32.3 [X680], e.g. {joint-iso-itu-t(2) example(999)}.
+
+.in 7
+Note: A line break, to break up lines that are too long, as defined in section\03.1 ("Format and Encoding") SHOULD be used.  This is no problem because multiple ASN.1 notations can be distinguished by their opening curly bracket and their closing curly bracket.
+.in 3
+
+(9) "iri-notation" (OPTIONAL, multiple values allowed) contains one or more possible notations in the OID-IRI syntax, as defined in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 34.3 [X680] (but without quotation marks), e.g. /Joint-ISO-ITU-T/Example.
+
+.in 7
+Note: A line break, to break up lines that are too long, as defined in section\03.1 ("Format and Encoding") SHALL NOT be used, otherwise, it would be ambiguous if the line break was used to shorten the line, or if the line break indicates a new value in case multiple OID-IRI notations are supplied.
+.in 3
+
+(10) "identifier" (OPTIONAL, multiple values allowed) contains an alphanumeric identifier ("NameForm") as defined in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 12.3 [X680].
+
+(11) "standardized-id" (OPTIONAL, multiple values allowed) contains an alphanumeric identifier that has a standardized "NameForm", i.e. in ASN.1 notation, it can be written without its associated number.  See more information in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 32.7 [X680].
+
+(12) "unicode-label" (OPTIONAL, multiple values allowed) contains a Non-integer Unicode label, as defined in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 12.27 [X680].
+
+(13) "long-arc" (OPTIONAL, multiple values allowed) contains a Non-integer Unicode label that can be used as the first identifier in an OID Internationalized Resource Identifier (OID-IRI), shortening it.  More information can be found in Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-1:2012, clause 3.5.8 [X660].
+
+(14) "oidip-service" (OPTIONAL) contains an IP address or hostname of a system that offers an OID-IP service that can supply information about the OID and/or its subordinate OIDs, followed by a double-colon (:) and a port number.  If the result is "Found" (i.e. the OID is existing in the local database), then the information "oidip-service" is only informational; its existence is most likely a hint that subordinate OIDs will be found at that OID-IP server.  If the result is "Not found; superior object found", then the client SHOULD query the referred OID-IP server to receive more information about the OID.  See more information in section\04 "Referral".
+
+(15) "oidip-pubkey" (OPTIONAL) contains the public key of the service that is identified with "oidip-service", in case it uses signatures (see section\03.3 "Digital Signature") and the referring service knows about it.
+
+(16) "attribute" (OPTIONAL, multiple values allowed) contains attributes of the OID.  An attribute MUST be one of the following values:
+
+.in 7
+"confidential" means that information about the OID or part of it is confidential.
+
+"draft" means that the allocation of the OID is not yet official and the information is subject to change without notice.  This includes deletion and relocation.
+
+"frozen" means that no more child OIDs can be created under this OID, e.g. because the RA has stopped operating, but the existing child OIDs stay valid.
+
+"leaf" means that no child OIDs can be allocated under this OID.  The field "subordinate" SHALL therefore not be present.
+
+"no-identifiers" means that the RA is not allocating alphanumeric identifiers.
+
+"no-unicode-labels" means that the RA is not allocating Non-integer Unicode labels.
+
+"retired" means that the OID is withdrawn, revoked, retired, expired, etc.  Please consult Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-1:2012 [X660] for more information about such cases.
+.in 3
+
+(17) "parent" (OPTIONAL) contains the OID of the nearest known parent OID, prepended by namespace identifier and double colon, i.e. "oid:".  It MAY be followed by additional human-readable information, e.g. a description or a list of ASN.1 identifiers.  There SHALL be at least 1 whitespace in between.
+
+(18) "subordinate" (OPTIONAL, multiple values allowed) contains a list of subordinate OIDs, prepended by namespace identifier and double colon, i.e. "oid:".  It MAY be followed by additional human-readable information, e.g. a description or a list of ASN.1 identifiers.  There SHALL be at least 1 whitespace in between.
+
+(19) "created" (OPTIONAL) contains the date and time (as specified in section\03.4 "Date/Time Format") when the OID was first allocated by the RA of the superior OID.
+
+(20) "updated" (OPTIONAL) contains the date and time (as specified in section\03.4 "Date/Time Format") when the OID information was last updated.
+
+Additional fields can be defined by the OID-IP service.  The field names SHALL only consist of the lower-case letters "a..z", hyphens ("-"), and numbers, and SHOULD be written in the English language.  The field name MUST NOT begin or end with a hyphen and a hyphen MUST NOT be followed by another hyphen.
+
+.ti 0
+3.2.3  RA-Section (Information about the Current RA)
+
+This section MUST NOT be present if the result is "Not found" or "Service error", otherwise it MAY be present.  If it is present, it MUST start with the field "ra".
+
+Possible fields are:
+
+(1) "ra" contains a general name of the RA, like the name of a person, the name of a group, or the name of an organization.  This field MUST be present.
+
+(2) "ra-status" MUST be present and SHALL be one of the following values:
+
+.in 7
+"Information available" means that information about this RA is fully available.
+
+"Information partially available" means that part of the information is not available.  A possible reason could be that part of the information is redacted due to confidentiality.  The field "attribute" MAY be used with the value "confidential".
+
+"Information unavailable" means that the data is missing (if the OID-IP service only knows the name of the RA and nothing else), redacted due to confidentiality, or otherwise unavailable.  The field "attribute" MAY be used with the value "confidential".
+.in 3
+
+(3) "ra-lang" (OPTIONAL) contains the language of the fields in this section, if their translation makes sense.  The language should be a language tag as defined in [RFC5646].
+
+(4) "ra-contact-name" (OPTIONAL, multiple values allowed) contains the name of a person responsible for the allocation of subordinate OIDs, in case "ra" is a group or organization.
+
+(5) "ra-address" (OPTIONAL) contains the physical location of the RA.  While a fully qualified postal address is recommended, the field can also just contain a rough location like city and country name, state and country name, or just the country name, etc.  The name of the country SHOULD always be present.
+
+(6) "ra-phone" (OPTIONAL, multiple values allowed) contains a landline phone number of the Registration Authority.  It SHOULD be written in the international number format specified in Recommendation ITU-T E.164 (2010) [E164], e.g. +1 206 555 0100.
+
+(7) "ra-mobile" (OPTIONAL, multiple values allowed) contains a mobile phone number of the Registration Authority.  It SHOULD be written in the international number format specified in Recommendation ITU-T E.164 (2010) [E164], e.g. +1 206 555 0100.
+
+(8) "ra-fax" (OPTIONAL, multiple values allowed) contains a fax number of the Registration Authority.  It SHOULD be written in the international number format specified in Recommendation ITU-T E.164 (2010) [E164], e.g. +1 206 555 0100.
+
+(9) "ra-email" (OPTIONAL, multiple values allowed) contains an email address of the Registration Authority.
+
+(10) "ra-url" (OPTIONAL, multiple values allowed) contains a URL (as defined in RFC\03986 [RFC3986]) leading to more information about the RA (usually the website of the RA).
+
+(11) "ra-attribute" (OPTIONAL, multiple values allowed) contains attributes of the RA.  An attribute MUST be one of the following values:
+
+.in 7
+"confidential" means that the information about the RA or part of it is confidential.
+
+"retired" means that the RA is defunct.  If this attribute is set to the current RA, then the OID MUST have the attribute "frozen" (until the responsibility is transferred to a non-defunct RA, or until the current RA becomes active again).
+.in 3
+
+(12) "ra-created" (OPTIONAL) contains the date and time (as specified in section\03.4 "Date/Time Format") when the RA was created/registered in the database.
+
+(13) "ra-updated" (OPTIONAL) contains the date and time (as specified in section\03.4 "Date/Time Format") when the RA information was last modified.
+
+Additional fields can be defined by the OID-IP service, but they MUST begin with "ra-".  The field names SHALL only consist of the lower-case letters "a..z", hyphens ("-"), and numbers, and SHOULD be written in the English language.  The field name MUST NOT begin or end with a hyphen and a hyphen MUST NOT be followed by another hyphen.
+
+.ti 0
+3.2.4  Sections for Previous Registration Authorities
+
+To optionally display information about RAs that were previously in charge of managing the OID, a new section per RA can be added with the following field name prefixes:
+
+"ra-" is the prefix of the current Registration Authority,
+.br
+"ra1-" is the prefix of the first RA.  It is the very first person or company to whom the OID was allocated by the RA of the superior OID,
+.br
+"ra2-" is the prefix of the second RA, after the responsibility has been transferred, etc.
+.br
+
+Each section MUST start with the field "ra1", "ra2", etc.
+
+The definition of these sections is identical to the definition of the RA-Section (described in section\03.2.3 "RA-Section"), just with a different prefix.
+
+The history does not need to be complete, e.g. it is no problem to only serve information about the first ("ra1") and the current RA ("ra"), or only serve information about the current RA ("ra").
+
+.ti 0
+3.3  Digital Signature
+
+.ti 0
+3.3.1  "text" Format
+
+If integrity/authenticity is required, the whole response can be signed, e.g. by using PGP, RSA, ECDSA, etc.  Depending on the signature method being used, various things need to be appended and/or prepended to the response (e.g. "-----BEGIN PGP MESSAGE-----" and "-----END PGP MESSAGE-----").  These additional lines MUST be prepended by a percent sign ("%") to avoid an application confusing these additional lines (e.g. lines belonging to a PGP header, as defined in RFC\04880 [RFC4880]) with parts of the actual OID-IP response.
+
+.ti 0
+3.3.2  "json" Format
+
+Steps for signing a message:
+
+.in 7
+1. Make sure that the JSON file has no signature (remove the "signature" key if one exists).
+
+2. Create a working-copy of the JSON file and canonize the contents using the procedures described in RFC\08785 [RFC8785].
+
+3. Create a JSON Web Signature (JWS, RFC\07515 [RFC7515]) using your public key and the canonized form of the JSON contents.
+
+4. Add the signature in the "signature" field to the original JSON file.  Note that the original JSON does not need to be canonized, since the canonization will be repeated in the verification procedure.
+.in 3
+
+Steps for verifying a message:
+
+.in 7
+1. Extract the contents of the "signature" key from the JSON file.  This is the JSON Web Signature containing a header, a payload, and a signature.
+
+2. Create a working-copy of the JSON file and remove the "signature" key there.
+
+3. Canonize the remaining contents using the procedures described in RFC\08785 [RFC8785].
+
+4. Compare the canonized contents to the base64-encoded payload of the JSON Web Signature which was extracted before.  The contents MUST be equal.
+
+5. Verify the JSON Web Signature of the original JSON file according to the procedures described in RFC\07515 [RFC7515].
+.in 3
+
+.ti 0
+3.3.3  "xml" Format
+
+Signing and verifying signatures will be performed as described in the W3C Recommendation "XML Signature Syntax and Processing" ([XMLDSig]).
+
+.ti 0
+3.4  Date/Time Format
+
+Date/Time references SHALL be formatted as described in section\03.4.1.
+
+If parts of the date/time reference are uncertain, then they SHOULD be omitted until the date/time reference has the highest correctness.
+
+Examples of valid date/time references can be found in section\03.4.2.
+.bp
+.ti 0
+3.4.1  Date/Time Format ABNF Notation
+
+To define the format of a Date/Time reference, the following Augmented BNF definitions will be used.  They are based on the ABNF styles of RFC\05234 [RFC5234].
+
+.\" Tool for verification of ABNF: https://tools.ietf.org/tools/bap/abnf.cgi
+.nf
+date-time = year [ "-" month [ "-" day [ " " time ] ] ]
+
+year      = 4DIGIT
+
+month     = ( "0" %x31-39 ) /
+            ( "1" %x30-32 )      ; 01-12
+
+day       = ( "0" %x31-39 ) /
+            ( "1" %x30-39 ) /
+            ( "2" %x30-39 ) /
+            ( "3" %x30-31 )      ; 01-31
+
+time      = hour ":" minute [ ":" second ] [ " " timezone ]
+
+hour      = ( "0" %x30-39 ) /
+            ( "1" %x30-39 ) /
+            ( "2" %x30-33 )      ; 00-23
+
+minute    = %x30-35 DIGIT        ; 00-59
+
+second    = %x30-35 DIGIT        ; 00-59
+
+timezone  = ( "+" / "-" ) hour minute
+.fi
+
+.ti 0
+3.4.2  Date/Time Format Examples
+
+Examples of valid date/time references are:
+
+.in 7
+.nf
+2023-09-29 18:32:00 +0200
+2023-09-29 18:32:00
+2023-09-29 18:32 +0200
+2023-09-29 18:32
+2023-09-29
+2023-09
+2023
+.fi
+.in 3
+.bp
+.ti 0
+4  Referral
+
+By using the fields "oidip-service" and "oidip-pubkey", the OID-IP service can instruct the client to query another OID-IP service that might have more information about the requested OID.
+
+If Registration Authorities maintain up-to-date OID-IP service references of their OID delegations, it is possible to automatically retrieve information about any OID.
+
+Example: OID "2.999" is owned by Registration Authority "A", operating an OID-IP service at "a.example.com".
+
+Registration Authority "A" allocated OID "2.999.1000" to Registration Authority "B" who is operating an OID-IP service at "b.example.com".
+
+The client asks a.example.com for information about OID "2.999.1000.1" and should receive the following reply:
+
+.in 7
+.nf
+query:          oid:2.999.1000.1
+result:         Not found; superior object found
+distance:       1
+
+object:         oid:2.999.1000
+status:         Information available
+name:           Company "B"
+oidip-service:  b.example.com:XXX
+
+ra:             "B"
+ra-status:      Information unavailable
+.fi
+.in 3
+
+The client is now aware that "a.example.com" only knows OID "2.999.1000", and that there is a reference to another OID-IP service located at "b.example.com".  So, the client should then accordingly query "b.example.com", asking for information about OID "2.999.1000.1":
+
+.in 7
+.nf
+query:          oid:2.999.1000.1
+result:         Found
+
+object:         oid:2.999.1000.1
+status:         Information available
+name:           Example OID 1
+
+ra:             "B"
+ra-status:      Information unavailable
+.fi
+.in 3
+.bp
+.ti 0
+5  Full Example ("text" Format)
+
+.ti 0
+5.1  Request
+
+.nf
+oid:2.999
+.fi
+
+.ti 0
+5.2  Response
+
+.nf
+query:          oid:2.999
+result:         Found
+
+object:         oid:2.999
+status:         Information available
+lang:           en-US
+name:           Example
+description:    This OID can be used by anyone, for the purposes of
+description:    documenting examples of Object Identifiers.
+asn1-notation:  {joint-iso-itu-t(2) example(999)}
+iri-notation:   /Example
+identifier:     example
+unicode-label:  Beispiel
+unicode-label:  Ejemplo
+unicode-label:  Example
+unicode-label:  Exemple
+unicode-label:  (Korean characters are omitted in this example)
+unicode-label:  (Arabian characters are omitted in this example)
+unicode-label:  (Japanese characters are omitted in this example)
+unicode-label:  (Chinese characters are omitted in this example)
+unicode-label:  (Russian characters are omitted in this example)
+long-arc:       Beispiel
+long-arc:       Ejemplo
+long-arc:       Example
+long-arc:       Exemple
+long-arc:       (Korean characters are omitted in this example)
+long-arc:       (Arabian characters are omitted in this example)
+long-arc:       (Japanese characters are omitted in this example)
+long-arc:       (Chinese characters are omitted in this example)
+long-arc:       (Russian characters are omitted in this example)
+parent:         oid:2 (joint-iso-itu-t)
+created:        2011-06
+updated:        2011-09
+
+ra:             ITU-T SG 17 & ISO/IEC JTC 1/SC 6
+ra-status:      Information unavailable
+% -----BEGIN RSA SIGNATURE-----
+% DwnqRtx/ONtPh4onXnrZPl9jF+G50RMLZkSwuClaoH2t/yK8CnYJrmzkzA5+gkfWkoQ
+% cq+J8J9cvnwXvBfpVHg==
+% -----END RSA SIGNATURE-----
+.fi
+.bp
+.ti 0
+6  Alternative Namespaces
+
+This document describes the retrieval of information about OIDs using the OID-IP protocol.  In addition to the OID namespace, the methods described in this document can also be applied to other namespaces like "uuid", "isbn", "gtin", etc.
+
+The following things need to be considered if alternative namespaces are implemented:
+
+(1) The request MUST be UTF-8 encoded (as defined in RFC\03629 [RFC3629]), without Byte-Order-Mark (BOM).
+
+(2) The namespace SHALL be a namespace identifier (NID) as defined in RFC\08141 [RFC8141].
+
+(3) The namespace identifier SHALL be written in lower-case (this is already defined in section\02 "Request").
+
+(4) If available, a formal URN namespace identifier (as defined in RFC\08141, section\05.1 [RFC8141]) SHOULD be used, e.g. "uuid" should be used instead of "guid".
+
+(5) If things like "Owner", "Creator", "Manager", "Administrator", etc., are relevant to the identifiers in the namespace, then the RA-section as described in section\03.2.3 SHALL be used, even though the word "Registration Authority" might not be appropriate in the terminology of the namespace.
+
+(6) The namespace-specific identifier MUST NOT contain dollar signs ("$"), because section\02.1 "Input Parameters" defines them as a separator for input parameters.
+
+(7) The namespace-specific identifier MUST be treated as case-sensitive if the namespace distinguishes between lower-case and upper-case.
+
+(8) Fields that can only be used in the OID namespace (e.g. "unicode-label") MUST NOT be used for other namespaces.
+.bp
+.ti 0
+6.1  Example: UUID Namespace
+
+The following example shows the retrieval of information about Universally Unique Identifiers (e.g. UUIDs used by the Microsoft Common Object Model, also known as GUIDs).  The UUID namespace has no hierarchical structure, which means that the OID-IP service can only respond with the result "Found", "Not found" or "Service error" and the fields "parent" and "subordinate" cannot be used.
+
+Request:
+
+.in 7
+.nf
+uuid:b4bfcc3a-db2c-424c-b029-7fe99a87c641
+.fi
+.in 3
+
+Response:
+
+.in 7
+.nf
+query:        uuid:b4bfcc3a-db2c-424c-b029-7fe99a87c641
+result:       Found
+
+object:       uuid:b4bfcc3a-db2c-424c-b029-7fe99a87c641
+status:       Information available
+lang:         en-US
+name:         Desktop
+information:  GUID can be used in file dialogs as "Custom Place".
+
+ra:           Microsoft Corp.
+ra-status:    Information unavailable
+.fi
+.in 3
+
+More information about UUIDs can be found in Recommendation ITU-T X.667 (2012) | ISO/IEC 9834-8:2014 [X667].
+
+More information about the Microsoft Common Object Model (COM) can be found at Microsoft Docs <https://docs.microsoft.com/en-us/windows/win32/com/component-object-model--com--portal>.
+
+.ti 0
+7  Internationalization Considerations
+
+This document specifies that the request and response MUST be UTF-8 encoded (as defined in RFC\03629 [RFC3629]), without Byte-Order-Mark (BOM).
+
+The OID-IP service can define additional field names, but they SHOULD be written in the English language so that there is consistency with the field names defined in this document.
+.bp
+.ti 0
+8  Security Considerations
+
+(1) The knowledge of the existence of an OID, or information about some OIDs could be considered confidential.  In this case, the OID-IP service can either deny the existence of the requested OID (by setting the result to "Not found") or redact information in the Object-Section, as defined in section\03.2.2 "Object-Section".
+
+(2) Registration Authorities might demand that their data be kept confidential, or at least be partially redacted to increase privacy or as a measurement against spam.  In this case, the OID-IP service can redact information in the RA-Section, as defined in section\03.2.3 "RA-Section".
+
+(3) The OID-IP service can decide if confidential material is omitted or shown, based on authentication mechanisms like white-listing client IP addresses or by using authentication tokens supplied by the client during the request, as defined in section\02.1.2 "Authentication Tokens".
+
+(4) The usage of authentication tokens or transmitting confidential information is not recommended if the traffic between client and server is transmitted through an untrusted network, because the OID-IP protocol is not encrypted.
+
+(5) Authentication tokens must have a sufficient length and complexity to avoid successful brute force attacks, or the OID-IP service must limit the number of requests per time.
+
+(6) If integrity/authenticity is required, the OID-IP response can be signed, as described in section\03.3 "Digital Signature".
+
+
+.ti 0
+9  IANA Considerations
+
+There are no IANA Considerations.
+
+.bp
+.ti 0
+10  References
+
+.ti 0
+10.1  Normative References
+.in 14
+
+.ti 3
+[E164]     "The international public telecommunication numbering plan", Recommendation ITU-T\0E.164 (2010), November 2010,
+.br
+<http://handle.itu.int/11.1002/1000/10688>.
+
+.\" https://www.rfc-editor.org/refs/ref2119.txt
+.ti 3
+[RFC2119]  Bradner, S., "Key words for use in RFCs to Indicate Requirement Levels", BCP\014, RFC\02119, DOI\010.17487/RFC2119, March\01997,
+.br
+<https://www.rfc-editor.org/info/rfc2119>.
+
+.\" https://www.rfc-editor.org/refs/ref3061.txt
+.ti 3
+[RFC3061]  Mealling, M., "A URN Namespace of Object Identifiers", RFC\03061, DOI\010.17487/RFC3061, February\02001,
+.br
+<https://www.rfc-editor.org/info/rfc3061>.
+
+.\" https://www.rfc-editor.org/refs/ref3629.txt
+.ti 3
+[RFC3629]  Yergeau, F., "UTF-8, a transformation format of ISO 10646", STD\063, RFC\03629, DOI\010.17487/RFC3629, November\02003,
+.br
+<https://www.rfc-editor.org/info/rfc3629>.
+
+.\" https://www.rfc-editor.org/refs/ref3986.txt
+.ti 3
+[RFC3986]  Berners-Lee, T., Fielding, R., and L. Masinter, "Uniform Resource Identifier (URI): Generic Syntax", STD\066, RFC\03986, DOI\010.17487/RFC3986, January\02005,
+.br
+<https://www.rfc-editor.org/info/rfc3986>.
+
+.\" https://www.rfc-editor.org/refs/ref5234.txt
+.ti 3
+[RFC5234]  Crocker, D., Ed., and P. Overell, "Augmented BNF for Syntax Specifications: ABNF", STD\068, RFC\05234, DOI\010.17487/RFC5234, January\02008,
+.br
+<https://www.rfc-editor.org/info/rfc5234>.
+
+.\" https://www.rfc-editor.org/refs/ref7515.txt
+.ti 3
+[RFC7515]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web Signature (JWS)", RFC\07515, DOI\010.17487/RFC7515, May\02015,
+.br
+<https://www.rfc-editor.org/info/rfc7515>.
+
+.\" https://www.rfc-editor.org/refs/ref5646.txt
+.ti 3
+[RFC5646]  Phillips, A., Ed., and M. Davis, Ed., "Tags for Identifying Languages", BCP\047, RFC\05646, DOI\010.17487/RFC5646, September\02009,
+.br
+<https://www.rfc-editor.org/info/rfc5646>.
+
+.\" https://www.rfc-editor.org/refs/ref8141.txt
+.ti 3
+[RFC8141]  Saint-Andre, P. and J. Klensin, "Uniform Resource Names (URNs)", RFC\08141, DOI\010.17487/RFC8141, April\02017,
+.br
+<https://www.rfc-editor.org/info/rfc8141>.
+
+.\" https://www.rfc-editor.org/refs/ref8174.txt
+.ti 3
+[RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC 2119 Key Words", BCP\014, RFC\08174, DOI\010.17487/RFC8174, May\02017,
+.br
+<https://www.rfc-editor.org/info/rfc8174>.
+
+.\" https://www.rfc-editor.org/refs/ref8785.txt
+.ti 3
+[RFC8785]  Rundgren, A., Jordan, B., and S. Erdtman, "JSON Canonicalization Scheme (JCS)", RFC\08785, DOI\010.17487/RFC8785, June\02020,
+.br
+<https://www.rfc-editor.org/info/rfc8785>.
+
+.\" https://www.rfc-editor.org/refs/ref8792.txt
+.ti 3
+[RFC8792]  Watsen, K., Auerswald, E., Farrel, A., and Q. Wu, "Handling Long Lines in Content of Internet-Drafts and RFCs", RFC\08792, DOI\010.17487/RFC8792, June\02020,
+.br
+<https://www.rfc-editor.org/info/rfc8792>.
+
+.\" https://www.rfc-editor.org/refs/ref8259.txt
+.ti 3
+[RFC8259]  Bray, T., Ed., "The JavaScript Object Notation (JSON) Data Interchange Format", STD\090, RFC\08259, DOI\010.17487/RFC8259, December\02017,
+.br
+<https://www.rfc-editor.org/info/rfc8259>.
+
+.ti 3
+[X660]     "Information technology - Procedures for the operation of object identifier registration authorities: General procedures and top arcs of the international object identifier tree", Recommendation ITU-T\0X.660 (2011) | ISO/IEC\09834-1:2012, July\02011,
+.br
+<http://handle.itu.int/11.1002/1000/11336>.
+
+.ti 3
+[X680]     "Information technology - Abstract Syntax Notation One (ASN.1): Specification of basic notation", Recommendation ITU-T\0X.680 (2015) | ISO/IEC\08824-1:2015, August\02015,
+.br
+<http://handle.itu.int/11.1002/1000/12479>.
+
+.ti 3
+[XML]      "Extensible Markup Language (XML) 1.1 (Second Edition)"
+.br
+W3C Recommendation 16\0August\02006, edited in place 29\0September\02006,
+.br
+<https://www.w3.org/TR/2006/REC-xml11-20060816/>.
+
+.ti 3
+[XMLDSig]  "XML Signature Syntax and Processing Version 1.1"
+.br
+W3C Recommendation 11\0April\02013,
+.br
+<https://www.w3.org/TR/xmldsig-core1/>.
+
+.ti 3
+[XSD]      W3C XML Schema Definition Language (XSD)
+.br
+W3C Recommendation 5\0April\02012,
+.br
+<https://www.w3.org/TR/xmlschema11-1/>.
+
+.\" TODO: When this becomes a RFC, then reference the RFC instead: https://datatracker.ietf.org/doc/draft-bhutton-json-schema/
+.ti 3
+[JSONSch]  JSON Schema Specification
+.br
+<https://json-schema.org/specification.html>.
+.in 0
+
+.ti 0
+10.2  Informative References
+.in 14
+
+.\" https://www.rfc-editor.org/refs/ref1157.txt
+.ti 3
+[RFC1157]  Case, J., Fedor, M., Schoffstall, M., and J. Davin, "Simple Network Management Protocol (SNMP)", RFC\01157, DOI\010.17487/RFC1157, May\01990,
+.br
+<https://www.rfc-editor.org/info/rfc1157>.
+
+.\" https://www.rfc-editor.org/refs/ref4511.txt
+.ti 3
+[RFC4511]  Sermersheim, J., Ed., "Lightweight Directory Access Protocol (LDAP): The Protocol", RFC\04511, DOI\010.17487/RFC4511, June\02006,
+.br
+<https://www.rfc-editor.org/info/rfc4511>.
+
+.\" https://www.rfc-editor.org/refs/ref4880.txt
+.ti 3
+[RFC4880]  Callas, J., Donnerhacke, L., Finney, H., Shaw, D., and R. Thayer, "OpenPGP Message Format", RFC\04880, DOI\010.17487/RFC4880, November\02007,
+.br
+<https://www.rfc-editor.org/info/rfc4880>.
+
+.ti 3
+[X509]     "Information technology - Open Systems Interconnection - The Directory: Public-key and attribute certificate frameworks", Recommendation ITU-T\0X.509 (2016) |
+.br
+ISO/IEC 9594-8:2017, October\02016,
+.br
+<http://handle.itu.int/11.1002/1000/13031>.
+
+.ti 3
+[X667]     "Information technology - Procedures for the operation of object identifier registration authorities: Generation of universally unique identifiers and their use in object identifiers", Recommendation ITU-T\0X.667 (2012) |
+.br
+ISO/IEC\09834-8:2014, October\02012,
+.br
+<http://handle.itu.int/11.1002/1000/11746>.
+
+.ti 3
+[X672]     "Information technology - Open systems interconnection - Object identifier resolution system",
+.br
+Recommendation ITU-T\0X.672 (2010) | ISO/IEC\029168-1:2011, August\02010,
+.br
+<http://handle.itu.int/11.1002/1000/10831>.
+.in 0
+.bp
+.ti 0
+Appendix A.  JSON Format Schema and Example
+
+.ti 0
+Appendix A.1.  JSON Format Schema
+
+The following JSON Schema ([JSONSch]) defines the expected output the server sends if the argument "format" is set to "json".
+
+[To RFC Editor: Please change "draft-viathinksoft-oidip-06.json" before publication.]
+
+[To RFC Editor: Please change "urn:ietf:id:draft-viathinksoft-oidip-06" to "urn:ietf:rfc:yyyy" before publication.]
+
+.\" Attention: NROFF changes \\ to \ . Therefore '\\' is correct and means '\'!
+NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
+
+.\" .in 3
+.nf
+<CODE BEGINS> file "draft-viathinksoft-oidip-06.json"
+{
+  "$id":"urn:ietf:id:draft-viathinksoft-oidip-06",
+  "$schema":"https://json-schema.org/draft/2020-12/schema",
+  "type":"object",
+  "properties":{
+    "oidip":{
+      "type":"object",
+      "properties":{
+        "querySection":{
+          "type":"object",
+          "properties":{
+            "query":{
+              "$ref": "#/$defs/inputQueryType"
+            },
+            "result":{
+              "type":"string",
+              "enum":["Found",
+                      "Not found; superior object found",
+                      "Not found",
+                      "Service error"]
+            },
+            "distance":{
+              "type":"integer"
+            },
+            "message":{
+              "type":"string"
+            },
+            "lang":{
+              "type":"string"
+            }
+          },
+          "required":[
+            "query",
+            "result"
+          ]
+        },
+        "objectSection":{
+          "type":"object",
+          "properties":{
+            "object":{
+              "$ref": "#/$defs/inputQueryType"
+            },
+            "status":{
+              "type":"string",
+              "enum":["Information available",
+                      "Information partially available",
+                      "Information unavailable"]
+            },
+            "lang":{
+              "type":"string"
+            },
+            "name":{
+              "type":"string"
+            },
+            "description":{
+              "type":"string"
+            },
+            "information":{
+              "type":"string"
+            },
+            "url":{
+              "type":"string"
+            },
+            "asn1-notation":{
+              "oneOf":[
+                {
+                  "type":"string"
+                },
+                {
+                  "type":"array",
+                  "items":{
+                    "type":"string"
+                  }
+                }
+              ]
+            },
+            "iri-notation":{
+              "oneOf":[
+                {
+                  "type":"string"
+                },
+                {
+                  "type":"array",
+                  "items":{
+                    "type":"string"
+                  }
+                }
+              ]
+            },
+            "identifier":{
+              "oneOf":[
+                {
+                  "type":"string"
+                },
+                {
+                  "type":"array",
+                  "items":{
+                    "type":"string"
+                  }
+                }
+              ]
+            },
+            "standardized-id":{
+              "oneOf":[
+                {
+                  "type":"string"
+                },
+                {
+                  "type":"array",
+                  "items":{
+                    "type":"string"
+                  }
+                }
+              ]
+            },
+            "unicode-label":{
+              "oneOf":[
+                {
+                  "type":"string"
+                },
+                {
+                  "type":"array",
+                  "items":{
+                    "type":"string"
+                  }
+                }
+              ]
+            },
+            "long-arc":{
+              "oneOf":[
+                {
+                  "type":"string"
+                },
+                {
+                  "type":"array",
+                  "items":{
+                    "type":"string"
+                  }
+                }
+              ]
+            },
+            "oidip-service":{
+              "type":"string"
+            },
+            "oidip-pubkey":{
+              "type":"string"
+            },
+            "attribute":{
+              "oneOf":[
+                {
+                  "type":"string",
+                  "enum":["confidential",
+                          "draft",
+                          "frozen",
+                          "leaf",
+                          "no-identifiers",
+                          "no-unicode-labels",
+                          "retired"]
+                },
+                {
+                  "type":"array",
+                  "items":{
+                    "type":"string",
+                    "enum":["confidential",
+                            "draft",
+                            "frozen",
+                            "leaf",
+                            "no-identifiers",
+                            "no-unicode-labels",
+                            "retired"]
+                  }
+                }
+              ]
+            },
+            "parent":{
+              "type":"string"
+            },
+            "subordinate":{
+              "oneOf":[
+                {
+                  "type":"string"
+                },
+                {
+                  "type":"array",
+                  "items":{
+                    "type":"string"
+                  }
+                }
+              ]
+            },
+            "created":{
+              "$ref": "#/$defs/dateTimeRef"
+            },
+            "updated":{
+              "$ref": "#/$defs/dateTimeRef"
+            }
+          },
+          "required":[
+            "object",
+            "status"
+          ]
+        },
+        "raSection":{
+          "type":"object",
+          "properties":{
+            "ra":{
+              "$comment":"Note: \\"ra\\" keeps its name, even in \\
+Ra1SectionType et al.",
+              "type":"string"
+            },
+            "status":{
+              "type":"string",
+              "enum":["Information available",
+                      "Information partially available",
+                      "Information unavailable"]
+            },
+            "lang":{
+              "type":"string"
+            },
+            "contact-name":{
+              "type":"string"
+            },
+            "address":{
+              "type":"string"
+            },
+            "phone":{
+              "type":"string"
+            },
+            "mobile":{
+              "type":"string"
+            },
+            "fax":{
+              "type":"string"
+            },
+            "email":{
+              "type":"string"
+            },
+            "url":{
+              "type":"string"
+            },
+            "attribute":{
+              "oneOf":[
+                {
+                  "type":"string",
+                  "enum":["confidential",
+                          "retired"]
+                },
+                {
+                  "type":"array",
+                  "items":{
+                    "type":"string",
+                    "enum":["confidential",
+                            "retired"]
+                  }
+                }
+              ]
+            },
+            "created":{
+              "$ref": "#/$defs/dateTimeRef"
+            },
+            "updated":{
+              "$ref": "#/$defs/dateTimeRef"
+            }
+          },
+          "required":[
+            "ra",
+            "status"
+          ]
+        },
+        "ra1Section":{"$ref":"#/properties/oidip/properties/raSection"},
+        "ra2Section":{"$ref":"#/properties/oidip/properties/raSection"},
+        "ra3Section":{"$ref":"#/properties/oidip/properties/raSection"},
+        "ra4Section":{"$ref":"#/properties/oidip/properties/raSection"},
+        "ra5Section":{"$ref":"#/properties/oidip/properties/raSection"},
+        "ra6Section":{"$ref":"#/properties/oidip/properties/raSection"},
+        "ra7Section":{"$ref":"#/properties/oidip/properties/raSection"},
+        "ra8Section":{"$ref":"#/properties/oidip/properties/raSection"},
+        "ra9Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra10Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra11Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra12Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra13Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra14Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra15Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra16Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra17Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra18Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra19Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra20Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra21Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra22Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra23Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra24Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra25Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra26Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra27Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra28Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra29Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra30Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra31Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra32Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra33Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra34Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra35Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra36Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra37Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra38Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra39Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra40Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra41Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra42Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra43Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra44Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra45Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra46Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra47Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra48Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra49Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra50Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra51Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra52Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra53Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra54Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra55Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra56Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra57Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra58Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra59Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra60Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra61Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra62Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra63Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra64Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra65Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra66Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra67Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra68Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra69Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra70Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra71Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra72Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra73Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra74Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra75Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra76Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra77Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra78Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra79Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra80Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra81Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra82Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra83Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra84Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra85Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra86Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra87Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra88Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra89Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra90Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra91Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra92Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra93Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra94Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra95Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra96Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra97Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra98Section":{"$ref":"#/properties/oidip/properties/raSection"},
+       "ra99Section":{"$ref":"#/properties/oidip/properties/raSection"}
+      },
+      "required":[
+        "querySection"
+      ]
+    },
+    "signature":{
+      "type":"string",
+      "pattern":"^[A-Za-z0-9+/=]+\\\\.[A-Za-z0-9+/=]+\\\\.[A-Za-z0-9+/=]+$"
+    }
+  },
+  "required":[
+    "oidip"
+  ],
+  "$defs":{
+    "dateTimeRef":{
+      "type":"string",
+      "pattern":"^\\\\d{4}(\\\\-(0[1-9]|1[0-2])(\\\\-(0[1-9]|1\\\\d|2\\\\d|\\
+3[0-1])( [0-5]\\\\d:[0-5]\\\\d(:[0-5]\\\\d){0,1}( [+-][0-5]\\\\d[0-5]\\\\d)\\
+{0,1}){0,1}){0,1}){0,1}$"
+    },
+    "inputQueryType":{
+      "$comment":"Note: The ABNF definition is more accurate",
+      "type":"string",
+      "pattern":"^[a-z0-9]+:(.*)$"
+    }
+  }
+}
+<CODE ENDS>
+.fi
+.in 0
+.bp
+.ti 0
+Appendix A.2.  JSON Format Example of Output
+
+[To RFC Editor: Please change "urn:ietf:id:draft-viathinksoft-oidip-06" to "urn:ietf:rfc:yyyy" before publication.]
+
+.\" Attention: NROFF changes \\ to \ . Therefore '\\' is correct and means '\'!
+NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
+
+.\" .in 3
+.nf
+<CODE BEGINS> file "oidip_example.json"
+{
+  "$schema":"urn:ietf:id:draft-viathinksoft-oidip-06",
+  "oidip": {
+    "querySection": {
+      "query": "oid:2.999",
+      "result": "Found"
+    },
+    "objectSection": {
+      "object": "oid:2.999",
+      "status": "Information available",
+      "lang": "en-US",
+      "name": "Example",
+      "description": "This OID can be used by anyone, for the \\
+purposes of documenting examples of Object Identifiers.",
+      "asn1-notation": "{joint-iso-itu-t(2) example(999)}",
+      "iri-notation": "/Example",
+      "identifier": "example",
+      "unicode-label": [
+            "Beispiel",
+            "Ejemplo",
+            "Example",
+            "Exemple",
+            "(Korean characters are omitted in this example)",
+            "(Arabian characters are omitted in this example)",
+            "(Japanese characters are omitted in this example)",
+            "(Chinese characters are omitted in this example)",
+            "(Russian characters are omitted in this example)"
+      ],
+      "long-arc": [
+            "Beispiel",
+            "Ejemplo",
+            "Example",
+            "Exemple",
+            "(Korean characters are omitted in this example)",
+            "(Arabian characters are omitted in this example)",
+            "(Japanese characters are omitted in this example)",
+            "(Chinese characters are omitted in this example)",
+            "(Russian characters are omitted in this example)"
+      ],
+      "parent": "oid:2 (joint-iso-ccitt, joint-iso-itu-t)",
+      "subordinate": [],
+      "created": "2011-06",
+      "updated": "2020-09"
+    },
+    "raSection": {
+      "ra": "ITU-T SG 17 & ISO/IEC JTC 1/SC 6",
+      "status": "Information unavailable"
+    }
+  },
+  "signature": "(JSON Web Signature here)"
+}
+<CODE ENDS>
+.fi
+.in 0
+.bp
+.ti 0
+Appendix B.  XML Format Schema and Example
+
+.ti 0
+Appendix B.1.  XML Format Schema
+
+[To RFC Editor: Please change "urn:ietf:id:draft-viathinksoft-oidip-06" to "urn:ietf:rfc:yyyy" before publication.]
+
+[To RFC Editor: Please change "draft-viathinksoft-oidip-06.xsd" before publication.]
+
+The following XML Schema Definition ([XSD]) defines the expected output the server sends if the argument "format" is set to "xml".
+
+.\" Attention: NROFF changes \\ to \ . Therefore '\\' is correct and means '\'!
+NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
+
+.\" .in 3
+.nf
+<CODE BEGINS> file "draft-viathinksoft-oidip-06.xsd"
+<?xml version="1.0"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
+           xmlns:ns1="urn:ietf:id:draft-viathinksoft-oidip-06"
+           targetNamespace="urn:ietf:id:draft-viathinksoft-oidip-06"
+           elementFormDefault="qualified"
+           attributeFormDefault="unqualified">
+<xs:import namespace="http://www.w3.org/2000/09/xmldsig#"
+           schemaLocation="http://www.w3.org/TR/2002/REC-xmldsig\\
+-core-20020212/xmldsig-core-schema.xsd"/>
+
+  <xs:element name="root">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="oidip" minOccurs="1" maxOccurs="1"
+                    type="ns1:OidIpType"/>
+        <xs:element minOccurs="0" maxOccurs="1"
+                    ref="ds:Signature"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="OidIpType">
+    <xs:sequence>
+      <xs:element name="querySection" minOccurs="1" maxOccurs="1"
+                  type="ns1:QuerySectionType"/>
+      <xs:element name="objectSection" minOccurs="0" maxOccurs="1"
+                  type="ns1:ObjectSectionType"/>
+      <xs:element name="raSection" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra1Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra2Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra3Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra4Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra5Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra6Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra7Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra8Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra9Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra10Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra11Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra12Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra13Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra14Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra15Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra16Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra17Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra18Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra19Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra20Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra21Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra22Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra23Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra24Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra25Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra26Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra27Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra28Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra29Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra30Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra31Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra32Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra33Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra34Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra35Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra36Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra37Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra38Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra39Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra40Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra41Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra42Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra43Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra44Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra45Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra46Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra47Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra48Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra49Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra50Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra51Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra52Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra53Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra54Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra55Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra56Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra57Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra58Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra59Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra60Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra61Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra62Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra63Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra64Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra65Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra66Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra67Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra68Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra69Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra70Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra71Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra72Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra73Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra74Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra75Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra76Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra77Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra78Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra79Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra80Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra81Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra82Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra83Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra84Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra85Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra86Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra87Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra88Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra89Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra90Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra91Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra92Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra93Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra94Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra95Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra96Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra97Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra98Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:element name="ra99Section" minOccurs="0" maxOccurs="1"
+                  type="ns1:RaSectionType"/>
+      <xs:any     namespace="##other" minOccurs="0"
+                  maxOccurs="unbounded" processContents="lax"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="DateTimeRef">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="\\d{4}(\\-(0[1-9]|1[0-2])(\\-(0[1-9]|1\\d|2\\d|\\
+3[0-1])( [0-5]\\d:[0-5]\\d(:[0-5]\\d){0,1}( [+-][0-5]\\d[0-5]\\d){0,1})\\
+{0,1}){0,1}){0,1}"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:complexType name="QuerySectionType">
+    <xs:sequence>
+      <xs:element name="query" minOccurs="1" maxOccurs="1"
+                  type="ns1:InputQueryType"/>
+      <xs:element name="result" minOccurs="1" maxOccurs="1"
+                  type="ns1:QueryResultEnumType"/>
+      <xs:element name="distance" minOccurs="0" maxOccurs="1"
+                  type="xs:integer"/>
+      <xs:element name="message" minOccurs="0" maxOccurs="1"
+                  type="xs:string"/>
+      <xs:element name="lang" minOccurs="0" maxOccurs="1"
+                  type="xs:string"/>
+      <xs:any     namespace="##other" minOccurs="0"
+                  maxOccurs="unbounded" processContents="lax"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:simpleType name="InputQueryType">
+    <xs:restriction base="xs:string">
+      <!-- Note: The ABNF definition is more accurate -->
+      <xs:pattern value="[a-z0-9]+:(.*)"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="QueryResultEnumType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Found"/>
+      <xs:enumeration value="Not found; superior object found"/>
+      <xs:enumeration value="Not found"/>
+      <xs:enumeration value="Service error"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:complexType name="ObjectSectionType">
+    <xs:sequence>
+      <xs:element name="object" minOccurs="1" maxOccurs="1"
+                  type="ns1:ObjectIdType"/>
+      <xs:element name="status" minOccurs="1" maxOccurs="1"
+                  type="ns1:ObjectStatusEnumType"/>
+      <xs:element name="lang" minOccurs="0" maxOccurs="1"
+                  type="xs:string"/>
+      <xs:element name="name" minOccurs="0" maxOccurs="1"
+                  type="xs:string"/>
+      <xs:element name="description" minOccurs="0" maxOccurs="1"
+                  type="xs:string"/>
+      <xs:element name="information" minOccurs="0" maxOccurs="1"
+                  type="xs:string"/>
+      <xs:element name="url" minOccurs="0" maxOccurs="unbounded"
+                  type="xs:string"/>
+      <xs:element name="asn1-notation" minOccurs="0"
+                  maxOccurs="unbounded" type="xs:string"/>
+      <xs:element name="iri-notation" minOccurs="0"
+                  maxOccurs="unbounded" type="xs:string"/>
+      <xs:element name="identifier" minOccurs="0" maxOccurs="unbounded"
+                  type="xs:string"/>
+      <xs:element name="standardized-id" minOccurs="0"
+                  maxOccurs="unbounded" type="xs:string"/>
+      <xs:element name="unicode-label" minOccurs="0"
+                  maxOccurs="unbounded" type="xs:string"/>
+      <xs:element name="long-arc" minOccurs="0" maxOccurs="unbounded"
+                  type="xs:string"/>
+      <xs:element name="oidip-service" minOccurs="0"
+                  maxOccurs="unbounded" type="xs:string"/>
+      <xs:element name="oidip-pubkey" minOccurs="0"
+                  maxOccurs="unbounded" type="xs:string"/>
+      <xs:any     namespace="##other" minOccurs="0"
+                  maxOccurs="unbounded" processContents="lax"/>
+      <xs:element name="attribute" minOccurs="0" maxOccurs="unbounded"
+                  type="ns1:ObjectAttributeEnumType"/>
+      <xs:element name="parent" minOccurs="0" maxOccurs="1"
+                  type="xs:string"/>
+      <xs:element name="subordinate" minOccurs="0" maxOccurs="unbounded"
+                  type="xs:string"/>
+      <xs:element name="created" minOccurs="0" maxOccurs="1"
+                  type="ns1:DateTimeRef"/>
+      <xs:element name="updated" minOccurs="0" maxOccurs="1"
+                  type="ns1:DateTimeRef"/>
+    </xs:sequence>
+  </xs:complexType>
+  
+  <xs:simpleType name="ObjectIdType">
+    <xs:restriction base="xs:string">
+      <!-- Note: The ABNF definition is more accurate -->
+      <xs:pattern value="[a-z0-9]+:(.*)"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="ObjectStatusEnumType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Information available"/>
+      <xs:enumeration value="Information partially available"/>
+      <xs:enumeration value="Information unavailable"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+  <xs:simpleType name="ObjectAttributeEnumType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="confidential"/>
+      <xs:enumeration value="draft"/>
+      <xs:enumeration value="frozen"/>
+      <xs:enumeration value="leaf"/>
+      <xs:enumeration value="no-identifiers"/>
+      <xs:enumeration value="no-unicode-labels"/>
+      <xs:enumeration value="retired"/>
+    </xs:restriction>
+  </xs:simpleType>  
+
+  <xs:complexType name="RaSectionType">
+    <xs:sequence>
+      <!-- Note: "ra" keeps its name, even in Ra1SectionType et al. -->
+      <xs:element name="ra" minOccurs="1" maxOccurs="1"
+                  type="xs:string"/>
+      <xs:element name="status" minOccurs="1" maxOccurs="1"
+                  type="ns1:RaStatusEnumType"/>
+      <xs:element name="lang" minOccurs="0" maxOccurs="1"
+                  type="xs:string"/>
+      <xs:element name="contact-name" minOccurs="0" maxOccurs="1"
+                  type="xs:string"/>
+      <xs:element name="address" minOccurs="0" maxOccurs="unbounded"
+                  type="xs:string"/>
+      <xs:element name="phone" minOccurs="0" maxOccurs="unbounded"
+                  type="xs:string"/>
+      <xs:element name="mobile" minOccurs="0" maxOccurs="unbounded"
+                  type="xs:string"/>
+      <xs:element name="fax" minOccurs="0" maxOccurs="unbounded"
+                  type="xs:string"/>
+      <xs:element name="email" minOccurs="0" maxOccurs="unbounded"
+                  type="xs:string"/>
+      <xs:element name="url" minOccurs="0" maxOccurs="unbounded"
+                  type="xs:string"/>
+      <xs:any     namespace="##other" minOccurs="0"
+                  maxOccurs="unbounded" processContents="lax"/>
+      <xs:element name="attribute" minOccurs="0"
+                  maxOccurs="unbounded" type="ns1:RaAttributeEnumType"/>
+      <xs:element name="created" minOccurs="0" maxOccurs="1"
+                  type="ns1:DateTimeRef"/>
+      <xs:element name="updated" minOccurs="0" maxOccurs="1"
+                  type="ns1:DateTimeRef"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <xs:simpleType name="RaStatusEnumType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Information available"/>
+      <xs:enumeration value="Information partially available"/>
+      <xs:enumeration value="Information unavailable"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="RaAttributeEnumType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="confidential"/>
+      <xs:enumeration value="retired"/>
+    </xs:restriction>
+  </xs:simpleType>
+  
+</xs:schema>
+<CODE ENDS>
+.fi
+.in 0
+.bp
+.ti 0
+Appendix B.2.  XML Format Example of Output
+
+[To RFC Editor: Please change "urn:ietf:id:draft-viathinksoft-oidip-06" to "urn:ietf:rfc:yyyy" before publication.]
+
+[To RFC Editor: Please change "draft-viathinksoft-oidip-06.xsd" before publication.]
+
+.\" Attention: NROFF changes \\ to \ . Therefore '\\' is correct and means '\'!
+NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
+
+.\" .in 3
+.nf
+<CODE BEGINS> file "oidip_example.xml"
+<?xml version="1.0"?>
+<root xmlns="urn:ietf:id:draft-viathinksoft-oidip-06"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="urn:ietf:id:draft-viathinksoft-oidip-06 \\
+http://.../draft-viathinksoft-oidip-06.xsd">
+<oidip>
+  <querySection>
+     <query>oid:2.999</query>
+     <result>Found</result>
+  </querySection>
+  <objectSection>
+     <object>oid:2.999</object>
+     <status>Information available</status>
+     <lang>en-US</lang>
+     <name>Example</name>
+     <description>This OID can be used by anyone, for the \\
+purposes of documenting examples of Object Identifiers."</description>
+     <asn1-notation>{ joint-iso-itu-t(2) example(999) }</asn1-notation>
+     <iri-notation>/Example</iri-notation>
+     <identifier>example</identifier>
+     <unicode-label>Beispiel</unicode-label>
+     <unicode-label>Ejemplo</unicode-label>
+     <unicode-label>Example</unicode-label>
+     <unicode-label>Exemple</unicode-label>
+     <unicode-label>(Korean characters are omitted)</unicode-label>
+     <unicode-label>(Arabian characters are omitted)</unicode-label>
+     <unicode-label>(Japanese characters are omitted)</unicode-label>
+     <unicode-label>(Chinese characters are omitted)</unicode-label>
+     <unicode-label>(Russian characters are omitted)</unicode-label>
+     <long-arc>Beispiel</long-arc>
+     <long-arc>Ejemplo</long-arc>
+     <long-arc>Example</long-arc>
+     <long-arc>Exemple</long-arc>
+     <long-arc>(Korean characters are omitted)</long-arc>
+     <long-arc>(Arabian characters are omitted)</long-arc>
+     <long-arc>(Japanese characters are omitted)</long-arc>
+     <long-arc>(Chinese characters are omitted)</long-arc>
+     <long-arc>(Russian characters are omitted)</long-arc>
+     <parent>oid:2 (joint-iso-ccitt, joint-iso-itu-t)</parent>
+     <created>2011-06</created>
+     <updated>2020-09"</updated>
+  </objectSection>
+  <raSection>
+     <ra>ITU-T SG 17 &amp; ISO/IEC JTC 1/SC 6</ra>
+     <status>Information unavailable</status>
+  </raSection>
+</oidip>
+<ds:Signature xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+  <ds:SignedInfo>
+  <ds:CanonicalizationMethod
+     Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"/>
+  <ds:SignatureMethod
+     Algorithm="http://www.w3.org/2001/04/xmldsig-more#rsa-sha512"/>
+  <ds:Reference>
+  <ds:Transforms>
+  <ds:Transform
+    Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature"/>
+  </ds:Transforms>
+  <ds:DigestMethod
+    Algorithm="http://www.w3.org/2001/04/xmlenc#sha512"/>
+  <ds:DigestValue>.....</ds:DigestValue>
+  </ds:Reference>
+  </ds:SignedInfo>
+  <ds:SignatureValue>.....</ds:SignatureValue>
+</ds:Signature>
+</root>
+<CODE ENDS>
+.fi
+.in 0
+.bp
+.ti 0
+Acknowledgements
+.in 3
+
+I would like to thank Olivier Dubuisson for his expertise and help regarding all topics of Object Identifiers, and Till Wehowski for his feedback and input on the OID Information Protocol.
+
+Thanks to the authors of these free tools which did a very good job in validating various contents of this document:
+
+.in 3
+- "JSON Schema Validator" by Newtonsoft
+.in 5
+https://www.jsonschemavalidator.net/
+
+.in 3
+- "Free Online XML Validator" by Liquid Technologies
+.in 5
+https://www.liquid-technologies.com/online-xsd-validator
+
+.in 3
+- Bill's ABNF Parser
+.in 5
+https://tools.ietf.org/tools/bap/abnf.cgi
+
+.in 3
+- "Grammarly" spell and grammar checker
+.in 5
+https://app.grammarly.com/
+.in 3
+
+.in 3
+- "regex101" regular expression debugger
+.in 5
+https://regex101.com/
+.in 3
+
+.in 3
+- IDNITS
+.in 5
+https://www6.ietf.org/tools/idnits
+.in 3
+
+.in 3
+- Title Case Converter
+.in 5
+https://titlecaseconverter.com/
+.in 3
+
+This document was written in Nroff Internet Draft Editor by 3xA Security.
+.br
+https://aaa-sec.com/nroffedit/
+.br
+https://misc.daniel-marschall.de/patches/nroffedit/ (year 2020 fix)
+
+.ti 0
+Authors' Addresses
+.in 3
+
+.nf
+Daniel Marschall
+Postfach 11 53
+69243 Bammental
+Germany
+
+Email: daniel-marschall@viathinksoft.de
+URI:   https://www.viathinksoft.com/
+.fi
