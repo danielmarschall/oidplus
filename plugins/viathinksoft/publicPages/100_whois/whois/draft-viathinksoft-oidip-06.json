@@ -1,5 +1,5 @@
 {
-	"$id":"urn:ietf:id:draft-viathinksoft-oidip-05",
+	"$id":"urn:ietf:id:draft-viathinksoft-oidip-06",
 	"$schema":"https://json-schema.org/draft/2020-12/schema",
 	"type":"object",
 	"properties":{

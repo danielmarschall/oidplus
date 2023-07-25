@@ -52,10 +52,10 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 		// NOTES:
 		// - XML_SCHEMA_URN must be equal to the string in the .xsd file!
 		// - the schema file names and draft version are also written in OIDplusPagePublicWhois.class.php
-		$this->XML_SCHEMA_URN  = 'urn:ietf:id:draft-viathinksoft-oidip-05';
-		$this->XML_SCHEMA_URL  = OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'whois/draft-viathinksoft-oidip-05.xsd';
-		$this->JSON_SCHEMA_URN = 'urn:ietf:id:draft-viathinksoft-oidip-05';
-		$this->JSON_SCHEMA_URL = OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'whois/draft-viathinksoft-oidip-05.json';
+		$this->XML_SCHEMA_URN  = 'urn:ietf:id:draft-viathinksoft-oidip-06';
+		$this->XML_SCHEMA_URL  = OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'whois/draft-viathinksoft-oidip-06.xsd';
+		$this->JSON_SCHEMA_URN = 'urn:ietf:id:draft-viathinksoft-oidip-06';
+		$this->JSON_SCHEMA_URL = OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'whois/draft-viathinksoft-oidip-06.json';
 	}
 
 	/**
