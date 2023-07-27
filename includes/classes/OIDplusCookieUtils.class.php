@@ -39,7 +39,7 @@ class OIDplusCookieUtils extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	private function getCookieDomain(): string {
-		$default_domain = ''; // ini_get('session.cookie_domain');
+		$default_domain = '(auto)'; // ini_get('session.cookie_domain');
 		$domain = OIDplus::baseConfig()->getValue('COOKIE_DOMAIN', $default_domain);
 		if ($domain === '(auto)') {
 			$tmp = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE/*_CANONICAL*/);
@@ -57,7 +57,7 @@ class OIDplusCookieUtils extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	private function getCookiePath(): string {
-		$default_path = '/'; // ini_get('session.cookie_path');
+		$default_path = '(auto)'; // ini_get('session.cookie_path');
 		$path = OIDplus::baseConfig()->getValue('COOKIE_PATH', $default_path);
 		if ($path === '(auto)') {
 			$tmp = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE/*_CANONICAL*/);
@@ -74,7 +74,7 @@ class OIDplusCookieUtils extends OIDplusBaseClass {
 		return $path;
 	}
 
-	// TODO: There are several PHPSESSID cookies set. That's not very nice. We should collect the cookies and then at script ending only send the last definition one time.
+	// TODO: In a HTTP request, there are usually several setcookie() for the same name that overwrite each other. That's not very nice. We should collect the cookies and then at script ending only send the last definition one time.
 	/**
 	 * @param string $name
 	 * @param string $value
