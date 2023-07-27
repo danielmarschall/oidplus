@@ -1,3 +1,4 @@
 vendor/**/* linguist-vendored
 plugins/viathinksoft/publicPages/100_whois/whois/xml/vendor/**/* linguist-vendored
 plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/**/* linguist-vendored
+doc/website/bootstrap/**/* linguist-vendored
