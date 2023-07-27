@@ -371,7 +371,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	/**
 	 * @param array|string $data The original data that had been passed to makeAuthKey()
 	 * @param string $auth_key The result from makeAuthKey()
-	 * @param int $valid_secs How many seconds is the auth key valid? (-1 for infinite)
+	 * @param int $valid_secs How many seconds is the auth key valid? (0 or -1 for infinite)
 	 * @return bool True if the key is valid and not expired.
 	 * @throws OIDplusException
 	 */
@@ -380,7 +380,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 		if (count($auth_key_ary) != 2) return false; // invalid auth key syntax
 		list($ts, $secret) = $auth_key_ary;
 		if (!is_numeric($ts)) return false; // invalid auth key syntax
-		if ($valid_secs >= 0) {
+		if ($valid_secs > 0) {
 			if (time() > ($ts+$valid_secs)) return false; // expired auth key
 		}
 		if (!is_array($data)) $data = [$data];
