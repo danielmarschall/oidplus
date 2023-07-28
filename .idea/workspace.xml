@@ -9,12 +9,7 @@
   <component name="ChangeListManager">
     <list default="true" id="df2a484b-bed2-4376-a9d2-11f38408a62e" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/developer_notes/auth_methods.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/developer_notes/auth_methods.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/developer_notes/compatibility_notes.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/developer_notes/compatibility_notes.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/includes/classes/OIDplusAuthContentStoreJWT.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/includes/classes/OIDplusAuthContentStoreJWT.class.php" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/language/dede/messages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/language/dede/messages.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/objectTypes/mac/OIDplusObjectTypePluginMac.class.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/objectTypes/mac/OIDplusObjectTypePluginMac.class.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/doc/oidplus_custom_guid.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/oidplus_custom_guid.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -298,6 +293,12 @@
       <workItem from="1687549660663" duration="33000" />
       <workItem from="1687553303039" duration="1409000" />
       <workItem from="1687644919266" duration="2036000" />
+      <workItem from="1687690902709" duration="50000" />
+      <workItem from="1689106718939" duration="5033000" />
+      <workItem from="1689443221399" duration="1937000" />
+      <workItem from="1689461875606" duration="88000" />
+      <workItem from="1690578635294" duration="6929000" />
+      <workItem from="1690585681333" duration="119000" />
     </task>
     <servers />
   </component>
