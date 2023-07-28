@@ -185,8 +185,8 @@ It contains the information as follows:
 | 2     | Timestamp         | 0x0000     | Unknown                                         
 | 3     | Reserved+Version  | 0x8000     | 0x0000 \| 0x8000                                
 | 4     | Namespace+Variant | 0x8005     | 0x0005 \| 0x8000                                
-| 5     | Data (High)       | 0x208DED   | SHA1('2.999') & 0xFFFF.FFFF.FFFF                
-|       | Data (Low)        | 0xAF9A96   | SHA1(utf8_encode('Example')) & 0xFFFF.FFFF.FFFF 
+| 5     | Data (High)       | 0x208DED   | SHA1('2.999') & 0xFF.FFFF                
+|       | Data (Low)        | 0xAF9A96   | SHA1(utf8_encode('Example')) & 0xFF.FFFF 
 
 
 ## System reserved UUIDs (Block 4 = 0x8006 till 0x800F)
@@ -207,7 +207,8 @@ between `0x8010` till `0xFFFF`.
 The 48-bit data is defined as the lower 48 bits of the SHA1 hash of the
 object name without the object type prefix.
 
-**Example**: The object **java:com.example**, created on 30 September 2018 on system #1855139287 has the following UUID:
+**Example**: The object **java:com.example**, created on 30 September 2018
+on system #1855139287 has the following UUID:
 
     6e932dd7-458c-8000-b9e9-c1e3894d1105
 
