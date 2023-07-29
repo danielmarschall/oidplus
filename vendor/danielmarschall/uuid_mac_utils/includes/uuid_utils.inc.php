@@ -3,7 +3,7 @@
 /*
  * UUID utils for PHP
  * Copyright 2011 - 2023 Daniel Marschall, ViaThinkSoft
- * Version 2023-07-18
+ * Version 2023-07-29
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -658,25 +658,102 @@ function uuid_info($uuid, $echo=true) {
 					echo sprintf("%-32s %s\n", "Custom data block4 (14 bit):", "[0x$custom_block4]");
 					echo sprintf("%-32s %s\n", "Custom data block5 (48 bit):", "[0x$custom_block5]");
 
-					// Check if Custom UUIDv8 is likely an OIDplus 2.0 System UUID
-					// Details here: https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md
-					if (($custom_block4 == '0000') && (strtolower($custom_block5) == '1890afd80709')) {
-						echo "\n<u>Interpretation of <a href=\"https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md\">OIDplus 2.0 System UUID</a></u>\n\n";
+					// START: Check if Custom UUIDv8 is likely an OIDplus 2.0 Custom UUID
 
-						echo sprintf("%-32s %s\n", "System ID:", "[0x$custom_block1] ".hexdec($custom_block1));
-						echo sprintf("%-32s %s\n", "Creation time:", "[0x$custom_block2] ".($custom_block2 == '0000' ? 'Unknown' : date('Y-m-d', hexdec($custom_block2)*24*60*60)));
-						echo sprintf("%-32s %s\n", "Reserved:", "[0x$custom_block3]");
-						echo sprintf("%-32s %s\n", "Namespace:", "[0x$custom_block4] 0=System");
-						echo sprintf("%-32s %s\n", "Object ID hash:", "[0x$custom_block5] SHA1('') = ????????????????????????????$custom_block5");
-					} else {
-						// Check if Custom UUIDv8 is likely an OIDplus 2.0 Information Object UUID
-						// Details here: https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md
-						// NOTE: Actually, the date 0x0000 is OK for objects which have an unknown creation date. However, we disallow it, otherwise there is a risk that Non-OIDplus UUID gets confused with OIDplus UUIDs
-						$min_day = 14610; // 1 Jan 2010
-						$max_day = floor(time()/24/60/60); // Today
-						if (($custom_block3 == '000') && (hexdec($custom_block2) >= $min_day) && (hexdec($custom_block2) <= $max_day)) {
-							echo "\n<u>Interpretation of <a href=\"https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md\">OIDplus 2.0 Information Object UUID</a></u>\n\n";
+					$oidplus_systemid_hex = $custom_block1;
+					$oidplus_systemid_int = hexdec($oidplus_systemid_hex); // 31 bit hash of public key
+					$oidplus_systemid_valid = hexdec($custom_block1) < 0x80000000;
 
+					$oidplus_creation_hex = $custom_block2;
+					$oidplus_creation_int = hexdec($oidplus_creation_hex); // days since 1 January 1970, or 0 if unknown
+					//$oidplus_creation_valid = ($oidplus_creation_int >= 14610/*1 Jan 2010*/) && ($oidplus_creation_int <= floor(time()/24/60/60)/*Today*/);
+					$oidplus_creation_unknown = $oidplus_creation_int == 0;
+
+					$oidplus_reserved_hex = $custom_block3;
+					$oidplus_reserved_int = hexdec($oidplus_reserved_hex);
+
+					$oidplus_namespace_hex = $custom_block4;
+					$oidplus_namespace_int = hexdec($oidplus_namespace_hex);
+
+					$oidplus_data_hex = $custom_block5;
+					$oidplus_data_int = (PHP_INT_SIZE == 4) ? gmp_strval(gmp_init($oidplus_data_hex,16),10) : hexdec($custom_block5);
+
+					if ($oidplus_systemid_valid && ($oidplus_reserved_int == 0)) {
+						if (($oidplus_namespace_int == 0) && $oidplus_creation_unknown && (strtolower($oidplus_data_hex) == '1890afd80709')) {
+							// System GUID, e.g. 6e932dd7-0000-8000-8000-1890afd80709
+							echo "\n<u>Interpretation of <a href=\"https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md\">OIDplus 2.0 Custom UUID</a></u>\n\n";
+							echo sprintf("%-32s %s\n", "System ID:", "[0x$oidplus_systemid_hex] ".$oidplus_systemid_int);
+							echo sprintf("%-32s %s\n", "Creation time:", "[0x$oidplus_creation_hex] ".($oidplus_creation_unknown ? 'Unknown' : date('Y-m-d', $oidplus_creation_int*24*60*60))); /**@phpstan-ignore-line*/
+							echo sprintf("%-32s %s\n", "Reserved:", "[0x$oidplus_reserved_hex]");
+							echo sprintf("%-32s %s\n", "Namespace:", "[0x$oidplus_namespace_hex] $oidplus_namespace_int=System");
+							echo sprintf("%-32s %s\n", "Data (empty string hash):", "[0x$oidplus_data_hex] SHA1('') = ????????????????????????????$oidplus_data_hex");
+						}
+						else if (($oidplus_namespace_int == 1) && $oidplus_creation_unknown) {
+							// User GUID, e.g. 6e932dd7-0000-8000-8001-2938f50e857e (User), 6e932dd7-0000-8000-8001-000000000000 (Admin)
+							echo "\n<u>Interpretation of <a href=\"https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md\">OIDplus 2.0 Custom UUID</a></u>\n\n";
+							echo sprintf("%-32s %s\n", "System ID:", "[0x$oidplus_systemid_hex] ".$oidplus_systemid_int);
+							echo sprintf("%-32s %s\n", "Creation time:", "[0x$oidplus_creation_hex] ".($oidplus_creation_unknown ? 'Unknown' : date('Y-m-d', $oidplus_creation_int*24*60*60)));  /**@phpstan-ignore-line*/
+							echo sprintf("%-32s %s\n", "Reserved:", "[0x$oidplus_reserved_hex]");
+							echo sprintf("%-32s %s\n", "Namespace:", "[0x$oidplus_namespace_hex] $oidplus_namespace_int=User");
+							if ($oidplus_data_int == 0) {
+								echo sprintf("%-32s %s\n", "Data (Username):", "[0x$oidplus_data_hex] 0=Admin");
+							} else {
+								echo sprintf("%-32s %s\n", "Data (Username):", "[0x$oidplus_data_hex] SHA1(UserName) = ????????????????????????????$oidplus_data_hex");
+							}
+						}
+						else if (($oidplus_namespace_int == 2)/* && $oidplus_creation_valid*/) {
+							// Log entry GUID, e.g. 6e932dd7-458c-8000-8002-0000000004d2
+							echo "\n<u>Interpretation of <a href=\"https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md\">OIDplus 2.0 Custom UUID</a></u>\n\n";
+							echo sprintf("%-32s %s\n", "System ID:", "[0x$oidplus_systemid_hex] ".$oidplus_systemid_int);
+							echo sprintf("%-32s %s\n", "Creation time:", "[0x$oidplus_creation_hex] ".($oidplus_creation_unknown ? 'Unknown' : date('Y-m-d', $oidplus_creation_int*24*60*60)));
+							echo sprintf("%-32s %s\n", "Reserved:", "[0x$oidplus_reserved_hex]");
+							echo sprintf("%-32s %s\n", "Namespace:", "[0x$oidplus_namespace_hex] $oidplus_namespace_int=Log Entry");
+							echo sprintf("%-32s %s\n", "Data (Sequence number):", "[0x$oidplus_data_hex] $oidplus_data_int");
+						}
+						else if (($oidplus_namespace_int == 3) && $oidplus_creation_unknown) {
+							// Configuration entry GUID, e.g. 6e932dd7-0000-8000-8003-f14dda42862a
+							echo "\n<u>Interpretation of <a href=\"https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md\">OIDplus 2.0 Custom UUID</a></u>\n\n";
+							echo sprintf("%-32s %s\n", "System ID:", "[0x$oidplus_systemid_hex] ".$oidplus_systemid_int);
+							echo sprintf("%-32s %s\n", "Creation time:", "[0x$oidplus_creation_hex] ".($oidplus_creation_unknown ? 'Unknown' : date('Y-m-d', $oidplus_creation_int*24*60*60))); /**@phpstan-ignore-line*/
+							echo sprintf("%-32s %s\n", "Reserved:", "[0x$oidplus_reserved_hex]");
+							echo sprintf("%-32s %s\n", "Namespace:", "[0x$oidplus_namespace_hex] $oidplus_namespace_int=Configuration Entry");
+							echo sprintf("%-32s %s\n", "Data (Setting name hash):", "[0x$oidplus_data_hex] SHA1(SettingName) = ????????????????????????????$oidplus_data_hex");
+						}
+						else if ($oidplus_namespace_int == 4) {
+							// ASN.1 Alpahnumeric identifier GUID, e.g. 6e932dd7-0000-8000-8004-208ded8a3f8f
+							echo "\n<u>Interpretation of <a href=\"https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md\">OIDplus 2.0 Custom UUID</a></u>\n\n";
+							echo sprintf("%-32s %s\n", "System ID:", "[0x$oidplus_systemid_hex] ".$oidplus_systemid_int);
+							echo sprintf("%-32s %s\n", "Creation time:", "[0x$oidplus_creation_hex] ".($oidplus_creation_unknown ? 'Unknown' : date('Y-m-d', $oidplus_creation_int*24*60*60)));
+							echo sprintf("%-32s %s\n", "Reserved:", "[0x$oidplus_reserved_hex]");
+							echo sprintf("%-32s %s\n", "Namespace:", "[0x$oidplus_namespace_hex] $oidplus_namespace_int=ASN.1 Alphanumeric ID");
+							$oidplus_data_24hi_hex = substr($oidplus_data_hex, 0, 6);
+							$oidplus_data_24lo_hex = substr($oidplus_data_hex, 6, 6);
+							echo sprintf("%-32s %s\n", "Data (OID hash):", "[0x$oidplus_data_24hi_hex] SHA1(OID) = ????????????????????????????$oidplus_data_24hi_hex");
+							echo sprintf("%-32s %s\n", "Data (Name hash):", "[0x$oidplus_data_24lo_hex] SHA1(AlphaNumId) = ????????????????????????????$oidplus_data_24lo_hex");
+						}
+						else if ($oidplus_namespace_int == 5) {
+							// Unicode Label entry GUID, e.g. 6e932dd7-0000-8000-8005-208dedaf9a96
+							echo "\n<u>Interpretation of <a href=\"https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md\">OIDplus 2.0 Custom UUID</a></u>\n\n";
+							echo sprintf("%-32s %s\n", "System ID:", "[0x$oidplus_systemid_hex] ".$oidplus_systemid_int);
+							echo sprintf("%-32s %s\n", "Creation time:", "[0x$oidplus_creation_hex] ".($oidplus_creation_unknown ? 'Unknown' : date('Y-m-d', $oidplus_creation_int*24*60*60)));
+							echo sprintf("%-32s %s\n", "Reserved:", "[0x$oidplus_reserved_hex]");
+							echo sprintf("%-32s %s\n", "Namespace:", "[0x$oidplus_namespace_hex] $oidplus_namespace_int=Unicode Label");
+							$oidplus_data_24hi_hex = substr($oidplus_data_hex, 0, 6);
+							$oidplus_data_24lo_hex = substr($oidplus_data_hex, 6, 6);
+							echo sprintf("%-32s %s\n", "Data (OID hash):", "[0x$oidplus_data_24hi_hex] SHA1(OID) = ????????????????????????????$oidplus_data_24hi_hex");
+							echo sprintf("%-32s %s\n", "Data (Name hash):", "[0x$oidplus_data_24lo_hex] SHA1(UnicodeLabel) = ????????????????????????????$oidplus_data_24lo_hex");
+						}
+						else if (($oidplus_namespace_int >= 6) && ($oidplus_namespace_int <= 0xF)) {
+							// System reserved
+							echo "\n<u>Interpretation of <a href=\"https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md\">OIDplus 2.0 Custom UUID</a></u>\n\n";
+							echo sprintf("%-32s %s\n", "System ID:", "[0x$oidplus_systemid_hex] ".$oidplus_systemid_int);
+							echo sprintf("%-32s %s\n", "Creation time:", "[0x$oidplus_creation_hex] ".($oidplus_creation_unknown ? 'Unknown' : date('Y-m-d', $oidplus_creation_int*24*60*60)));
+							echo sprintf("%-32s %s\n", "Reserved:", "[0x$oidplus_reserved_hex]");
+							echo sprintf("%-32s %s\n", "Namespace:", "[0x$oidplus_namespace_hex] $oidplus_namespace_int=Unknown (System Reserved)");
+							echo sprintf("%-32s %s\n", "Data (Setting name hash):", "[0x$oidplus_data_hex] Unknown");
+						}
+						else if ($oidplus_namespace_int > 0xF) {
+							// Information Object GUID, e.g. 6e932dd7-458c-8000-b9e9-c1e3894d1105
 							$known_objecttype_plugins = array(
 								// Latest list here: https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md
 								'1.3.6.1.4.1.37476.2.5.2.4.8.1' => 'doi (ViaThinkSoft plugin)',
@@ -700,17 +777,18 @@ function uuid_info($uuid, $echo=true) {
 							);
 							$namespace_desc = 'Unknown object type';
 							foreach ($known_objecttype_plugins as $oid => $name) {
-								if ((hexdec(substr(sha1($oid),-4)) & 0x3fff) == hexdec($custom_block4)) $namespace_desc = "$oid = $name";
+								if ((hexdec(substr(sha1($oid), -4)) & 0x3fff) == $oidplus_namespace_int) $namespace_desc = "$oid = $name";
 							}
-
-							echo sprintf("%-32s %s\n", "System ID:", "[0x$custom_block1] ".hexdec($custom_block1));
-							echo sprintf("%-32s %s\n", "Creation time:", "[0x$custom_block2] ".($custom_block2 == '0000' ? 'Unknown' : date('Y-m-d', hexdec($custom_block2)*24*60*60)));
-							echo sprintf("%-32s %s\n", "Reserved:", "[0x$custom_block3]");
-							echo sprintf("%-32s %s\n", "Namespace (Obj.type OID) hash:", "[0x$custom_block4] $namespace_desc");
-							echo sprintf("%-32s %s\n", "Object ID hash:", "[0x$custom_block5] SHA1 = ????????????????????????????$custom_block5");
-
+							echo "\n<u>Interpretation of <a href=\"https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md\">OIDplus 2.0 Custom UUID</a></u>\n\n";
+							echo sprintf("%-32s %s\n", "System ID:", "[0x$oidplus_systemid_hex] ".$oidplus_systemid_int);
+							echo sprintf("%-32s %s\n", "Creation time:", "[0x$oidplus_creation_hex] ".($oidplus_creation_unknown ? 'Unknown' : date('Y-m-d', $oidplus_creation_int*24*60*60)));
+							echo sprintf("%-32s %s\n", "Reserved:", "[0x$oidplus_reserved_hex]");
+							echo sprintf("%-32s %s\n", "Namespace (Obj.type OID hash):", "[0x$oidplus_namespace_hex] $namespace_desc");
+							echo sprintf("%-32s %s\n", "Data (Object name hash):", "[0x$oidplus_data_hex] SHA1(ObjectName) = ????????????????????????????$oidplus_data_hex");
 						}
 					}
+
+					// END: OIDplus 2.0 Custom UUID Interpretation
 
 					break;
 				default:

@@ -115,7 +115,7 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin
 		_CheckParamExists($params, $fieldname);
 		$response=$params[$fieldname];
 
-		$verify=url_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.urlencode($secret).'&response='.urlencode($response).'&remoteip='.urlencode($_SERVER['REMOTE_ADDR']));
+		$verify=url_get_contents('https://www.google.com/recaptcha/api/siteverify?secret='.urlencode($secret).'&response='.urlencode($response).'&remoteip='.urlencode(OIDplus::getClientIpAddress() ?: ''));
 		if ($verify === false) {
 			throw new OIDplusException(_L('CAPTCHA not successfully verified').' (Web request failed)');
 		}

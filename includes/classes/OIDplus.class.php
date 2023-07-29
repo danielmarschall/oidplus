@@ -2513,4 +2513,20 @@ class OIDplus extends OIDplusBaseClass {
 		}
 	}
 
+	/**
+	 * Tries to determine the IP address of the website visitor
+	 * @return string|false
+	 */
+	public static function getClientIpAddress() {
+		$direct_connection = $_SERVER['REMOTE_ADDR'] ?? false;
+		if ($direct_connection === false) return false;
+
+		$trusted_proxies = OIDplus::baseConfig()->getValue('XFF_TRUSTED_PROXIES', []);
+		if (in_array($direct_connection, $trusted_proxies)) {
+			return $_SERVER['HTTP_X_FORWARDED_FOR'] ?: $direct_connection;
+		} else {
+			return $direct_connection;
+		}
+	}
+
 }

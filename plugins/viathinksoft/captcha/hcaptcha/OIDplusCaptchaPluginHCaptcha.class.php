@@ -80,7 +80,7 @@ class OIDplusCaptchaPluginHCaptcha extends OIDplusCaptchaPlugin
 			array(
 				"secret"   => $secret,
 				"response" => $response,
-				"remoteip" => $_SERVER['REMOTE_ADDR'],
+				"remoteip" => OIDplus::getClientIpAddress() ?: '',
 				"sitekey"  => $sitekey
 			)
 		);

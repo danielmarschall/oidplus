@@ -472,6 +472,19 @@ Set to '(auto)' to automatically detect the path based on the absolute canonical
 Note: If supported, you can use Apache's "ProxyPassReverseCookiePath" to translate
 the cookie path in a reverse-proxy setting.
 
+### XFF_TRUSTED_PROXIES
+
+    OIDplus::baseConfig()->setValue('XFF_TRUSTED_PROXIES', []);
+
+Contains the IP addresses of proxies of which the value
+`HTTP_X_FORWARDED_FOR` is trusted in order to determine the IP address
+of the real web-visitor. Otherwise `REMOTE_ADDR` will be used to
+determine the address of the web-visitor.
+Please note: If you have multiple proxies, then the second-level-proxy
+must trust the third-level-proxy and so on.
+OIDplus only verifies the address of its direct communication partner,
+i.e. the proxy that will identify itself through `REMOTE_ADDR`.
+
 ### RA_PASSWORD_PEPPER
 
     OIDplus::baseConfig()->setValue('RA_PASSWORD_PEPPER', '');

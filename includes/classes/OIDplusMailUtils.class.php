@@ -177,7 +177,8 @@ class OIDplusMailUtils extends OIDplusBaseClass {
 		$h->addHeader('X-Mailer', 'PHP/'.PHP_VERSION);
 
 		// DM 14.04.2022: Commented out because of privacy
-		//if (isset($_SERVER['REMOTE_ADDR'])) $h->addHeader('X-RemoteAddr', $_SERVER['REMOTE_ADDR']);
+		// $cur_ip = OIDplus::getClientIpAddress();
+		//if ($cur_ip !== false) $h->addHeader('X-RemoteAddr', $cur_ip);
 
 		$h->addHeader('MIME-Version', '1.0');
 

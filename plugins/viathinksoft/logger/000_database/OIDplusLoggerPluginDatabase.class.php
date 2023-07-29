@@ -40,7 +40,7 @@ class OIDplusLoggerPluginDatabase extends OIDplusLoggerPlugin {
 	 * @throws OIDplusException
 	 */
 	public function log(OIDplusLogEvent $event): bool {
-		$addr = $_SERVER['REMOTE_ADDR'] ?? '';
+		$addr = OIDplus::getClientIpAddress() ?: '';
 		OIDplus::dbIsolated()->query("insert into ###log (addr, unix_ts, event) values (?, ?, ?)", array($addr, time(), $event->getMessage())); // TODO: why unix_ts? Why not a database DATETIME field?!
 		$log_id = OIDplus::dbIsolated()->insert_id();
 		if ($log_id === 0) {
