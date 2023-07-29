@@ -267,7 +267,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 		// Optional feature: Limit the JWT to a specific IP address (used if JWT_FIXED_IP_USER or JWT_FIXED_IP_ADMIN is true)
 		$ip = $contentProvider->getValue(self::CLAIM_LIMIT_IP, null);
 		if (!is_null($ip)) {
-			if (isset($_SERVER['REMOTE_ADDR']) && ($ip !== $_SERVER['REMOTE_ADDR'])) {
+			if ($ip !== OIDplus::getClientIpAddress()) {
 				throw new OIDplusException(_L('Your IP address is not allowed to use this token'));
 			}
 		}
@@ -364,8 +364,11 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 		if ($admin) $authSimulation->adminLogin();
 		$authSimulation->setValue(OIDplusAuthContentStoreJWT::CLAIM_GENERATOR, $gen);
 		$authSimulation->setValue('exp', time()+$ttl);
-		if ($limit_ip && isset($_SERVER['REMOTE_ADDR'])) {
-			$authSimulation->setValue(self::CLAIM_LIMIT_IP, $_SERVER['REMOTE_ADDR']);
+		if ($limit_ip) {
+			$cur_ip = OIDplus::getClientIpAddress();
+			if ($cur_ip !== false) {
+				$authSimulation->setValue(self::CLAIM_LIMIT_IP, $cur_ip);
+			}
 		}
 		return $authSimulation->getJWTToken();
 	}
@@ -599,8 +602,11 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 		$this->raLogin($email);
 		$ttl = OIDplus::baseConfig()->getValue('JWT_TTL_LOGIN_USER', 30*24*60*60);
 		$this->setValue('exp', time()+$ttl); // JWT "exp" attribute
-		if (OIDplus::baseConfig()->getValue('JWT_FIXED_IP_USER', false) && isset($_SERVER['REMOTE_ADDR'])) {
-			$this->setValue(self::CLAIM_LIMIT_IP, $_SERVER['REMOTE_ADDR']);
+		if (OIDplus::baseConfig()->getValue('JWT_FIXED_IP_USER', false)) {
+			$cur_ip = OIDplus::getClientIpAddress();
+			if ($cur_ip !== false) {
+				$this->setValue(self::CLAIM_LIMIT_IP, $cur_ip);
+			}
 		}
 	}
 
@@ -634,8 +640,11 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 		$this->adminLogin();
 		$ttl = OIDplus::baseConfig()->getValue('JWT_TTL_LOGIN_ADMIN', 30*24*60*60);
 		$this->setValue('exp', time()+$ttl); // JWT "exp" attribute
-		if (OIDplus::baseConfig()->getValue('JWT_FIXED_IP_ADMIN', false) && isset($_SERVER['REMOTE_ADDR'])) {
-			$this->setValue(self::CLAIM_LIMIT_IP, $_SERVER['REMOTE_ADDR']);
+		if (OIDplus::baseConfig()->getValue('JWT_FIXED_IP_ADMIN', false)) {
+			$cur_ip = OIDplus::getClientIpAddress();
+			if ($cur_ip !== false) {
+				$this->setValue(self::CLAIM_LIMIT_IP, $cur_ip);
+			}
 		}
 	}
 
@@ -676,6 +685,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 		if (!isset($payload["nbf"])) $payload["nbf"] = time();
 		if (!isset($payload["exp"])) $payload["exp"] = time()+3600/*1h*/;
 
+		$cur_ip = OIDplus::getClientIpAddress();
 		if (!isset($payload[self::CLAIM_TRACE])) {
 			// "Trace" can be used for later updates
 			// For example, if the IP changes "too much" (different country, different AS, etc.)
@@ -684,14 +694,14 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 			$payload[self::CLAIM_TRACE]['iat_1st'] = $payload["iat"];
 			$payload[self::CLAIM_TRACE]['jti_1st'] = $payload["jti"];
 			$payload[self::CLAIM_TRACE]['seq'] = 1;
-			$payload[self::CLAIM_TRACE]['ip'] = $_SERVER['REMOTE_ADDR'] ?? '';
+			if ($cur_ip !== false) $payload[self::CLAIM_TRACE]['ip'] = $cur_ip;
 			$payload[self::CLAIM_TRACE]['ip_1st'] = $payload[self::CLAIM_TRACE]['ip'];
 			$payload[self::CLAIM_TRACE]['ua'] = $_SERVER['HTTP_USER_AGENT'] ?? '';
 			$payload[self::CLAIM_TRACE]['ua_1st'] = $payload[self::CLAIM_TRACE]['ua'];
 		} else {
 			assert(is_numeric($payload[self::CLAIM_TRACE]['seq']));
 			$payload[self::CLAIM_TRACE]['seq']++;
-			$payload[self::CLAIM_TRACE]['ip'] = $_SERVER['REMOTE_ADDR'] ?? '';
+			if ($cur_ip !== false) $payload[self::CLAIM_TRACE]['ip'] = $cur_ip;
 			$payload[self::CLAIM_TRACE]['ua'] = $_SERVER['HTTP_USER_AGENT'] ?? '';
 		}
 

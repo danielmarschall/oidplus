@@ -61,7 +61,7 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 
 		$starttime = time();
 		$random = mt_rand($min,$max);
-		$ip_target = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+		$ip_target = OIDplus::getClientIpAddress() ?: 'unknown';
 		$challenge = sha3_512($starttime.'/'.$ip_target.'/'.$random); // $random is secret!
 		$challenge_integrity = OIDplus::authUtils()->makeAuthKey(['797bfc34-f4fa-11ed-86ca-3c4a92df8582',$challenge]);
 		$send_to_client = array($starttime, $ip_target, $challenge, $min, $max, $challenge_integrity);
@@ -155,7 +155,7 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 
 		$open_trans_file = self::getOpenTransFileName($ip_target, $answer);
 
-		$current_ip = ($_SERVER['REMOTE_ADDR'] ?? 'unknown');
+		$current_ip = OIDplus::getClientIpAddress() ?: 'unknown';
 		if ($ip_target != $current_ip) {
 			throw new OIDplusException(_L('IP address has changed. Please try again. (current IP %1, expected %2)', $current_ip, $ip_target));
 		//} else if (time()-$starttime > OIDplus::baseConfig()->getValue('VTS_CAPTCHA_MAXTIME', 10*60/*10 minutes*/)) {
