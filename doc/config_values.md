@@ -456,7 +456,7 @@ still safe.
 
 ### COOKIE_DOMAIN
 
-    OIDplus::baseConfig()->setValue('COOKIE_DOMAIN', '');
+    OIDplus::baseConfig()->setValue('COOKIE_DOMAIN', '(auto)');
 
 Can be used to increase security by setting an explicit domain-name in the cookies.
 Set to '' (empty string) to allow all (sub)domains.
@@ -464,7 +464,7 @@ Set to '(auto)' to automatically detect the domain based on the absolute canonic
 
 ### COOKIE_PATH
 
-    OIDplus::baseConfig()->setValue('COOKIE_PATH', '/');
+    OIDplus::baseConfig()->setValue('COOKIE_PATH', '(auto));
 
 Can be used to increase security by setting an explicit pathname in the cookies.
 Set to '/' to allow all paths.

@@ -39,15 +39,20 @@ class OIDplusCookieUtils extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	private function getCookieDomain(): string {
-		$default_domain = '(auto)'; // ini_get('session.cookie_domain');
-		$domain = OIDplus::baseConfig()->getValue('COOKIE_DOMAIN', $default_domain);
+		$domain = OIDplus::baseConfig()->getValue('COOKIE_DOMAIN', '(auto)');
 		if ($domain === '(auto)') {
-			$tmp = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE/*_CANONICAL*/);
-			if ($tmp === false) return $default_domain;
-			$tmp = parse_url($tmp);
-			if ($tmp === false) return $default_domain;
-			if (!isset($tmp['host'])) return $default_domain;
-			$domain = $tmp['host'];
+			if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+				// If OIDplus is called through a Reverse Proxy, we must make sure that the cookies are working.
+				$domain = $_SERVER['HTTP_X_FORWARDED_HOST'];
+			} else {
+				$default_domain = ''; // ini_get('session.cookie_domain');
+				$tmp = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE/*_CANONICAL*/);
+				if ($tmp === false) return $default_domain;
+				$tmp = parse_url($tmp);
+				if ($tmp === false) return $default_domain;
+				if (!isset($tmp['host'])) return $default_domain;
+				$domain = $tmp['host'];
+			}
 		}
 		return $domain;
 	}
@@ -57,19 +62,27 @@ class OIDplusCookieUtils extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	private function getCookiePath(): string {
-		$default_path = '(auto)'; // ini_get('session.cookie_path');
-		$path = OIDplus::baseConfig()->getValue('COOKIE_PATH', $default_path);
+		$path = OIDplus::baseConfig()->getValue('COOKIE_PATH', '(auto)');
 		if ($path === '(auto)') {
-			$tmp = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE/*_CANONICAL*/);
-			if ($tmp === false) return $default_path;
-			$tmp = parse_url($tmp);
-			if ($tmp === false) return $default_path;
-			if (!isset($tmp['path'])) return $default_path;
-			$path = $tmp['path'];
+			if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
+				// If OIDplus is called through a Reverse Proxy, we must make sure that the cookies are working.
+				// Since we don't know the path the client is using, we need to set the path to '/'
+				// Alternatively, the system owner can evaluate HTTP_X_FORWARDED_HOST inside the base configuration file
+				// and set the COOKIE_PATH setting based on HTTP_X_FORWARDED_HOST.
+				$path = '/';
+			} else {
+				$default_path = '/'; // ini_get('session.cookie_path');
+				$tmp = OIDplus::webpath(null, OIDplus::PATH_ABSOLUTE/*_CANONICAL*/);
+				if ($tmp === false) return $default_path;
+				$tmp = parse_url($tmp);
+				if ($tmp === false) return $default_path;
+				if (!isset($tmp['path'])) return $default_path;
+				$path = $tmp['path'];
 
-			// Alternatively:
-			//$path = OIDplus::webpath(null,OIDplus::PATH_RELATIVE_TO_ROOT_CANONICAL);
-			//if ($path === false) return $default_path;
+				// Alternatively:
+				//$path = OIDplus::webpath(null,OIDplus::PATH_RELATIVE_TO_ROOT_CANONICAL);
+				//if ($path === false) return $default_path;
+			}
 		}
 		return $path;
 	}
