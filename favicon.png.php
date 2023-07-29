@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,10 +21,10 @@ require_once __DIR__ . '/includes/oidplus.inc.php';
 
 error_reporting(0);
 
-if (file_exists(__DIR__.'/userdata/favicon.ico')) {
-	$out = file_get_contents(__DIR__.'/userdata/favicon.ico');
+if (file_exists(__DIR__.'/userdata/favicon.png')) {
+	$out = file_get_contents(__DIR__.'/userdata/favicon.png');
 } else {
-	$out = file_get_contents(__DIR__.'/img/default_favicon.ico');
+	$out = file_get_contents(__DIR__.'/img/default_favicon.png');
 }
 
-httpOutWithETag($out, 'image/x-icon', 'favicon.ico');
+httpOutWithETag($out, 'image/x-icon', 'favicon.png');

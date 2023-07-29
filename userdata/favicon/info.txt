@@ -2,5 +2,5 @@
 About the folder "userdata/favicon"
 -----------------------------------
 
-If the file favicon.ico is existing, it will be chosen instead of img/favicon.ico
+If the file favicon.png is existing, it will be chosen instead of img/favicon.png
 
