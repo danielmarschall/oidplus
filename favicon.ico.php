@@ -24,7 +24,7 @@ error_reporting(0);
 if (file_exists(__DIR__.'/userdata/favicon.ico')) {
 	$out = file_get_contents(__DIR__.'/userdata/favicon.ico');
 } else {
-	$out = file_get_contents(__DIR__.'/img/favicon.ico');
+	$out = file_get_contents(__DIR__.'/img/default_favicon.ico');
 }
 
 httpOutWithETag($out, 'image/x-icon', 'favicon.ico');
