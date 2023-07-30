@@ -1826,7 +1826,7 @@ class OIDplus extends OIDplusBaseClass {
 			$pubKey = OIDplus::getSystemPublicKey();
 			if (!verify_private_public_key($privKey, $pubKey)) {
 				if ($pubKey) {
-					OIDplus::logger()->log("V2:[WARN]A", "The private/public key-pair is broken. A new key-pair will now be generated for your system. Your System-ID will change.");
+					OIDplus::logger()->log("V2:[CRIT]A", "The private/public key-pair is broken. A new key-pair will now be generated for your system. Your System-ID will change.");
 				}
 
 				$pkey_config = array(
