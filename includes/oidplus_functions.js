@@ -88,12 +88,6 @@ function copyToClipboard(elem) {
 	return succeed;
 }
 
-function isInternetExplorer() {
-	// see also includes/functions.inc.php
-	var ua = window.navigator.userAgent;
-	return ((ua.indexOf("MSIE ") > 0) || (ua.indexOf("Trident/") > 0));
-}
-
 function getMeta(metaName) {
 	const metas = $('meta[name='+metaName+']');
 	return (metas.length == 0) ? '' : metas[0].content;
@@ -174,10 +168,8 @@ function setCookie(cname, cvalue, exdays, path) {
 	document.cookie = cname + "=" + cvalue + expires + ";path=" + path + ";SameSite=" + samesite_policy;
 }
 
-
-
 function isNull(val, def) {
-	// For compatibility with Internet Explorer, use isNull(a,b) instead of a??b
+	// Deprecated. Use "val??def" instead of isNull(val,def)
 	if (val == null) {
 		// since null==undefined, this also works with undefined
 		return def;

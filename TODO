@@ -150,8 +150,6 @@ TINYMCE
 	OK:   In the openOidInPanel() function, i.e. when you enter something into the goto-bar.
 - critical bug: open page, edit tiny mce, click save. Then F5 reload (not Ctrl+F5): then the old content is there again. Except if you press Ctrl+F5
 	(cannot be reproduced anymore? tested with firefox and chrome)
-- TinyMCE "isDirty" does not correctly work on Internet Explorer: It always reports "dirty"
-	see bug https://github.com/tinymce/tinymce/issues/6048
 - The "is dirty" check should also include the "Title" input box
 - (Sep 2022) Need more detailled reproduction:
 	If you use the browser back functionality and switch between
