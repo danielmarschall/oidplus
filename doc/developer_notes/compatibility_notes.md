@@ -8,8 +8,6 @@ Requirements regarding compatibility
 - The minimum required PHP version should be PHP 7.0, at least until the last old-stable Linux distro has lost its extended support.
 - OIDplus should always be compatible with the latest available PHP version
 - OIDplus must be compatible with all modern browsers
-- Internet Explorer for public pages should be supported as long as the effort stays low, e.g. just changing a few lines of codes, or including a polyfill.
-- Internet Explorer for private pages (RA or admin login) is not so important, since only a small number of visitors will be registered users or admins, therefore there does not need to be a compatibility.
 - Search engines must be able to crawl all public content. This is the reason why a page contains static content (loaded in index.php) for the first navigation, instead of fetching everything through ajax.php.
 
 Dependencies

@@ -212,8 +212,7 @@ class OIDplusGui extends OIDplusBaseClass {
 	 */
 	public function tabBarElement(string $id, string $title, bool $active): string {
 		// data-bs-toggle is for Bootstrap 5
-		// data-toggle is for Bootstrap 4 (InternetExplorer compatibility)
-		return '<li class="nav-item"><a class="nav-link'.($active ? ' active' : '').'" id="'.$id.'-tab" data-bs-toggle="tab" data-toggle="tab" href="#'.$id.'" role="tab" aria-controls="'.$id.'" aria-selected="'.($active ? 'true' : 'false').'">'.$title.'</a></li>';
+		return '<li class="nav-item"><a class="nav-link'.($active ? ' active' : '').'" id="'.$id.'-tab" data-bs-toggle="tab" href="#'.$id.'" role="tab" aria-controls="'.$id.'" aria-selected="'.($active ? 'true' : 'false').'">'.$title.'</a></li>';
 	}
 
 	/**

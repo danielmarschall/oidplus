@@ -514,14 +514,10 @@ function setLanguage(lngid) {
 	});
 	$("#lng_flag_"+$.escapeSelector(lngid)).removeClass("picture_ghost");
 
-	if (isInternetExplorer()) {
-		// Internet Explorer has problems with sending new cookies to new AJAX requests, so we reload the page completely
-		window.location.reload();
-	} else {
-		// TODO: Small detail: The "Go" button also needs to be re-translated
-		reloadContent();
-		mobileNavClose();
-	}
+	// TODO: Small detail: The "Go" button also needs to be re-translated
+	reloadContent();
+	mobileNavClose();
+
 	return true; // we have handled it. Do not follow href=""
 }
 
