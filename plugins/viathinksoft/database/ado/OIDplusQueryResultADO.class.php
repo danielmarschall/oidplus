@@ -75,7 +75,9 @@ class OIDplusQueryResultADO extends OIDplusQueryResult {
 
 		$ary = array();
 		for ($i=0; $i<$this->res->Fields->Count; $i++) {
-			$ary[$this->res->Fields->Item($i)->Name] = $this->res->Fields->Item($i)->Value;
+			$val = $this->res->Fields->Item($i)->Value;
+			if (is_object($val)) $val = "$val"; // DATETIME values become a "Resource" object for some reason. Transfer to string!
+			$ary[$this->res->Fields->Item($i)->Name] = $val;
 		}
 		$this->res->MoveNext();
 		return $ary;

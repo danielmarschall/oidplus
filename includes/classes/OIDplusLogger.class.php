@@ -394,7 +394,12 @@ class OIDplusLogger extends OIDplusBaseClass {
 				}
 				foreach (OIDplusRA::getAllRAs() as $ra) {
 					if ($obj->userHasWriteRights($ra)) {
-						if (OIDplus::authUtils()->isRaLoggedIn($ra)) {
+						try {
+							$tmp = OIDplus::authUtils()->isRaLoggedIn($ra);
+						} catch (\Exception $e) {
+							$tmp = false; // avoid that logging fails if things like JWT signature verification fails
+						}
+						if ($tmp) {
 							if (($severity_online_int = self::convertSeverity($severity_online)) >= 0) {
 								$logEvent->addTarget(new OIDplusLogTargetUser($severity_online_int, $ra->raEmail()));
 							}
@@ -421,7 +426,12 @@ class OIDplusLogger extends OIDplusBaseClass {
 				}
 				foreach (OIDplusRA::getAllRAs() as $ra) {
 					if ($obj->userHasParentalWriteRights($ra)) {
-						if (OIDplus::authUtils()->isRaLoggedIn($ra)) {
+						try {
+							$tmp = OIDplus::authUtils()->isRaLoggedIn($ra);
+						} catch (\Exception $e) {
+							$tmp = false; // avoid that logging fails if things like JWT signature verification fails
+						}
+						if ($tmp) {
 							if (($severity_online_int = self::convertSeverity($severity_online)) >= 0) {
 								$logEvent->addTarget(new OIDplusLogTargetUser($severity_online_int, $ra->raEmail()));
 							}
@@ -444,7 +454,12 @@ class OIDplusLogger extends OIDplusBaseClass {
 					$severity_online = $severity[0];
 					$severity_offline = $severity[1];
 				}
-				if (OIDplus::authUtils()->isRaLoggedIn($ra_email)) {
+				try {
+					$tmp = OIDplus::authUtils()->isRaLoggedIn($ra_email);
+				} catch (\Exception $e) {
+					$tmp = false; // avoid that logging fails if things like JWT signature verification fails
+				}
+				if ($tmp) {
 					if (($severity_online_int = self::convertSeverity($severity_online)) >= 0) {
 						$logEvent->addTarget(new OIDplusLogTargetUser($severity_online_int, $ra_email));
 					}
@@ -464,7 +479,12 @@ class OIDplusLogger extends OIDplusBaseClass {
 					$severity_online = $severity[0];
 					$severity_offline = $severity[1];
 				}
-				if (OIDplus::authUtils()->isAdminLoggedIn()) {
+				try {
+					$tmp = OIDplus::authUtils()->isAdminLoggedIn();
+				} catch (\Exception $e) {
+					$tmp = false; // avoid that logging fails if things like JWT signature verification fails
+				}
+				if ($tmp) {
 					if (($severity_online_int = self::convertSeverity($severity_online)) >= 0) {
 						$logEvent->addTarget(new OIDplusLogTargetUser($severity_online_int, 'admin'));
 					}

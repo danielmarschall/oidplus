@@ -1,6 +1,6 @@
 
 August 2023 planned:
-- Make a setting which rejects pages to proxy OIDplus (is this possible? What if the proxy does not send HTTP_X_FORWARDED_HOST?)
+- Backup plugin: https://github.com/danielmarschall/oidplus/issues/18
 
 May 2023 planned:
 - Don't send "information object OIDs" (= Non-OIDs) OIDs to oid-info.com anymore
@@ -26,7 +26,7 @@ Unicode compatibility:
 - [DONE]  MySQL works with Unicode and emoji if collation is utf8mb4
 - [DONE]  Access table structure works with Unicode
 -         PDO+MySQL: Unicode (with emoji) works, but PDO+ODBC+MSSQL and PDO+ODBC+ACCESS does not work, so it's ODBC's or ODBC-Driver's fault. Can we do something about it?
--         ODBC+MSSQL and ODBC+ACCESS: Unicode deos not work. So it's ODBC's or ODBC-Driver's fault. Can we do something about it?
+-         ODBC+MSSQL and ODBC+ACCESS: Unicode does not work. So it's ODBC's or ODBC-Driver's fault. Can we do something about it?
           (Note: ODBC and PDO can save UTF-8, but then they are double-encoded in DBTool/Access/SQLManagementStudio. When you insert Unicode in DBTool/Access/SQLManagementStudio, then they show up as '??' in OIDplus)
 -         ADO via OLEDB does not seem to support Unicode??? But it should! https://stackoverflow.com/questions/28311687/unable-to-retrieve-utf-8-accented-characters-from-access-via-pdo-odbc/28341697#28341697
 - [DONE]  SRVSRV plugin is capable of Unicode and pile of poo Emoji.
@@ -90,7 +90,7 @@ Ideas
 	* Own color settings
 	* Newly created OIDs: Always open, Never open, Ask (default)
 	But what do we do if multiple users are logged in??
-- "Download Backup" plugin (contains SQL backup, as well as everything inside "userdata" and "userdata_pub")
+- "Download Complete Backup" plugin (contains a full SQL backup for all DBMS, as well as everything inside "userdata" and "userdata_pub")
 - if a third-party plugin throws an exception in the init() method, maybe OIDplus should avoid loading the plugin?
 - "hidden" alt ids which are not shown in the GUI, but can be used for reverse-Alt-ID ? (I believe we have excluded some AltIDs which are "not neccessary", e.g. an GUID already is a GUID and therefore does not need a Namespace GUID, or something like that)
 

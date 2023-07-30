@@ -123,10 +123,12 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 				$replace = $arg;
 			} else if (is_float($arg)) {
 				$replace = number_format($arg, 10, '.', '');
+			} else if (is_null($arg)) {
+				$replace = 'NULL';
 			} else {
 				// TODO: More types?
 				if ($this->slangDetectionDone) {
-					$replace = "'".$this->getSlang()->escapeString($arg ?? '')."'";
+					$replace = "'".$this->getSlang()->escapeString($arg)."'";
 				} else {
 					$replace = "'".str_replace("'", "''", $arg)."'";
 				}

@@ -95,7 +95,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 				$ids[] = new OIDplusAltId('guid',
 					gen_uuid_v8(
 						dechex($sysid_int),
-						dechex($unix_ts/60/60/24),
+						dechex((int)round($unix_ts/60/60/24)),
 						dechex(0),
 						sha1($ns_oid), // Note: No 14bit collission between 1.3.6.1.4.1.37476.2.5.2.4.8.[0-185]
 						sha1($obj_name)
