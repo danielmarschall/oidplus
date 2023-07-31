@@ -702,24 +702,28 @@ function oidplus_is_true($mixed): bool {
  * @throws \Exception
  */
 function encrypt_str(string $data, string $key): string {
-	if (function_exists('openssl_encrypt')) {
-		$iv = random_bytes(16); // AES block size in CBC mode
-		// Encryption
-		$ciphertext = openssl_encrypt(
-			$data,
-			'AES-256-CBC',
-			hash_pbkdf2('sha512', $key, '', 10000, 32/*256bit*/, true),
-			OPENSSL_RAW_DATA,
-			$iv
-		);
-		// Authentication
-		$hmac = sha3_512_hmac($iv . $ciphertext, $key, true);
-		return $hmac . $iv . $ciphertext;
-	} else {
-		// When OpenSSL is not available, then we just do a HMAC
-		$hmac = sha3_512_hmac($data, $key, true);
-		return $hmac . $data;
+	if (!function_exists('openssl_encrypt')) {
+		throw new OIDplusException(_L('Decryption failed (OpenSSL not installed)'));
 	}
+
+	$iv = random_bytes(16); // AES block size in CBC mode
+
+	// In 2023, OWASP recommended to use 600,000 iterations for PBKDF2-HMAC-SHA256 and 210,000 for PBKDF2-HMAC-SHA512.
+	$version = 'V2023A';
+
+	// Encryption
+	$ciphertext = openssl_encrypt(
+		$data,
+		'AES-256-CBC',
+		hash_pbkdf2('sha512', $key, '', 210000, 32/*256bit*/, true),
+		OPENSSL_RAW_DATA,
+		$iv
+	);
+
+	// Authentication
+	$hmac = sha3_512_hmac($iv . $ciphertext, $key, true);
+
+	return $version . $hmac . $iv . $ciphertext;
 }
 
 /**
@@ -729,35 +733,36 @@ function encrypt_str(string $data, string $key): string {
  * @throws OIDplusException
  */
 function decrypt_str(string $data, string $key): string {
-	if (function_exists('openssl_decrypt')) {
-		$hmac       = mb_substr($data, 0, 64, '8bit');
-		$iv         = mb_substr($data, 64, 16, '8bit');
-		$ciphertext = mb_substr($data, 80, null, '8bit');
+	if (!function_exists('openssl_decrypt')) {
+		throw new OIDplusException(_L('Decryption failed (OpenSSL not installed)'));
+	}
+
+	$version    = mb_substr($data, 0, 6, '8bit');
+	$hmac       = mb_substr($data, 6, 64, '8bit');
+	$iv         = mb_substr($data, 70, 16, '8bit');
+	$ciphertext = mb_substr($data, 86, null, '8bit');
+
+	if ($version === 'V2023A') {
 		// Authentication
 		$hmacNew = sha3_512_hmac($iv . $ciphertext, $key, true);
 		if (!hash_equals($hmac, $hmacNew)) {
-			throw new OIDplusException(_L('Authentication failed'));
+			throw new OIDplusException(_L('Decryption failed (wrong password)'));
 		}
+
 		// Decryption
 		$cleartext = openssl_decrypt(
 			$ciphertext,
 			'AES-256-CBC',
-			hash_pbkdf2('sha512', $key, '', 10000, 32/*256bit*/, true),
+			hash_pbkdf2('sha512', $key, '', 210000, 32/*256bit*/, true),
 			OPENSSL_RAW_DATA,
 			$iv
 		);
-		if ($cleartext === false) {
-			throw new OIDplusException(_L('Decryption failed'));
-		}
-		return $cleartext;
 	} else {
-		// When OpenSSL is not available, then we just do a HMAC
-		$hmac       = mb_substr($data, 0, 64, '8bit');
-		$cleartext  = mb_substr($data, 64, null, '8bit');
-		$hmacNew    = sha3_512_hmac($cleartext, $key, true);
-		if (!hash_equals($hmac, $hmacNew)) {
-			throw new OIDplusException(_L('Authentication failed'));
-		}
-		return $cleartext;
+		throw new OIDplusException(_L('Decryption failed (Unexpected encryption version)'));
 	}
+
+	if ($cleartext === false) {
+		throw new OIDplusException(_L('Decryption failed (Internal error)'));
+	}
+	return $cleartext;
 }

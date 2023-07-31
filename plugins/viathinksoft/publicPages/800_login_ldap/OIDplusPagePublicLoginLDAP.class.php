@@ -265,7 +265,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic
 			}
 
 			$out['text']  = '<noscript>';
-			$out['text'] .= '<p><font color="red">'._L('You need to enable JavaScript to use the login area.').'</font></p>';
+			$out['text'] .= '<p><font color="red">'._L('You need to enable JavaScript to use this feature.').'</font></p>';
 			$out['text'] .= '</noscript>';
 
 			$out['text'] .= '<div id="loginLdapArea" style="visibility: hidden">';

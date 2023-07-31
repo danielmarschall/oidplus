@@ -614,7 +614,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 
 		if ($id === 'oidplus:datatransfer') {
 			$handled = true;
-			$out['title'] = _L('Data Transfer (oid-info.com)');
+			$out['title'] = _L('Data Exchange (oid-info.com)');
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
@@ -622,7 +622,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 			}
 
 			$out['text'] = '<noscript>';
-			$out['text'] .= '<p><font color="red">'._L('You need to enable JavaScript to use the login area.').'</font></p>';
+			$out['text'] .= '<p><font color="red">'._L('You need to enable JavaScript to use this feature.').'</font></p>';
 			$out['text'] .= '</noscript>';
 
 			$out['text'] .= '<br><div id="dataTransferArea" style="visibility: hidden"><div id="dataTransferTab" class="container" style="width:100%;">';
@@ -655,7 +655,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 			$tabcont .= '<p>'._L('These XML files are following the <a %1>XML schema</a> of <b>oid-info.com</b>.','href="https://oid-rep.orange-labs.fr/oid.xsd" target="_blank"').'</p>';
 			// TODO: we need a waiting animation!
 			$tabcont .= '<form action="javascript:void(0);" onsubmit="return OIDplusPageAdminOIDInfoExport.uploadXmlFileOnSubmit(this);" enctype="multipart/form-data" id="uploadXmlFileForm">';
-			$tabcont .= '<div>'._L('Choose XML file here').':<input type="file" name="userfile" value="" id="userfile">';
+			$tabcont .= '<div>'._L('Choose XML file here').':<br><input type="file" name="userfile" value="" id="userfile">';
 			$tabcont .= '<br><input type="submit" value="'._L('Import XML').'"></div>';
 			$tabcont .= '</form>';
 			$tabcont .= '<br><p>'._L('Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!<br>It will cause various loss of information, e.g. because Non-OIDs like GUIDs are converted in OIDs and can\'t be converted back.').'</p>';
@@ -689,7 +689,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 		$json[] = array(
 			'id' => 'oidplus:datatransfer',
 			'icon' => $tree_icon,
-			'text' => _L('Data Transfer (oid-info.com)')
+			'text' => _L('Data Exchange (oid-info.com)')
 		);
 
 		return true;
