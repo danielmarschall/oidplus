@@ -227,7 +227,7 @@ define('BACKUP_RECOVERY_SPECIAL_TEST', true); // TODO: Disable on release! Just 
 	$pki = [];
 	if ($export_pki) {
 		$num_rows["pki"]++;
-		$pki = [
+		$pki[] = [
 			"private_key" => OIDplus::getSystemPrivateKey(),
 			"public_key" => OIDplus::getSystemPublicKey()
 		];
@@ -235,10 +235,10 @@ define('BACKUP_RECOVERY_SPECIAL_TEST', true); // TODO: Disable on release! Just 
 
 	// Put everything together
 	$json = [
+		"\$schema" => "urn:oid:2.999", // TODO: Assign schema OID and replace it everywhere
 		"oidplus_backup" => [
-			"file_version" => "2023",
-			"origin_systemid" => OIDplus::getSystemId(false) ?: "unknown",
 			"created" => date('Y-m-d H:i:s O'),
+			"origin_systemid" => ($sysid = OIDplus::getSystemId(false)) ? (int)$sysid : "unknown",
 			"dataset_count" => $num_rows
 		],
 		"objects" => $objects,
@@ -247,7 +247,6 @@ define('BACKUP_RECOVERY_SPECIAL_TEST', true); // TODO: Disable on release! Just 
 		"log" => $log,
 		"pki" => $pki
 	];
-
 
 	// Done!
 
@@ -290,6 +289,10 @@ define('BACKUP_RECOVERY_SPECIAL_TEST', true); // TODO: Disable on release! Just 
 	if ($cont === false) throw new OIDplusException("Could not read file from disk: $backup_file");
 	$json = @json_decode($cont,true);
 	if ($json === false) throw new OIDplusException("Could not decode JSON structure of $backup_file");
+
+	if ($json["\$schema" ?? ""] != "urn:oid:2.999") {
+		throw new OIDplusException("File $backup_file cannot be restored, because it has a wrong file format (schema)");
+	}
 
 	if (OIDplus::db()->transaction_supported()) OIDplus::db()->transaction_begin();
 	try {
@@ -439,8 +442,8 @@ define('BACKUP_RECOVERY_SPECIAL_TEST', true); // TODO: Disable on release! Just 
 
 		// Restore public/private key
 		if ($import_pki) {
-			$privkey = $json["pki"]["private_key"] ?? null;
-			$pubkey = $json["pki"]["public_key"] ?? null;
+			$privkey = $json["pki"][0]["private_key"] ?? null;
+			$pubkey = $json["pki"][0]["public_key"] ?? null;
 			if ($privkey && $pubkey) {
 				$num_rows["pki"]++;
 				// Note: The private key is not encrypted. It will be re-encrypted in OIDplus::getPkiStatus()
