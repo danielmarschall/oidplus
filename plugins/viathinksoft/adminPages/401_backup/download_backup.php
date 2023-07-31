@@ -50,12 +50,12 @@ if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 	}
 }
 
-$exp_objects = $_POST['database_backup_export_objects'] ?? false;
-$exp_ra = $_POST['database_backup_export_ra'] ?? false;
-$exp_config = $_POST['database_backup_export_config'] ?? false;
-$exp_log = $_POST['database_backup_export_log'] ?? false;
-$exp_pki = $_POST['database_backup_export_pki'] ?? false;
-$encrypt = $_POST['database_backup_export_encrypt'] ?? false;
+$exp_objects = oidplus_is_true($_POST['database_backup_export_objects'] ?? false);
+$exp_ra = oidplus_is_true($_POST['database_backup_export_ra'] ?? false);
+$exp_config = oidplus_is_true($_POST['database_backup_export_config'] ?? false);
+$exp_log = oidplus_is_true($_POST['database_backup_export_log'] ?? false);
+$exp_pki = oidplus_is_true($_POST['database_backup_export_pki'] ?? false);
+$encrypt = oidplus_is_true($_POST['database_backup_export_encrypt'] ?? false);
 $password1 = $_POST['database_backup_export_password1'] ?? "";
 $password2 = $_POST['database_backup_export_password2'] ?? "";
 
@@ -101,6 +101,16 @@ if ($encrypt) {
 	$filename .= '.json';
 	header('Content-Type: application/json');
 }
+
+if (function_exists('gzencode')) {
+	$tmp = @gzencode($encoded_data, 9);
+	if ($tmp) {
+		$encoded_data = $tmp;
+		$filename .= '.gz';
+		header('Content-Type: application/x-gzip');
+	}
+}
+
 header('Content-Disposition: attachment; filename='.$filename);
 header('Content-Length: '.strlen($encoded_data));
 echo $encoded_data;

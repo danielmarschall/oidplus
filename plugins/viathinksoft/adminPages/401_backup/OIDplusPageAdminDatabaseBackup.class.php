@@ -177,6 +177,26 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 	}
 
 	/**
+	 * @param mixed|string|null $datetime
+	 * @return mixed|string|null
+	 */
+	private static function fix_datetime_for_output($datetime) {
+		if ($datetime === "0000-00-00 00:00:00") $datetime = null; // MySQL might use this as default instead of NULL... But SQL Server cannot read this.
+
+		if (is_string($datetime) && (substr($datetime,4,1) !== '-')) {
+			// Let's hope PHP can convert the database language specific string to ymd
+			$time = @strtotime($datetime);
+			if ($time) {
+				$date = date('Y-m-d H:i:s', $time);
+				if ($date) {
+					$datetime = $date;
+				}
+			}
+		}
+		return $datetime;
+	}
+
+	/**
 	 * @param bool $showReport
 	 * @param bool $export_objects
 	 * @param bool $export_ra
@@ -237,8 +257,8 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 					$num_rows["asn1id"]++;
 					$asn1ids[] = [
 						"name" => $row2['name'],
-						"standardized" => $row2['standardized'],
-						"well_known" => $row2['well_known'],
+						"standardized" => $row2['standardized'] ?? false,
+						"well_known" => $row2['well_known'] ?? false,
 					];
 				}
 
@@ -248,8 +268,8 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 					$num_rows["iri"]++;
 					$iris[] = [
 						"name" => $row2['name'],
-						"longarc" => $row2['longarc'],
-						"well_known" => $row2['well_known'],
+						"longarc" => $row2['longarc'] ?? false,
+						"well_known" => $row2['well_known'] ?? false,
 					];
 				}
 
@@ -259,9 +279,9 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 					"title" => $row["title"],
 					"description" => $row["description"],
 					"ra_email" => $row["ra_email"],
-					"confidential" => $row["confidential"],
-					"created" => $row["created"],
-					"updated" => $row["updated"],
+					"confidential" => $row["confidential"] ?? false,
+					"created" => self::fix_datetime_for_output($row["created"]),
+					"updated" => self::fix_datetime_for_output($row["updated"]),
 					"comment" => $row["comment"],
 					"asn1ids" => $asn1ids,
 					"iris" => $iris
@@ -287,11 +307,11 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 					"phone" => $row["phone"],
 					"mobile" => $row["mobile"],
 					"fax" => $row["fax"],
-					"privacy" => $row["privacy"],
+					"privacy" => $row["privacy"] ?? false,
 					"authkey" => $row["authkey"],
-					"registered" => $row["registered"],
-					"updated" => $row["updated"],
-					"last_login" => $row["last_login"]
+					"registered" => self::fix_datetime_for_output($row["registered"]),
+					"updated" => self::fix_datetime_for_output($row["updated"]),
+					"last_login" => self::fix_datetime_for_output($row["last_login"])
 				];
 			}
 		}
@@ -306,8 +326,8 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 					"name" => $row["name"],
 					"value" => $row["value"],
 					"description" => $row["description"],
-					"protected" => $row["protected"],
-					"visible" => $row["visible"]
+					"protected" => $row["protected"] ?? false,
+					"visible" => $row["visible"] ?? false
 				];
 			}
 		}
@@ -330,7 +350,7 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 					$num_rows["log_object"]++;
 					$log_objects[] = [
 						"object" => $row2['object'],
-						"severity" => $row2['severity']
+						"severity" => $row2['severity'] ?? 0
 					];
 				}
 
@@ -340,7 +360,7 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 					$num_rows["log_user"]++;
 					$log_users[] = [
 						"username" => $row2['username'],
-						"severity" => $row2['severity']
+						"severity" => $row2['severity'] ?? 0
 					];
 				}
 
@@ -382,6 +402,17 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 		// Done!
 
 		$encoded_data = json_encode($json, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
+		if ($encoded_data === false) {
+			// Some DBMS plugins might not output UTF-8 correctly. In my test case it was SQL Server on ADO/MSOLEDBSQL (where Unicode does not work in OIDplus for some unknown reason)
+			array_walk_recursive($json, function (&$value)
+			{
+				if (is_string($value)) $value = vts_utf8_encode($value);
+			});
+			$encoded_data = json_encode($json, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
+			if ($encoded_data === false) {
+				throw new OIDplusException(_L("%1 failed","json_encode"));
+			}
+		}
 
 		OIDplus::logger()->log("V2:[INFO]A", "Created backup: ".self::num_rows_list($num_rows));
 
@@ -526,6 +557,41 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 			}
 		}
 
+		if (OIDplus::db()->getSlang()->id() == 'mssql') {
+			// MSSQL: Try to find out if the other system created in YMD format
+			$has_ymd_format = false;
+			foreach (($json["objects"]??[]) as $row) {
+				if (substr($row["created"]??'',4,1) === '-') $has_ymd_format = true;
+				if (substr($row["updated"]??'',4,1) === '-') $has_ymd_format = true;
+
+			}
+			foreach (($json["ra"]??[]) as $row) {
+				if (substr($row["registered"]??'',4,1) === '-') $has_ymd_format = true;
+				if (substr($row["updated"]??'',4,1) === '-') $has_ymd_format = true;
+				if (substr($row["last_login"]??'',4,1) === '-') $has_ymd_format = true;
+			}
+			if ($has_ymd_format) {
+				OIDplus::db()->query("SET DATEFORMAT ymd;");
+			}
+
+			// Convert "0000-00-00 00:00:00" (MySQL) to NULL
+			if (isset($json["objects"])) {
+				foreach ($json["objects"] as &$row) {
+					if ($row["created"] === "0000-00-00 00:00:00") $row["created"] = null;
+					if ($row["updated"] === "0000-00-00 00:00:00") $row["updated"] = null;
+				}
+				unset($row);
+			}
+			if (isset($json["ra"])) {
+				foreach ($json["ra"] as &$row) {
+					if ($row["registered"] === "0000-00-00 00:00:00") $row["registered"] = null;
+					if ($row["updated"] === "0000-00-00 00:00:00") $row["updated"] = null;
+					if ($row["last_login"] === "0000-00-00 00:00:00") $row["last_login"] = null;
+				}
+				unset($row);
+			}
+		}
+
 		if (OIDplus::db()->transaction_supported()) OIDplus::db()->transaction_begin();
 		try {
 
@@ -549,7 +615,7 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 							$row["title"]??null,
 							$row["description"]??null,
 							$row["ra_email"]??null,
-							$row["confidential"]??null,
+							$row["confidential"]??false,
 							$row["created"]??null,
 							$row["updated"]??null,
 							$row["comment"]??null)
@@ -560,8 +626,8 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 						OIDplus::db()->query("insert into ###asn1id (oid, name, standardized, well_known) values (?, ?, ?, ?)",
 							array($row["id"]??null, // sic: $row, not $row2
 								$row2["name"]??null,
-								$row2["standardized"]??null,
-								$row2["well_known"]??null)
+								$row2["standardized"]??false,
+								$row2["well_known"]??false)
 						);
 					}
 
@@ -570,8 +636,8 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 						OIDplus::db()->query("insert into ###iri (oid, name, longarc, well_known) values (?, ?, ?, ?)",
 							array($row["id"]??null, // sic: $row, not $row2
 								$row2["name"]??null,
-								$row2["longarc"]??null,
-								$row2["well_known"]??null)
+								$row2["longarc"]??false,
+								$row2["well_known"]??false)
 						);
 					}
 				}
@@ -600,7 +666,7 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 							$row["phone"]??null,
 							$row["mobile"]??null,
 							$row["fax"]??null,
-							$row["privacy"]??null,
+							$row["privacy"]??false,
 							$row["authkey"]??null,
 							$row["registered"]??null,
 							$row["updated"]??null,
@@ -625,8 +691,8 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 						array($row["name"]??null,
 							$row["value"]??null,
 							$row["description"]??null,
-							$row["protected"]??null,
-							$row["visible"]??null)
+							$row["protected"]??false,
+							$row["visible"]??false)
 					);
 				}
 
@@ -660,7 +726,7 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 						OIDplus::db()->query("insert into ###log_object (log_id, object, severity) values (?, ?, ?)",
 							array($row["id"], // sic: $row, not $row2
 								$row2["object"]??null,
-								$row2["severity"]??null)
+								$row2["severity"]??0)
 						);
 					}
 
@@ -669,7 +735,7 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 						OIDplus::db()->query("insert into ###log_user (log_id, username, severity) values (?, ?, ?)",
 							array($row["id"], // sic: $row, not $row2
 								$row2["username"]??null,
-								$row2["severity"]??null)
+								$row2["severity"]??0)
 						);
 					}
 				}

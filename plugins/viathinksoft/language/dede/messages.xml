@@ -70,6 +70,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		%1 failed
+		]]></source>
+		<target><![CDATA[
+		%1 ist fehlgeschlagen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		%1 files are included in the manifest XML, but this plugin type does not allow such files.
 		]]></source>
 		<target><![CDATA[
@@ -1530,6 +1538,14 @@
 		]]></source>
 		<target><![CDATA[
 		Ereignis konnte nicht geloggt werden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Could not receive file (probably it is too large?)
+		]]></source>
+		<target><![CDATA[
+		Kann Datei nicht empfangen (vielleicht ist sie zu groß?)
 		]]></target>
 	</message>
 	<message>
