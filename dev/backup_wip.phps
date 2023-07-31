@@ -290,8 +290,104 @@ define('BACKUP_RECOVERY_SPECIAL_TEST', true); // TODO: Disable on release! Just 
 	$json = @json_decode($cont,true);
 	if ($json === false) throw new OIDplusException("Could not decode JSON structure of $backup_file");
 
-	if ($json["\$schema" ?? ""] != "urn:oid:2.999") {
+	if (($json["\$schema"]??"") != "urn:oid:2.999") {
 		throw new OIDplusException("File $backup_file cannot be restored, because it has a wrong file format (schema)");
+	}
+
+	if ($import_objects) {
+		$tmp = $json["oidplus_backup"]["dataset_count"]["objects"] ?? "n/a";
+		if ($tmp === "n/a") {
+			throw new OIDplusException(_L('File %1 cannot be restored, because you want to import "%2", but the file was not created with this data.',$backup_file,"objects"));
+		}
+
+		$cnt = count($json["objects"]??[]);
+		if ($tmp != $cnt) {
+			throw new OIDplusException(_L('File %1 cannot be restored, because the number of "%2" does not match',$backup_file,"objects"));
+		}
+
+		$tmp = $json["oidplus_backup"]["dataset_count"]["asn1id"] ?? "n/a";
+		$cnt_asn1id = 0;
+		foreach (($json["objects"]??[]) as $row) {
+			$cnt_asn1id += count($row['asn1ids']??[]);
+		}
+		if ($tmp != $cnt_asn1id) {
+			throw new OIDplusException(_L('File %1 cannot be restored, because the number of "%2" does not match',$backup_file,"asn1id"));
+		}
+
+		$tmp = $json["oidplus_backup"]["dataset_count"]["iri"] ?? "n/a";
+		$cnt_iri = 0;
+		foreach (($json["objects"]??[]) as $row) {
+			$cnt_iri += count($row['iris']??[]);
+		}
+		if ($tmp != $cnt_iri) {
+			throw new OIDplusException(_L('File %1 cannot be restored, because the number of "%2" does not match',$backup_file,"iri"));
+		}
+	}
+
+	if ($import_ra) {
+		$tmp = $json["oidplus_backup"]["dataset_count"]["ra"] ?? "n/a";
+		if ($tmp === "n/a") {
+			throw new OIDplusException(_L('File %1 cannot be restored, because you want to import "%2", but the file was not created with this data.',$backup_file,"ra"));
+		}
+		$cnt = count($json["ra"]??[]);
+		if ($tmp != $cnt) {
+			throw new OIDplusException(_L('File %1 cannot be restored, because the number of "%2" does not match',$backup_file,"ra"));
+		}
+	}
+
+	if ($import_config) {
+		$tmp = $json["oidplus_backup"]["dataset_count"]["config"] ?? "n/a";
+		if ($tmp === "n/a") {
+			throw new OIDplusException(_L('File %1 cannot be restored, because you want to import "%2", but the file was not created with this data.',$backup_file,"config"));
+		}
+		$cnt = count($json["config"]??[]);
+		if ($tmp != $cnt) {
+			throw new OIDplusException(_L('File %1 cannot be restored, because the number of "%2" does not match',$backup_file,"config"));
+		}
+	}
+
+	if ($import_log) {
+		$tmp = $json["oidplus_backup"]["dataset_count"]["log"] ?? "n/a";
+		if ($tmp === "n/a") {
+			throw new OIDplusException(_L('File %1 cannot be restored, because you want to import "%2", but the file was not created with this data.',$backup_file,"log"));
+		}
+
+		$cnt = count($json["log"]??[]);
+		if ($tmp != $cnt) {
+			throw new OIDplusException(_L('File %1 cannot be restored, because the number of "%2" does not match',$backup_file,"log"));
+		}
+
+		$tmp = $json["oidplus_backup"]["dataset_count"]["log_object"] ?? "n/a";
+		$cnt_objects = 0;
+		foreach (($json["log"]??[]) as $row) {
+			$cnt_objects += count($row['objects']??[]);
+		}
+		if ($tmp != $cnt_objects) {
+			throw new OIDplusException(_L('File %1 cannot be restored, because the number of "%2" does not match',$backup_file,"log_object"));
+		}
+
+		$tmp = $json["oidplus_backup"]["dataset_count"]["log_user"] ?? "n/a";
+		$cnt_users = 0;
+		foreach (($json["log"]??[]) as $row) {
+			$cnt_users += count($row['users']??[]);
+		}
+		if ($tmp != $cnt_users) {
+			throw new OIDplusException(_L('File %1 cannot be restored, because the number of "%2" does not match',$backup_file,"log_user"));
+		}
+	}
+
+	if ($import_pki) {
+		$tmp = $json["oidplus_backup"]["dataset_count"]["pki"] ?? "n/a";
+		if ($tmp === "n/a") {
+			throw new OIDplusException(_L('File %1 cannot be restored, because you want to import "%2", but the file was not created with this data.',$backup_file,"pki"));
+		}
+		if (($tmp !== 0) && ($tmp !== 1)) {
+			throw new OIDplusException(_L('File %1 cannot be restored, because the number of "%2" is invalid',$backup_file,"pki"));
+		}
+		$cnt = count($json["pki"]??[]);
+		if ($tmp != $cnt) {
+			throw new OIDplusException(_L('File %1 cannot be restored, because the number of "%2" does not match',$backup_file,"pki"));
+		}
 	}
 
 	if (OIDplus::db()->transaction_supported()) OIDplus::db()->transaction_begin();
