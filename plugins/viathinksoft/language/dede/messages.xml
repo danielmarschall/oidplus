@@ -1126,6 +1126,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Cannot decompress backup file because PHP ZLib extension is not installed
+		]]></source>
+		<target><![CDATA[
+		Kann Datensicherung nicht entpacken, da die PHP ZLib-Erweiterung nicht installiert ist
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Cannot determine database version (the entry "database_version" inside the table "###config" is probably missing)
 		]]></source>
 		<target><![CDATA[

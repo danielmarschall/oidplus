@@ -65,6 +65,12 @@ if (preg_match('@-----BEGIN OIDPLUS ENCRYPTED DATABASE BACKUP-----(.+)-----END O
 	$encoded_data = $m[1];
 	$encoded_data = base64_decode($encoded_data);
 	$encoded_data = decrypt_str($encoded_data, $password);
+	if (substr($encoded_data,0,4) === 'GZIP') {
+		if (!function_exists('gzinflate')) {
+			throw new OIDplusException(_L("Cannot decompress backup file because PHP ZLib extension is not installed"));
+		}
+		$encoded_data = gzinflate(substr($encoded_data,4));
+	}
 }
 
 OIDplusPageAdminDatabaseBackup::restoreBackup(true, $encoded_data, $exp_objects, $exp_ra, $exp_config, $exp_log, $exp_pki);
