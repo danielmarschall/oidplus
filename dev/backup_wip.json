@@ -1,0 +1,451 @@
+{
+  "$id": "urn:oid:2.999",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "oidplus_backup": {
+      "type": "object",
+      "properties": {
+        "created": {
+          "type": "string",
+          "pattern": "^\\d{4}(\\-(0[1-9]|1[0-2])(\\-(0[1-9]|1\\d|2\\d|3[0-1])( [0-5]\\d:[0-5]\\d(:[0-5]\\d){0,1}( [+-][0-5]\\d[0-5]\\d){0,1}){0,1}){0,1}){0,1}$"
+        },
+        "origin_systemid": {
+          "oneOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string",
+              "enum": [
+                "unknown"
+              ]
+            }
+          ]
+        },
+        "dataset_count": {
+          "type": "object",
+          "properties": {
+            "objects": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "n/a"
+                  ]
+                }
+              ]
+            },
+            "asn1id": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "n/a"
+                  ]
+                }
+              ]
+            },
+            "iri": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "n/a"
+                  ]
+                }
+              ]
+            },
+            "ra": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "n/a"
+                  ]
+                }
+              ]
+            },
+            "config": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "n/a"
+                  ]
+                }
+              ]
+            },
+            "log": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "n/a"
+                  ]
+                }
+              ]
+            },
+            "log_object": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "n/a"
+                  ]
+                }
+              ]
+            },
+            "log_user": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "n/a"
+                  ]
+                }
+              ]
+            },
+            "pki": {
+              "oneOf": [
+                {
+                  "type": "integer"
+                },
+                {
+                  "type": "string",
+                  "enum": [
+                    "n/a"
+                  ]
+                }
+              ]
+            }
+          },
+          "required": [
+            "objects",
+            "asn1id",
+            "iri",
+            "ra",
+            "config",
+            "log",
+            "log_object",
+            "log_user",
+            "pki"
+          ]
+        }
+      },
+      "required": [
+        "created",
+        "origin_systemid",
+        "dataset_count"
+      ]
+    },
+    "objects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "any"
+          },
+          "parent": {
+            "type": "any"
+          },
+          "title": {
+            "type": "any"
+          },
+          "description": {
+            "type": "any"
+          },
+          "ra_email": {
+            "type": "any"
+          },
+          "confidential": {
+            "type": "any"
+          },
+          "created": {
+            "type": "any"
+          },
+          "updated": {
+            "type": "any"
+          },
+          "comment": {
+            "type": "any"
+          },
+          "asn1ids": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "any"
+                },
+                "standardized": {
+                  "type": "any"
+                },
+                "well_known": {
+                  "type": "any"
+                }
+              },
+              "required": [
+                "name",
+                "standardized",
+                "well_known"
+              ]
+            }
+          },
+          "iris": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "any"
+                },
+                "longarc": {
+                  "type": "any"
+                },
+                "well_known": {
+                  "type": "any"
+                }
+              },
+              "required": [
+                "name",
+                "longarc",
+                "well_known"
+              ]
+            }
+          }
+        },
+        "required": [
+          "id",
+          "parent",
+          "title",
+          "description",
+          "ra_email",
+          "confidential",
+          "created",
+          "updated",
+          "comment",
+          "asn1ids",
+          "iris"
+        ]
+      }
+    },
+    "ra": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "any"
+          },
+          "ra_name": {
+            "type": "any"
+          },
+          "personal_name": {
+            "type": "any"
+          },
+          "organization": {
+            "type": "any"
+          },
+          "office": {
+            "type": "any"
+          },
+          "street": {
+            "type": "any"
+          },
+          "zip_town": {
+            "type": "any"
+          },
+          "country": {
+            "type": "any"
+          },
+          "phone": {
+            "type": "any"
+          },
+          "mobile": {
+            "type": "any"
+          },
+          "fax": {
+            "type": "any"
+          },
+          "privacy": {
+            "type": "any"
+          },
+          "authkey": {
+            "type": "any"
+          },
+          "registered": {
+            "type": "any"
+          },
+          "updated": {
+            "type": "any"
+          },
+          "last_login": {
+            "type": "any"
+          }
+        },
+        "required": [
+          "email",
+          "ra_name",
+          "personal_name",
+          "organization",
+          "office",
+          "street",
+          "zip_town",
+          "country",
+          "phone",
+          "mobile",
+          "fax",
+          "privacy",
+          "authkey",
+          "registered",
+          "updated",
+          "last_login"
+        ]
+      }
+    },
+    "config": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "any"
+          },
+          "value": {
+            "type": "any"
+          },
+          "description": {
+            "type": "any"
+          },
+          "protected": {
+            "type": "any"
+          },
+          "visible": {
+            "type": "any"
+          }
+        },
+        "required": [
+          "name",
+          "value",
+          "description",
+          "protected",
+          "visible"
+        ]
+      }
+    },
+    "log": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "unix_ts": {
+            "type": "any"
+          },
+          "addr": {
+            "type": "any"
+          },
+          "event": {
+            "type": "any"
+          },
+          "objects": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "object": {
+                  "type": "any"
+                },
+                "severity": {
+                  "type": "any"
+                }
+              },
+              "required": [
+                "object",
+                "severity"
+              ]
+            }
+          },
+          "users": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "username": {
+                  "type": "any"
+                },
+                "severity": {
+                  "type": "any"
+                }
+              },
+              "required": [
+                "username",
+                "severity"
+              ]
+            }
+          }
+        },
+        "required": [
+          "unix_ts",
+          "addr",
+          "event",
+          "objects",
+          "users"
+        ]
+      }
+    },
+    "pki": {
+      "type": "array",
+      "minItems": 0,
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "private_key": {
+            "type": "string"
+          },
+          "public_key": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "private_key",
+          "public_key"
+        ]
+      }
+    }
+  },
+  "required": [
+    "oidplus_backup",
+    "objects",
+    "ra",
+    "config",
+    "log",
+    "pki"
+  ]
+}
