@@ -68,6 +68,12 @@ if ($encrypt) {
 $encoded_data = OIDplusPageAdminDatabaseBackup::createBackup(false, $exp_objects, $exp_ra, $exp_config, $exp_log, $exp_pki);
 
 if ($encrypt) {
+	$encoded_data = json_encode(json_decode($encoded_data),JSON_UNESCAPED_SLASHES); // remove pretty-print to save space
+	if (function_exists('gzdeflate')) {
+		$encoded_data_gz = @gzdeflate($encoded_data, 9);
+		if ($encoded_data_gz) $encoded_data = 'GZIP'.$encoded_data_gz;
+	}
+	
 	$encoded_data = chunk_split(base64_encode(encrypt_str($encoded_data, $password1)));
 	$encoded_data =
 		"-----BEGIN OIDPLUS ENCRYPTED DATABASE BACKUP-----\r\n".
