@@ -75,6 +75,8 @@ if ($encrypt) {
 		"-----END OIDPLUS ENCRYPTED DATABASE BACKUP-----\r\n";
 }
 
+$title = OIDplus::config()->getValue('system_title', 'oidplus');
+
 OIDplus::invoke_shutdown();
 
 $cont = ob_get_contents();
@@ -85,11 +87,12 @@ if ($cont) {
 	die($cont);
 }
 
+$filename = preg_replace('@[^a-z0-9]@', '-', strtolower($title)).'-backup-' . date('Y-m-d-H-i-s');
 if ($encrypt) {
-	$filename = 'oidplus-backup-' . date('Y-m-d-H-i-s') . '.bak';
+	$filename .= '-encrypted.bak';
 	header('Content-Type: application/octet-stream');
 } else {
-	$filename = 'oidplus-backup-' . date('Y-m-d-H-i-s') . '.json';
+	$filename .= '.json';
 	header('Content-Type: application/json');
 }
 header('Content-Disposition: attachment; filename='.$filename);
