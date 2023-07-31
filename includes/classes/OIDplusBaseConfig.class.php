@@ -50,7 +50,7 @@ class OIDplusBaseConfig extends OIDplusBaseClass implements OIDplusGetterSetterI
 		if ($name == 'SERVER_SECRET') {
 			$caller_class = debug_backtrace()[1]['class'];
 			if (!str_starts_with($caller_class, 'ViaThinkSoft\\OIDplus\\')) {
-				throw new OIDplusException(_L('Outdated plugin: Calling %1 from a plugin is deprecated. Please use %2 instead', 'SERVER_SECRET', 'OIDplus::authUtils()->makeSecret()'));
+				throw new OIDplusException(_L('Outdated plugin: Calling %1 from a plugin is deprecated. Please use %2 instead', $name, 'OIDplus::authUtils()->makeSecret()'));
 			}
 		}
 		return $this->exists($name) ? $this->data[$name] : $default;

@@ -205,6 +205,19 @@ class OIDplusConfig extends OIDplusBaseClass implements OIDplusGetterSetterInter
 	 * @throws OIDplusException
 	 */
 	public function getValue(string $name, $default=null) {
+		if ($name == 'oidplus_private_key') {
+			$caller_class = debug_backtrace()[1]['class'];
+			if (!str_starts_with($caller_class, 'ViaThinkSoft\\OIDplus\\')) {
+				throw new OIDplusException(_L('Outdated plugin: Calling %1 from a plugin is deprecated. Please use %2 instead', $name, 'OIDplus::getSystemPrivateKey()'));
+			}
+		}
+		if ($name == 'oidplus_public_key') {
+			$caller_class = debug_backtrace()[1]['class'];
+			if (!str_starts_with($caller_class, 'ViaThinkSoft\\OIDplus\\')) {
+				throw new OIDplusException(_L('Outdated plugin: Calling %1 from a plugin is deprecated. Please use %2 instead', $name, 'OIDplus::getSystemPublicKey()'));
+			}
+		}
+
 		// Read all config settings once and write them in array $this->values
 		$this->buildConfigArray();
 

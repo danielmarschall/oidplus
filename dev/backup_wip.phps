@@ -56,7 +56,7 @@ define('BACKUP_RECOVERY_SPECIAL_TEST', true); // TODO: Disable on release! Just 
 
 // ================ Backup ================
 
-/*public*/ function oidplus_backup_db(string $backup_file, bool $export_objects=true, bool $export_ra=true, bool $export_config=false, bool $export_log=false): void {
+/*public*/ function oidplus_backup_db(string $backup_file, bool $export_objects=true, bool $export_ra=true, bool $export_config=false, bool $export_log=false, bool $export_pki=false): void {
 	$num_rows = [
 		"objects" => $export_objects ? 0 : "n/a",
 		"asn1id" => $export_objects ? 0 : "n/a",
@@ -65,7 +65,8 @@ define('BACKUP_RECOVERY_SPECIAL_TEST', true); // TODO: Disable on release! Just 
 		"config" => $export_config ? 0 : "n/a",
 		"log" => $export_log ? 0 : "n/a",
 		"log_object" => $export_log ? 0 : "n/a",
-		"log_user" => $export_log ? 0 : "n/a"
+		"log_user" => $export_log ? 0 : "n/a",
+		"pki" => $export_pki ? 0 : "n/a"
 	];
 
 	if (BACKUP_RECOVERY_SPECIAL_TEST) {
@@ -222,6 +223,16 @@ define('BACKUP_RECOVERY_SPECIAL_TEST', true); // TODO: Disable on release! Just 
 		}
 	}
 
+	// Backup public/private key
+	$pki = [];
+	if ($export_pki) {
+		$num_rows["pki"]++;
+		$pki = [
+			"private_key" => OIDplus::getSystemPrivateKey(),
+			"public_key" => OIDplus::getSystemPublicKey()
+		];
+	}
+
 	// Put everything together
 	$json = [
 		"oidplus_backup" => [
@@ -233,7 +244,8 @@ define('BACKUP_RECOVERY_SPECIAL_TEST', true); // TODO: Disable on release! Just 
 		"objects" => $objects,
 		"ra" => $ra,
 		"config" => $config,
-		"log" => $log
+		"log" => $log,
+		"pki" => $pki
 	];
 
 
@@ -261,7 +273,7 @@ define('BACKUP_RECOVERY_SPECIAL_TEST', true); // TODO: Disable on release! Just 
 
 // ================ Recovery ================
 
-/*public*/ function oidplus_restore_db(string $backup_file, bool $import_objects=true, bool $import_ra=true, bool $import_config=false, bool $import_log=false): void {
+/*public*/ function oidplus_restore_db(string $backup_file, bool $import_objects=true, bool $import_ra=true, bool $import_config=false, bool $import_log=false, bool $import_pki=false): void {
 	$num_rows = [
 		"objects" => $import_objects ? 0 : "n/a",
 		"asn1id" => $import_objects ? 0 : "n/a",
@@ -270,7 +282,8 @@ define('BACKUP_RECOVERY_SPECIAL_TEST', true); // TODO: Disable on release! Just 
 		"config" => $import_config ? 0 : "n/a",
 		"log" => $import_log ? 0 : "n/a",
 		"log_object" => $import_log ? 0 : "n/a",
-		"log_user" => $import_log ? 0 : "n/a"
+		"log_user" => $import_log ? 0 : "n/a",
+		"pki" => $import_pki ? 0 : "n/a"
 	];
 
 	$cont = @file_get_contents($backup_file);
@@ -424,6 +437,19 @@ define('BACKUP_RECOVERY_SPECIAL_TEST', true); // TODO: Disable on release! Just 
 			}
 		}
 
+		// Restore public/private key
+		if ($import_pki) {
+			$privkey = $json["pki"]["private_key"] ?? null;
+			$pubkey = $json["pki"]["public_key"] ?? null;
+			if ($privkey && $pubkey) {
+				$num_rows["pki"]++;
+				// Note: The private key is not encrypted. It will be re-encrypted in OIDplus::getPkiStatus()
+				OIDplus::db()->query("update ###config set value = ? where name = 'oidplus_private_key'", [$privkey]);
+				OIDplus::db()->query("update ###config set value = ? where name = 'oidplus_public_key'", [$pubkey]);
+				OIDplus::config()->clearCache();
+			}
+		}
+
 		// Done!
 
 		OIDplus::logger()->log("V2:[WARN]A", "EXECUTED OBJECT AND RA DATABASE BACKUP RECOVERY: ".oidplus_num_rows_list($num_rows));
@@ -446,8 +472,8 @@ define('BACKUP_RECOVERY_SPECIAL_TEST', true); // TODO: Disable on release! Just 
 
 if (!is_dir(OIDplus::localpath().'/userdata/backups/')) @mkdir(OIDplus::localpath().'/userdata/backups/');
 $backup_file = OIDplus::localpath().'/userdata/backups/oidplus-'.date('Y-m-d-H-i-s').'.bak.json';
-oidplus_backup_db($backup_file, true, true, true, true);
-oidplus_restore_db($backup_file, true, true, true, true);
+oidplus_backup_db($backup_file, true, true, true, true, true);
+oidplus_restore_db($backup_file, true, true, true, true, true);
 
 
 
