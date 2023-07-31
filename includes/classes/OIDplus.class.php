@@ -1778,21 +1778,30 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	/**
+	 * Returns the private key of the system
+	 * @param bool $auto_decrypt Try to decrypt the key in case it is encrypted.
 	 * @return string|false
 	 * @throws OIDplusException
 	 */
-	public static function getSystemPrivateKey() {
+	public static function getSystemPrivateKey(bool $auto_decrypt=true) {
 		$privKey = OIDplus::config()->getValue('oidplus_private_key');
 		if ($privKey == '') return false;
 
-		$passphrase = self::getPrivKeyPassphrase();
-		if ($passphrase !== false) {
-			$privKey = decrypt_private_key($privKey, $passphrase);
-		}
-
 		if (is_privatekey_encrypted($privKey)) {
-			// This can happen if the key file has vanished
-			return false;
+			if (!$auto_decrypt) {
+				return false;
+			}
+
+			$passphrase = self::getPrivKeyPassphrase();
+			if ($passphrase === false) {
+				return false;
+			}
+
+			$privKey = decrypt_private_key($privKey, $passphrase);
+			if (($privKey === false) || is_privatekey_encrypted($privKey)) {
+				// This can happen if the key file has vanished or decryption failed because of another reason
+				return false;
+			}
 		}
 
 		return $privKey;
