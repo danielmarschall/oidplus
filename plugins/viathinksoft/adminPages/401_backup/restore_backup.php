@@ -48,18 +48,35 @@ if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 	}
 }
 
-$exp_objects = $_POST['database_backup_import_objects'] ?? false;
-$exp_ra = $_POST['database_backup_import_ra'] ?? false;
-$exp_config = $_POST['database_backup_import_config'] ?? false;
-$exp_log = $_POST['database_backup_import_log'] ?? false;
-$exp_pki = $_POST['database_backup_import_pki'] ?? false;
+$exp_objects = oidplus_is_true($_POST['database_backup_import_objects'] ?? false);
+$exp_ra = oidplus_is_true($_POST['database_backup_import_ra'] ?? false);
+$exp_config = oidplus_is_true($_POST['database_backup_import_config'] ?? false);
+$exp_log = oidplus_is_true($_POST['database_backup_import_log'] ?? false);
+$exp_pki = oidplus_is_true($_POST['database_backup_import_pki'] ?? false);
 $password = $_POST['database_backup_import_password'] ?? "";
 
 if (!isset($_FILES['userfile'])) {
 	throw new OIDplusException(_L('Please choose a file.'));
 }
 
+if ($_FILES['userfile']['error']) {
+	throw new OIDplusException(_L('Could not receive file (probably it is too large?)'));
+}
+
 $encoded_data = file_get_contents($_FILES['userfile']['tmp_name']);
+
+if (strtolower(substr($_FILES['userfile']['name']??"",-3)) == '.gz') {
+	if (function_exists('gzdecode')) {
+		$tmp = @gzdecode($encoded_data);
+		if ($tmp) {
+			$encoded_data = $tmp;
+		} else {
+			throw new OIDplusException(_L("Cannot decompress backup file because PHP ZLib extension is not installed"));
+		}
+	} else {
+		throw new OIDplusException(_L("Cannot decompress backup file because PHP ZLib extension is not installed"));
+	}
+}
 
 if (preg_match('@-----BEGIN OIDPLUS ENCRYPTED DATABASE BACKUP-----(.+)-----END OIDPLUS ENCRYPTED DATABASE BACKUP-----@ismU', $encoded_data, $m)) {
 	$encoded_data = $m[1];

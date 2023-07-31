@@ -51,6 +51,10 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 			throw new OIDplusException(_L('Please choose a file.'));
 		}
 
+		if ($_FILES['userfile']['error']) {
+			throw new OIDplusException(_L('Could not receive file (probably it is too large?)'));
+		}
+
 		$xml_contents = file_get_contents($_FILES['userfile']['tmp_name']);
 
 		$errors = array();
