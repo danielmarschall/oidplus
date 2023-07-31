@@ -39,19 +39,33 @@ define('BACKUP_RECOVERY_SPECIAL_TEST', true); // TODO: Disable on release! Just 
 
 
 
+/*private*/ function oidplus_num_rows_list(array $num_rows): string {
+	$out = '';
+
+	$ary2 = [];
+	foreach ($num_rows as $table => $cnt) {
+		if ($cnt !== "n/a") $ary2[] = "$table=$cnt";
+	}
+	$out = implode(", ", $ary2);
+
+	if ($out === '') $out = 'No tables selected';
+	return $out;
+}
+
+
 
 // ================ Backup ================
 
-function oidplus_backup_db(string $backup_file, bool $export_objects=true, bool $export_ra=true): void {
+/*public*/ function oidplus_backup_db(string $backup_file, bool $export_objects=true, bool $export_ra=true, bool $export_config=false, bool $export_log=false): void {
 	$num_rows = [
 		"objects" => $export_objects ? 0 : "n/a",
 		"asn1id" => $export_objects ? 0 : "n/a",
 		"iri" => $export_objects ? 0 : "n/a",
 		"ra" => $export_ra ? 0 : "n/a",
-		"log" => "n/a", // No backup for this table!
-		"log_object" => "n/a", // No backup for this table!
-		"log_user" => "n/a", // No backup for this table!
-		"config" => "n/a" // No backup for this table!
+		"config" => $export_config ? 0 : "n/a",
+		"log" => $export_log ? 0 : "n/a",
+		"log_object" => $export_log ? 0 : "n/a",
+		"log_user" => $export_log ? 0 : "n/a"
 	];
 
 	if (BACKUP_RECOVERY_SPECIAL_TEST) {
@@ -62,6 +76,14 @@ function oidplus_backup_db(string $backup_file, bool $export_objects=true, bool 
 		}
 		if ($export_ra) {
 			OIDplus::db()->query("delete from ###ra where email like '%_CLONE'");
+		}
+		if ($export_config) {
+			OIDplus::db()->query("delete from ###config where name <> 'oidplus_private_key' and name <> 'oidplus_public_key' and name like '%_CLONE'");
+		}
+		if ($export_log) {
+			OIDplus::db()->query("delete from ###log where addr like '%_CLONE'");
+			OIDplus::db()->query("delete from ###log_object where object like '%_CLONE'");
+			OIDplus::db()->query("delete from ###log_user where username like '%_CLONE'");
 		}
 	}
 
@@ -142,6 +164,64 @@ function oidplus_backup_db(string $backup_file, bool $export_objects=true, bool 
 		}
 	}
 
+	// Backup configuration (Table config)
+	$config = [];
+	if ($export_config) {
+		$res = OIDplus::db()->query("select * from ###config where name <> 'oidplus_private_key' and name <> 'oidplus_public_key' order by name");
+		while ($row = $res->fetch_array()) {
+			$num_rows["config"]++;
+			$config[] = [
+				"name" => $row["name"],
+				"value" => $row["value"],
+				"description" => $row["description"],
+				"protected" => $row["protected"],
+				"visible" => $row["visible"]
+			];
+		}
+	}
+
+	// Backup logs (Tables log, log_object, log_user)
+	$log = [];
+	if ($export_log) {
+		$res = OIDplus::db()->query("select * from ###log order by id");
+		$rows = [];
+		while ($row = $res->fetch_array()) {
+			// Not all databases support multiple active rows, so we need to read it in a isolated loop
+			$rows[] = $row;
+		}
+		foreach ($rows as $row) {
+			$num_rows["log"]++;
+
+			$log_objects = [];
+			$res2 = OIDplus::db()->query("select * from ###log_object where log_id = ? order by id", array($row["id"]));
+			while ($row2 = $res2->fetch_array()) {
+				$num_rows["log_object"]++;
+				$log_objects[] = [
+					"object" => $row2['object'],
+					"severity" => $row2['severity']
+				];
+			}
+
+			$log_users = [];
+			$res2 = OIDplus::db()->query("select * from ###log_user where log_id = ? order by id", array($row["id"]));
+			while ($row2 = $res2->fetch_array()) {
+				$num_rows["log_user"]++;
+				$log_users[] = [
+					"username" => $row2['username'],
+					"severity" => $row2['severity']
+				];
+			}
+
+			$log[] = [
+				"unix_ts" => $row["unix_ts"],
+				"addr" => $row["addr"],
+				"event" => $row["event"],
+				"objects" => $log_objects,
+				"users" => $log_users
+			];
+		}
+	}
+
 	// Put everything together
 	$json = [
 		"oidplus_backup" => [
@@ -151,25 +231,29 @@ function oidplus_backup_db(string $backup_file, bool $export_objects=true, bool 
 			"dataset_count" => $num_rows
 		],
 		"objects" => $objects,
-		"ra" => $ra
+		"ra" => $ra,
+		"config" => $config,
+		"log" => $log
 	];
 
-	OIDplus::logger()->log("V2:[INFO]A", "Created backup of Objects and RAs");
 
+	// Done!
 
 	$encoded_data = json_encode($json, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
 	if (@file_put_contents($backup_file, $encoded_data) === false) {
 		throw new OIDplusException("Could not write file to disk: $backup_file");
 	}
 
+	OIDplus::logger()->log("V2:[INFO]A", "Created backup: ".oidplus_num_rows_list($num_rows));
+
 	echo "<p>Backup done: $backup_file</p>";
 	foreach ($num_rows as $table_name => $cnt) {
 		if ($cnt !== "n/a")  echo "<p>... $table_name: $cnt datasets</p>";
 	}
 	echo "<hr>";
-	//echo '<pre>';
-	//echo htmlentities($encoded_data);
-	//echo '</pre>';
+	echo '<pre>';
+	echo htmlentities($encoded_data);
+	echo '</pre>';
 }
 
 
@@ -177,16 +261,16 @@ function oidplus_backup_db(string $backup_file, bool $export_objects=true, bool 
 
 // ================ Recovery ================
 
-function oidplus_restore_db(string $backup_file, bool $import_objects=true, bool $import_ra=true): void {
+/*public*/ function oidplus_restore_db(string $backup_file, bool $import_objects=true, bool $import_ra=true, bool $import_config=false, bool $import_log=false): void {
 	$num_rows = [
 		"objects" => $import_objects ? 0 : "n/a",
 		"asn1id" => $import_objects ? 0 : "n/a",
 		"iri" => $import_objects ? 0 : "n/a",
 		"ra" => $import_ra ? 0 : "n/a",
-		"log" => "n/a", // No backup for this table!
-		"log_object" => "n/a", // No backup for this table!
-		"log_user" => "n/a", // No backup for this table!
-		"config" => "n/a" // No backup for this table!
+		"config" => $import_config ? 0 : "n/a",
+		"log" => $import_log ? 0 : "n/a",
+		"log_object" => $import_log ? 0 : "n/a",
+		"log_user" => $import_log ? 0 : "n/a"
 	];
 
 	$cont = @file_get_contents($backup_file);
@@ -197,6 +281,7 @@ function oidplus_restore_db(string $backup_file, bool $import_objects=true, bool
 	if (OIDplus::db()->transaction_supported()) OIDplus::db()->transaction_begin();
 	try {
 
+		// Restore objects (Tables objects, asn1id, iri)
 		if ($import_objects) {
 			if (!BACKUP_RECOVERY_SPECIAL_TEST) {
 				OIDplus::db()->query("delete from ###objects");
@@ -244,6 +329,7 @@ function oidplus_restore_db(string $backup_file, bool $import_objects=true, bool
 			}
 		}
 
+		// Restore RAs (Table ra)
 		if ($import_ra) {
 			if (!BACKUP_RECOVERY_SPECIAL_TEST) {
 				OIDplus::db()->query("delete from ###ra");
@@ -275,15 +361,81 @@ function oidplus_restore_db(string $backup_file, bool $import_objects=true, bool
 			}
 		}
 
+		// Restore configuration (Table config)
+		if ($import_config) {
+			if (!BACKUP_RECOVERY_SPECIAL_TEST) {
+				OIDplus::db()->query("delete from ###config where name <> 'oidplus_private_key' and name <> 'oidplus_public_key'");
+			}
+
+			foreach (($json["config"]??[]) as $row) {
+				if (BACKUP_RECOVERY_SPECIAL_TEST) {
+					$row['name'] .= '_CLONE';
+				}
+
+				$num_rows["config"]++;
+				OIDplus::db()->query("insert into ###config (name, value, description, protected, visible) values (?, ?, ?, ?, ?)",
+					array($row["name"]??null,
+						$row["value"]??null,
+						$row["description"]??null,
+						$row["protected"]??null,
+						$row["visible"]??null)
+				);
+			}
+
+		}
+
+		// Restore logs (Tables log, log_object, log_user)
+		if ($import_log) {
+			if (!BACKUP_RECOVERY_SPECIAL_TEST) {
+				OIDplus::db()->query("delete from ###log");
+				OIDplus::db()->query("delete from ###log_object");
+				OIDplus::db()->query("delete from ###log_user");
+			}
+			foreach (($json["log"]??[]) as $row) {
+				if (BACKUP_RECOVERY_SPECIAL_TEST) {
+					$row['addr'] .= '_CLONE';
+				}
+
+				$num_rows["log"]++;
+				OIDplus::db()->query("insert into ###log (unix_ts, addr, event) values (?, ?, ?)",
+					array($row["unix_ts"]??null,
+						$row["addr"]??null,
+						$row["event"]??null)
+				);
+				$row['id'] = OIDplus::db()->insert_id();
+
+				foreach (($row["objects"]??[]) as $row2) {
+					$num_rows["log_object"]++;
+					OIDplus::db()->query("insert into ###log_object (log_id, object, severity) values (?, ?, ?)",
+						array($row["id"]??null, // sic: $row, not $row2
+							$row2["object"]??null,
+							$row2["severity"]??null)
+					);
+				}
+
+				foreach (($row["users"]??[]) as $row2) {
+					$num_rows["log_user"]++;
+					OIDplus::db()->query("insert into ###log_user (log_id, username, severity) values (?, ?, ?)",
+						array($row["id"]??null, // sic: $row, not $row2
+							$row2["username"]??null,
+							$row2["severity"]??null)
+					);
+				}
+			}
+		}
+
+		// Done!
+
+		OIDplus::logger()->log("V2:[WARN]A", "EXECUTED OBJECT AND RA DATABASE BACKUP RECOVERY: ".oidplus_num_rows_list($num_rows));
+
+		if (OIDplus::db()->transaction_supported()) OIDplus::db()->transaction_commit();
+
 		echo "<p>Backup restore done: $backup_file</p>";
 		foreach ($num_rows as $table_name => $cnt) {
 			if ($cnt !== "n/a")  echo "<p>... $table_name: $cnt datasets</p>";
 		}
 		echo "<hr>";
 
-		OIDplus::logger()->log("V2:[WARN]A", "EXECUTED OBJECT AND RA DATABASE BACKUP RECOVERY");
-
-		if (OIDplus::db()->transaction_supported()) OIDplus::db()->transaction_commit();
 	} catch (\Exception $e) {
 		if (OIDplus::db()->transaction_supported()) OIDplus::db()->transaction_rollback();
 		throw $e;
@@ -294,8 +446,8 @@ function oidplus_restore_db(string $backup_file, bool $import_objects=true, bool
 
 if (!is_dir(OIDplus::localpath().'/userdata/backups/')) @mkdir(OIDplus::localpath().'/userdata/backups/');
 $backup_file = OIDplus::localpath().'/userdata/backups/oidplus-'.date('Y-m-d-H-i-s').'.bak.json';
-oidplus_backup_db($backup_file, true, true);
-oidplus_restore_db($backup_file, true, true);
+oidplus_backup_db($backup_file, true, true, true, true);
+oidplus_restore_db($backup_file, true, true, true, true);
 
 
 
