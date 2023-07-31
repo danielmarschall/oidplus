@@ -181,7 +181,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 			$out['icon']  = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/login_icon.png';
 
 			$out['text']  = '<noscript>';
-			$out['text'] .= '<p><font color="red">'._L('You need to enable JavaScript to use the login area.').'</font></p>';
+			$out['text'] .= '<p><font color="red">'._L('You need to enable JavaScript to use this feature.').'</font></p>';
 			$out['text'] .= '</noscript>';
 
 			$out['text'] .= '<div id="loginArea" style="visibility: hidden"><div id="loginTab" class="container" style="width:100%;">';
@@ -207,8 +207,8 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 				$tabcont .= '<p>'._L('Enter your email address and your password to log in as Registration Authority.').'</p>';
 			}
 			$tabcont .= '<form action="javascript:void(0);" onsubmit="return OIDplusPagePublicLogin.raLoginOnSubmit(this);">';
-			$tabcont .= '<div><label class="padding_label">'._L('E-Mail').':</label><input type="text" name="email" value="'.htmlentities($desired_ra).'" id="raLoginEMail"></div>';
-			$tabcont .= '<div><label class="padding_label">'._L('Password').':</label><input type="password" name="password" value="" id="raLoginPassword"></div>';
+			$tabcont .= '<div><label class="padding_label" for="raLoginEMail">'._L('E-Mail').':</label><input type="text" name="email" value="'.htmlentities($desired_ra).'" id="raLoginEMail"></div>';
+			$tabcont .= '<div><label class="padding_label" for="raLoginPassword">'._L('Password').':</label><input type="password" name="password" value="" id="raLoginPassword"></div>';
 			$tabcont .= '<br><input type="submit" value="'._L('Login').'"><br><br>';
 			$tabcont .= '</form>';
 			$tabcont .= '<p><a '.OIDplus::gui()->link('oidplus:forgot_password').'>'._L('Forgot password?').'</a><br>';
@@ -252,7 +252,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 				$tabcont .= '<a href="#" onclick="return OIDplusPagePublicLogin.adminLogout();">'._L('Logout').'</a>';
 			} else {
 				$tabcont .= '<form action="javascript:void(0);" onsubmit="return OIDplusPagePublicLogin.adminLoginOnSubmit(this);">';
-				$tabcont .= '<div><label class="padding_label">'._L('Password').':</label><input type="password" name="password" value="" id="adminLoginPassword"></div>';
+				$tabcont .= '<div><label class="padding_label" for="adminLoginPassword">'._L('Password').':</label><input type="password" name="password" value="" id="adminLoginPassword"></div>';
 				$tabcont .= '<br><input type="submit" value="'._L('Login').'"><br><br>';
 				$tabcont .= '</form>';
 				$tabcont .= '<p><a '.OIDplus::gui()->link('oidplus:forgot_password_admin').'>'._L('Forgot password?').'</a><br>';

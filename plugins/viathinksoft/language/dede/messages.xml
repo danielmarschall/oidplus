@@ -62,6 +62,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		%1 datasets
+		]]></source>
+		<target><![CDATA[
+		%1 Datensätze
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		%1 files are included in the manifest XML, but this plugin type does not allow such files.
 		]]></source>
 		<target><![CDATA[
@@ -662,6 +670,22 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Attention: In case you are cloning a system, e.g. in order to create a staging environment, please DO NOT copy the private key, as this would cause two systems to have the same System ID.
+		]]></source>
+		<target><![CDATA[
+		Achtung: Falls Sie ein System klonen möchten, z.B. um eine Test-Umgebung einzurichten, kopieren Sie bitte NICHT den Privaten Schlüssel, da dies dazu führen würde, dass zwei Systeme die gleiche System ID erhalten würden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Attention: Some Database Management Systems (DBMS), OIDplus connectivity plugins, and OIDplus SQL Slang plugins might export and import data differently regarding NULL values, time zones, boolean values, Unicode characters, etc. Please use backup/restore with caution and consider testing the restore procedure on a staging environment first.
+		]]></source>
+		<target><![CDATA[
+		Achtung: Manche Datenbanksysteme (DBMS), OIDplus Datenbank-Plugins und OIDplus SQL-Dialekt-Plugins behandeln Daten beim Import und Export unterschiedlich, z.B. bezüglich NULL-Werten, Zeitzonen, Boolean Werte, Unicode-Zeichen, usw. Bitte testen Sie die Sichern/Wiederherstellen-Prozedur gründlich, z.B. in einer Testumgebung, bevor Sie Änderungen an einem Produktivsystem vornehmen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Attention: Takes a long time!
 		]]></source>
 		<target><![CDATA[
@@ -806,14 +830,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Authentication failed
-		]]></source>
-		<target><![CDATA[
-		Zugriffsfehler
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Authentication token(s), comma separated (optional)
 		]]></source>
 		<target><![CDATA[
@@ -866,6 +882,54 @@
 		]]></source>
 		<target><![CDATA[
 		Verfügbare Objekte / Kategorien
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Backup
+		]]></source>
+		<target><![CDATA[
+		Datensicherung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Backup cannot be restored, because the number of "%1" does not match
+		]]></source>
+		<target><![CDATA[
+		Datensicherung konnte nicht eingespielt werden, da die Anzahl von "%1" Datensätzen nicht übereinstimmt
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Backup cannot be restored, because the number of "%1" is invalid
+		]]></source>
+		<target><![CDATA[
+		Datensicherung konnte nicht eingespielt werden, da die Anzahl von "%1" Datensätzen ungültig ist
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Backup cannot be restored, because you want to import "%1", but the file was not created with this data.
+		]]></source>
+		<target><![CDATA[
+		Datensicherung konnte nicht eingespielt werden, da Sie "%1" importieren möchten, die Datensicherung aber nicht mit diesen Daten erstellt wurde.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Backup done
+		]]></source>
+		<target><![CDATA[
+		Datensicherung erfolgreich erstellt
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Backup restore done
+		]]></source>
+		<target><![CDATA[
+		Datensicherung erfolgreich eingespielt
 		]]></target>
 	</message>
 	<message>
@@ -1310,6 +1374,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Choose database backup file here
+		]]></source>
+		<target><![CDATA[
+		Bitte Datensicherungs-Datei hier auswählen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Class %1 is erroneous: At least one fetch-method needs to be overridden
 		]]></source>
 		<target><![CDATA[
@@ -1374,6 +1446,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Configuration
+		]]></source>
+		<target><![CDATA[
+		Systemkonfiguration
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Configuration File Generator
 		]]></source>
 		<target><![CDATA[
@@ -1410,6 +1490,14 @@
 		]]></source>
 		<target><![CDATA[
 		In Zwischenablage kopieren
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Could not decode JSON structure of backup file
+		]]></source>
+		<target><![CDATA[
+		Kann JSON-Struktur der Datensicherungs-Datei nicht lesen
 		]]></target>
 	</message>
 	<message>
@@ -1466,6 +1554,14 @@
 		]]></source>
 		<target><![CDATA[
 		Eine neue RA manuell erstellen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Create database backup
+		]]></source>
+		<target><![CDATA[
+		Datensicherung erstellen
 		]]></target>
 	</message>
 	<message>
@@ -1702,10 +1798,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Data Transfer (oid-info.com)
+		Data Exchange (oid-info.com)
 		]]></source>
 		<target><![CDATA[
-		Datentransfer (oid-info.com)
+		Daten-Austausch (oid-info.com)
 		]]></target>
 	</message>
 	<message>
@@ -1722,6 +1818,14 @@
 		]]></source>
 		<target><![CDATA[
 		Datenbank
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Database Backup
+		]]></source>
+		<target><![CDATA[
+		Datenbank-Backup
 		]]></target>
 	</message>
 	<message>
@@ -1822,10 +1926,34 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Decryption failed
+		Decryption failed (Internal error)
 		]]></source>
 		<target><![CDATA[
-		Entschlüsselung fehlgeschlagen!
+		Entschlüsselung fehlgeschlagen (Interner Fehler)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Decryption failed (OpenSSL not installed)
+		]]></source>
+		<target><![CDATA[
+		Entschlüsselung fehlgeschlagen (OpenSSL nicht installiert)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Decryption failed (Unexpected encryption version)
+		]]></source>
+		<target><![CDATA[
+		Entschlüsselung fehlgeschlagen (Nicht unterstützte Version)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Decryption failed (wrong password)
+		]]></source>
+		<target><![CDATA[
+		Entschlüsselung fehlgeschlagen (Falsches Passwort)
 		]]></target>
 	</message>
 	<message>
@@ -2054,6 +2182,22 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Download a database backup file with the following contents:
+		]]></source>
+		<target><![CDATA[
+		Eine Datensicherung mit folgenden Inhalten herunterladen:
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Download backup
+		]]></source>
+		<target><![CDATA[
+		Herunterladen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Download extension from Microsoft
 		]]></source>
 		<target><![CDATA[
@@ -2150,6 +2294,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Encrypt backup file with the following password (optional)
+		]]></source>
+		<target><![CDATA[
+		Sicherungsdatei mit folgendem Passwort verschlüsseln (optional)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Endpoints
 		]]></source>
 		<target><![CDATA[
@@ -2218,6 +2370,14 @@
 		]]></source>
 		<target><![CDATA[
 		Fehler beim Erstellen des Passwort-Hashs
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Error during restore of backup: Cannot get insert_id of log entry!
+		]]></source>
+		<target><![CDATA[
+		Fehler beim Wiederherstellen der Sicherung: Kann nicht insert_id von einem Logbuch-Eintrag erhalten!
 		]]></target>
 	</message>
 	<message>
@@ -2514,6 +2674,14 @@
 		]]></source>
 		<target><![CDATA[
 		Datei-Anhänge
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		File cannot be restored, because it has a wrong file format (schema)
+		]]></source>
+		<target><![CDATA[
+		Datei kann nicht wiederhergestellt werden, da sie das falsche Format (Schema) hat
 		]]></target>
 	</message>
 	<message>
@@ -3206,6 +3374,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		In case the backup is encrypted, enter the decryption password here
+		]]></source>
+		<target><![CDATA[
+		Fall die Datensicherung verschlüsselt ist, geben Sie hier das Passwort ein
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		In order to use this feature, you need to have at least one (root) OID added in your system, and the system needs to report the newly added root to the directory service (the reporting interval is 1 hour).
 		]]></source>
 		<target><![CDATA[
@@ -3746,6 +3922,14 @@
 		]]></source>
 		<target><![CDATA[
 		Ort
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Log messages
+		]]></source>
+		<target><![CDATA[
+		Logbuch-Einträge
 		]]></target>
 	</message>
 	<message>
@@ -5190,6 +5374,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Password (repeat)
+		]]></source>
+		<target><![CDATA[
+		Passwort (wiederholen)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Password is too long (max %1 bytes)
 		]]></source>
 		<target><![CDATA[
@@ -5878,6 +6070,22 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Private key
+		]]></source>
+		<target><![CDATA[
+		Privater Schlüssel
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Private key (Highly confidential!)
+		]]></source>
+		<target><![CDATA[
+		Privater Schlüssel (streng geheim)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Private/Public key creation failed
 		]]></source>
 		<target><![CDATA[
@@ -6134,6 +6342,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Registration Authorities
+		]]></source>
+		<target><![CDATA[
+		Registrierungsstellen (RA)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Registration Authority
 		]]></source>
 		<target><![CDATA[
@@ -6282,6 +6498,38 @@
 		]]></source>
 		<target><![CDATA[
 		%1 auflösen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Restore
+		]]></source>
+		<target><![CDATA[
+		Wiederherstellen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Restore backup
+		]]></source>
+		<target><![CDATA[
+		Backup einspielen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Restore database backup
+		]]></source>
+		<target><![CDATA[
+		Datenbank-Backup einspielen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Restore the following contents from the backup file (existing data will be deleted):
+		]]></source>
+		<target><![CDATA[
+		Die folgenden Inhalte aus einer Datensicherungs-Datei wiederherstellen (bestehende Daten werden gelöscht):
 		]]></target>
 	</message>
 	<message>
@@ -8662,10 +8910,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		You need to enable JavaScript to use the login area.
+		You need to enable JavaScript to use this feature.
 		]]></source>
 		<target><![CDATA[
-		Sie müssen JavaScript aktivieren, um den Anmeldebereich zu verwenden.
+		Sie müssen JavaScript aktivieren, um diesen Bereich zu verwenden.
 		]]></target>
 	</message>
 	<message>

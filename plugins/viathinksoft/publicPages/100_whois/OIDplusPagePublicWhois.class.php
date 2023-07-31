@@ -116,7 +116,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 			//$out['text'] .= '<p>'._L('RFC Internet Draft').': <a href="'.OIDplus::webpath(__DIR__.'/whois/rfc/draft-viathinksoft-oidip-06.txt', true).'" target="_blank">draft-viathinksoft-oidip-06</a></p>';
 			# ---
 			$out['text'] .= '<noscript>';
-			$out['text'] .= '<p><font color="red">'._L('You need to enable JavaScript to use the login area.').'</font></p>';
+			$out['text'] .= '<p><font color="red">'._L('You need to enable JavaScript to use this feature.').'</font></p>';
 			$out['text'] .= '</noscript>';
 			$out['text'] .= '<div id="oidipArea" style="display:none">';
 			$out['text'] .= '<h2>'._L('Parameters for new request').'</h2>';

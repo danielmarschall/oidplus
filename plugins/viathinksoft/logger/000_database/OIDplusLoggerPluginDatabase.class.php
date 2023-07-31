@@ -41,10 +41,20 @@ class OIDplusLoggerPluginDatabase extends OIDplusLoggerPlugin {
 	 */
 	public function log(OIDplusLogEvent $event): bool {
 		$addr = OIDplus::getClientIpAddress() ?: '';
-		OIDplus::dbIsolated()->query("insert into ###log (addr, unix_ts, event) values (?, ?, ?)", array($addr, time(), $event->getMessage())); // TODO: why unix_ts? Why not a database DATETIME field?!
-		$log_id = OIDplus::dbIsolated()->insert_id();
+
+		if (OIDplus::db()->transaction_supported() && (OIDplus::db()->transaction_level() > 0)) {
+			// If a transaction is open, we must use it, otherwise we might get a deadlock if the isolated connection is waiting for the main connection which is in the transaction
+			// (Happens with Backup Restore plugin)
+			$db = OIDplus::db();
+		} else {
+			// Isolated connection is good for detecting the last insert ID...
+			$db = OIDplus::dbIsolated();
+		}
+
+		$db->query("insert into ###log (addr, unix_ts, event) values (?, ?, ?)", array($addr, time(), $event->getMessage())); // TODO: why unix_ts? Why not a database DATETIME field?!
+		$log_id = $db->insert_id();
 		if ($log_id === 0) {
-			$log_id = OIDplus::dbIsolated()->getScalar("select max(id) as last_id from ###log");
+			$log_id = $db->getScalar("select max(id) as last_id from ###log");
 			if (!$log_id) throw new OIDplusException(_L('Could not log event'));
 		}
 
@@ -56,12 +66,12 @@ class OIDplusLoggerPluginDatabase extends OIDplusLoggerPlugin {
 				$object = $target->getObject();
 				if (in_array($object, $object_dupe_check)) continue;
 				$object_dupe_check[] = $object;
-				OIDplus::dbIsolated()->query("insert into ###log_object (log_id, severity, object) values (?, ?, ?)", array((int)$log_id, (int)$severity, $object));
+				$db->query("insert into ###log_object (log_id, severity, object) values (?, ?, ?)", array((int)$log_id, (int)$severity, $object));
 			} else if ($target instanceof OIDplusLogTargetUser) {
 				$username = $target->getUsername();
 				if (in_array($username, $user_dupe_check)) continue;
 				$user_dupe_check[] = $username;
-				OIDplus::dbIsolated()->query("insert into ###log_user (log_id, severity, username) values (?, ?, ?)", array((int)$log_id, (int)$severity, $username));
+				$db->query("insert into ###log_user (log_id, severity, username) values (?, ?, ?)", array((int)$log_id, (int)$severity, $username));
 			} else {
 				assert(false);
 			}
