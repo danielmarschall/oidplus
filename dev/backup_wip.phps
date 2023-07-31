@@ -32,16 +32,17 @@ ob_start(); // allow cookie headers to be sent
 OIDplus::init(true);
 
 
-
-
-define('BACKUP_RECOVERY_SPECIAL_TEST', true); // TODO: Disable on release! Just for testing the backup/restore procedure!!!
-
+const BACKUP_RECOVERY_SPECIAL_TEST = true; // TODO: Disable on release! Just for testing the backup/restore procedure!!!
 
 
 
+
+
+/**
+ * @param array $num_rows
+ * @return string
+ */
 /*private*/ function oidplus_num_rows_list(array $num_rows): string {
-	$out = '';
-
 	$ary2 = [];
 	foreach ($num_rows as $table => $cnt) {
 		if ($cnt !== "n/a") $ary2[] = "$table=$cnt";
@@ -56,7 +57,20 @@ define('BACKUP_RECOVERY_SPECIAL_TEST', true); // TODO: Disable on release! Just 
 
 // ================ Backup ================
 
-/*public*/ function oidplus_backup_db(string $backup_file, bool $export_objects=true, bool $export_ra=true, bool $export_config=false, bool $export_log=false, bool $export_pki=false): void {
+
+/**
+ * @param string $backup_file
+ * @param bool $export_objects
+ * @param bool $export_ra
+ * @param bool $export_config
+ * @param bool $export_log
+ * @param bool $export_pki
+ * @return void
+ * @throws OIDplusException
+ * @throws ReflectionException
+ * @throws \ViaThinkSoft\OIDplus\OIDplusConfigInitializationException
+ */
+/*public*/ function oidplus_backup_db(string $backup_file, bool $export_objects=true, bool $export_ra=true, bool $export_config=false, bool $export_log=false, bool $export_pki=false)/*: void*/ {
 	$num_rows = [
 		"objects" => $export_objects ? 0 : "n/a",
 		"asn1id" => $export_objects ? 0 : "n/a",
@@ -252,7 +266,7 @@ define('BACKUP_RECOVERY_SPECIAL_TEST', true); // TODO: Disable on release! Just 
 
 	$encoded_data = json_encode($json, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
 	if (@file_put_contents($backup_file, $encoded_data) === false) {
-		throw new OIDplusException("Could not write file to disk: $backup_file");
+		throw new OIDplusException(_L("Could not write file to disk: %1", $backup_file));
 	}
 
 	OIDplus::logger()->log("V2:[INFO]A", "Created backup: ".oidplus_num_rows_list($num_rows));
@@ -272,7 +286,19 @@ define('BACKUP_RECOVERY_SPECIAL_TEST', true); // TODO: Disable on release! Just 
 
 // ================ Recovery ================
 
-/*public*/ function oidplus_restore_db(string $backup_file, bool $import_objects=true, bool $import_ra=true, bool $import_config=false, bool $import_log=false, bool $import_pki=false): void {
+
+/**
+ * @param string $backup_file
+ * @param bool $import_objects
+ * @param bool $import_ra
+ * @param bool $import_config
+ * @param bool $import_log
+ * @param bool $import_pki
+ * @return void
+ * @throws OIDplusException
+ * @throws \ViaThinkSoft\OIDplus\OIDplusConfigInitializationException
+ */
+/*public*/ function oidplus_restore_db(string $backup_file, bool $import_objects=true, bool $import_ra=true, bool $import_config=false, bool $import_log=false, bool $import_pki=false)/*: void*/ {
 	$num_rows = [
 		"objects" => $import_objects ? 0 : "n/a",
 		"asn1id" => $import_objects ? 0 : "n/a",
@@ -286,12 +312,12 @@ define('BACKUP_RECOVERY_SPECIAL_TEST', true); // TODO: Disable on release! Just 
 	];
 
 	$cont = @file_get_contents($backup_file);
-	if ($cont === false) throw new OIDplusException("Could not read file from disk: $backup_file");
+	if ($cont === false) throw new OIDplusException(_L("Could not read file from disk: %1", $backup_file));
 	$json = @json_decode($cont,true);
-	if ($json === false) throw new OIDplusException("Could not decode JSON structure of $backup_file");
+	if ($json === false) throw new OIDplusException(_L("Could not decode JSON structure of %1", $backup_file));
 
 	if (($json["\$schema"]??"") != "urn:oid:2.999") {
-		throw new OIDplusException("File $backup_file cannot be restored, because it has a wrong file format (schema)");
+		throw new OIDplusException(_L("File %1 cannot be restored, because it has a wrong file format (schema)", $backup_file));
 	}
 
 	if ($import_objects) {
@@ -515,11 +541,14 @@ define('BACKUP_RECOVERY_SPECIAL_TEST', true); // TODO: Disable on release! Just 
 						$row["event"]??null)
 				);
 				$row['id'] = OIDplus::db()->insert_id();
+				if ($row['id'] <= 0) {
+					throw new OIDplusException(_L("Error during restore of %1: Cannot get insert_id of log entry!", $backup_file));
+				}
 
 				foreach (($row["objects"]??[]) as $row2) {
 					$num_rows["log_object"]++;
 					OIDplus::db()->query("insert into ###log_object (log_id, object, severity) values (?, ?, ?)",
-						array($row["id"]??null, // sic: $row, not $row2
+						array($row["id"], // sic: $row, not $row2
 							$row2["object"]??null,
 							$row2["severity"]??null)
 					);
@@ -528,7 +557,7 @@ define('BACKUP_RECOVERY_SPECIAL_TEST', true); // TODO: Disable on release! Just 
 				foreach (($row["users"]??[]) as $row2) {
 					$num_rows["log_user"]++;
 					OIDplus::db()->query("insert into ###log_user (log_id, username, severity) values (?, ?, ?)",
-						array($row["id"]??null, // sic: $row, not $row2
+						array($row["id"], // sic: $row, not $row2
 							$row2["username"]??null,
 							$row2["severity"]??null)
 					);
@@ -542,7 +571,7 @@ define('BACKUP_RECOVERY_SPECIAL_TEST', true); // TODO: Disable on release! Just 
 			$pubkey = $json["pki"][0]["public_key"] ?? null;
 			if ($privkey && $pubkey) {
 				$num_rows["pki"]++;
-				// Note: The private key is not encrypted. It will be re-encrypted in OIDplus::getPkiStatus()
+				// Note: If the private key is not encrypted, then it will be re-encrypted during the next call of OIDplus::getPkiStatus()
 				OIDplus::db()->query("update ###config set value = ? where name = 'oidplus_private_key'", [$privkey]);
 				OIDplus::db()->query("update ###config set value = ? where name = 'oidplus_public_key'", [$pubkey]);
 				OIDplus::config()->clearCache();
