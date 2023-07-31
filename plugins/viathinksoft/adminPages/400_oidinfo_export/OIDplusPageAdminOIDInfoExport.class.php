@@ -614,7 +614,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 
 		if ($id === 'oidplus:datatransfer') {
 			$handled = true;
-			$out['title'] = _L('Data Transfer');
+			$out['title'] = _L('Data Transfer (oid-info.com)');
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
@@ -689,7 +689,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 		$json[] = array(
 			'id' => 'oidplus:datatransfer',
 			'icon' => $tree_icon,
-			'text' => _L('Data Transfer')
+			'text' => _L('Data Transfer (oid-info.com)')
 		);
 
 		return true;
