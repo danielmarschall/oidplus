@@ -3,7 +3,7 @@
 /*
  * PHP Utilities - Misc functions
  * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
- * Revision: 2023-02-27
+ * Revision: 2023-08-01
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -137,23 +137,34 @@ function wildcard_is_dir($dir) {
 }
 
 function isInternetExplorer() {
-	// see also includes/oidplus_base.js
 	$ua = isset($_SERVER['HTTP_USER_AGENT']) ? $_SERVER['HTTP_USER_AGENT'] : '';
 	return ((strpos($ua,'MSIE ') !== false) || (strpos($ua,'Trident/') !== false));
 }
 
-if (!function_exists('str_ends_with')) {
+if (!function_exists('str_starts_with')) {
 	// PHP 7.x compatibility
-	function str_ends_with($haystack, $needle) {
-		$length = strlen($needle);
-		return $length > 0 ? substr($haystack, -$length) === $needle : true;
+	// source: Laravel Framework
+	// https://github.com/laravel/framework/blob/8.x/src/Illuminate/Support/Str.php
+	function str_starts_with($haystack, $needle) {
+		return (string)$needle !== '' && strncmp($haystack, $needle, strlen($needle)) === 0;
 	}
 }
 
-if (!function_exists('str_starts_with')) {
+if (!function_exists('str_ends_with')) {
 	// PHP 7.x compatibility
-	function str_starts_with($haystack, $needle) {
-		return strpos($haystack, $needle) === 0;
+	// source: Laravel Framework
+	// https://github.com/laravel/framework/blob/8.x/src/Illuminate/Support/Str.php
+	function str_ends_with($haystack, $needle) {
+		return $needle !== '' && substr($haystack, -strlen($needle)) === (string)$needle;
+	}
+}
+
+if (!function_exists('str_contains')) {
+	// PHP 7.x compatibility
+	// source: Laravel Framework
+	// https://github.com/laravel/framework/blob/8.x/src/Illuminate/Support/Str.php
+	function str_contains($haystack, $needle) {
+		return $needle !== '' && mb_strpos($haystack, $needle) !== false;
 	}
 }
 

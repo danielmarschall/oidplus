@@ -210,7 +210,6 @@ INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.
 
 -- 1.3.6.1.4.1
 INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1', 'enterprise', '0', '1');
-INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1', 'enterprises', '0', '1');
 
 -- 1.3.6.1.4.1.12798.1
 INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.12798.1', 'member', '0', '1');
@@ -344,4 +343,4 @@ INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:2.999', char(506
 INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:2.999', char(20363), '1', '1');
 INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:2.999', 'Beispiel', '1', '1');
 
--- Generator "generate_wellknown_other_sqlite" checksum e57e46d5
+-- Generator "generate_wellknown_other_sqlite" checksum 55f8f00d
