@@ -55,13 +55,17 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePluginAdmin {
 				$out['text'] = '<pre>';
 				while ($row = $res->fetch_array()) {
 					$severity = 0;
+					$contains_messages_for_me = false;
 					// ---
 					$users = array();
 					$res2 = OIDplus::db()->query("select username, severity from ###log_user ".
 					                             "where log_id = ?", array((int)$row['id']));
 					while ($row2 = $res2->fetch_array()) {
 						$users[] = $row2['username'];
-						if ($row2['username'] == 'admin') $severity = $row2['severity'];
+						if ($row2['username'] == 'admin') {
+							$severity = $row2['severity'];
+							$contains_messages_for_me = true;
+						}
 					}
 					$users = count($users) > 0 ? '; '._L('affected users: %1',implode(', ',$users)) : '';
 					// ---
@@ -75,7 +79,9 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePluginAdmin {
 					// ---
 					$addr = empty($row['addr']) ? _L('no address') : $row['addr'];
 					// ---
+					if ($contains_messages_for_me) $out['text'] .= '<b>';
 					$out['text'] .= '<span class="severity_'.$severity.'">' . date('Y-m-d H:i:s', (int)$row['unix_ts']) . ': ' . htmlentities($row["event"])." (" . htmlentities($addr.$users.$objects) . ")</span>\n";
+					if ($contains_messages_for_me) $out['text'] .= '</b>';
 				}
 				$out['text'] .= '</pre>';
 			} else {

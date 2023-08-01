@@ -505,10 +505,12 @@ class OIDplusLogger extends OIDplusBaseClass {
 
 		$result = false;
 
-		foreach ($loggerPlugins as $plugin) {
-			$reason = '';
-			if ($plugin->available($reason)) {
-				$result |= $plugin->log($logEvent);
+		if (count($logEvent->getTargets()) > 0) { // <-- count(targets)=0 for example of OIDRA(%1) gets notified during delete, but the object has no RA
+			foreach ($loggerPlugins as $plugin) {
+				$reason = '';
+				if ($plugin->available($reason)) {
+					$result |= $plugin->log($logEvent);
+				}
 			}
 		}
 
