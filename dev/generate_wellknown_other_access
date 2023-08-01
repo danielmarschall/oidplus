@@ -25,6 +25,8 @@ select '-- Use the tool dev/generate_wellknown_other_access to generate this fil
  * limitations under the License.
  */
 
+use ViaThinkSoft\OIDplus\OIDplus;
+
 require_once __DIR__ . '/../includes/oidplus.inc.php';
 
 OIDplus::init(false);

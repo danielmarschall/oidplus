@@ -511,8 +511,14 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 
 			try {
 
-				$rel_url = substr($_SERVER['REQUEST_URI'], strlen(OIDplus::webpath(null, OIDplus::PATH_RELATIVE_TO_ROOT)));
-				if (str_starts_with($rel_url, 'rest/')) { // <== TODO: Find a way how to move this into the plugin, since REST does not belong to the core.
+				if (isset($_SERVER['REQUEST_URI'])) {
+					$rel_url = substr($_SERVER['REQUEST_URI'], strlen(OIDplus::webpath(null, OIDplus::PATH_RELATIVE_TO_ROOT)));
+					$only_use_bearer = str_starts_with($rel_url, 'rest/'); // <== TODO: Find a way how to move this into the plugin, since REST does not belong to the core.
+				} else {
+					$only_use_bearer = false;
+				}
+
+				if ($only_use_bearer) {
 
 					// REST may only use Bearer Authentication
 					$bearer = getBearerToken();

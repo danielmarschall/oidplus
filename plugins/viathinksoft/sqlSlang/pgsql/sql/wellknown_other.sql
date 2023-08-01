@@ -210,7 +210,6 @@ INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.
 
 -- 1.3.6.1.4.1
 INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1', 'enterprise', false, true);
-INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1', 'enterprises', false, true);
 
 -- 1.3.6.1.4.1.12798.1
 INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.12798.1', 'member', false, true);
@@ -344,4 +343,4 @@ INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:2.999', convert_
 INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:2.999', convert_from(decode('5L6L', 'base64'), 'utf-8'), true, true);
 INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:2.999', 'Beispiel', true, true);
 
--- Generator "generate_wellknown_other_pgsql" checksum e57e46d5
+-- Generator "generate_wellknown_other_pgsql" checksum 55f8f00d

@@ -21,8 +21,11 @@
 $dir = __DIR__ . '/../../';
 
 define('INSIDE_OIDPLUS',true);
+include_once $dir.'vendor/danielmarschall/php_utils/misc_functions.inc.php'; // PHP 7.x compat functions
 require_once $dir.'includes/classes/OIDplusBaseClass.class.php';
 require_once $dir.'includes/classes/OIDplusLogger.class.php';
+
+const VERBOSE = false;
 
 use ViaThinkSoft\OIDplus\OIDplusLogger;
 
@@ -51,7 +54,7 @@ foreach(new RecursiveIteratorIterator($it) as $file) {
 				$file = substr($file, strlen($dir));
 				echo "Invalid maskcode '$str' in file '$file'\n";
 			} else {
-				//echo 'Valid: '.$str."\n";
+				if (VERBOSE) echo 'Valid: '.$str."\n";
 			}
 		}
 	}
