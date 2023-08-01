@@ -213,7 +213,7 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 
 		try {
 			/** @phpstan-ignore-next-line */
-			$this->conn->Execute( "SET NAMES 'UTF-8'"); // Does most likely NOT work with ADO. Try adding ";CHARSET=UTF8" (or similar) to the DSN
+			$this->conn->Execute("SET NAMES 'UTF-8'"); // Does most likely NOT work with ADO. Try adding ";CHARSET=UTF8" (or similar) to the DSN
 		} catch (\Exception $e) {
 		}
 

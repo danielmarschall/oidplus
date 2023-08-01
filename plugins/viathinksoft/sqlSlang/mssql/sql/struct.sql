@@ -31,7 +31,7 @@ IF OBJECT_ID('dbo.asn1id', 'U') IS NOT NULL /*Backwards compatibility*/
 CREATE TABLE [dbo].[asn1id](
 	[lfd] [int] IDENTITY(1,1) NOT NULL,
 	[oid] [nvarchar](255) COLLATE German_PhoneBook_CS_AS NOT NULL,
-	[name] [nvarchar](255) NOT NULL,
+	[name] [nvarchar](255) COLLATE German_PhoneBook_CS_AS NOT NULL,
 	[standardized] [bit] NOT NULL CONSTRAINT [DF__asn1id__standardized]  DEFAULT ('0'),
 	[well_known] [bit] NOT NULL CONSTRAINT [DF__asn1id__well_known]  DEFAULT ('0'),
  	CONSTRAINT [PK_asn1id] PRIMARY KEY CLUSTERED 
@@ -53,7 +53,7 @@ IF OBJECT_ID('dbo.iri', 'U') IS NOT NULL /*Backwards compatibility*/
 CREATE TABLE [dbo].[iri](
 	[lfd] [int] IDENTITY(1,1) NOT NULL,
 	[oid] [nvarchar](255) COLLATE German_PhoneBook_CS_AS NOT NULL,
-	[name] [nvarchar](255) NOT NULL,
+	[name] [nvarchar](255) COLLATE German_PhoneBook_CS_AS NOT NULL,
 	[longarc] [bit] NOT NULL CONSTRAINT [DF__iri__longarc]  DEFAULT ('0'),
 	[well_known] [bit] NOT NULL CONSTRAINT [DF__iri__well_known]  DEFAULT ('0'),
 	CONSTRAINT [PK_iri] PRIMARY KEY CLUSTERED 
