@@ -153,12 +153,12 @@ try {
 
 	$json_out = array();
 	$json_out['status'] = -2;
-	$json_out['error'] = $errmsg;
+	$json_out['error'] = strip_tags($errmsg);
 	$out = json_encode($json_out);
 
 	if ($out === false) {
 		// Some modules (like ODBC) might output non-UTF8 data
-		$json_out['error'] = vts_utf8_encode($errmsg);
+		$json_out['error'] = vts_utf8_encode(strip_tags($errmsg));
 		$out = json_encode($json_out);
 	}
 

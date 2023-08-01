@@ -265,6 +265,7 @@ class OIDplusGui extends OIDplusBaseClass {
 
 		$head_elems = array();
 		$head_elems[] = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
+		$head_elems[] = '<meta charset="UTF-8">';
 		if (OIDplus::baseConfig()->getValue('DATABASE_PLUGIN','') !== '') {
 			$head_elems[] = '<meta name="OIDplus-SystemTitle" content="'.htmlentities(OIDplus::config()->getValue('system_title')).'">'; // Do not remove. This meta tag is acessed by oidplus_base.js
 		}

@@ -61,9 +61,9 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 			} else {
 				// TODO: More types?
 				if ($this->slangDetectionDone) {
-					$replace = "'".$this->getSlang()->escapeString($arg)."'";
+					$replace = "N'".$this->getSlang()->escapeString($arg)."'";
 				} else {
-					$replace = "'".str_replace("'", "''", $arg)."'";
+					$replace = "N'".str_replace("'", "''", $arg)."'";
 				}
 			}
 			$pos = strpos($sql, $needle);
@@ -99,7 +99,7 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 			try {
 				$fetchableRowsExpected = $this->slangDetectionDone ? $this->getSlang()->fetchableRowsExpected($sql) : str_starts_with(trim(strtolower($sql)),'select');
 				if ($fetchableRowsExpected) {
-					$res = new \COM("ADODB.Recordset");
+					$res = new \COM("ADODB.Recordset", NULL, 65001/*CP_UTF8*/);
 
 					$res->Open($sql, $this->conn, 3/*adOpenStatic*/, 3/*adLockOptimistic*/);   /** @phpstan-ignore-line */
 
@@ -122,6 +122,14 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 
 				} else {
 					$this->conn->Execute($sql, $this->rowsAffected);
+
+					// Alternatively:
+					//$cmd = new \COM("ADODB.Command", NULL, 65001/*CP_UTF8*/);
+					//$cmd->CommandText = $sql;
+					//$cmd->CommandType = 1/*adCmdText*/;
+					//$cmd->ActiveConnection = $this->conn;
+					//$cmd->Execute();
+
 					return new OIDplusQueryResultADO(null);
 				}
 			} catch (\Exception $e) {
