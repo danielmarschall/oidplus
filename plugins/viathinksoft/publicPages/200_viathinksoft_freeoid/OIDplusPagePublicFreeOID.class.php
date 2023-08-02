@@ -111,6 +111,10 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 			throw new OIDplusException(_L('Invalid or expired authentication key'));
 		}
 
+		if ($already_registered_oid = $this->alreadyHasFreeOid($email, true)) {
+			throw new OIDplusHtmlException(_L('This email address already has a FreeOID registered (%1)', '<a '.OIDplus::gui()->link($already_registered_oid).'>'.htmlentities($already_registered_oid).'</a>'));
+		}
+
 		// 1. step: Check entered data and add the RA to the database
 
 		$ra = new OIDplusRA($email);
