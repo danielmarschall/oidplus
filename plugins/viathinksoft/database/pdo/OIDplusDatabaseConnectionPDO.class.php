@@ -154,7 +154,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 
 			if (stripos($dsn,"charset=") === false) {
 				// Try to extend DSN with charset
-				// Note: For MySQL, must be utf8 or utf8, and not UTF-8
+				// Note: For MySQL, must be utf8mb4 or utf8, and not UTF-8
 				try {
 					$this->conn = new \PDO("$dsn;charset=utf8mb4", $username, $password, $options);
 				} catch (\Exception $e1) {

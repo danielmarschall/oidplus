@@ -25,7 +25,7 @@ Unicode compatibility:
 -         PDO+MySQL: Unicode (with emoji) works, but PDO+ODBC+MSSQL and PDO+ODBC+ACCESS does not work, so it's ODBC's or ODBC-Driver's fault. Can we do something about it?
 -         ODBC+MSSQL and ODBC+ACCESS: Unicode does not work. So it's ODBC's or ODBC-Driver's fault. Can we do something about it?
           (Note: OIDplus can read and write UTF-8 with ODBC and PDO and it looks good if you look at it in OIDplus. However, the data is actually double-encoded, which can be noticed if you view the data in SQL Management Studio, Access, or any other tool. When you insert Unicode in SQL Management Studio, then it shows up as '??' in OIDplus)
--         The following trick might work (not tested) https://www.php.net/manual/en/function.odbc-connect.php#123797 , so that Unicode can work correctly with ODBC
+-         The following trick might work (not tested) https://www.php.net/manual/en/function.odbc-connect.php#123797 , so that Unicode can work correctly with ODBC:  Control Panel > Region > Administrative > Change system locale >Check '<i>Use Unicode UTF-8 for worldwide language support.
 - [DONE]  ADO+OLEDB works with Unicode and emoji. It is important that the COM class is created with codepage 65001, and that SQL commands use N'...' strings
 - [DONE]  SRVSRV plugin is capable of Unicode and pile of poo Emoji. Tested reading and writing (Update commmand).
 
