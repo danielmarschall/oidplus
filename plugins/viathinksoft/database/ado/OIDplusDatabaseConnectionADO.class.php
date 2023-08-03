@@ -184,7 +184,7 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 		try {
 			if (stripos($connStr, "charset=") === false) {
 				// Try to extend DSN with charset
-				// Note: For MySQL, must be utf8 or utf8, and not UTF-8
+				// Note: For MySQL, must be utf8mb4 or utf8, and not UTF-8
 				try {
 					/** @phpstan-ignore-next-line */
 					$conn->Open("$connStr;charset=utf8mb4");

@@ -127,6 +127,8 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 				$replace = 'NULL';
 			} else {
 				// TODO: More types?
+				// Note: Actually, the strings should be N'...' instead of '...',
+				//       but since Unicode does not work with ODBC, it does not make a difference
 				if ($this->slangDetectionDone) {
 					$replace = "'".$this->getSlang()->escapeString($arg)."'";
 				} else {
@@ -191,12 +193,12 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 		if (!function_exists('odbc_connect')) throw new OIDplusConfigInitializationException(_L('PHP extension "%1" not installed','ODBC'));
 
 		// Try connecting to the database
-		$dsn      = OIDplus::baseConfig()->getValue('ODBC_DSN',      'DRIVER={SQL Server};SERVER=localhost;DATABASE=oidplus;CHARSET=UTF8');
+		$dsn      = OIDplus::baseConfig()->getValue('ODBC_DSN',      'DRIVER={SQL Server};SERVER=localhost;DATABASE=oidplus');
 		$username = OIDplus::baseConfig()->getValue('ODBC_USERNAME', '');
 		$password = OIDplus::baseConfig()->getValue('ODBC_PASSWORD', '');
 
 		// Try to extend DSN with charset
-		// Note: For MySQL, must be utf8 or utf8, and not UTF-8
+		// Note: For MySQL, must be utf8mb4 or utf8, and not UTF-8
 		if (stripos($dsn,"charset=") === false) {
 			$this->conn = odbc_connect("$dsn;charset=utf8mb4", $username, $password);
 			if (!$this->conn) $this->conn = odbc_connect("$dsn;charset=utf8", $username, $password);
