@@ -1331,7 +1331,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		if (!$objParent) return '';
 		$parentNS = $objParent::ns();
 
-		// http://www.oid-info.com/cgi-bin/display?a=list-by-category&category=Not%20allocating%20identifiers
+		// http://oid-info.com/cgi-bin/display?a=list-by-category&category=Not%20allocating%20identifiers
 		$no_asn1 = array(
 			'oid:1.3.6.1.4.1',
 			'oid:1.3.6.1.4.1.37476.9000',
@@ -1341,7 +1341,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			//'oid:1.2.840.113556.1.8000.2554' // Adhoc (GUID/UUID-based) customer use. It is probably the same case as the UUID OIDs, after all, these are UUIDs, too.
 		);
 
-		// http://www.oid-info.com/cgi-bin/display?a=list-by-category&category=Not%20allocating%20Unicode%20labels
+		// http://oid-info.com/cgi-bin/display?a=list-by-category&category=Not%20allocating%20Unicode%20labels
 		$no_iri = array(
 			'oid:1.2.250.1',
 			'oid:1.3.6.1.4.1',
