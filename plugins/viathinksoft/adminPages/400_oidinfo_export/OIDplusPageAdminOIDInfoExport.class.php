@@ -339,7 +339,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 
 								$row = $row_lookup[$local_oid];
 
-								$url = "https://oid-rep.orange-labs.fr/cgi-bin/manage?f=".oid_up($local_oid)."&a=create";
+								$url = "http://oid-info.com/cgi-bin/manage?f=".oid_up($local_oid)."&a=create";
 
 								$tmp = explode('.',$local_oid);
 								$url .= "&nb=".urlencode(array_pop($tmp));
@@ -594,7 +594,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 								$count++;
 								// Note: "Actions" is at the left, because it has a fixed width, so the user can continue clicking without the links moving if the OID length changes between lines
 								$out['text'] .= '<tr id="missing_oid_'.str_replace('.','_',$child_oid).'">'.
-								'<td><a target="_blank" href="https://oid-rep.orange-labs.fr/get/'.$child_oid.'">'._L('View OID at oid-info.com').'</a></td>'.
+								'<td><a target="_blank" href="http://oid-info.com/get/'.$child_oid.'">'._L('View OID at oid-info.com').'</a></td>'.
 								'<td><a href="javascript:OIDplusPageAdminOIDInfoExport.removeMissingOid(\''.$child_oid.'\');">'._L('Ignore for now').'</a></td>'.
 								'<td><a href="mailto:admin@oid-info.com">'._L('Report illegal OID').'</a></td>'.
 								(strpos($child_oid,'1.3.6.1.4.1.37476.30.9.') === 0 ? '<td>&nbsp;</td>' : '<td><a href="javascript:OIDplusPageAdminOIDInfoExport.importMissingOid(\''.$child_oid.'\');">'._L('Import OID').'</a></td>').
@@ -639,10 +639,10 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 			$out['text'] .= OIDplus::gui()->tabContentStart();
 			// ---------------- "Export" tab
 			$tabcont  = '<h2>'._L('Generate XML file containing all OIDs').'</h2>';
-			$tabcont .= '<p>'._L('These XML files are following the <a %1>XML schema</a> of <b>oid-info.com</b>. They can be used for various purposes though.','href="https://oid-rep.orange-labs.fr/oid.xsd" target="_blank"').'</p>';
+			$tabcont .= '<p>'._L('These XML files are following the <a %1>XML schema</a> of <b>oid-info.com</b>. They can be used for various purposes though.','href="http://oid-info.com/oid.xsd" target="_blank"').'</p>';
 			$tabcont .= '<p><input type="button" onclick="window.open(\''.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'oidinfo_export.php\',\'_blank\')" value="'._L('Generate XML (all OIDs)').'"></p>';
 			$tabcont .= '<p><input type="button" onclick="window.open(\''.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'oidinfo_export.php?online=1\',\'_blank\')" value="'._L('Generate XML (only OIDs which do not exist at oid-info.com)').'"></p>';
-			$tabcont .= '<p><a href="https://oid-rep.orange-labs.fr/submit.htm" target="_blank">'._L('Upload XML files manually to oid-info.com').'</a></p>';
+			$tabcont .= '<p><a href="http://oid-info.com/submit.htm" target="_blank">'._L('Upload XML files manually to oid-info.com').'</a></p>';
 			$tabcont .= '<br><p>'._L('Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!<br>It will cause various loss of information, e.g. because Non-OIDs like GUIDs are converted in OIDs and can\'t be converted back.').'</p>';
 			$tabcont .= '<h2>'._L('Automatic export to oid-info.com').'</h2>';
 			$privacy_level = OIDplus::config()->getValue('reg_privacy');
@@ -656,7 +656,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 			$out['text'] .= OIDplus::gui()->tabContentPage('export', $tabcont, $tab === 'export');
 			// ---------------- "Import" tab
 			$tabcont  = '<h2>'._L('Import XML file').'</h2>';
-			$tabcont .= '<p>'._L('These XML files are following the <a %1>XML schema</a> of <b>oid-info.com</b>.','href="https://oid-rep.orange-labs.fr/oid.xsd" target="_blank"').'</p>';
+			$tabcont .= '<p>'._L('These XML files are following the <a %1>XML schema</a> of <b>oid-info.com</b>.','href="http://oid-info.com/oid.xsd" target="_blank"').'</p>';
 			// TODO: we need a waiting animation!
 			$tabcont .= '<form action="javascript:void(0);" onsubmit="return OIDplusPageAdminOIDInfoExport.uploadXmlFileOnSubmit(this);" enctype="multipart/form-data" id="uploadXmlFileForm">';
 			$tabcont .= '<div>'._L('Choose XML file here').':<br><input type="file" name="userfile" value="" id="userfile">';
