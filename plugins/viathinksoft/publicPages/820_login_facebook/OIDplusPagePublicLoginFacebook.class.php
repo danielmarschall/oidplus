@@ -64,6 +64,9 @@ class OIDplusPagePublicLoginFacebook extends OIDplusPagePluginPublic
 			}
 
 			$out['text']  = '<p>'._L('Please wait...').'</p>';
+			$out['text'] .= '<noscript>';
+			$out['text'] .= '<p><font color="red">'._L('You need to enable JavaScript to use this feature.').'</font></p>';
+			$out['text'] .= '</noscript>';
 			$out['text'] .= '<form action="https://www.facebook.com/v8.0/dialog/oauth" method="GET">';
 			$out['text'] .= '<input type="hidden" name="client_id" value="'.htmlentities(OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_CLIENT_ID')).'">'."\n";
 			$out['text'] .= '<input type="hidden" name="redirect_uri" value="'.htmlentities('').'">'."\n"; // URL will be filled by JavaScript

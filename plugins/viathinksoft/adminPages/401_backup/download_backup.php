@@ -73,7 +73,7 @@ if ($encrypt) {
 		$encoded_data_gz = @gzdeflate($encoded_data, 9);
 		if ($encoded_data_gz) $encoded_data = 'GZIP'.$encoded_data_gz;
 	}
-	
+
 	$encoded_data = chunk_split(base64_encode(encrypt_str($encoded_data, $password1)));
 	$encoded_data =
 		"-----BEGIN OIDPLUS ENCRYPTED DATABASE BACKUP-----\r\n".
@@ -93,7 +93,8 @@ if ($cont) {
 	die($cont);
 }
 
-$filename = preg_replace('@[^a-z0-9]@', '-', strtolower($title)).'-backup-' . date('Y-m-d-H-i-s');
+$sysid = OIDplus::getSystemId();
+$filename = preg_replace('@[^a-z0-9]@', '-', strtolower($title)).($sysid ? '-'.$sysid : '').'-backup-' . date('Y-m-d-H-i-s');
 if ($encrypt) {
 	$filename .= '-encrypted.bak';
 	header('Content-Type: application/octet-stream');
