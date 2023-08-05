@@ -39,7 +39,7 @@ class OIDplusCookieUtils extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	private function getCookieDomain(): string {
-		$domain = OIDplus::baseConfig()->getValue('COOKIE_DOMAIN', '(auto)');
+		$domain = OIDplus::baseConfig()->getValue('COOKIE_DOMAIN', '');
 		if ($domain === '(auto)') {
 			if (isset($_SERVER['HTTP_X_FORWARDED_HOST'])) {
 				// If OIDplus is called through a Reverse Proxy, we must make sure that the cookies are working.
