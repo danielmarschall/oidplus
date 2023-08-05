@@ -43,7 +43,14 @@ _CheckParamExists($_GET, 'code');
 _CheckParamExists($_GET, 'state');
 _CheckParamExists($_COOKIE, 'csrf_token_weak');
 
-if ($_GET['state'] != $_COOKIE['csrf_token_weak']) {
+$ary = explode('|', $_GET['state'], 2);
+if (count($ary) !== 2) {
+	die(_L('Invalid State'));
+}
+$redirect_uri = $ary[0]; // Attention: Comes from the client. The OAuth2 server MUST verify it! (Google and Facebook does this)
+$check_csrf = $ary[1];
+
+if ($check_csrf != $_COOKIE['csrf_token_weak']) {
 	die(_L('Missing or wrong CSRF Token'));
 }
 
@@ -52,7 +59,7 @@ $cont = url_post_contents(
 	array(
 		"grant_type"    => "authorization_code",
 		"code"          => $_GET['code'],
-		"redirect_uri"  => OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE_CANONICAL).'oauth.php',
+		"redirect_uri"  => $redirect_uri,
 		"client_id"     => OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_ID'),
 		"client_secret" => OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_SECRET')
 	)
@@ -133,7 +140,7 @@ try {
 
 		// Go back to OIDplus
 
-		header('Location:'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL));
+		header('Location:'.OIDplus::webpath(null,OIDplus::PATH_RELATIVE));
 	}
 
 } finally {

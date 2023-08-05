@@ -63,14 +63,20 @@ class OIDplusPagePublicLoginGoogle extends OIDplusPagePluginPublic
 				throw new OIDplusException(_L('Google OAuth authentication is disabled on this system.'), $out['title']);
 			}
 
-			$target =
-				"https://accounts.google.com/o/oauth2/v2/auth?".
-				"response_type=code&".
-				"client_id=".urlencode(OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_ID'))."&".
-				"scope=".implode('%20', array(/*'openid',*/ 'email', 'profile'))."&".
-				"redirect_uri=".urlencode(OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE_CANONICAL).'oauth.php')."&".
-				"state=".urlencode($_COOKIE['csrf_token_weak']);
-			$out['text'] = '<p>'._L('Please wait...').'</p><script>window.location.href = '.js_escape($target).';</script>';
+			$out['text']  = '<p>'._L('Please wait...').'</p>';
+			$out['text'] .= '<form action="https://accounts.google.com/o/oauth2/v2/auth" method="GET">';
+			$out['text'] .= '<input type="hidden" name="response_type" value="'.htmlentities('code').'">'."\n";
+			$out['text'] .= '<input type="hidden" name="client_id" value="'.htmlentities(OIDplus::baseConfig()->getValue('GOOGLE_OAUTH2_CLIENT_ID')).'">'."\n";
+			$out['text'] .= '<input type="hidden" name="scope" value="'.htmlentities(implode(' ', array(/*'openid',*/ 'email', 'profile'))).'">'."\n";
+			$out['text'] .= '<input type="hidden" name="redirect_uri" value="'.htmlentities('').'">'."\n"; // URL will be filled by JavaScript
+			$out['text'] .= '<input type="hidden" name="state" value="'.htmlentities($_COOKIE['csrf_token_weak']).'">'."\n"; // URL will be added by JavaScript
+			$out['text'] .= '</form>';
+			$out['text'] .= '<script>';
+			$out['text'] .= 'redir_url = getSystemUrl() + "plugins/viathinksoft/publicPages/810_login_google/oauth.php";';
+			$out['text'] .= 'document.forms[0].elements.redirect_uri.value = redir_url;';
+			$out['text'] .= 'document.forms[0].elements.state.value = redir_url + "|" + document.forms[0].elements.state.value;';
+			$out['text'] .= 'document.forms[0].submit();';
+			$out['text'] .= '</script>';
 		}
 	}
 

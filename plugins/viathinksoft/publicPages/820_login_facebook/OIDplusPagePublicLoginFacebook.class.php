@@ -63,13 +63,19 @@ class OIDplusPagePublicLoginFacebook extends OIDplusPagePluginPublic
 				throw new OIDplusException(_L('Facebook OAuth authentication is disabled on this system.'), $out['title']);
 			}
 
-			$target =
-				"https://www.facebook.com/v8.0/dialog/oauth?".
-				"client_id=".urlencode(OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_CLIENT_ID'))."&".
-				"redirect_uri=".urlencode(OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE_CANONICAL).'oauth.php')."&".
-				"state=".urlencode($_COOKIE['csrf_token_weak'])."&".
-				"scope=email";
-			$out['text'] = '<p>'._L('Please wait...').'</p><script>window.location.href = '.js_escape($target).';</script>';
+			$out['text']  = '<p>'._L('Please wait...').'</p>';
+			$out['text'] .= '<form action="https://www.facebook.com/v8.0/dialog/oauth" method="GET">';
+			$out['text'] .= '<input type="hidden" name="client_id" value="'.htmlentities(OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_CLIENT_ID')).'">'."\n";
+			$out['text'] .= '<input type="hidden" name="redirect_uri" value="'.htmlentities('').'">'."\n"; // URL will be filled by JavaScript
+			$out['text'] .= '<input type="hidden" name="state" value="'.htmlentities($_COOKIE['csrf_token_weak']).'">'."\n"; // URL will be added by JavaScript
+			$out['text'] .= '<input type="hidden" name="scope" value="'.htmlentities(implode(' ', array('email'))).'">'."\n";
+			$out['text'] .= '</form>';
+			$out['text'] .= '<script>';
+			$out['text'] .= 'redir_url = getSystemUrl() + "plugins/viathinksoft/publicPages/820_login_facebook/oauth.php";';
+			$out['text'] .= 'document.forms[0].elements.redirect_uri.value = redir_url;';
+			$out['text'] .= 'document.forms[0].elements.state.value = redir_url + "|" + document.forms[0].elements.state.value;';
+			$out['text'] .= 'document.forms[0].submit();';
+			$out['text'] .= '</script>';
 		}
 	}
 

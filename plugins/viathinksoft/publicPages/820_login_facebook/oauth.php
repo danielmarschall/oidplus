@@ -44,7 +44,14 @@ _CheckParamExists($_GET, 'code');
 _CheckParamExists($_GET, 'state');
 _CheckParamExists($_COOKIE, 'csrf_token_weak');
 
-if ($_GET['state'] != $_COOKIE['csrf_token_weak']) {
+$ary = explode('|', $_GET['state'], 2);
+if (count($ary) !== 2) {
+	die(_L('Invalid State'));
+}
+$redirect_uri = $ary[0]; // Attention: Comes from the client. The OAuth2 server MUST verify it! (Google and Facebook does this)
+$check_csrf = $ary[1];
+
+if ($check_csrf != $_COOKIE['csrf_token_weak']) {
 	die(_L('Missing or wrong CSRF Token'));
 }
 
@@ -53,7 +60,7 @@ if ($_GET['state'] != $_COOKIE['csrf_token_weak']) {
 $cont = url_post_contents(
 	"https://graph.facebook.com/v8.0/oauth/access_token?".
 		"client_id=".urlencode(OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_CLIENT_ID'))."&".
-		"redirect_uri=".urlencode(OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE_CANONICAL).'oauth.php')."&".
+		"redirect_uri=".urlencode($redirect_uri)."&".
 		"client_secret=".urlencode(OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_CLIENT_SECRET'))."&".
 		"code=".$_GET['code']
 );
@@ -111,4 +118,4 @@ OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate()."
 
 OIDplus::invoke_shutdown();
 
-header('Location:'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL));
+header('Location:'.OIDplus::webpath(null,OIDplus::PATH_RELATIVE));
