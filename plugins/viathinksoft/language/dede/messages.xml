@@ -3598,6 +3598,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Invalid State
+		]]></source>
+		<target><![CDATA[
+		Ungültiger Zustand
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Invalid WEID
 		]]></source>
 		<target><![CDATA[

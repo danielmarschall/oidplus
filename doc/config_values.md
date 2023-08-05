@@ -456,15 +456,23 @@ still safe.
 
 ### COOKIE_DOMAIN
 
-    OIDplus::baseConfig()->setValue('COOKIE_DOMAIN', '(auto)');
+    OIDplus::baseConfig()->setValue('COOKIE_DOMAIN', '');
 
-Can be used to increase security by setting an explicit domain-name in the cookies.
-Set to '' (empty string) to allow all (sub)domains.
-Set to '(auto)' to automatically detect the domain based on the absolute canonical path.
+If set, the "cookieDomain" setting will be set.
+Value '' (empty string) means that only the current domain or subdomain is allowed.
+Value '(auto)' means that the current domain or subdomain as well as all its sub(sub)domains are allowed.
+Any other value means that the entered domain or subdomain as well as all its sub(sub)domains are allowed.
+
+HIGHLY RECOMMEND TO SET THIS VALUE TO '' (EMPTY STRING).
+Be very careful if you change this value! If the value was set to '' (empty string),
+then the visitors might have a cookie on their system that allows only this domain (Chrome shows this as domain "example.com").
+If you change the setting to a different value, then the users will receive a subdomain cookie (Chrome shows this as domain ".example.com").
+Since the web-browser will prefer the domain-only cookie (without dot prefix) over the subdomain cookie (with dot prefix),
+your users will always get the old cookie, therefore cannot login anymore!
 
 ### COOKIE_PATH
 
-    OIDplus::baseConfig()->setValue('COOKIE_PATH', '(auto));
+    OIDplus::baseConfig()->setValue('COOKIE_PATH', '(auto)');
 
 Can be used to increase security by setting an explicit pathname in the cookies.
 Set to '/' to allow all paths.
