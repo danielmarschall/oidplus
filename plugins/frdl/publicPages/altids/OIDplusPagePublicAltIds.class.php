@@ -229,7 +229,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 	public function whoisObjectAttributes(string $id, array &$out) {
 		$xmlns = 'oidplus-frdlweb-altids-plugin';
 		$xmlschema = 'urn:oid:1.3.6.1.4.1.37553.8.1.8.8.53354196964.641310544.1714020422';
-		$xmlschemauri = OIDplus::webpath(__DIR__.'/altids.xsd',OIDplus::PATH_ABSOLUTE);
+		$xmlschemauri = OIDplus::webpath(__DIR__.'/altids.xsd',OIDplus::PATH_ABSOLUTE_CANONICAL);
 
 		$handleShown = false;
 		$canonicalShown = false;

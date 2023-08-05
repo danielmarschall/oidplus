@@ -39,6 +39,7 @@ if (isset($_REQUEST['h404'])) {
 		if ($plugin->handle404($_REQUEST['h404'])) $handled = true;
 	}
 	if (!$handled) {
+		// TODO: Is canonical host OK? Because we might have a login cookie on this domain!
 		header('Location:'.OIDplus::webpath().'?goto='.urlencode('oidplus:err:'.$_REQUEST['h404']));
 		die();
 	}
@@ -48,6 +49,7 @@ $static_node_id_original = $static_node_id;
 $static_node_id = OIDplus::prefilterQuery($static_node_id, false);
 if ($static_node_id_original !== $static_node_id) {
 	// Redirect to the corrected query
+	// TODO: Is canonical host OK? Because we might have a login cookie on this domain!
 	$canonical_url = OIDplus::canonicalURL($static_node_id);
 	if ($canonical_url) {
 		header('Location:'.$canonical_url);

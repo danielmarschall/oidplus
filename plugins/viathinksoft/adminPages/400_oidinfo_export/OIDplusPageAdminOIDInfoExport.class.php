@@ -937,7 +937,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 				if (stripos($url,'www.') === 0) {
 					$url .= 'http://' . $url;
 				} else {
-					$url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . $url; // TODO: Canonical or not?
+					$url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . $url; // TODO: Canonical or not?!
 				}
 			}
 			return $treffer[1].$url.$treffer[4];

@@ -69,7 +69,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
 	 */
 	public function modifyContent(string $id, string &$title, string &$icon, string &$text) {
-		$payload = '<br /> <a href="'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE)
+		$payload = '<br /> <a href="'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL)
 			.'rest/v1/objects/'.htmlentities($id).'" class="gray_footer_font" target="_blank">'._L('REST API').'</a> '
 			.'(<a '.OIDplus::gui()->link('oidplus:rest_api_information_admin$endpoints:1.3.6.1.4.1.37476.2.5.2.4.1.0').' class="gray_footer_font">'._L('Documentation').'</a>)';
 
@@ -1591,7 +1591,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		$out = '<script>
 				tinymce.EditorManager.baseURL = "vendor/tinymce/tinymce";
 				tinymce.init({
-					document_base_url: "'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'",
+					document_base_url: "'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'", // TODO: canonical or not?!
 					selector: "#'.$name.'",
 					height: 200,
 					statusbar: false,
