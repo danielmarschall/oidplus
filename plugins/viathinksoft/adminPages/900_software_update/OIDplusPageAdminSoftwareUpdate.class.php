@@ -154,10 +154,14 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 				// Now call the written file
 				// Note: we may not use eval($cont) because the script uses die(),
 				// and things in the script might collide with currently (un)loaded source code files, shutdown procedues, etc.
-				$web_file = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE).$tmp_filename; // NOT canonical URL! This might fail with reverse proxies which can only be executed from outside
+				$web_file = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).$tmp_filename;
 				$res = url_get_contents($web_file);
 				if ($res === false) {
-					throw new OIDplusException(_L('Update-script %1 could not be executed',$web_file));
+					$web_file = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE).$tmp_filename;
+					$res = url_get_contents($web_file);
+					if ($res === false) {
+						throw new OIDplusException(_L('Update-script %1 could not be executed',$web_file));
+					}
 				}
 				return array("status" => 0, "content" => $res, "rev" => $rev);
 			} else if ($update_version == 2) {

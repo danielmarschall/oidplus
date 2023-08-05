@@ -53,9 +53,9 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 		// - XML_SCHEMA_URN must be equal to the string in the .xsd file!
 		// - the schema file names and draft version are also written in OIDplusPagePublicWhois.class.php
 		$this->XML_SCHEMA_URN  = 'urn:ietf:id:draft-viathinksoft-oidip-06';
-		$this->XML_SCHEMA_URL  = OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'whois/draft-viathinksoft-oidip-06.xsd';
+		$this->XML_SCHEMA_URL  = OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE_CANONICAL).'whois/draft-viathinksoft-oidip-06.xsd';
 		$this->JSON_SCHEMA_URN = 'urn:ietf:id:draft-viathinksoft-oidip-06';
-		$this->JSON_SCHEMA_URL = OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE).'whois/draft-viathinksoft-oidip-06.json';
+		$this->JSON_SCHEMA_URL = OIDplus::webpath(__DIR__,OIDplus::PATH_ABSOLUTE_CANONICAL).'whois/draft-viathinksoft-oidip-06.json';
 	}
 
 	/**
@@ -266,7 +266,7 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 							$out[] = $this->_oidip_attr('url', 'http://oid-info.com/get/'.$obj->nodeId(false));
 						}
 					} else {
-						$out[] = $this->_oidip_attr('url', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE).'?goto='.urlencode($obj->nodeId(true)));
+						$out[] = $this->_oidip_attr('url', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'?goto='.urlencode($obj->nodeId(true)));
 					}
 
 					if (substr($query,0,4) === 'oid:') {
