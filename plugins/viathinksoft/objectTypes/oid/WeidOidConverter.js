@@ -4,26 +4,40 @@
 /**
 * WEID<=>OID Converter
 * (c) Webfan.de, ViaThinkSoft
-* Revision 2022-03-26
+* Revision 2023-08-09
 **/
 
 // What is a WEID?
 //     A WEID (WEhowski IDentifier) is an alternative representation of an
 //     OID (Object IDentifier) defined by Till Wehowski.
 //     In OIDs, arcs are in decimal base 10. In WEIDs, the arcs are in base 36.
-//     Also, each WEID has a check digit at the end (called WeLohn Check Digit).
+//     Also, each WEID has a check digit at the end (called WeLuhn Check Digit).
 //
-// Changes in the December 2021 definition by Daniel Marschall:
+// The full specification can be found here: https://weid.info/spec.html
+//
+// This converter supports WEID as of Spec Change #11
+//
+// A few short notes:
 //     - There are several classes of WEIDs which have different OID bases:
-//           "Class C" WEID:  weid:EXAMPLE-3      (base .1.3.6.1.4.1.37553.8.)
-//                            oid:1.3.6.1.4.1.37553.8.32488192274
-//           "Class B" WEID:  weid:pen:SX0-7PR-6  (base .1.3.6.1.4.1.)
-//                            oid:1.3.6.1.4.1.37476.9999
-//           "Class A" WEID:  weid:root:2-RR-2    (base .)
+//           "Class A" WEID:  weid:root:2-RR-?
 //                            oid:2.999
-//     - The namespace (weid:, weid:pen:, weid:root:) is now case insensitive.
+//                            WEID class base OID: (OID Root)
+//           "Class B" WEID:  weid:pen:SX0-7PR-?
+//                            oid:1.3.6.1.4.1.37476.9999
+//                            WEID class base OID: 1.3.6.1.4.1
+//           "Class C" WEID:  weid:EXAMPLE-?
+//                            oid:1.3.6.1.4.1.37553.8.32488192274
+//                            WEID class base OID: 1.3.6.1.4.1.37553.8
+//           "Class D" WEID:  weid:example.com:TEST-? is equal to weid:9-DNS-COM-EXAMPLE-TEST-?
+//                            Since the check digit is based on the OID, the check digit is equal for both notations.
+//                            oid:1.3.6.1.4.1.37553.8.9.17704.32488192274.16438.1372205
+//                            WEID class base OID: 1.3.6.1.4.1.37553.8.9.17704
+//     - The last arc in a WEID is the check digit. A question mark is the wildcard for an unknown check digit.
+//       In this case, the converter will return the correct expected check digit for the input.
+//     - The namespace (weid:, weid:pen:, weid:root:) is case insensitive.
 //     - Padding with '0' characters is valid (e.g. weid:000EXAMPLE-3)
-//       The paddings do not count into the WeLuhn check-digit.
+//       The paddings do not count into the WeLuhn check digit.
+//
 
 var WeidOidConverter = {
 
@@ -99,8 +113,8 @@ var WeidOidConverter = {
 
 	// Translates a WEID to an OID
 	// "weid:EXAMPLE-3" becomes "1.3.6.1.4.1.37553.8.32488192274"
-	// If it failed (e.g. wrong namespace, wrong checksum, etc.) then false is returned.
-	// If the weid ends with '?', the checksum will be added
+	// If it failed (e.g. wrong namespace, wrong check digit, etc.) then false is returned.
+	// If the weid ends with '?', the check digit will be added
 	// Return value is an array with the elements "oid" and "weid".
 	// Example:
 	//     weid2oid("weid:EXAMPLE-?").weid == "weid:EXAMPLE-3"
@@ -114,7 +128,22 @@ var WeidOidConverter = {
 
 		var base = null;
 		namespace = namespace.toLowerCase(); // namespace is case insensitive
-		if (namespace == 'weid:') {
+
+		if (namespace.startsWith("weid:")) {
+			var domainpart = weid.split(":")[1].split(".");
+			if (domainpart.length > 1) {
+				// Spec Change 10: Class D / Domain-WEID ( https://github.com/frdl/weid/issues/3 )
+				if (weid.split(":").length != 3) return false;
+				var domainrest = weid.split(":")[2].split("-");
+				var alt_weid = "weid:9-DNS-" + domainpart.reverse().join("-").toUpperCase() + "-" + domainrest.join("-");
+				return WeidOidConverter.weid2oid(alt_weid);
+			}
+		}
+
+		if (namespace.startsWith('weid:x-')) {
+			// Spec Change 11: Proprietary Namespaces ( https://github.com/frdl/weid/issues/4 )
+			return { "weid": weid, "oid" : "[Proprietary WEID Namespace]" };
+		} else if (namespace == 'weid:') {
 			// Class C
 			base = '1-3-6-1-4-1-SZ5-8';
 		} else if (namespace == 'weid:pen:') {
@@ -143,11 +172,11 @@ var WeidOidConverter = {
 		var expected_checksum = WeidOidConverter.weLuhnCheckDigit(elements.join('-'));
 		if (actual_checksum != '?') {
 			if (actual_checksum != expected_checksum) {
-				console.error("weid2oid: Wrong checksum");
+				console.error("weid2oid: Wrong check digit");
 				return false; // wrong checksum
 			}
 		} else {
-			// If checksum is '?', it will be replaced by the actual checksum,
+			// If check digit is '?', it will be replaced by the actual check digit,
 			// e.g. weid:EXAMPLE-? becomes weid:EXAMPLE-3
 			weid = weid.replace('?', expected_checksum);
 		}
