@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # OIDplus 2.0
-# Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
+# Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -117,3 +117,6 @@ sed -i 's@\$parts\[0\] = rtrim(\$parts\[0\], \x27\.0\x27);@\$parts\[0\] = rtrim(
 # The author does know about the problem (I have opened a GitHub issue), but they did not sync it from the symfony main repo (as polyfill-mbstring is just a fraction of it, for composer)
 # see https://github.com/symfony/polyfill-mbstring/pull/11
 sed -i 's@if (\\is_array(\$fromEncoding) || false !== strpos(\$fromEncoding, \x27,\x27)) {@if (\\is_array(\$fromEncoding) || (null !== \$fromEncoding \&\& false !== strpos(\$fromEncoding, \x27,\x27))) {@g' vendor/symfony/polyfill-mbstring/Mbstring.php
+
+# Get latest version of WEID converter
+curl https://raw.githubusercontent.com/frdl/weid/gh-pages/WeidOidConverter.js > plugins/viathinksoft/objectTypes/oid/WeidOidConverter.js

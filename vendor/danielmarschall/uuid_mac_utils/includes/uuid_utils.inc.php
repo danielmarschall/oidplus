@@ -3,7 +3,7 @@
 /*
  * UUID utils for PHP
  * Copyright 2011 - 2023 Daniel Marschall, ViaThinkSoft
- * Version 2023-07-29
+ * Version 2023-08-04
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -56,6 +56,14 @@ function uuid_valid($uuid) {
 	$uuid = preg_replace('@[0-9A-F]@i', '', $uuid);
 
 	return ($uuid == '');
+}
+
+function uuid_equal($uuid1, $uuid2) {
+	$uuid1 = uuid_canonize($uuid1);
+	if (!$uuid1) return false;
+	$uuid2 = uuid_canonize($uuid2);
+	if (!$uuid2) return false;
+	return $uuid1 === $uuid2;
 }
 
 function uuid_version($uuid) {
@@ -629,11 +637,11 @@ function uuid_info($uuid, $echo=true) {
 				case 8:
 					/*
 					Variant 1, Version 8 UUID
-					- 48 bit Custom data
+					- 48 bit Custom data [Block 1+2]
 					-  4 bit Version (fix 0x8)
-					- 12 bit Custom data
+					- 12 bit Custom data [Block 3]
 					-  2 bit Variant (fix 0b10)
-					- 62 bit Custom data
+					- 62 bit Custom data [Block 4+5]
 					*/
 
 					echo sprintf("%-32s %s\n", "Version:", "[0x8] Custom implementation");
@@ -1025,11 +1033,11 @@ function gen_uuid_v2($domain, $id) {
 function gen_uuid_dce($domain, $id) {
 	if (($domain ?? '') === '') throw new Exception("Domain ID missing");
 	if (!is_numeric($domain)) throw new Exception("Invalid Domain ID");
-	if (($domain < 0) || ($domain > 255)) throw new Exception("Domain ID must be in range 0..255");
+	if (($domain < 0) || ($domain > 0xFF)) throw new Exception("Domain ID must be in range 0..255");
 
 	if (($id ?? '') === '') throw new Exception("ID value missing");
 	if (!is_numeric($id)) throw new Exception("Invalid ID value");
-	if (($id < 0) || ($id > 4294967295)) throw new Exception("ID value must be in range 0..4294967295");
+	if (($id < 0) || ($id > 0xFFFFFFFF)) throw new Exception("ID value must be in range 0..4294967295");
 
 	# Start with a version 1 UUID
 	$uuid = gen_uuid_timebased();
@@ -1265,6 +1273,103 @@ function gen_uuid_custom($block1_32bit, $block2_16bit, $block3_12bit, $block4_14
 	return strtolower($block1.'-'.$block2.'-'.$block3.'-'.$block4.'-'.$block5);
 }
 
+function gen_uuid_v8_namebased($hash_uuid, $namespace_uuid, $name) {
+	if (($hash_uuid ?? '') === '') throw new Exception("Hash space UUID missing");
+	if (!uuid_valid($hash_uuid)) throw new Exception("Invalid hash space ID '$hash_uuid'");
+
+	if (($namespace_uuid ?? '') === '') throw new Exception("Namespace UUID missing");
+	if (!uuid_valid($namespace_uuid)) throw new Exception("Invalid namespace UUID '$namespace_uuid'");
+
+	$uuid1 = hex2bin(str_replace('-','',uuid_canonize($hash_uuid)));
+	$uuid2 = hex2bin(str_replace('-','',uuid_canonize($namespace_uuid)));
+	$payload = $uuid1 . $uuid2 . $name;
+
+	$hash = null;
+	foreach (get_uuidv8_hash_space_ids() as list($algo,$space,$friendlyName,$author,$available)) {
+		if (uuid_equal($hash_uuid,$space)) {
+			if (!$available) {
+				throw new Exception("Algorithm $algo is not available on this system (PHP version too old)");
+			}
+
+			if ($algo == 'shake128') $hash = shake128($payload, 16/*min. required bytes*/, false);
+			else if ($algo == 'shake256') $hash = shake256($payload, 16/*min. required bytes*/, false);
+			else $hash = hash($algo, $payload, false);
+			break;
+		}
+	}
+
+	if ($hash == null) {
+		throw new Exception("Unknown Hash Space UUID $hash_uuid");
+	}
+
+	$hash[12] = '8'; // Set version: 8 = Custom
+	$hash[16] = dechex(hexdec($hash[16]) & 0b0011 | 0b1000); // Set variant to "0b10__" (RFC4122/DCE1.1)
+
+	return substr($hash,  0, 8).'-'.
+	       substr($hash,  8, 4).'-'.
+	       substr($hash, 12, 4).'-'.
+	       substr($hash, 16, 4).'-'.
+	       substr($hash, 20, 12);
+}
+
+/**
+ * Collection of Namebased UUIDv8 Hash Space IDs
+ * @return array An array containing tuples of [PHP Algo Name, Hash Space UUID, Human friendly name, Hash Space Author, Available]
+ */
+function get_uuidv8_hash_space_ids(): array {
+	$out = array();
+
+	// The following Hash Space UUIDs are defined in the RFC4122bis as Example for Namebased UUIDv8
+	$out[] = ['sha224', '59031ca3-fbdb-47fb-9f6c-0f30e2e83145', 'SHA2-224', 'RFC Example', PHP_VERSION_ID >= 70100];
+	$out[] = ['sha256', '3fb32780-953c-4464-9cfd-e85dbbe9843d', 'SHA2-256', 'RFC Example', PHP_VERSION_ID >= 70100];
+	$out[] = ['sha384', 'e6800581-f333-484b-8778-601ff2b58da8', 'SHA2-384', 'RFC Example', PHP_VERSION_ID >= 70100];
+	$out[] = ['sha512', '0fde22f2-e7ba-4fd1-9753-9c2ea88fa3f9', 'SHA2-512', 'RFC Example', PHP_VERSION_ID >= 70100];
+	$out[] = ['sha512/224', '003c2038-c4fe-4b95-a672-0c26c1b79542', 'SHA2-512/224', 'RFC Example', PHP_VERSION_ID >= 70100];
+	$out[] = ['sha512/256', '9475ad00-3769-4c07-9642-5e7383732306', 'SHA2-512/256', 'RFC Example', PHP_VERSION_ID >= 70100];
+	$out[] = ['sha3-224', '9768761f-ac5a-419e-a180-7ca239e8025a', 'SHA3-224', 'RFC Example', PHP_VERSION_ID >= 70100];
+	$out[] = ['sha3-256', '2034d66b-4047-4553-8f80-70e593176877', 'SHA3-256', 'RFC Example', PHP_VERSION_ID >= 70100];
+	$out[] = ['sha3-384', '872fb339-2636-4bdd-bda6-b6dc2a82b1b3', 'SHA3-384', 'RFC Example', PHP_VERSION_ID >= 70100];
+	$out[] = ['sha3-512', 'a4920a5d-a8a6-426c-8d14-a6cafbe64c7b', 'SHA3-512', 'RFC Example', PHP_VERSION_ID >= 70100];
+	$out[] = ['shake128'/*Currently no PHP core algorithm!*/, '7ea218f6-629a-425f-9f88-7439d63296bb', 'SHAKE-128', 'RFC Example', file_exists(__DIR__.'/SHA3.php')];
+	$out[] = ['shake256'/*Currently no PHP core algorithm!*/, '2e7fc6a4-2919-4edc-b0ba-7d7062ce4f0a', 'SHAKE-256', 'RFC Example', file_exists(__DIR__.'/SHA3.php')];
+
+	// The following Hash Space UUIDs are defined by ViaThinkSoft
+	// These Hash Spaces can be calculated as follows:
+	//      UUIDv8_NamebasedViaThinkSoft := <HashAlgo>_AsUUIDv8( BinaryHashSpaceUUID + BinaryNamespaceUUID + Data )
+	//      BinaryHashSpaceUUID := SHA1_AsUUIDv5( hex2bin('1ee317e2-1853-64b2-8fe9-3c4a92df8582') + PhpHashAlgoName )
+	foreach (hash_algos() as $algo) {
+		if ($algo == 'md5') continue; // MD5 is already used in UUIDv3
+		if ($algo == 'sha1') continue; // MD5 is already used in UUIDv5
+		foreach ($out as list($algo2,$space,$friendlyName,$author)) {
+			if ($algo == $algo2) continue 2; // UUID is already defined by RFC, don't need a VTS Hash Space UUID
+		}
+		if (strlen(hash($algo,'',false)) < 32) continue; // Hash too short (needs at least 16 bytes)
+		$out[] = [$algo, gen_uuid_v5('1ee317e2-1853-64b2-8fe9-3c4a92df8582', $algo), strtoupper($algo), 'ViaThinkSoft', true];
+	}
+
+	// How to update this list $unavailable_algos:
+	// 1. Look if new hashes are listed in the PHP documentation: https://www.php.net/manual/de/function.hash-algos.php
+	// 2. If the required version is lower than our server version, then you don't need to do anything
+	// 3. Otherwise, run this command on a different machine (where the algorithms are implemented) to check if the hashes have the correct length
+	//	foreach (hash_algos() as $algo) {
+	//		$len = strlen(hash($algo, '', false));
+	//		if ($len >= 32) echo "$algo, length $len\n";
+	//	}
+	// 4. Then, include all fitting hashes here
+	// 5. Please publish the new hash space IDs here: https://oidplus.viathinksoft.com/oidplus/?goto=guid%3Auuid_mac_utils%2Fuuidv8_hash_space_vts
+	$unavailable_algos = [];
+	if (PHP_VERSION_ID < 80100/*8.1.0*/) {
+		$unavailable_algos[] = 'murmur3c'; // length: 16 bytes
+		$unavailable_algos[] = 'murmur3f'; // length: 16 bytes
+		$unavailable_algos[] = 'xxh128';   // length: 16 bytes
+	}
+	foreach ($unavailable_algos as $algo) {
+		$out[] = [$algo, gen_uuid_v5('1ee317e2-1853-64b2-8fe9-3c4a92df8582', $algo), strtoupper($algo), 'ViaThinkSoft', false];
+	}
+
+	return $out;
+}
+
 # --------------------------------------
 
 // http://php.net/manual/de/function.hex2bin.php#113057
@@ -1290,4 +1395,20 @@ if (!function_exists('gmp_shiftr')) {
     function gmp_shiftr($x,$n) { // shift right
         return(gmp_div_q($x,gmp_pow(2,$n)));
     }
+}
+
+function shake128(string $msg, int $outputLength=512, bool $binary=false): string {
+	include_once __DIR__.'/SHA3.php';
+	$sponge = SHA3::init(SHA3::SHAKE128);
+	$sponge->absorb($msg);
+	$bin = $sponge->squeeze($outputLength);
+	return $binary ? $bin : bin2hex($bin);
+}
+
+function shake256(string $msg, int $outputLength=512, bool $binary=false): string {
+	include_once __DIR__.'/SHA3.php';
+	$sponge = SHA3::init(SHA3::SHAKE256);
+	$sponge->absorb($msg);
+	$bin = $sponge->squeeze($outputLength);
+	return $binary ? $bin : bin2hex($bin);
 }
