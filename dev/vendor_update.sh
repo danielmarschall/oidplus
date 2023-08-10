@@ -120,3 +120,4 @@ sed -i 's@if (\\is_array(\$fromEncoding) || false !== strpos(\$fromEncoding, \x2
 
 # Get latest version of WEID converter
 curl https://raw.githubusercontent.com/frdl/weid/gh-pages/WeidOidConverter.js > plugins/viathinksoft/objectTypes/oid/WeidOidConverter.js
+curl https://raw.githubusercontent.com/frdl/weid/gh-pages/WeidOidConverter.php > plugins/viathinksoft/objectTypes/oid/WeidOidConverter.class.php

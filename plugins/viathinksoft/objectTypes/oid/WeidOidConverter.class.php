@@ -40,9 +40,7 @@
 
 namespace Frdl\Weid;
 
-use ViaThinkSoft\OIDplus\OIDplusBaseClass;
-
-class WeidOidConverter extends OIDplusBaseClass {
+class WeidOidConverter {
 
 	/**
 	 * @param string $str
