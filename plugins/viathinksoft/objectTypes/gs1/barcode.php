@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,30 +22,46 @@
 // ourselves) and also allows us to be conform with the GDPR, since the IP address / referrer is
 // not transferred to metafloor.com
 
-require_once __DIR__ . '/../../../../includes/functions.inc.php';
+namespace ViaThinkSoft\OIDplus;
+
+require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 
 _CheckParamExists($_GET, 'number');
 
-//if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplusObjectTypePluginGs1', false)) {
-//	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
-//}
+if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplusObjectTypePluginGs1', false)) {
+	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
+}
 
 error_reporting(0);
+
+const OIDPLUS_BARCODE_MAX_CACHE_AGE = 100*365*24*60*60;;
 
 $number = $_GET['number'];
 $number = preg_replace("/[^0-9]/", "", $number);
 $number = substr($number, 0, 20);
 
-try {
-	$out = url_get_contents('https://bwipjs-api.metafloor.com/?bcid=code128&text='.urlencode($number).'&scale=1&includetext');
-} catch (\Exception $e) {
-	http_response_code(500);
-	die();
-}
+$cache_file = OIDplus::localpath() . 'userdata/cache/barcode_'.$number.'.png';
 
-if ($out === false) {
-	http_response_code(500);
-	die();
+if ((file_exists($cache_file)) && (time()-filemtime($cache_file) <= OIDPLUS_BARCODE_MAX_CACHE_AGE)) {
+
+	$out = file_get_contents($cache_file);
+
+} else {
+
+	try {
+		$out = url_get_contents('https://bwipjs-api.metafloor.com/?bcid=code128&text='.urlencode($number).'&scale=1&includetext');
+	} catch (\Exception $e) {
+		http_response_code(500);
+		die();
+	}
+
+	if (($out === false) || ($out == '')) {
+		http_response_code(500);
+		die();
+	}
+
+	@file_put_contents($cache_file, $out);
+
 }
 
 httpOutWithETag($out, 'image/png', "barcode_$number.png");
