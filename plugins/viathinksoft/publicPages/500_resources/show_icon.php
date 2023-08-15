@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,15 +17,17 @@
  * limitations under the License.
  */
 
+namespace ViaThinkSoft\OIDplus;
+
 define('SPACER_PNG', base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII='));
 
 // TODO: should we also check security.ini ?
 
-require_once __DIR__ . '/../../../../includes/functions.inc.php';
+require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 
-//if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplusPagePublicResources', false)) {
-//	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
-//}
+if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplusPagePublicResources', false)) {
+	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
+}
 
 error_reporting(0);
 
