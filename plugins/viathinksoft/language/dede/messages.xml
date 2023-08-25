@@ -1182,6 +1182,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Cannot find a free slot for a random AID! Please try again, or try generating a random AID in a subordinate node.
+		]]></source>
+		<target><![CDATA[
+		Kann keinen freien Platz für eine zufällige AID finden! Bitte versuchen Sie es erneut oder versuchen Sie eine AID in einem untergeordneten Element zu erzeugen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Cannot find dot notation because fields asn1-notation and dot-notation are both not existing
 		]]></source>
 		<target><![CDATA[
@@ -2898,6 +2906,14 @@
 		]]></source>
 		<target><![CDATA[
 		Zufällige <abbr title="Administratively Assigned Identifier (nicht weltweit einzigartig!)">AAI</abbr> erzeugen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Generate a random AID
+		]]></source>
+		<target><![CDATA[
+		Zufällige AID erzeugen
 		]]></target>
 	</message>
 	<message>
@@ -7362,6 +7378,14 @@
 		]]></source>
 		<target><![CDATA[
 		Das %1-Plugin kann sich nicht mit dem Internet verbinden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		The AID has reached its maximum size.
+		]]></source>
+		<target><![CDATA[
+		Die maximale Länge für eine AID wurde bereits erreicht.
 		]]></target>
 	</message>
 	<message>
