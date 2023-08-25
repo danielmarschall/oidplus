@@ -1591,7 +1591,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		$out = '<script>
 				tinymce.EditorManager.baseURL = "vendor/tinymce/tinymce";
 				tinymce.init({
-					document_base_url: "'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'", // TODO: canonical or not?!
+					document_base_url: getSystemUrl(),
 					selector: "#'.$name.'",
 					height: 200,
 					statusbar: false,
