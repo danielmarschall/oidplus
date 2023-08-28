@@ -30,10 +30,11 @@ else if (file_exists($f = __DIR__ . '/gmp_supplement.inc.phps')) include_once $f
 if (file_exists($f = __DIR__ . '/OidDerConverter.class.php')) include_once $f;
 else if (file_exists($f = __DIR__ . '/OidDerConverter.class.phps')) include_once $f;
 
-const UUID_NAMEBASED_NS_DNS = '6ba7b810-9dad-11d1-80b4-00c04fd430c8'; // FQDN
+// Note: The RFC allows various notations as payload, not a strict notation constraint
+const UUID_NAMEBASED_NS_DNS = '6ba7b810-9dad-11d1-80b4-00c04fd430c8';
 const UUID_NAMEBASED_NS_URL = '6ba7b811-9dad-11d1-80b4-00c04fd430c8';
 const UUID_NAMEBASED_NS_OID = '6ba7b812-9dad-11d1-80b4-00c04fd430c8';
-const UUID_NAMEBASED_NS_X500_DN = '6ba7b814-9dad-11d1-80b4-00c04fd430c8'; // "DER or text encoding" according to RFC4122bis
+const UUID_NAMEBASED_NS_X500_DN = '6ba7b814-9dad-11d1-80b4-00c04fd430c8';
 
 if (!function_exists('_random_int')) {
 	function _random_int($min, $max) {
@@ -324,7 +325,7 @@ function uuid_info($uuid, $echo=true) {
 			} else if (($version >= 3) && ($version <= 5)) {
 				echo sprintf("%-32s %s\n", "Variant:", "[0b10_] RFC 4122 (Leach-Mealling-Salz)");
 			} else if (($version >= 6) && ($version <= 8)) {
-				echo sprintf("%-32s %s\n", "Variant:", "[0b10_] RFC 4122bis (Leach-Mealling-Peabody-Davis)");
+				echo sprintf("%-32s %s\n", "Variant:", "[0b10_] RFC 4122bis (Davis-Peabody-Leach)"); // TODO: When new RFC is published, replace the RFC number
 			} else {
 				echo sprintf("%-32s %s\n", "Variant:", "[0b10_] RFC 4122?");
 			}
@@ -1319,7 +1320,7 @@ function gen_uuid_v8_namebased($hash_uuid, $namespace_uuid, $name) {
 function get_uuidv8_hash_space_ids(): array {
 	$out = array();
 
-	// The following Hash Space UUIDs are defined in the RFC4122bis as Example for Namebased UUIDv8
+	// The following Hash Space UUIDs are defined in RFC4122bis as Example for Namebased UUIDv8    [ TODO: When new RFC is published, replace the RFC number in this comment ]
 	$out[] = ['sha224', '59031ca3-fbdb-47fb-9f6c-0f30e2e83145', 'SHA2-224', 'RFC Example', PHP_VERSION_ID >= 70100];
 	$out[] = ['sha256', '3fb32780-953c-4464-9cfd-e85dbbe9843d', 'SHA2-256', 'RFC Example', PHP_VERSION_ID >= 70100];
 	$out[] = ['sha384', 'e6800581-f333-484b-8778-601ff2b58da8', 'SHA2-384', 'RFC Example', PHP_VERSION_ID >= 70100];
