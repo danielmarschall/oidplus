@@ -366,6 +366,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		ASN.1: UTF8String
+		]]></source>
+		<target><![CDATA[
+		ASN.1: UTF8String
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Access denied
 		]]></source>
 		<target><![CDATA[
@@ -586,6 +594,14 @@
 		]]></source>
 		<target><![CDATA[
 		Anwendungsbezeichner (ISO/IEC 7816) basierend auf der System-ID (die auf dem Hash des öffentlichen Schlüssels des OIDplus Systems basiert).
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Arc %1 (%2) is not a valid Relative Distinguished Name (RDN).
+		]]></source>
+		<target><![CDATA[
+		Teil %1 (%2) ist kein gültiger Relative Distinguished Name (RDN).
 		]]></target>
 	</message>
 	<message>
@@ -1750,6 +1766,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Currently, no X.500 Distinguished Names are registered in the system.
+		]]></source>
+		<target><![CDATA[
+		Derzeit sind keine X.500 Distinguished Names in diesem System registriert.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Currently, no misc. objects are registered in the system.
 		]]></source>
 		<target><![CDATA[
@@ -1778,6 +1802,14 @@
 		]]></source>
 		<target><![CDATA[
 		Datenbank-Dialekt-Erkennung fehlgeschlagen: Mehrere Dialekte erkannt (%1). Bitte Basiskonfiguration FORCE_DBMS_SLANG nutzen, um einen Dialekt festzulegen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		DCE/MSAD notation
+		]]></source>
+		<target><![CDATA[
+		DCE/MSAD-Notation
 		]]></target>
 	</message>
 	<message>
@@ -2094,6 +2126,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Distributed Computing Environment
+		]]></source>
+		<target><![CDATA[
+		Distributed Computing Environment
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Distribution via %1 is not possible with this edition of OIDplus
 		]]></source>
 		<target><![CDATA[
@@ -2322,6 +2362,14 @@
 		]]></source>
 		<target><![CDATA[
 		Leere OIDplus Datenbank ohne Beispiel-Daten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Encoded string notation
+		]]></source>
+		<target><![CDATA[
+		Kodierte String-Notation
 		]]></target>
 	</message>
 	<message>
@@ -2778,6 +2826,14 @@
 		]]></source>
 		<target><![CDATA[
 		Passwort vergessen?
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Format: %1
+		]]></source>
+		<target><![CDATA[
+		Format: %1
 		]]></target>
 	</message>
 	<message>
@@ -3862,6 +3918,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		LDAP notation
+		]]></source>
+		<target><![CDATA[
+		LDAP-Notation
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Languages
 		]]></source>
 		<target><![CDATA[
@@ -3910,10 +3974,26 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Length
+		]]></source>
+		<target><![CDATA[
+		Länge
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		License
 		]]></source>
 		<target><![CDATA[
 		Lizenz
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Lightweight Directory Access Protocol
+		]]></source>
+		<target><![CDATA[
+		Lightweight Directory Access Protocol
 		]]></target>
 	</message>
 	<message>
@@ -4218,6 +4298,14 @@
 		]]></source>
 		<target><![CDATA[
 		MiB
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Microsoft ActiveDirectory
+		]]></source>
+		<target><![CDATA[
+		Microsoft ActiveDirectory
 		]]></target>
 	</message>
 	<message>
@@ -8722,6 +8810,22 @@
 		]]></source>
 		<target><![CDATA[
 		Falsches Passwort oder Benutzer nicht registriert
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		X.500 DN
+		]]></source>
+		<target><![CDATA[
+		X.500 DN
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		X.500 Distinguished Name
+		]]></source>
+		<target><![CDATA[
+		X.500 Distinguished Name
 		]]></target>
 	</message>
 	<message>
