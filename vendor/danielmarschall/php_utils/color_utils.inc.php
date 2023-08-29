@@ -105,8 +105,15 @@ function rgb2html($r, $g=-1, $b=-1) {
 
 // TODO: Also support hsl() and hsla() color schemes
 function changeCSSWithRgbFunction($css_content, $rgb_function) {
-	$css_content = preg_replace('@(\\}\\s*)#@ismU', '\\1'.chr(1), $css_content);
-	$css_content = preg_replace('@(^\\s*)#@isU', '\\1'.chr(1), $css_content);
+
+	$i = 0;
+	do {
+		$i++;
+		$dummy = "[$i]";
+	} while (strpos($css_content, $dummy) !== false);
+
+	$css_content = preg_replace('@(\\}\\s*)#@ismU', '\\1'.$dummy, $css_content);
+	$css_content = preg_replace('@(^\\s*)#@isU', '\\1'.$dummy, $css_content);
 	$css_content = preg_replace_callback('@#([0-9a-fA-F]{6}|[0-9a-fA-F]{3})@ismU',
 		function ($x) use ($rgb_function) {
 			if (strlen($x[1]) == 3) {
@@ -147,8 +154,8 @@ function changeCSSWithRgbFunction($css_content, $rgb_function) {
 			$rgb_function($r,$g,$b);
 			return "-rgb:$r,$g,$b;";
 		}, $css_content);
-	$css_content = str_replace(chr(1), '#', $css_content);
-        return $css_content;
+	$css_content = str_replace($dummy, '#', $css_content);
+	return $css_content;
 }
 
 function changeHueOfCSS($css_content, $h_shift=0, $s_shift=0, $v_shift=0) {

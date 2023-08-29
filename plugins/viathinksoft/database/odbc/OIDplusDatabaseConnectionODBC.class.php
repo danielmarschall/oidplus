@@ -110,9 +110,10 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 	 */
 	protected function doQueryPrepareEmulation(string $sql, array $prepared_args=null): OIDplusQueryResultODBC {
 		// For some drivers (e.g. Microsoft Access), we need to do this kind of emulation, because odbc_prepare() does not work
-		$sql = str_replace('?', chr(1), $sql);
+		$dummy = find_nonexisting_substr($sql);
+		$sql = str_replace('?', $dummy, $sql);
 		foreach ($prepared_args as $arg) {
-			$needle = chr(1);
+			$needle = $dummy;
 			if (is_bool($arg)) {
 				if ($this->slangDetectionDone) {
 					$replace = $this->getSlang()->getSQLBool($arg);
@@ -140,7 +141,7 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 				$sql = substr_replace($sql, $replace, $pos, strlen($needle));
 			}
 		}
-		$sql = str_replace(chr(1), '?', $sql);
+		$sql = str_replace($dummy, '?', $sql);
 		$ps = @odbc_exec($this->conn, $sql);
 		if (!$ps) {
 			$this->last_error = odbc_errormsg($this->conn);
