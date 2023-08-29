@@ -42,7 +42,7 @@ class OIDplusX500DN extends OIDplusObject {
 	 * @return OIDplusX500DN|null
 	 */
 	public static function parse(string $node_id)/*: ?OIDplusX500DN*/ {
-		@list($namespace, $identifier) = explode(':', $node_id, 2);
+		@list($namespace, $identifier) = explode_with_escaping(':', $node_id, 2);
 		if ($namespace !== self::ns()) return null;
 		return new self($identifier);
 	}
@@ -232,22 +232,109 @@ class OIDplusX500DN extends OIDplusObject {
 	}
 
 	/**
-	 * @param string $arc A RDN (Relative Distinguished Name), e.g. C=DE, CN=test, or 2.999=example
+	 * @param string $val
+	 * @param bool $escape_equal_sign
+	 * @param bool $escape_backslash
+	 * @return string
+	 */
+	protected static function escapeAttributeValue(string $val, bool $escape_equal_sign, bool $escape_backslash): string {
+		// Escaping required by https://datatracker.ietf.org/doc/html/rfc2253#section-2.4
+
+		$val = trim($val); // we don't escape whitespaces. It is very unlikely that someone wants whitespaces at the beginning or end (it is rather a copy-paste error)
+
+		if ($escape_backslash) $val = str_replace('\\', '\\\\', $val); // important: do this first
+
+		$chars_to_escape = array(',', '+', '"', '<', '>', ';'); // listed in RFC 2253
+		$chars_to_escape[] = '/'; // defined by us (OIDplus)
+		if ($escape_equal_sign) $chars_to_escape[] = '='; // defined by us (OIDplus)
+
+		foreach ($chars_to_escape as $char) {
+			if (!$escape_backslash) $val = str_replace('\\'.$char, chr(4), $val);
+			$val = str_replace($char, '\\'.$char, $val);
+			if (!$escape_backslash) $val = str_replace(chr(4), '\\'.$char, $val);
+		}
+
+		if (substr($val, 0, 1) == '#') {
+			$val = '\\' . $val;
+		}
+
+		return $val;
+	}
+
+	/**
+	 * @param string &$arc A RDN (Relative Distinguished Name), e.g. C=DE, CN=test, or 2.999=example.
+	 *                     It *might* be auto-corrected (adding escape values).
+	 * @param bool $allow_multival Are multi-valued arcs (e.g. "uid=4711+cn=John Doe") allowed?
 	 * @return bool
 	 */
-	private static function isValidArc(string $arc): bool {
-		$ary = explode('=', $arc);
-		if (count($ary) !== 2) return false;
-		if ($ary[0] == "") return false;
-		if ($ary[1] == "") return false;
+	protected static function isValidArc(string &$arc, bool $allow_multival=true): bool {
+		if ($allow_multival) {
+			// We allow unescaped "+" and try to escape it, but at the same time we try to allow multi-valued names
+			// Example:
+			// "/cn=A+B Consulting"  will get corrected to  "/cn=A\+B Consulting"
+			// "/cn=X+cn=Y" stays the same (multi-valued)
+			// "/cn=X+cn=A+B Consulting"  will get corrected to  "/cn=X+cn=A\+B Consulting"
+			// But we will also accept escape sequences by the user!
+			// "/cn=X\+cn=A\+B Consulting" stays the same (not multi-valued)
 
-		if (oid_valid_dotnotation($ary[0], false, false, 1)) return true;
+			$values = explode_with_escaping('+', $arc);
 
-		$accepted_attribute_names = self::getKnownAttributeNames();
-		foreach ($accepted_attribute_names as $abbr => list($oid, $human_friendly_name)) {
-			if (strtolower($abbr) === strtolower($ary[0])) return true;
+			$corrected_identifier = '';
+			foreach ($values as $v) {
+				$v = str_replace('\\=', chr(3), $v);
+				$is_rdn = strpos($v, '=');
+				$v = str_replace(chr(3), '\\=', $v);
+
+				if ($is_rdn) {
+					if (!self::isValidArc($v, false)) return false; // Note: isValidArc() also corrects the escaping of $v
+				} else {
+					$v = self::escapeAttributeValue($v, /*$escape_equal_sign=*/false, /*$escape_backslash=*/false);
+				}
+
+				if ($corrected_identifier == '') { // 1st value
+					if ($is_rdn) {
+						// "cn=hello" (values = ["cn=hello"]) is valid
+						$corrected_identifier = $v;
+					} else {
+						// "hello+cn=world" (values = ["hello", "cn=world"]) is always invalid
+						return false;
+					}
+				} else { // 2nd, 3rd, ... value
+					if ($is_rdn) {
+						// "cn=hello+cn=world" (values = ["cn=hello", "cn=world"]) stays "cn=hello+cn=world"
+						$corrected_identifier .= '+' . $v;
+					} else {
+						// "cn=hello+world" (values = ["cn=hello", "world"]) becomes "cn=hello\+world"
+						$corrected_identifier .= '\\+' . $v;
+					}
+				}
+			}
+			$arc = $corrected_identifier; // return the auto-corrected identifier
+			return true;
+		} else {
+			$ary = explode_with_escaping('=', $arc, 2);
+			if (count($ary) !== 2) return false;
+			if ($ary[0] == "") return false;
+			if ($ary[1] == "") return false;
+
+			$ary[0] = self::escapeAttributeValue($ary[0], /*$escape_equal_sign=*/false, /*$escape_backslash=*/false);
+			$ary[1] = self::escapeAttributeValue($ary[1], /*$escape_equal_sign=*/true,  /*$escape_backslash=*/false);
+
+			if (oid_valid_dotnotation($ary[0], false, false, 1)) {
+				$arc = $ary[0] . '=' . $ary[1]; // return the auto-corrected identifier
+				return true;
+			}
+
+			$accepted_attribute_names = self::getKnownAttributeNames();
+			foreach ($accepted_attribute_names as $abbr => list($oid, $human_friendly_name)) {
+				if (strtolower($abbr) === strtolower($ary[0])) {
+					$arc = $ary[0] . '=' . $ary[1]; // return the auto-corrected identifier
+					return true;
+				}
+			}
+
+			return false;
 		}
-		return false;
 	}
 
 	/**
@@ -257,12 +344,14 @@ class OIDplusX500DN extends OIDplusObject {
 	public function addString(string $str): string {
 		if (substr($str,0,1) == '/') $str = substr($str, 1);
 
-		$new_arcs = explode('/', $str);
-		foreach ($new_arcs as $n => $test_arc) {
-			if (!self::isValidArc($test_arc)) {
+		$new_arcs = explode_with_escaping('/', $str);
+		foreach ($new_arcs as $n => &$test_arc) {
+			if (!self::isValidArc($test_arc, true)) {
 				throw new OIDplusException(_L("Arc %1 (%2) is not a valid Relative Distinguished Name (RDN).", $n+1, $test_arc));
 			}
 		}
+		unset($test_arc);
+		$str = implode('/', $new_arcs); // correct escaping which was auto-corrected by isValidArc()
 
 		if ($this->isRoot()) {
 			if (substr($str,0,1) != '/') $str = '/'.$str;
@@ -322,15 +411,15 @@ class OIDplusX500DN extends OIDplusObject {
 		$known_attr_names = self::getKnownAttributeNames();
 
 		// Note: There are some notation rules if names contain things like backslashes, see https://www.cryptosys.net/pki/manpki/pki_distnames.html
-		// We currently do not implement these! (TODO)
+		// We currently do not fully implement these! (TODO)
 
 		$html_dce_ad_notation = '';
 		$html_ldap_notation = '';
 		$html_encoded_string_notation = '';
 
-		$arcs = explode('/', ltrim($this->identifier,'/'));
+		$arcs = explode_with_escaping('/', ltrim($this->identifier,'/'));
 		foreach ($arcs as $arc) {
-			$ary = explode('=', $arc);
+			$ary = explode_with_escaping('=', $arc, 2);
 
 			$found_oid = '';
 			$found_hf_name = '???';
@@ -345,6 +434,7 @@ class OIDplusX500DN extends OIDplusObject {
 			$html_dce_ad_notation .= '/<abbr title="'.htmlentities($found_hf_name).'">'.htmlentities(strtoupper($ary[0])).'</abbr>='.htmlentities($ary[1]);
 			$html_ldap_notation = '<abbr title="'.htmlentities($found_hf_name).'">'.htmlentities(strtoupper($ary[0])).'</abbr>='.htmlentities(str_replace(',','\\,',$ary[1])) . ($html_ldap_notation == '' ? '' : ', ' . $html_ldap_notation);
 
+			// TODO: how are multi-valued values handled?
 			$html_encoded_str = '#<abbr title="'._L('ASN.1: UTF8String').'">'.sprintf('%02s', strtoupper(dechex(0x0C/*UTF8String*/))).'</abbr>';
 			$utf8 = vts_utf8_encode($ary[1]);
 			$html_encoded_str .= '<abbr title="'._L('Length').'">'.sprintf('%02s', strtoupper(dechex(strlen($utf8)))).'</abbr>'; // TODO: This length does only work for length <= 0x7F! The correct implementation is described here: https://misc.daniel-marschall.de/asn.1/oid_facts.html#chap1_2
@@ -459,8 +549,8 @@ class OIDplusX500DN extends OIDplusObject {
 		if (substr($a,0,1) == '/') $a = substr($a,1);
 		if (substr($b,0,1) == '/') $b = substr($b,1);
 
-		$ary = explode('/', $a);
-		$bry = explode('/', $b);
+		$ary = explode_with_escaping('/', $a);
+		$bry = explode_with_escaping('/', $b);
 
 		$min_len = min(count($ary), count($bry));
 
