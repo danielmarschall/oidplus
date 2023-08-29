@@ -91,13 +91,11 @@ class OIDplusX500DN extends OIDplusObject {
 	}
 
 	/**
-	 * @return array
+	 * @return array Format: [oid => [source, englishName, [ldapNames, ...], oidName], ...]
 	 */
 	public static function getKnownAttributeNames(): array {
-
-		// Extracted from https://www.itu.int/itu-t/recommendations/rec.aspx?rec=X.520
 		$ldap_attributes = [
-			// Format: oid => [source, englishName, [ldapNames, ...], oidName]
+			// Extracted from https://www.itu.int/itu-t/recommendations/rec.aspx?rec=X.520
 			// ITU-T X.520 (10/2019), clause 6.1 System attribute types
 			"2.5.4.2" => ["ITU-T X.520 (10/2019), clause 6.1.1", "Knowledge information", [], "id-at-knowledgeInformation"],
 			// ITU-T X.520 (10/2019), clause 6.2 Labelling attribute types
@@ -116,9 +114,9 @@ class OIDplusX500DN extends OIDplusObject {
 			"2.5.4.86" => ["ITU-T X.520 (10/2019), clause 6.2.13", "URN", ["urn"], "id-at-urn"],
 			"2.5.4.87" => ["ITU-T X.520 (10/2019), clause 6.2.14", "URL", ["url"], "id-at-url"],
 			"2.5.4.100" => ["ITU-T X.520 (10/2019), clause 6.2.15", "Domain name", ["DNS name"], "id-at-dnsName"],
-			"2.5.4.104" => ["ITU-T X.520 (10/2019), clause 6.2.16", "Internationalized email address attribute type", ["Internationalized Email"], "id-at-intEmail"],
-			"2.5.4.105" => ["ITU-T X.520 (10/2019), clause 6.2.17", "Jabber identifier attribute type", ["Jabber identifier"], "id-at-jid"],
-			"2.5.4.106" => ["ITU-T X.520 (10/2019), clause 6.2.18", "Object identifier attribute type", ["Object Identifier"], "id-at-objectIdentifier"],
+			"2.5.4.104" => ["ITU-T X.520 (10/2019), clause 6.2.16", "Internationalized email address", ["Internationalized Email"], "id-at-intEmail"],
+			"2.5.4.105" => ["ITU-T X.520 (10/2019), clause 6.2.17", "Jabber identifier", ["Jabber identifier"], "id-at-jid"],
+			"2.5.4.106" => ["ITU-T X.520 (10/2019), clause 6.2.18", "Object identifier", ["Object Identifier"], "id-at-objectIdentifier"],
 			// ITU-T X.520 (10/2019), clause 6.3 Geographical attribute types
 			"2.5.4.6" => ["ITU-T X.520 (10/2019), clause 6.3.1", "Country Name", ["c"], "id-at-countryName"],
 			"2.5.4.98" => ["ITU-T X.520 (10/2019), clause 6.3.2", "Country code with three characters", ["c3"], "id-at-countryCode3c"],
@@ -130,7 +128,7 @@ class OIDplusX500DN extends OIDplusObject {
 			"2.5.4.9" => ["ITU-T X.520 (10/2019), clause 6.3.6", "Street Address", ["street"], "id-at-streetAddress"],
 			"2.5.4.9.1" => ["ITU-T X.520 (10/2019), clause 6.3.6", "Collective Street Address", ["c-street"], "id-at-collectiveStreetAddress"],
 			"2.5.4.51" => ["ITU-T X.520 (10/2019), clause 6.3.7", "House Identifier", ["houseIdentifier"], "id-at-houseIdentifier"],
-			"2.5.4.88" => ["ITU-T X.520 (10/2019), clause 6.3.8", "UTM coordinates attribute type", ["utmCoordinates"], "id-at-utmCoordinates"],
+			"2.5.4.88" => ["ITU-T X.520 (10/2019), clause 6.3.8", "UTM coordinates", ["utmCoordinates"], "id-at-utmCoordinates"],
 			// ITU-T X.520 (10/2019), clause 6.4 Organizational attribute types
 			"2.5.4.10" => ["ITU-T X.520 (10/2019), clause 6.4.1", "Organization Name", ["o"], "id-at-organizationName"],
 			"2.5.4.10.1" => ["ITU-T X.520 (10/2019), clause 6.4.1", "Collective Organization Name", ["c-o"], "id-at-collectiveOrganizationName"],
@@ -186,51 +184,51 @@ class OIDplusX500DN extends OIDplusObject {
 			// ITU-T X.520 (10/2019), clause 6.12 Hierarchical attribute types
 			"2.17.1.2.0" => ["ITU-T X.520 (10/2019), clause 6.12.1", "Top level object identifier arc", [], "id-oidC1"],
 			"2.17.1.2.1" => ["ITU-T X.520 (10/2019), clause 6.12.2", "Second level object identifier arc", [], "id-oidC2"],
-			"2.17.1.2.2" => ["ITU-T X.520 (10/2019), clause 6.12.3", "Lower level object identifier arc attribute type", [], "id-oidC"],
-			"2.5.4.89" => ["ITU-T X.520 (10/2019), clause 6.12.4", "URN component attribute type", ["urnC"], "id-at-urnC"],
+			"2.17.1.2.2" => ["ITU-T X.520 (10/2019), clause 6.12.3", "Lower level object identifier arc", [], "id-oidC"],
+			"2.5.4.89" => ["ITU-T X.520 (10/2019), clause 6.12.4", "URN component", ["urnC"], "id-at-urnC"],
 			// ITU-T X.520 (10/2019), clause 6.13 Attributes for applications using tag-based identification
 			"2.5.4.78" => ["ITU-T X.520 (10/2019), clause 6.13.1", "Tag OID", ["tagOid"], "id-at-tagOid"],
 			"2.5.4.79" => ["ITU-T X.520 (10/2019), clause 6.13.2", "UII Format", ["uiiFormat"], "id-at-uiiFormat"],
-			"2.5.4.80" => ["ITU-T X.520 (10/2019), clause 6.13.3", "UII in URN attribute type (LDAP-NAME found in Annex A only)", ["uiiInUrn"], "id-at-uiiInUrn"],
+			"2.5.4.80" => ["ITU-T X.520 (10/2019), clause 6.13.3 (LDAP-NAME found in Annex A only)", "UII in URN", ["uiiInUrn"], "id-at-uiiInUrn"],
 			"2.5.4.81" => ["ITU-T X.520 (10/2019), clause 6.13.4", "Content URL", ["contentUrl"], "id-at-contentUrl"],
-			"2.5.4.90" => ["ITU-T X.520 (10/2019), clause 6.13.5", "UII attribute type", ["uii"], "id-at-uii"],
-			"2.5.4.91" => ["ITU-T X.520 (10/2019), clause 6.13.6", "EPC attribute type", ["epc"], "id-at-epc"],
-			"2.5.4.92" => ["ITU-T X.520 (10/2019), clause 6.13.7", "Tag AFI attribute type", ["tagAfi"], "id-at-tagAfi"],
-			"2.5.4.93" => ["ITU-T X.520 (10/2019), clause 6.13.8", "EPC format attribute", ["epcFormat"], "id-at-epcFormat"],
-			"2.5.4.94" => ["ITU-T X.520 (10/2019), clause 6.13.9", "EPC in URN attribute type", ["epcInUrn"], "id-at-epcInUrn"],
-			"2.5.4.95" => ["ITU-T X.520 (10/2019), clause 6.13.10", "LDAP URL attribute type", ["ldapUrl"], "id-at-ldapUrl"],
+			"2.5.4.90" => ["ITU-T X.520 (10/2019), clause 6.13.5", "UII", ["uii"], "id-at-uii"],
+			"2.5.4.91" => ["ITU-T X.520 (10/2019), clause 6.13.6", "EPC", ["epc"], "id-at-epc"],
+			"2.5.4.92" => ["ITU-T X.520 (10/2019), clause 6.13.7", "Tag AFI", ["tagAfi"], "id-at-tagAfi"],
+			"2.5.4.93" => ["ITU-T X.520 (10/2019), clause 6.13.8", "EPC format", ["epcFormat"], "id-at-epcFormat"],
+			"2.5.4.94" => ["ITU-T X.520 (10/2019), clause 6.13.9", "EPC in URN", ["epcInUrn"], "id-at-epcInUrn"],
+			"2.5.4.95" => ["ITU-T X.520 (10/2019), clause 6.13.10", "LDAP URL", ["ldapUrl"], "id-at-ldapUrl"],
 			"2.5.4.96" => ["ITU-T X.520 (10/2019), clause 6.13.11", "Tag location", ["tagLocation"], "id-at-tagLocation"],
 			// ITU-T X.520 (10/2019), clause 6.14 Simple Authentication attributes held by object entries
-			"2.5.4.35" => ["ITU-T X.520 (10/2019), clause 6.14.1 | X.509, Part 8", "Multi-valued user password attribute type", ["userPassword"], "id-at-userPassword"],
-			"2.5.4.85" => ["ITU-T X.520 (10/2019), clause 6.14.2 | Annex B", "Single-valued user password attribute", ["userPwd"], "id-at-userPwd"],
-			"2.5.18.22" => ["ITU-T X.520 (10/2019), clause 6.14.3", "Password Start Time attribute", ["pwdStartTime"], "id-oa-pwdStartTime"],
-			"2.5.18.23" => ["ITU-T X.520 (10/2019), clause 6.14.4", "Password expiry time attribute", ["pwdExpiryTime"], "id-oa-pwdExpiryTime"],
-			"2.5.18.24" => ["ITU-T X.520 (10/2019), clause 6.14.5", "Password End Time attribute", ["pwdEndTime"], "id-oa-pwdEndTime"],
-			"2.5.18.25" => ["ITU-T X.520 (10/2019), clause 6.14.6", "Password fails attribute", ["pwdFails"], "id-oa-pwdFails"],
-			"2.5.18.26" => ["ITU-T X.520 (10/2019), clause 6.14.7", "Password failure time attribute", ["pwdFailureTime"], "id-oa-pwdFailureTime"],
-			"2.5.18.27" => ["ITU-T X.520 (10/2019), clause 6.14.8", "Password graces used attribute", ["pwdGracesUsed"], "id-oa-pwdGracesUsed"],
-			"2.5.18.28" => ["ITU-T X.520 (10/2019), clause 6.14.9", "User password history attribute", [], "id-oa-userPwdHistory"],
-			"2.5.18.29" => ["ITU-T X.520 (10/2019), clause 6.14.10", "User password recently expired attribute", [], "id-oa-userPwdRecentlyExpired"],
+			"2.5.4.35" => ["ITU-T X.520 (10/2019), clause 6.14.1 | X.509, Part 8", "Multi-valued user password", ["userPassword"], "id-at-userPassword"],
+			"2.5.4.85" => ["ITU-T X.520 (10/2019), clause 6.14.2 | Annex B", "Single-valued user password", ["userPwd"], "id-at-userPwd"],
+			"2.5.18.22" => ["ITU-T X.520 (10/2019), clause 6.14.3", "Password Start Time", ["pwdStartTime"], "id-oa-pwdStartTime"],
+			"2.5.18.23" => ["ITU-T X.520 (10/2019), clause 6.14.4", "Password expiry time", ["pwdExpiryTime"], "id-oa-pwdExpiryTime"],
+			"2.5.18.24" => ["ITU-T X.520 (10/2019), clause 6.14.5", "Password End Time", ["pwdEndTime"], "id-oa-pwdEndTime"],
+			"2.5.18.25" => ["ITU-T X.520 (10/2019), clause 6.14.6", "Password fails", ["pwdFails"], "id-oa-pwdFails"],
+			"2.5.18.26" => ["ITU-T X.520 (10/2019), clause 6.14.7", "Password failure time", ["pwdFailureTime"], "id-oa-pwdFailureTime"],
+			"2.5.18.27" => ["ITU-T X.520 (10/2019), clause 6.14.8", "Password graces used", ["pwdGracesUsed"], "id-oa-pwdGracesUsed"],
+			"2.5.18.28" => ["ITU-T X.520 (10/2019), clause 6.14.9", "User password history", [], "id-oa-userPwdHistory"],
+			"2.5.18.29" => ["ITU-T X.520 (10/2019), clause 6.14.10", "User password recently expired", [], "id-oa-userPwdRecentlyExpired"],
 			// ITU-T X.520 (10/2019), clause 6.15 Password policy attributes
-			"2.5.18.30" => ["ITU-T X.520 (10/2019), clause 6.15.1", "Password modify entry allowed attribute", ["pwdModifyEntryAllowed"], "id-oa-pwdModifyEntryAllowed"],
-			"2.5.18.31" => ["ITU-T X.520 (10/2019), clause 6.15.2", "Password change allowed attribute", ["pwdChangeAllowed"], "id-oa-pwdChangeAllowed"],
-			"2.5.18.32" => ["ITU-T X.520 (10/2019), clause 6.15.3", "Password maximum age attribute", ["pwdMaxAge"], "id-oa-pwdMaxAge"],
-			"2.5.18.33" => ["ITU-T X.520 (10/2019), clause 6.15.4", "Password expiry age attribute", ["pwdExpiryAge"], "id-oa-pwdExpiryAge"],
+			"2.5.18.30" => ["ITU-T X.520 (10/2019), clause 6.15.1", "Password modify entry allowed", ["pwdModifyEntryAllowed"], "id-oa-pwdModifyEntryAllowed"],
+			"2.5.18.31" => ["ITU-T X.520 (10/2019), clause 6.15.2", "Password change allowed", ["pwdChangeAllowed"], "id-oa-pwdChangeAllowed"],
+			"2.5.18.32" => ["ITU-T X.520 (10/2019), clause 6.15.3", "Password maximum age", ["pwdMaxAge"], "id-oa-pwdMaxAge"],
+			"2.5.18.33" => ["ITU-T X.520 (10/2019), clause 6.15.4", "Password expiry age", ["pwdExpiryAge"], "id-oa-pwdExpiryAge"],
 			// ITU-T X.520 (10/2019), clause 6.15.5 Password quality rule attribute types
-			"2.5.18.34" => ["ITU-T X.520 (10/2019), clause 6.15.5.1", "Password minimum length attribute", ["pwdMinLength"], "id-oa-pwdMinLength"],
-			"2.5.18.35" => ["ITU-T X.520 (10/2019), clause 6.15.5.2", "Password vocabulary attribute", ["pwdVocabulary"], "id-oa-pwdVocabulary"],
-			"2.5.18.36" => ["ITU-T X.520 (10/2019), clause 6.15.5.3", "Password alphabet attribute", ["pwdAlphabet"], "id-oa-pwdAlphabet"],
-			"2.5.18.37" => ["ITU-T X.520 (10/2019), clause 6.15.5.4", "Password dictionaries attribute", ["pwdDictionaries"], "id-oa-pwdDictionaries"],
-			"2.5.18.38" => ["ITU-T X.520 (10/2019), clause 6.15.6", "Password expiry warning attribute", ["pwdExpiryWarning"], "id-oa-pwdExpiryWarning"],
-			"2.5.18.39" => ["ITU-T X.520 (10/2019), clause 6.15.7", "Password graces attribute", ["pwdGraces"], "id-oa-pwdGraces"],
-			"2.5.18.40" => ["ITU-T X.520 (10/2019), clause 6.15.8", "Password failure duration attribute", ["pwdFailureDuration"], "id-oa-pwdFailureDuration"],
-			"2.5.18.41" => ["ITU-T X.520 (10/2019), clause 6.15.9", "Password lockout duration attribute", ["pwdLockoutDuration"], "id-oa-pwdLockoutDuration"],
-			"2.5.18.42" => ["ITU-T X.520 (10/2019), clause 6.15.10", "Password maximum failures attribute", ["pwdMaxFailures"], "id-oa-pwdMaxFailures"],
-			"2.5.18.43" => ["ITU-T X.520 (10/2019), clause 6.15.11", "Password maximum time in history attribute", ["pwdMaxTimeInHistory"], "id-oa-pwdMaxTimeInHistory"],
-			"2.5.18.44" => ["ITU-T X.520 (10/2019), clause 6.15.12", "Password minimum time in history attribute", ["pwdMinTimeInHistory"], "id-oa-pwdMinTimeInHistory"],
-			"2.5.18.45" => ["ITU-T X.520 (10/2019), clause 6.15.13", "Password history slots attribute", ["pwdHistorySlots"], "id-oa-pwdHistorySlots"],
-			"2.5.18.46" => ["ITU-T X.520 (10/2019), clause 6.15.14", "Password recently expired duration attribute", ["pwdRecentlyExpiredDuration"], "id-oa-pwdRecentlyExpiredDuration"],
-			"2.5.18.47" => ["ITU-T X.520 (10/2019), clause 6.15.15", "Password encryption algorithm attribute", ["pwdEncAlg"], "id-oa-pwdEncAlg"],
+			"2.5.18.34" => ["ITU-T X.520 (10/2019), clause 6.15.5.1", "Password minimum length", ["pwdMinLength"], "id-oa-pwdMinLength"],
+			"2.5.18.35" => ["ITU-T X.520 (10/2019), clause 6.15.5.2", "Password vocabulary", ["pwdVocabulary"], "id-oa-pwdVocabulary"],
+			"2.5.18.36" => ["ITU-T X.520 (10/2019), clause 6.15.5.3", "Password alphabet", ["pwdAlphabet"], "id-oa-pwdAlphabet"],
+			"2.5.18.37" => ["ITU-T X.520 (10/2019), clause 6.15.5.4", "Password dictionaries", ["pwdDictionaries"], "id-oa-pwdDictionaries"],
+			"2.5.18.38" => ["ITU-T X.520 (10/2019), clause 6.15.6", "Password expiry warning", ["pwdExpiryWarning"], "id-oa-pwdExpiryWarning"],
+			"2.5.18.39" => ["ITU-T X.520 (10/2019), clause 6.15.7", "Password graces", ["pwdGraces"], "id-oa-pwdGraces"],
+			"2.5.18.40" => ["ITU-T X.520 (10/2019), clause 6.15.8", "Password failure duration", ["pwdFailureDuration"], "id-oa-pwdFailureDuration"],
+			"2.5.18.41" => ["ITU-T X.520 (10/2019), clause 6.15.9", "Password lockout duration", ["pwdLockoutDuration"], "id-oa-pwdLockoutDuration"],
+			"2.5.18.42" => ["ITU-T X.520 (10/2019), clause 6.15.10", "Password maximum failures", ["pwdMaxFailures"], "id-oa-pwdMaxFailures"],
+			"2.5.18.43" => ["ITU-T X.520 (10/2019), clause 6.15.11", "Password maximum time in history", ["pwdMaxTimeInHistory"], "id-oa-pwdMaxTimeInHistory"],
+			"2.5.18.44" => ["ITU-T X.520 (10/2019), clause 6.15.12", "Password minimum time in history", ["pwdMinTimeInHistory"], "id-oa-pwdMinTimeInHistory"],
+			"2.5.18.45" => ["ITU-T X.520 (10/2019), clause 6.15.13", "Password history slots", ["pwdHistorySlots"], "id-oa-pwdHistorySlots"],
+			"2.5.18.46" => ["ITU-T X.520 (10/2019), clause 6.15.14", "Password recently expired duration", ["pwdRecentlyExpiredDuration"], "id-oa-pwdRecentlyExpiredDuration"],
+			"2.5.18.47" => ["ITU-T X.520 (10/2019), clause 6.15.15", "Password encryption algorithm", ["pwdEncAlg"], "id-oa-pwdEncAlg"],
 			// ITU-T X.520 (10/2019), clause 6.16 Notification attributes
 			// ITU-T X.520 (10/2019), clause 6.16.1 DSA problem
 			// ITU-T X.520 (10/2019), clause 6.16.2 Search service problem
@@ -251,10 +249,59 @@ class OIDplusX500DN extends OIDplusObject {
 			// ITU-T X.520 (10/2019), clause 6.16.17 Password response
 			// ITU-T X.520 (10/2019), clause 6.16.18 LDAP diagnostic message
 			// ITU-T X.520 (10/2019), clause 6.17 LDAP defined attribute types
-			"0.9.2342.19200300.100.1.1" => ["ITU-T X.520 (10/2019), clause 6.17.1", "User ID attribute type", ["uid"], "id-coat-uid"],
-			"0.9.2342.19200300.100.1.25" => ["ITU-T X.520 (10/2019), clause 6.17.2", "Domain component attribute type", ["dc"], "id-coat-dc"],
-			"0.9.2342.19200300.100.1.3" => ["ITU-T X.520 (10/2019), clause 6.17.3", "Mail attribute type", ["mail"], "id-coat-mail"]
+			"0.9.2342.19200300.100.1.1" => ["ITU-T X.520 (10/2019), clause 6.17.1", "User ID", ["uid"], "id-coat-uid"],
+			"0.9.2342.19200300.100.1.25" => ["ITU-T X.520 (10/2019), clause 6.17.2", "Domain component", ["dc"], "id-coat-dc"],
+			"0.9.2342.19200300.100.1.3" => ["ITU-T X.520 (10/2019), clause 6.17.3", "Mail", ["mail"], "id-coat-mail"],
+
+			// Extracted from https://www.itu.int/rec/T-REC-X.509-201910-I/en
+			"2.5.4.36" => ["Rec. ITU-T X.509 (10/2019), clause 13.2.1", "X.509 user certificate", ["userCertificate"], "id-at-userCertificate"],
+			"2.5.4.37" => ["Rec. ITU-T X.509 (10/2019), clause 13.2.2", "X.509 CA certificate", ["cACertificate"], "id-at-cAcertificate"],
+			"2.5.4.40" => ["Rec. ITU-T X.509 (10/2019), clause 13.2.3", "X.509 cross certificate pair", ["crossCertificatePair"], "id-at-crossCertificatePair"],
+			"2.5.4.39" => ["Rec. ITU-T X.509 (10/2019), clause 13.2.4", "X.509 certificate revocation list", ["certificateRevocationList"], "id-at-certificateRevocationList"],
+			"2.5.4.101" => ["Rec. ITU-T X.509 (10/2019), clause 13.2.5", "X.509 EEPK certificate revocation list", ["eepkCertificateRevocationList"], "id-at-eepkCertificateRevocationList"],
+			"2.5.4.38" => ["Rec. ITU-T X.509 (10/2019), clause 13.2.6", "X.509 CA revocation list", ["authorityRevocationList"], "id-at-authorityRevocationList"],
+			"2.5.4.53" => ["Rec. ITU-T X.509 (10/2019), clause 13.2.7", "X.509 delta revocation list", ["deltaRevocationList"], "id-at-deltaRevocationList"],
+			"2.5.4.52" => ["Rec. ITU-T X.509 (10/2019), clause 13.2.8", "X.509 support algorithms", ["supportedAlgorithms"], "id-at-supportedAlgorithms"],
+			"2.5.4.68" => ["Rec. ITU-T X.509 (10/2019), clause 13.2.9", "Certification practice statement", [], "id-at-certificationPracticeStmt"],
+			"2.5.4.69" => ["Rec. ITU-T X.509 (10/2019), clause 13.2.10", "Certificate policy", [], "id-at-certificatePolicy"],
+			"2.5.4.70" => ["Rec. ITU-T X.509 (10/2019), clause 13.2.11", "PKI path", [], "id-at-pkiPath"],
+			"2.5.4.103" => ["Rec. ITU-T X.509 (10/2019), clause 13.2.12", "X.509 supported publiv key algorithms", ["supportedPublicKeyAlgorithms"], "id-at-supportedPublicKeyAlgorithms"],
+			// Rec. ITU-T X.509 (10/2019), clause 19.2 PMI directory attributes
+			"2.5.4.58" => ["Rec. ITU-T X.509 (10/2019), clause 19.2.1", "Attribute certificate", [], "id-at-attributeCertificate"],
+			"2.5.4.61" => ["Rec. ITU-T X.509 (10/2019), clause 19.2.2", "AA certificate", [], "id-at-aACertificate"],
+			"2.5.4.62" => ["Rec. ITU-T X.509 (10/2019), clause 19.2.3", "Attribute descriptor certificate", [], "id-at-attributeDescriptorCertificate"],
+			"2.5.4.59" => ["Rec. ITU-T X.509 (10/2019), clause 19.2.4", "X.509 Attr certificate revocation list", ["AttrCertificateRevocationList"], "id-at-attributeCertificateRevocationList"],
+			"2.5.4.102" => ["Rec. ITU-T X.509 (10/2019), clause 19.2.5", "X.509 EEAttr certificate revocation list", ["EEAttrCertificateRevocationList"], "id-at-eeAttrCertificateRevocationList"],
+			"2.5.4.63" => ["Rec. ITU-T X.509 (10/2019), clause 19.2.6", "X.509 AA certificate revocation list", ["AACertificateRevocationList"], "id-at-attributeAuthorityRevocationList"],
+			"2.5.4.73" => ["Rec. ITU-T X.509 (10/2019), clause 19.2.7", "Delegation path", [], "id-at-delegationPath"],
+			"2.5.4.71" => ["Rec. ITU-T X.509 (10/2019), clause 19.2.8", "Privilege policy", [], "id-at-privPolicy"],
+			"2.5.4.74" => ["Rec. ITU-T X.509 (10/2019), clause 19.2.9", "Protected privilege policy", [], "id-at-protPrivPolicy"],
+			"2.5.4.76" => ["Rec. ITU-T X.509 (10/2019), clause 19.2.10", "XML Protected privilege policy", [], "id-at-xmlPrivPolicy"],
+			"2.5.4.72" => ["Rec. ITU-T X.509 (10/2019), clause 16.5.1", "Role", [], "id-at-role"],
+			"2.5.4.75" => ["Rec. ITU-T X.509 (10/2019), clause 16.7", "XML privilege information", [], "id-at-xMLPrivilegeInfo"],
+			"2.5.4.82" => ["Rec. ITU-T X.509 (10/2019), clause 16.8.1 ", "Permission", [], "id-at-permission"],
+
+			// Extracted from https://www.itu.int/rec/T-REC-X.501-201910-I/en
+			"2.5.4.0"  => ["Rec. ITU-T X.501 (10/2019), clause 13.4.8", "Object Class", ["objectClass"], "id-at-objectClass"],
+			"2.5.4.1"  => ["Rec. ITU-T X.501 (10/2019), clause 13.4.8", "Aliased Object Name", ["aliasedObjectName"], "id-at-aliasedEntryName"],
+			"2.5.4.84" => ["Rec. ITU-T X.501 (10/2019), clause 14.9", "Password attribute", ["pwdAttribute"], "id-at-pwdAttribute"],
+			"2.5.4.55" => ["Rec. ITU-T X.501 (10/2019), clause 19.5", "Clearance", [], "id-at-clearance"],
+			"2.5.4.56" => ["Rec. ITU-T X.501, obsolete", "Default Dir Qop", [], "id-at-defaultDirQop"],
+			"2.5.4.57" => ["Rec. ITU-T X.501 (10/2019), clause 20.2", "Attribute integrity info", [], "id-at-attributeIntegrityInfo"],
+			"2.5.4.60" => ["Rec. ITU-T X.501, obsolete", "Conf key info", [], "id-at-confKeyInfo"],
+
+			// Extracted from https://www.itu.int/rec/T-REC-X.511-201910-I/en
+			"2.5.4.64" => ["Rec. ITU-T X.511 (10/2019), clause 7.7.2", "Family information in entry information", [], "id-at-family-information"],
 		];
+
+		/*
+		for ($i=0; $i<106; $i++) {
+			if (!isset($ldap_attributes["2.5.4.$i"])) echo "WARNING: 2.5.4.$i MISSING\n";
+		}
+		foreach($ldap_attributes as $a) {
+			if (count($a) !== 4) echo "WARNING: ".print_r($a,true)."\n";
+		}
+		*/
 
 		// Additional identifiers found at https://www.ibm.com/docs/en/zos/2.2.0?topic=SSLTBW_2.2.0/com.ibm.tcp.ipsec.ipsec.help.doc/com/ibm/tcp/ipsec/nss/NssImageServerPs.RB_X500.htm
 		$ldap_attributes["1.2.840.113549.1.9.1"] = ["???", "E-mail address", ["E", "EMAIL", "EMAILADDRESS"], "pkcs-9-at-emailAddress"]; //(preferred: EMAIL)
@@ -266,6 +313,10 @@ class OIDplusX500DN extends OIDplusObject {
 		// Additional identifiers found at https://www.cryptosys.net/pki/manpki/pki_distnames.html
 		$ldap_attributes["2.5.4.42"][2][] = "G"; // Given name
 		$ldap_attributes["2.5.4.42"][2][] = "GN"; // Given name
+
+		// Found in OpenSSL https://github.com/openssl/openssl/blob/a2608e4bc430d6216bbf36f50a29278e8759103a/include/openssl/obj_mac.h
+		$ldap_attributes["2.5.4.100"][2][] = "dnsName"; // X.520 says "DNS Name"
+		$ldap_attributes["2.5.4.72"][2][] = "role";
 
 		// Additional identifiers by Daniel Marschall (these attributes don't have a LDAP-NAME property in X.520, so we set something based on the ASN.1 alphanumeric identifier)
 		$ldap_attributes["2.5.4.2"][2][] = "knowledgeInformation";
