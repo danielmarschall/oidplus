@@ -195,7 +195,7 @@ class OIDplusGs1 extends OIDplusObject {
 				foreach ($tech_info as $key => $value) {
 					$tech_info_html .= '<tr><td valign="top" style="white-space: nowrap;">'.$key.': </td><td><code>'.str_replace(' ','&nbsp;',$value).'</code></td></tr>';
 				}
-				$tech_info_html .= '</table>';
+				$tech_info_html .= '</table></div>';
 			}
 
 			if ($this->isLeafNode()) {
