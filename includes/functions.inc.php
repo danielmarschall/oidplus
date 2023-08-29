@@ -768,6 +768,20 @@ function decrypt_str(string $data, string $key): string {
 }
 
 /**
+ * Finds a substring that is guaranteed not in $str
+ * @param string $str
+ * @return string
+ */
+function find_nonexisting_substr(string $str): string {
+	$i = 0;
+	do {
+		$i++;
+		$dummy = "[$i]";
+	} while (strpos($str, $dummy) !== false);
+	return $dummy;
+}
+
+/**
  * Works like explode(), but it respects if $separator is preceded by an backslash escape character
  * @param string $separator
  * @param string $string
@@ -775,14 +789,17 @@ function decrypt_str(string $data, string $key): string {
  * @return array
  */
 function explode_with_escaping(string $separator, string $string, int $limit=PHP_INT_MAX): array {
-	$string = str_replace('\\\\', chr(2), $string);
-	$string = str_replace('\\'.$separator, chr(1), $string);
+	$dummy1 = find_nonexisting_substr($string);
+	$dummy2 = find_nonexisting_substr($string.$dummy1);
+
+	$string = str_replace('\\\\', $dummy2, $string);
+	$string = str_replace('\\'.$separator, $dummy1, $string);
 
 	$ary = explode($separator, $string, $limit);
 
 	foreach ($ary as &$a) {
-		$a = str_replace(chr(2), '\\\\', $a);
-		$a = str_replace(chr(1), '\\'.$separator, $a);
+		$a = str_replace($dummy2, '\\\\', $a);
+		$a = str_replace($dummy1, '\\'.$separator, $a);
 	}
 	unset($a);
 

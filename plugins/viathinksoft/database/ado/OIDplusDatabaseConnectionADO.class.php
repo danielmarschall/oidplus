@@ -43,9 +43,10 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 	 * @throws OIDplusSQLException
 	 */
 	protected function doQueryPrepareEmulation(string $sql, array $prepared_args=null): OIDplusQueryResultADO {
-		$sql = str_replace('?', chr(1), $sql);
+		$dummy = find_nonexisting_substr($sql);
+		$sql = str_replace('?', $dummy, $sql);
 		foreach ($prepared_args as $arg) {
-			$needle = chr(1);
+			$needle = $dummy;
 			if (is_bool($arg)) {
 				if ($this->slangDetectionDone) {
 					$replace = $this->getSlang()->getSQLBool($arg);
@@ -71,7 +72,7 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 				$sql = substr_replace($sql, $replace, $pos, strlen($needle));
 			}
 		}
-		$sql = str_replace(chr(1), '?', $sql);
+		$sql = str_replace($dummy, '?', $sql);
 		return $this->doQuery($sql);
 	}
 
