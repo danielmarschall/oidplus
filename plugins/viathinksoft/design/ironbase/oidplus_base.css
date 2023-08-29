@@ -654,3 +654,12 @@ h1, h2, h3 {
 li {
 	padding-bottom: 0.25em;
 }
+
+img[src="img/arrow_back.png"], img[src="img/share.png"] {
+	/* for dark designs (does not look good though...) */
+	/* TODO: how to replace all visible pixels by a specific color, e.g. white? mask-image? */
+	filter: drop-shadow( 1px -1px 1px white) 
+	        drop-shadow(-1px  1px 1px white)
+	        drop-shadow(-1px -1px 1px white)
+	        drop-shadow( 1px  1px 1px white);
+}
