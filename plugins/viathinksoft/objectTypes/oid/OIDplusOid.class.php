@@ -239,7 +239,7 @@ class OIDplusOid extends OIDplusObject {
 				foreach ($tech_info as $key => $value) {
 					$tech_info_html .= '<tr><td valign="top" style="white-space: nowrap;">'.$key.': </td><td><code>'.$value.'</code></td></tr>';
 				}
-				$tech_info_html .= '</table>';
+				$tech_info_html .= '</table></div>';
 			}
 
 			$content = $tech_info_html;
