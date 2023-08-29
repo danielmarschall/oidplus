@@ -249,9 +249,10 @@ class OIDplusX500DN extends OIDplusObject {
 		if ($escape_equal_sign) $chars_to_escape[] = '='; // defined by us (OIDplus)
 
 		foreach ($chars_to_escape as $char) {
-			if (!$escape_backslash) $val = str_replace('\\'.$char, chr(4), $val);
+			$dummy = find_nonexisting_substr($val);
+			if (!$escape_backslash) $val = str_replace('\\'.$char, $dummy, $val);
 			$val = str_replace($char, '\\'.$char, $val);
-			if (!$escape_backslash) $val = str_replace(chr(4), '\\'.$char, $val);
+			if (!$escape_backslash) $val = str_replace($dummy, '\\'.$char, $val);
 		}
 
 		if (substr($val, 0, 1) == '#') {
@@ -281,9 +282,10 @@ class OIDplusX500DN extends OIDplusObject {
 
 			$corrected_identifier = '';
 			foreach ($values as $v) {
-				$v = str_replace('\\=', chr(3), $v);
+				$dummy = find_nonexisting_substr($v);
+				$v = str_replace('\\=', $dummy, $v);
 				$is_rdn = strpos($v, '=');
-				$v = str_replace(chr(3), '\\=', $v);
+				$v = str_replace($dummy, '\\=', $v);
 
 				if ($is_rdn) {
 					if (!self::isValidArc($v, false)) return false; // Note: isValidArc() also corrects the escaping of $v
