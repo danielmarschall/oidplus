@@ -250,6 +250,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	public function restApiCall(string $requestMethod, string $endpoint, array $json_in) {
 		if (str_starts_with($endpoint, 'objects/')) {
 			if ($requestMethod == "OPTIONS") {
+				// Note: On some web servers, the server software might catch OPTIONS and not forward it to PHP
 				$this->restApiCall_OPTIONS($endpoint, $json_in);
 			} else if ($requestMethod == "GET"/*Select*/) {
 				return $this->restApiCall_GET($endpoint, $json_in);

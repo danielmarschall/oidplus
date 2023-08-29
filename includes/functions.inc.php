@@ -766,3 +766,25 @@ function decrypt_str(string $data, string $key): string {
 	}
 	return $cleartext;
 }
+
+/**
+ * Works like explode(), but it respects if $separator is preceded by an backslash escape character
+ * @param string $separator
+ * @param string $string
+ * @param int $limit
+ * @return array
+ */
+function explode_with_escaping(string $separator, string $string, int $limit=PHP_INT_MAX): array {
+	$string = str_replace('\\\\', chr(2), $string);
+	$string = str_replace('\\'.$separator, chr(1), $string);
+
+	$ary = explode($separator, $string, $limit);
+
+	foreach ($ary as &$a) {
+		$a = str_replace(chr(2), '\\\\', $a);
+		$a = str_replace(chr(1), '\\'.$separator, $a);
+	}
+	unset($a);
+
+	return $ary;
+}
