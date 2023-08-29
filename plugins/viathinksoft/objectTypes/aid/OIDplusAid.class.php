@@ -214,7 +214,7 @@ class OIDplusAid extends OIDplusObject {
 
 			$content .= '<h2>'._L('Decoding').'</h2>';
 			$content .= '<table border="0">';
-			$content .= '<code>'.$tmp.'</code>';
+			$content .= '<div style="overflow:auto;white-space:nowrap"><code>'.$tmp.'</code></div>';
 			$content .= '</table>';
 
 			$content .= '<h2>'._L('Description').'</h2>%%DESC%%';
