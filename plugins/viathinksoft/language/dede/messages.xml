@@ -30,6 +30,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		"%1" is not a valid hex string. Note: In case you want a string starting with a hashtag, you need to add a backslash in front of it.
+		]]></source>
+		<target><![CDATA[
+		"%1" ist kein gültiger Hex-String. Hinweis: Falls Sie einen String haben möchten, der mit einem Hashtag beginnt, dann müssen Sie ein Backslash davor setzen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		"Server Secret" was changed; therefore the JWT is not valid anymore
 		]]></source>
 		<target><![CDATA[

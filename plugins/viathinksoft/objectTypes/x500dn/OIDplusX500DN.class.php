@@ -394,6 +394,9 @@ class OIDplusX500DN extends OIDplusObject {
 		$ldap_attributes["2.5.18.28"][2][] = "userPwdHistory";
 		$ldap_attributes["2.5.18.29"][2][] = "userPwdRecentlyExpired";
 
+		// Vendor specific stuff
+		$ldap_attributes["1.3.6.1.4.1.37476.2.5.2.9.4.1"] = ["ViaThinkSoft", "OIDplus System", ["oidplusSystemId"], "system-id"];
+
 		// Test data
 		/*
 		for ($i=0; $i<=106; $i++) {
@@ -417,9 +420,10 @@ class OIDplusX500DN extends OIDplusObject {
 	 * @param string $val
 	 * @param bool $escape_equal_sign
 	 * @param bool $escape_backslash
+	 * @param bool $allow_ber
 	 * @return string
 	 */
-	protected static function escapeAttributeValue(string $val, bool $escape_equal_sign, bool $escape_backslash): string {
+	protected static function escapeAttributeValue(string $val, bool $escape_equal_sign, bool $escape_backslash, bool $allow_ber): string {
 		// Escaping required by https://datatracker.ietf.org/doc/html/rfc2253#section-2.4
 
 		$val = trim($val); // we don't escape whitespaces. It is very unlikely that someone wants whitespaces at the beginning or end (it is rather a copy-paste error)
@@ -437,8 +441,10 @@ class OIDplusX500DN extends OIDplusObject {
 			if (!$escape_backslash) $val = str_replace($dummy, '\\'.$char, $val);
 		}
 
-		if (substr($val, 0, 1) == '#') {
-			$val = '\\' . $val;
+		if (!$allow_ber) {
+			if (substr($val, 0, 1) == '#') {
+				$val = '\\' . $val;
+			}
 		}
 
 		return $val;
@@ -472,7 +478,7 @@ class OIDplusX500DN extends OIDplusObject {
 				if ($is_rdn) {
 					if (!self::isValidArc($v, false)) return false; // Note: isValidArc() also corrects the escaping of $v
 				} else {
-					$v = self::escapeAttributeValue($v, /*$escape_equal_sign=*/false, /*$escape_backslash=*/false);
+					$v = self::escapeAttributeValue($v, /*$escape_equal_sign=*/false, /*$escape_backslash=*/false, /*$allow_ber=*/true);
 				}
 
 				if ($corrected_identifier == '') { // 1st value
@@ -501,12 +507,24 @@ class OIDplusX500DN extends OIDplusObject {
 			if ($ary[0] == "") return false;
 			if ($ary[1] == "") return false;
 
-			$ary[0] = self::escapeAttributeValue($ary[0], /*$escape_equal_sign=*/false, /*$escape_backslash=*/false);
-			$ary[1] = self::escapeAttributeValue($ary[1], /*$escape_equal_sign=*/true,  /*$escape_backslash=*/false);
+			$ary[0] = self::escapeAttributeValue($ary[0], /*$escape_equal_sign=*/false, /*$escape_backslash=*/false, /*$allow_ber=*/true);
+			$ary[1] = self::escapeAttributeValue($ary[1], /*$escape_equal_sign=*/true,  /*$escape_backslash=*/false, /*$allow_ber=*/true);
 
 			if (oid_valid_dotnotation($ary[0], false, false, 1)) {
 				$arc = $ary[0] . '=' . $ary[1]; // return the auto-corrected identifier
 				return true;
+			}
+
+			if (substr($ary[1],0,1) == '#') {
+				$hex_code = substr($ary[1],1);
+				$is_valid_hexstr = preg_match("/^[a-f0-9]{2,}$/i", $hex_code) && !(strlen($hex_code) & 1);
+				if (!$is_valid_hexstr) {
+					throw new OIDplusException(_L('"%1" is not a valid hex string. Note: In case you want a string starting with a hashtag, you need to add a backslash in front of it.', $ary[1]));
+				}
+
+				// TODO: Theoretically, we should also check if the hex string is valid BER code... but that is a very hard task
+				//       Also, if we go even a step further, then we could also check if the data is valid (correct ASN.1 type).
+
 			}
 
 			$known_attr_names = self::getKnownAttributeNames();
@@ -624,15 +642,20 @@ class OIDplusX500DN extends OIDplusObject {
 			$html_ldap_notation = '<abbr title="'.htmlentities($found_hf_name).'">'.htmlentities(strtoupper($ary[0])).'</abbr>='.htmlentities(str_replace(',','\\,',$ary[1])) . ($html_ldap_notation == '' ? '' : ', ' . $html_ldap_notation);
 
 			// TODO: how are multi-valued values handled?
+			// TODO: We cannot simply encode everything to UTF8String, because some attributes need to be encoded as binary, integer, datetime, etc.!
 			$html_encoded_str = '#<abbr title="'._L('ASN.1: UTF8String').'">'.sprintf('%02s', strtoupper(dechex(0x0C/*UTF8String*/))).'</abbr>';
-			$utf8 = vts_utf8_encode($ary[1]);
-			$html_encoded_str .= '<abbr title="'._L('Length').'">'.sprintf('%02s', strtoupper(dechex(strlen($utf8)))).'</abbr>'; // TODO: This length does only work for length <= 0x7F! The correct implementation is described here: https://misc.daniel-marschall.de/asn.1/oid_facts.html#chap1_2
-			$html_encoded_str .= '<abbr title="'.htmlentities($ary[1]).'">';
-			for ($i=0; $i<strlen($utf8); $i++) {
-				$char = substr($utf8, $i, 1);
-				$html_encoded_str .= sprintf('%02s', strtoupper(dechex(ord($char))));
+			if (substr($ary[1],0,1) == '#') {
+				$html_encoded_str = htmlentities(strtoupper($ary[1]));
+			} else {
+				$utf8 = vts_utf8_encode($ary[1]);
+				$html_encoded_str .= '<abbr title="'._L('Length').'">'.sprintf('%02s', strtoupper(dechex(strlen($utf8)))).'</abbr>'; // TODO: This length does only work for length <= 0x7F! The correct implementation is described here: https://misc.daniel-marschall.de/asn.1/oid_facts.html#chap1_2
+				$html_encoded_str .= '<abbr title="'.htmlentities($ary[1]).'">';
+				for ($i=0; $i<strlen($utf8); $i++) {
+					$char = substr($utf8, $i, 1);
+					$html_encoded_str .= sprintf('%02s', strtoupper(dechex(ord($char))));
+				}
+				$html_encoded_str .= '</abbr>';
 			}
-			$html_encoded_str .= '</abbr>';
 			$html_encoded_string_notation = '<abbr title="'.htmlentities(strtoupper($ary[0]) . ' = ' . $found_hf_name).'">'.htmlentities($found_oid).'</abbr>='.$html_encoded_str . ($html_encoded_string_notation == '' ? '' : ',' . $html_encoded_string_notation);
 		}
 

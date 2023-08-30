@@ -84,7 +84,7 @@
         'danielmarschall/php_utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '2f698ec0e86f780b699cec900ae142fe5aad0f08',
+            'reference' => '501a04fd8388576126521f608fea32b41d40f0e9',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/php_utils',
             'aliases' => array(
