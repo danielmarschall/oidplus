@@ -2,8 +2,8 @@
 
 /*
  * OID-Utilities for PHP
- * Copyright 2011-2022 Daniel Marschall, ViaThinkSoft
- * Version 2022-01-07
+ * Copyright 2011 - 2023 Daniel Marschall, ViaThinkSoft
+ * Version 2023-08-25
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -226,7 +226,7 @@ function oid_up($oid) {
  **/
 function oid_len($oid) {
 	if ($oid == '') return 0;
-	if ($oid[0] == '.') $oid = substr($oid, 1);
+	if (substr($oid,0,1) == '.') $oid = substr($oid, 1);
 	return substr_count($oid, '.')+1;
 }
 function oid_depth($oid) {
@@ -460,7 +460,7 @@ function oid_add_leading_dot($oid) {
 	$oid = sanitizeOID($oid, 'auto');
 	if ($oid === false) return false;
 
-	if ($oid[0] != '.') $oid = '.'.$oid;
+	if (substr($oid,0,1) != '.') $oid = '.'.$oid;
 	return $oid;
 }
 
