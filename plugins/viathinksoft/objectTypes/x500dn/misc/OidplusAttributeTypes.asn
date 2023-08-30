@@ -9,21 +9,21 @@ IMPORTS
       {joint-iso-itu-t ds(5) module(1) informationFramework(1) 9} WITH SUCCESSORS;
 
 
-oidplusSystemId ATTRIBUTE ::= {
+attributeOidplusSystemId ATTRIBUTE ::= {
     WITH SYNTAX   INTEGER
     SINGLE VALUE  TRUE
     LDAP-SYNTAX   directoryString.&id
     LDAP-DESC     "OIDplus System"
-    LDAP-NAME     {"oidplusSystemId"}
+    LDAP-NAME     {"OidplusSystemId"}
     ID            id-oidplus-at-sysid
 }
 
-oidplusObjectHash ATTRIBUTE ::= {
+attributeOidplusObjectHash ATTRIBUTE ::= {
     WITH SYNTAX   INTEGER
     SINGLE VALUE  TRUE
     LDAP-SYNTAX   directoryString.&id
     LDAP-DESC     "OIDplus Object Hash"
-    LDAP-NAME     {"oidplusObjectHash"}
+    LDAP-NAME     {"OidplusObjectHash"}
     ID            id-oidplus-at-objhash
 }
 
