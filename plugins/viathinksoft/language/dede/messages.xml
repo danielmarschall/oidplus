@@ -7334,6 +7334,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		System X.500 Distinguished Name
+		]]></source>
+		<target><![CDATA[
+		System X.500 Distinguished Name
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		System check
 		]]></source>
 		<target><![CDATA[
@@ -8850,14 +8858,6 @@
 		]]></source>
 		<target><![CDATA[
 		X.500 Distinguished Name
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		X.500 Relative Distinguished Name
-		]]></source>
-		<target><![CDATA[
-		X.500 Relativer Distinguished Name
 		]]></target>
 	</message>
 	<message>
