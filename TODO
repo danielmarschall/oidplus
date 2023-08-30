@@ -1,7 +1,6 @@
 September 2023 planned:
 - Replace <font color="gray"> with <span style="opacity: 0.5"> everywhere. Also look if gray is hardcoded in CSS
-- X500DN: LDAP DS also add "object hash" attribute, so we can have Information Object X500DN. Also add in MD documentation as well as AltIds for the objects. 
-- X500DN: Publish ASN.1 modules for LDAP DS as well as the allocated OIDs to VTS OIDRA.
+- X500DN: Publish plugins/viathinksoft/objectTypes/x500dn/misc/OidplusAttributeTypes.asn as well as the allocated OIDs to VTS OIDRA.
 
 May 2023 planned:
 - Don't send "information object OIDs" (= Non-OIDs) OIDs to oid-info.com anymore
