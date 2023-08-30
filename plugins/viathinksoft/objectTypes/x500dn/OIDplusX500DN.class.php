@@ -626,11 +626,11 @@ class OIDplusX500DN extends OIDplusObject {
 			$ary = explode_with_escaping('=', $arc, 2);
 
 			$found_oid = '';
-			$found_hf_name = '???';
+			$found_hf_name = _L('Unknown attribute');
 
 			foreach ($known_attr_names as $oid => list($source, $englishName, $ldapNames, $oidName)) {
 				foreach ($ldapNames as $abbr) {
-					if (strtolower($abbr) == strtolower($ary[0])) {
+					if ((strtolower($abbr) == strtolower($ary[0])) || ($abbr == $oid)) {
 						$found_oid = $oid;
 						$found_hf_name = $englishName;
 						break;
