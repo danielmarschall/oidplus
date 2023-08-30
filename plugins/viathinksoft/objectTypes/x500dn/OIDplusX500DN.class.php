@@ -96,6 +96,7 @@ class OIDplusX500DN extends OIDplusObject {
 	public static function getKnownAttributeNames(): array {
 		$ldap_attributes = [
 			// Extracted from https://www.itu.int/itu-t/recommendations/rec.aspx?rec=X.520
+			// Note: The most common ones are also defined in RFC 4519
 			// ITU-T X.520 (10/2019), clause 6.1 System attribute types
 			"2.5.4.2" => ["ITU-T X.520 (10/2019), clause 6.1.1", "Knowledge information", [], "id-at-knowledgeInformation"],
 			// ITU-T X.520 (10/2019), clause 6.2 Labelling attribute types
@@ -292,16 +293,70 @@ class OIDplusX500DN extends OIDplusObject {
 
 			// Extracted from https://www.itu.int/rec/T-REC-X.511-201910-I/en
 			"2.5.4.64" => ["Rec. ITU-T X.511 (10/2019), clause 7.7.2", "Family information in entry information", [], "id-at-family-information"],
-		];
 
-		/*
-		for ($i=0; $i<106; $i++) {
-			if (!isset($ldap_attributes["2.5.4.$i"])) echo "WARNING: 2.5.4.$i MISSING\n";
-		}
-		foreach($ldap_attributes as $a) {
-			if (count($a) !== 4) echo "WARNING: ".print_r($a,true)."\n";
-		}
-		*/
+			// Extracted from https://www.rfc-editor.org/rfc/RFC 4524.html
+			// IETF RFC 4524, clause 2 (COSINE Attribute Types)
+			"0.9.2342.19200300.100.1.37" => ["IETF RFC 4524, clause 2.1", "Associated Domain", ["associatedDomain"], "associatedDomain"],
+			"0.9.2342.19200300.100.1.38" => ["IETF RFC 4524, clause 2.2", "Associated Name", ["associatedName"], "associatedName"],
+			"0.9.2342.19200300.100.1.48" => ["IETF RFC 4524, clause 2.3", "Building Name", ["buildingName"], "buildingName"],
+			"0.9.2342.19200300.100.1.43" => ["IETF RFC 4524, clause 2.4", "Friendly Country Name", ["co", "friendCountryName"], "friendCountryName"],
+			"0.9.2342.19200300.100.1.14" => ["IETF RFC 4524, clause 2.5", "Document Author", ["documentAuthor"], "documentAuthor"],
+			"0.9.2342.19200300.100.1.11" => ["IETF RFC 4524, clause 2.6", "Document Identifier", ["documentIdentifier"], "documentIdentifier"],
+			"0.9.2342.19200300.100.1.15" => ["IETF RFC 4524, clause 2.7", "Document Location", ["documentLocation"], "documentLocation"],
+			"0.9.2342.19200300.100.1.56" => ["IETF RFC 4524, clause 2.8", "Document Publisher", ["documentPublisher"], "documentPublisher"],
+			"0.9.2342.19200300.100.1.12" => ["IETF RFC 4524, clause 2.9", "Document Title", ["documentTitle"], "documentTitle"],
+			"0.9.2342.19200300.100.1.13" => ["IETF RFC 4524, clause 2.10", "Document Version", ["documentVersion"], "documentVersion"],
+			"0.9.2342.19200300.100.1.5" => ["IETF RFC 4524, clause 2.11", "Favorite Drink", ["drink", "favoriteDrink", "favouriteDrink"], "drink"],
+			"0.9.2342.19200300.100.1.20" => ["IETF RFC 4524, clause 2.12", "Home Phone", ["homeTelephoneNumber", "homePhone"], "homePhone"],
+			"0.9.2342.19200300.100.1.39" => ["IETF RFC 4524, clause 2.13", "Home Postal Address", ["homePostalAddress"], "homePostalAddress"],
+			"0.9.2342.19200300.100.1.9" => ["IETF RFC 4524, clause 2.14", "Host", ["host"], "host"],
+			"0.9.2342.19200300.100.1.4" => ["IETF RFC 4524, clause 2.15", "Info", ["info"], "info"],
+			//(already defined in X.520) "0.9.2342.19200300.100.1.3" => ["IETF RFC 4524, clause 2.16", "Mail", ["rfc822Mailbox", "mail"], "mail"],
+			"0.9.2342.19200300.100.1.10" => ["IETF RFC 4524, clause 2.17", "Manager", ["manager"], "manager"],
+			"0.9.2342.19200300.100.1.41" => ["IETF RFC 4524, clause 2.18", "Mobile", ["mobileTelephoneNumber", "mobile"], "mobile"],
+			"0.9.2342.19200300.100.1.45" => ["IETF RFC 4524, clause 2.19", "Organizational Status", ["organizationalStatus"], "organizationalStatus"],
+			"0.9.2342.19200300.100.1.42" => ["IETF RFC 4524, clause 2.20", "Pager", ["pagerTelephoneNumber", "pager"], "pager"],
+			"0.9.2342.19200300.100.1.40" => ["IETF RFC 4524, clause 2.21", "Personal Title", ["personalTitle"], "personalTitle"],
+			"0.9.2342.19200300.100.1.6" => ["IETF RFC 4524, clause 2.22", "Room Number", ["roomNumber"], "roomNumber"],
+			"0.9.2342.19200300.100.1.21" => ["IETF RFC 4524, clause 2.23", "secretary", ["secretary"], "secretary"],
+			"0.9.2342.19200300.100.1.44" => ["IETF RFC 4524, clause 2.24", "Unique Identifier", ["uniqueIdentifier"], "uniqueIdentifier"],
+			"0.9.2342.19200300.100.1.8" => ["IETF RFC 4524, clause 2.25", "User Class", ["userClass"], "userClass"],
+
+			// Extracted from https://www.rfc-editor.org/rfc/rfc1274.html (only the ones which don't exist above)
+			"0.9.2342.19200300.100.1.2" => ["IETF RFC 1274, clause 9.3.2", "Text Encoded O/R Address", ["textEncodedORAddress"], "textEncodedORAddress"],
+			"0.9.2342.19200300.100.1.7" => ["IETF RFC 1274, clause 9.3.7", "Photo", ["photo"], "photo"],
+			"0.9.2342.19200300.100.1.22" => ["IETF RFC 1274, clause 9.3.18", "Other Mailbox", ["otherMailbox"], "otherMailbox"],
+			"0.9.2342.19200300.100.1.23" => ["IETF RFC 1274, clause 9.3.19", "Last Modified Time", ["lastModifiedTime"], "lastModifiedTime"],
+			"0.9.2342.19200300.100.1.24" => ["IETF RFC 1274, clause 9.3.20", "Last Modified By", ["lastModifiedBy"], "lastModifiedBy"],
+			"0.9.2342.19200300.100.1.26" => ["IETF RFC 1274, clause 9.3.22", "DNS ARecord", ["aRecord"], "aRecord"],
+			"0.9.2342.19200300.100.1.27" => ["IETF RFC 1274 ???", "MD Record", ["mDRecord"], "mDRecord"],
+			"0.9.2342.19200300.100.1.28" => ["IETF RFC 1274, clause 9.3.23", "MX Record", ["mXRecord"], "mXRecord"],
+			"0.9.2342.19200300.100.1.29" => ["IETF RFC 1274, clause 9.3.24", "NS Record", ["nSRecord"], "nSRecord"],
+			"0.9.2342.19200300.100.1.30" => ["IETF RFC 1274, clause 9.3.25", "SOA Record", ["sOARecord"], "sOARecord"],
+			"0.9.2342.19200300.100.1.31" => ["IETF RFC 1274, clause 9.3.26", "CNAME Record", ["cNAMERecord"], "cNAMERecord"],
+			"0.9.2342.19200300.100.1.46" => ["IETF RFC 1274, clause 9.3.36", "Janet Mailbox", ["janetMailbox"], "janetMailbox"],
+			"0.9.2342.19200300.100.1.47" => ["IETF RFC 1274, clause 9.3.37", "Mail Preference Option", ["mailPreferenceOption"], "mailPreferenceOption"],
+			"0.9.2342.19200300.100.1.49" => ["IETF RFC 1274, clause 9.3.39", "DSA Quality", ["dSAQuality"], "dSAQuality"],
+			"0.9.2342.19200300.100.1.50" => ["IETF RFC 1274, clause 9.3.40", "Single Level Quality", ["singleLevelQuality"], "singleLevelQuality"],
+			"0.9.2342.19200300.100.1.51" => ["IETF RFC 1274, clause 9.3.41", "Subtree Minimum Quality", ["subtreeMinimumQuality"], "subtreeMinimumQuality"],
+			"0.9.2342.19200300.100.1.52" => ["IETF RFC 1274, clause 9.3.42", "Subtree Maximum Quality", ["subtreeMaximumQuality"], "subtreeMaximumQuality"],
+			"0.9.2342.19200300.100.1.53" => ["IETF RFC 1274, clause 9.3.43", "Personal Signature", ["personalSignature"], "personalSignature"],
+			"0.9.2342.19200300.100.1.54" => ["IETF RFC 1274, clause 9.3.44", "DIT Redirect", ["dITRedirect"], "dITRedirect"],
+			"0.9.2342.19200300.100.1.55" => ["IETF RFC 1274, clause 9.3.45", "Audio", ["audio"], "audio"],
+
+			// Extracted from https://www.rfc-editor.org/rfc/rfc2798.html
+			// IETF RFC 2798, clause 2 Attribute Types Used in the inetOrgPerson Object Class
+			"2.16.840.1.113730.3.1.1" => ["IETF RFC 2798, clause 2.1", "Vehicle license or registration plate", ["carLicense"], "carLicense"],
+			"2.16.840.1.113730.3.1.2" => ["IETF RFC 2798, clause 2.2", "Department number", ["departmentNumber"], "departmentNumber"],
+   			"2.16.840.1.113730.3.1.241" => ["IETF RFC 2798, clause 2.3", "Display Name", ["displayName"], "displayName"],
+   			"2.16.840.1.113730.3.1.3" => ["IETF RFC 2798, clause 2.4", "Employee Number", ["employeeNumber"], "employeeNumber"],
+   			"2.16.840.1.113730.3.1.4" => ["IETF RFC 2798, clause 2.5", "Employee Type", ["employeeType"], "employeeType"],
+   			"0.9.2342.19200300.100.1.60" => ["IETF RFC 2798, clause 2.6", "JPEG Photograph", ["jpegPhoto"], "jpegPhoto"],
+   			"2.16.840.1.113730.3.1.39" => ["IETF RFC 2798, clause 2.7", "Preferred Language", ["preferredLanguage"], "preferredLanguage"],
+   			"2.16.840.1.113730.3.1.40" => ["IETF RFC 2798, clause 2.8", "User S/MIME Certificate", ["userSMIMECertificate"], "userSMIMECertificate"],
+   			"2.16.840.1.113730.3.1.216" => ["IETF RFC 2798, clause 2.9", "User PKCS #12", ["userPKCS12"], "userPKCS12"],
+
+		];
 
 		// Additional identifiers found at https://www.ibm.com/docs/en/zos/2.2.0?topic=SSLTBW_2.2.0/com.ibm.tcp.ipsec.ipsec.help.doc/com/ibm/tcp/ipsec/nss/NssImageServerPs.RB_X500.htm
 		$ldap_attributes["1.2.840.113549.1.9.1"] = ["???", "E-mail address", ["E", "EMAIL", "EMAILADDRESS"], "pkcs-9-at-emailAddress"]; //(preferred: EMAIL)
@@ -318,6 +373,12 @@ class OIDplusX500DN extends OIDplusObject {
 		$ldap_attributes["2.5.4.100"][2][] = "dnsName"; // X.520 says "DNS Name"
 		$ldap_attributes["2.5.4.72"][2][] = "role";
 
+		// Merge identifiers from X.520 and RFC 4524
+		$ldap_attributes["0.9.2342.19200300.100.1.3"][2][] = "rfc822Mailbox";
+
+		// IETF RFC 1274 uses the identifier "userid" instead of "uid".
+		$ldap_attributes["0.9.2342.19200300.100.1.1"][2][] = "userId";
+
 		// Additional identifiers by Daniel Marschall (these attributes don't have a LDAP-NAME property in X.520, so we set something based on the ASN.1 alphanumeric identifier)
 		$ldap_attributes["2.5.4.2"][2][] = "knowledgeInformation";
 		$ldap_attributes["2.5.4.65"][2][] = "pseudonym";
@@ -332,6 +393,22 @@ class OIDplusX500DN extends OIDplusObject {
 		$ldap_attributes["2.17.1.2.2"][2][] = "oidC";
 		$ldap_attributes["2.5.18.28"][2][] = "userPwdHistory";
 		$ldap_attributes["2.5.18.29"][2][] = "userPwdRecentlyExpired";
+
+		// Test data
+		/*
+		for ($i=0; $i<=106; $i++) {
+			if (!isset($ldap_attributes["2.5.4.$i"])) echo "WARNING: 2.5.4.$i MISSING<br>\n";
+		}
+		for ($i=1; $i<=60; $i++) {
+			if (($i>15) && ($i<20)) continue;
+			if (($i>31) && ($i<37)) continue;
+			if (($i>56) && ($i<60)) continue;
+			if (!isset($ldap_attributes["0.9.2342.19200300.100.1.$i"])) echo "WARNING: 0.9.2342.19200300.100.1.$i MISSING<br>\n";
+		}
+		foreach($ldap_attributes as $a) {
+			if (count($a) !== 4) echo "WARNING: ".print_r($a,true)."<br>\n";
+		}
+		*/
 
 		return $ldap_attributes;
 	}
