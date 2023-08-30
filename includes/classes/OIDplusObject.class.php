@@ -137,6 +137,25 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 				$mac[1] = '3'; // 3=AAI Multicast
 				$ids[] = new OIDplusAltId('mac', $mac, _L('OIDplus Information Object MAC address, Multicast (AAI)'));
 			}
+
+			// Make a DN based on DN
+			// ... exclude DN, because an DN is already a DN
+			if ($this->ns() != 'x500dn') {
+				$sysid = OIDplus::getSystemId(false);
+				if ($sysid !== false) {
+					$ns_oid = $this->getPlugin()->getManifest()->getOid();
+					$hash_payload = $ns_oid.':'.$this->nodeId(false);
+					$objhash = smallhash($hash_payload);
+
+					$oid_at_sysid = '1.3.6.1.4.1.37476.2.5.2.9.4.1';
+					$oid_at_objhash = '1.3.6.1.4.1.37476.2.5.2.9.4.2';
+					$dn = '/dc=com/dc=example/cn=oidplus/'."\n".
+					$oid_at_sysid.'='.$sysid.'/'."\n".
+					$oid_at_objhash.'='.$objhash;
+
+					$ids[] = new OIDplusAltId('x500dn', $dn, _L('OIDplus Information Object X.500 DN'));
+				}
+			}
 		}
 
 		return $ids;

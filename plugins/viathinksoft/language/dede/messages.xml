@@ -4926,6 +4926,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		OIDplus Information Object X.500 DN
+		]]></source>
+		<target><![CDATA[
+		OIDplus Information Object X.500 DN
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		OIDplus Setup
 		]]></source>
 		<target><![CDATA[

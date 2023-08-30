@@ -28,3 +28,5 @@ The following schemas were developed for OIDplus:
 2.  "Information Object AAI" is a MAC address type (not globally unique!) derivated from the lower 48 bits of a SHA1 hash.
 3.  "Information Object GUID" is a UUID derivated from an OIDplus Object Hash using an UUIDv8 Custom Schema which is described [here](https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md).
 4.  "Information Object OID" is an OID derivated from an OIDplus Object Hash in `1.3.6.1.4.1.37476.30.9`. The schema is described [here](https://oidplus.viathinksoft.com/oidplus/?goto=oid:1.3.6.1.4.1.37476.30.9).
+5.  "Information Object X.500 RDN" can be used to create an X.500 DN identifying a system and/or its objects (identified by the hash of the object name).
+
