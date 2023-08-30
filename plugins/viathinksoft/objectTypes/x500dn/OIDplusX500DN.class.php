@@ -395,7 +395,8 @@ class OIDplusX500DN extends OIDplusObject {
 		$ldap_attributes["2.5.18.29"][2][] = "userPwdRecentlyExpired";
 
 		// Vendor specific stuff
-		$ldap_attributes["1.3.6.1.4.1.37476.2.5.2.9.4.1"] = ["ViaThinkSoft", "OIDplus System", ["oidplusSystemId"], "system-id"];
+		$ldap_attributes["1.3.6.1.4.1.37476.2.5.2.9.4.1"] = ["ViaThinkSoft", "OIDplus System", ["OidplusSystemId"], "system-id"];
+		$ldap_attributes["1.3.6.1.4.1.37476.2.5.2.9.4.2"] = ["ViaThinkSoft", "OIDplus Object Hash", ["OidplusObjectHash"], "object-hash"];
 
 		// Test data
 		/*
@@ -629,11 +630,16 @@ class OIDplusX500DN extends OIDplusObject {
 			$found_hf_name = _L('Unknown attribute');
 
 			foreach ($known_attr_names as $oid => list($source, $englishName, $ldapNames, $oidName)) {
+				if ($ary[0] == $oid) {
+					$found_oid = $oid;
+					$found_hf_name = $englishName;
+					break;
+				}
 				foreach ($ldapNames as $abbr) {
-					if ((strtolower($abbr) == strtolower($ary[0])) || ($abbr == $oid)) {
+					if (strtolower($abbr) == strtolower($ary[0])) {
 						$found_oid = $oid;
 						$found_hf_name = $englishName;
-						break;
+						break 2;
 					}
 				}
 			}
