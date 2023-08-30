@@ -181,6 +181,11 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '		<td>'.(!$sysid_aid ? '<i>'._L('unknown').'</i>' : htmlentities($sysid_aid)).' ('._L('No PIX allowed').')</td>';
 			$out['text'] .= '	</tr>';
 
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>'._L('X.500 Relative Distinguished Name').'</td>';
+			$out['text'] .= '		<td>'.(!$sysid ? '<i>'._L('unknown').'</i>' : '1.3.6.1.4.1.37476.2.5.2.9.4.1='.$sysid.'<span style="opacity: 0.5">, CN=OidPlus, DC=example, DC=com</span>').'</td>';
+			$out['text'] .= '	</tr>';
+
 			$sys_ver = OIDplus::getVersion();
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('System version').'</td>';

@@ -8374,6 +8374,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Unknown attribute
+		]]></source>
+		<target><![CDATA[
+		Unbekanntes Attribut
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Unknown file type
 		]]></source>
 		<target><![CDATA[
@@ -8834,6 +8842,14 @@
 		]]></source>
 		<target><![CDATA[
 		X.500 Distinguished Name
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		X.500 Relative Distinguished Name
+		]]></source>
+		<target><![CDATA[
+		X.500 Relativer Distinguished Name
 		]]></target>
 	</message>
 	<message>
