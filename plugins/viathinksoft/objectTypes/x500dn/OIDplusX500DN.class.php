@@ -395,8 +395,8 @@ class OIDplusX500DN extends OIDplusObject {
 		$ldap_attributes["2.5.18.29"][2][] = "userPwdRecentlyExpired";
 
 		// Vendor specific stuff
-		$ldap_attributes["1.3.6.1.4.1.37476.2.5.2.9.4.1"] = ["ViaThinkSoft", "OIDplus System", ["OidplusSystemId"], "system-id"];
-		$ldap_attributes["1.3.6.1.4.1.37476.2.5.2.9.4.2"] = ["ViaThinkSoft", "OIDplus Object Hash", ["OidplusObjectHash"], "object-hash"];
+		$ldap_attributes["1.3.6.1.4.1.37476.2.5.2.9.4.1"] = ["ViaThinkSoft: OidplusAttributeTypes ASN.1 Module, Version 1", "OIDplus System", ["OidplusSystemId"], "system-id"];
+		$ldap_attributes["1.3.6.1.4.1.37476.2.5.2.9.4.2"] = ["ViaThinkSoft: OidplusAttributeTypes ASN.1 Module, Version 1", "OIDplus Object Hash", ["OidplusObjectHash"], "object-hash"];
 
 		// Test data
 		/*
@@ -662,7 +662,11 @@ class OIDplusX500DN extends OIDplusObject {
 				}
 				$html_encoded_str .= '</abbr>';
 			}
-			$html_encoded_string_notation = '<abbr title="'.htmlentities(strtoupper($ary[0]) . ' = ' . $found_hf_name).'">'.htmlentities($found_oid).'</abbr>='.$html_encoded_str . ($html_encoded_string_notation == '' ? '' : ',' . $html_encoded_string_notation);
+			if ($ary[0] == $found_oid) {
+				$html_encoded_string_notation = '<abbr title="'.htmlentities($found_hf_name).'">'.htmlentities($found_oid).'</abbr>='.$html_encoded_str . ($html_encoded_string_notation == '' ? '' : ',' . $html_encoded_string_notation);
+			} else {
+				$html_encoded_string_notation = '<abbr title="'.htmlentities(strtoupper($ary[0]) . ' = ' . $found_hf_name).'">'.htmlentities($found_oid).'</abbr>='.$html_encoded_str . ($html_encoded_string_notation == '' ? '' : ',' . $html_encoded_string_notation);
+			}
 		}
 
 		$tmp = _L('DCE/MSAD notation');

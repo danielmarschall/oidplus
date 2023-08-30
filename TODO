@@ -1,6 +1,5 @@
 September 2023 planned:
 - Replace <font color="gray"> with <span style="opacity: 0.5"> everywhere. Also look if gray is hardcoded in CSS
-- X500DN: Publish plugins/viathinksoft/objectTypes/x500dn/misc/OidplusAttributeTypes.asn as well as the allocated OIDs to VTS OIDRA.
 
 May 2023 planned:
 - Don't send "information object OIDs" (= Non-OIDs) OIDs to oid-info.com anymore
