@@ -1,6 +1,3 @@
-September 2023 planned:
-- Replace <font color="gray"> with <span style="opacity: 0.5"> everywhere. Also look if gray is hardcoded in CSS
-
 May 2023 planned:
 - Don't send "information object OIDs" (= Non-OIDs) OIDs to oid-info.com anymore
 	=> 17 May 2023 mitigated at VTS internal side

@@ -209,8 +209,8 @@ class OIDplusAid extends OIDplusObject {
 			$tmp = htmlentities($tmp);
 			$tmp = str_replace(' ','&nbsp;',$tmp);
 			$tmp = nl2br($tmp);
-			$tmp = preg_replace('@(warning|invalid|error|illegal(&nbsp;usage){0,1})@i', '<span class="errortext">\\1</span>', $tmp);
-			$tmp = preg_replace('@(\\\\\\d{3})@i', '<span class="specialhexchar">\\1</span>', $tmp);
+			$tmp = preg_replace('@(warning|invalid|error|illegal(&nbsp;usage){0,1})@i', '<span class="aid_decoder_errortext">\\1</span>', $tmp);
+			$tmp = preg_replace('@(\\\\\\d{3})@i', '<span class="aid_decoder_specialhexchar">\\1</span>', $tmp);
 
 			$content .= '<h2>'._L('Decoding').'</h2>';
 			$content .= '<table border="0">';

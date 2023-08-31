@@ -168,8 +168,14 @@ body, #frames {
 	width:100%;
 }
 
+.gray_font {
+	/*color:#808080;*/
+	color:rgba(0, 0, 0, 0.5);
+}
+
 .gray_footer_font {
-	color:#808080;
+	/*color:#808080;*/
+	color:rgba(0, 0, 0, 0.5);
 	font-size:0.9em;
 }
 
