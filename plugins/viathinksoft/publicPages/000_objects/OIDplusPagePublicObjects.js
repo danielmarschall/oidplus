@@ -256,7 +256,7 @@ var OIDplusPagePublicObjects = {
 		});
 	},
 
-	updateDesc: function() {
+	updateDesc: function(id) {
 		$.ajax({
 			url:"ajax.php",
 			method:"POST",
@@ -271,7 +271,7 @@ var OIDplusPagePublicObjects = {
 				csrf_token:csrf_token,
 				plugin:OIDplusPagePublicObjects.oid,
 				action:"Update",
-				id:current_node,
+				id:id,
 				title:($("#titleedit")[0] ? $("#titleedit")[0].value : null),
 				//description:($("#description")[0] ? $("#description")[0].value : null)
 				description:tinyMCE.get('description').getContent()

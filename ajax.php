@@ -91,6 +91,7 @@ try {
 			$_REQUEST['id'] = OIDplus::prefilterQuery($_REQUEST['id'], false);
 			try {
 				$json_out = OIDplus::gui()->generateContentPage($_REQUEST['id']);
+				$json_out['id'] = $_REQUEST['id'];
 			} catch (\Exception $e) {
 				$json_out = array();
 				$json_out['title'] = _L('Error');

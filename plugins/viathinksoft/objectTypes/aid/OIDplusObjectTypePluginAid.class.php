@@ -41,13 +41,13 @@ class OIDplusObjectTypePluginAid extends OIDplusObjectTypePlugin
 	 */
 	public function gridGeneratorLinks(OIDplusObject $objParent): string {
 		if ($objParent->isRoot()) {
-			return '<br><a href="javascript:OIDplusObjectTypePluginAid.generateRandomAID()">('._L('Generate a random AID - not unique!').')</a>'.
+			return '<br><a href="javascript:OIDplusObjectTypePluginAid.generateRandomAID('.js_escape($objParent->nodeId(false)).')">('._L('Generate a random AID - not unique!').')</a>'.
 			       '<br><a href="https://oidplus.viathinksoft.com/oidplus/?goto=aid%3AD276000186F" target="_blank">('._L('Request a free AID from ViaThinkSoft').')</a>';
 		} else if (!$objParent->isLeafNode()) {
 			if (substr($objParent->nodeId(false),0,1) == 'F') {
-				return '<br><a href="javascript:OIDplusObjectTypePluginAid.generateRandomAID()">('._L('Generate a random AID - not unique!').')</a>';
+				return '<br><a href="javascript:OIDplusObjectTypePluginAid.generateRandomAID('.js_escape($objParent->nodeId(false)).')">('._L('Generate a random AID - not unique!').')</a>';
 			} else {
-				return '<br><a href="javascript:OIDplusObjectTypePluginAid.generateRandomAID()">('._L('Generate a random AID').')</a>';
+				return '<br><a href="javascript:OIDplusObjectTypePluginAid.generateRandomAID('.js_escape($objParent->nodeId(false)).')">('._L('Generate a random AID').')</a>';
 			}
 		} else {
 			return '';

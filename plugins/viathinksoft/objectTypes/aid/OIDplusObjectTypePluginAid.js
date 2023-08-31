@@ -19,12 +19,11 @@ var OIDplusObjectTypePluginAid = {
 
 	OID: "1.3.6.1.4.1.37476.2.5.2.4.8.11",
 
-	generateRandomAID: function() {
+	generateRandomAID: function(current_aid) {
 		var aid_max_len = 32; // 32 nibbles = 16 bytes
 		var characters  = '0123456789ABCDEF';
 		var counter     = 0;
 
-		var current_aid = current_node.split(":")[1];
 		if (current_aid.length >= aid_max_len) {
 				alertWarning(_L("The AID has reached its maximum size."));
 				return;

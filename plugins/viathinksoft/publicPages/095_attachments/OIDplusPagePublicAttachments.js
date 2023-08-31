@@ -57,7 +57,7 @@ var OIDplusPagePublicAttachments = {
 		});
 	},
 
-	uploadAttachment: function(id, file) {
+	uploadAttachment: function(idx, file) {
 		var file_data = $('#fileAttachment').prop('files')[0];
 
 		var form_data = new FormData();
@@ -65,7 +65,8 @@ var OIDplusPagePublicAttachments = {
 		form_data.append('userfile', file_data);
 		form_data.append('plugin', OIDplusPagePublicAttachments.oid);
 		form_data.append('action', "uploadAttachment");
-		form_data.append('id', id);
+		form_data.append('id', idx);
+		alert("test " + idx);
 
 		$.ajax({
 			url:"ajax.php",
@@ -93,7 +94,7 @@ var OIDplusPagePublicAttachments = {
 
 	uploadAttachmentOnSubmit: function() {
 		try {
-			OIDplusPagePublicAttachments.uploadAttachment(current_node, $("#fileAttachment")[0].value);
+			OIDplusPagePublicAttachments.uploadAttachment($('input[name=id]').val(), $("#fileAttachment")[0].value);
 		} finally {
 			return false;
 		}
