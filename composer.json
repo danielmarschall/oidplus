@@ -134,13 +134,11 @@
 	"scripts": {
 		"post-update-cmd": [
 			"curl https://curl.se/ca/cacert.pem -L -sS -o vendor/cacert.pem",
-			"curl https://cdn.jsdelivr.net/gh/nuxodin/ie11CustomProperties@4.1.0/ie11CustomProperties.min.js -L -sS -o vendor/ie11CustomProperties.min.js",
 			"echo 'Options -Indexes' > vendor/.htaccess",
 			"touch vendor/index.html"
 		],
 		"post-install-cmd": [
 			"curl https://curl.se/ca/cacert.pem -L -sS -o vendor/cacert.pem",
-			"curl https://cdn.jsdelivr.net/gh/nuxodin/ie11CustomProperties@4.1.0/ie11CustomProperties.min.js -L -sS -o vendor/ie11CustomProperties.min.js",
 			"echo 'Options -Indexes' > vendor/.htaccess",
 			"touch vendor/index.html"
 		]
