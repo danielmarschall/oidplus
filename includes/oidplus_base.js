@@ -223,18 +223,18 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 				alertError(_L("Failed to load content: %1",data.error));
 				console.error(data.error);
 			} else if (data.status >= 0) {
-				data.id = id;
+				if (!("id" in data)) data.id = id;
 
 				var state = {
-					"node_id":id,
+					"node_id":data.id,
 					"titleHTML":(data.icon ? '<img src="'+data.icon+'" width="48" height="48" alt="'+data.title.htmlentities()+'"> ' : '') + data.title.htmlentities(),
 					"textHTML":data.text,
-					"staticlinkHREF":oidplus_webpath_absolute_canonical+"?goto="+encodeURIComponent(id),
+					"staticlinkHREF":oidplus_webpath_absolute_canonical+"?goto="+encodeURIComponent(data.id),
 				};
-				if (current_node != id) {
-					window.history.pushState(state, data.title, "?goto="+encodeURIComponent(id));
+				if (current_node != data.id) {
+					window.history.pushState(state, data.title, "?goto="+encodeURIComponent(data.id));
 				} else {
-					window.history.replaceState(state, data.title, "?goto="+encodeURIComponent(id));
+					window.history.replaceState(state, data.title, "?goto="+encodeURIComponent(data.id));
 				}
 
 				document.title = combine_systemtitle_and_pagetitle(getOidPlusSystemTitle(), data.title);
@@ -246,7 +246,7 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 				}
 				$('#real_content').html(data.text);
 				document.title = combine_systemtitle_and_pagetitle(getOidPlusSystemTitle(), data.title);
-				current_node = id;
+				current_node = data.id;
 
 				executeAllCallbacks(pageLoadedCallbacks.anyPageLoad);
 				executeAllCallbacks(pageLoadedCallbacks.ajaxPageLoad);

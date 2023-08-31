@@ -1049,7 +1049,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					$desc .= '<div class="container box" style="display:none" id="descbox_'.$rand.'">';
 					$desc .= _L('Title').': <input type="text" name="title" id="titleedit" value="'.htmlentities($title).'"><br><br>'._L('Description').':<br>';
 					$desc .= self::showMCE('description', $description);
-					$desc .= '<button type="button" name="update_desc" id="update_desc" class="btn btn-success btn-xs update" onclick="OIDplusPagePublicObjects.updateDesc()">'._L('Update description').'</button>';
+					$desc .= '<button type="button" name="update_desc" id="update_desc" class="btn btn-success btn-xs update" onclick="OIDplusPagePublicObjects.updateDesc('.js_escape($obj->nodeId()).')">'._L('Update description').'</button>';
 					$desc .= '</div>';
 					$desc .= '<script>$("#descbox_'.$rand.'")[0].style.display = "block";</script>';
 				}
