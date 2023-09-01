@@ -31,7 +31,7 @@
         'danielmarschall/fileformats' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '880e97b497710dc14ee8f38b4e48250ce49202ee',
+            'reference' => '67fb75197baf894d2ce25e559c1aea2d4ccf4ab4',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/fileformats',
             'aliases' => array(
@@ -189,7 +189,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => 'aeac69b84634424a7d6b3a882ba3066983201472',
+            'reference' => '615d6cfc7cf40d61bdaa9653c6a4118c6be3cf06',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),
