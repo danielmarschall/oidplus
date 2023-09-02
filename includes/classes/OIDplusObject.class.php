@@ -149,9 +149,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 
 					$oid_at_sysid = '1.3.6.1.4.1.37476.2.5.2.9.4.1';
 					$oid_at_objhash = '1.3.6.1.4.1.37476.2.5.2.9.4.2';
-					$dn = '/dc=com/dc=example/cn=oidplus/'."\n".
-					$oid_at_sysid.'='.$sysid.'/'."\n".
-					$oid_at_objhash.'='.$objhash;
+					$dn = '/dc=com/dc=example/cn=oidplus/'.$oid_at_sysid.'='.$sysid.'/'.$oid_at_objhash.'='.$objhash;
 
 					$ids[] = new OIDplusAltId('x500dn', $dn, _L('OIDplus Information Object X.500 DN'));
 				}
