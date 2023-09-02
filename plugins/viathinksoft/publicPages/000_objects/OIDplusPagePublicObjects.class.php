@@ -1101,8 +1101,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					$aiddesc = $alt_id->getDescription();
 					$suffix = $alt_id->getSuffix();
 					$info = $alt_id->getMoreInfoUrl();
+
+					// Note: &#8203; is to allow a word-break (see https://stackoverflow.com/questions/8186743/what-is-the-best-way-to-break-html-text-on-slashes)
+					//       This is important for the very long X.500 DN, e.g. "x500dn:/dc=com/dc=example/cn=oidplus/1.3.6.1.4.1.37476.2.5.2.9.4.1=1494410075/1.3.6.1.4.1.37476.2.5.2.9.4.2=1610822832"
 					if ($info) $info = ' <a href="'.$info.'" target="_blank"><img src="img/info.png" style="width:16px;height:16px" alt="'._L('More information').'"></a>';
-					$out['text'] .= '<tr><td>'.nl2br(htmlentities($ns.':'.$aid)).($suffix ? '<br/><font size="-1">'.htmlentities($suffix).'</font>' : '').'</td><td>'.htmlentities($aiddesc).$info.'</td></tr>';
+					$out['text'] .= '<tr><td>'.str_replace("/", "/&#8203;",htmlentities($ns.':'.$aid)).($suffix ? '<br/><font size="-1">'.htmlentities($suffix).'</font>' : '').'</td><td>'.htmlentities($aiddesc).$info.'</td></tr>';
 				}
 				$out['text'] .= '</tbody>';
 				$out['text'] .= '</table>';
