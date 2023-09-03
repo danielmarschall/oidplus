@@ -8,6 +8,6 @@ Authentication methods
     -----------------------------------------------------------------------------------------------------------------------------------
     Browser login                   JWT          40         Optional    COOKIE           No (Silent)        No
     Automated AJAX call             JWT          10         No          GET/POST         Yes                Only ajax.php with GET/POST
-    REST plugin                     JWT          10         No          HTTP Bearer      Yes                Yes
+    REST plugin                     JWT          20         No          HTTP Bearer      Yes                Yes
     Manually created JWT token      JWT          80         Optional    GET/POST/COOKIE  Only via GET/POST  Only ajax.php with GET/POST
     -----------------------------------------------------------------------------------------------------------------------------------

@@ -69,7 +69,6 @@ Ideas by Simon T.:
 - a possibility to move objects/nodes from one hierarchy level to another (for now, I have to reconstruct them)
 - 2FA TOTP support (+backup codes) - good for public instances, like FreeOID (Yes, I'm that one person who always asks for true totp 2FA everywhere xD )
 - a setting for a permanent choice between 'Always switch to newly created object' / 'Never switch' / 'Ask user if they want to switch'
-- a possibility to export&transfer all data between OIDplus'es: Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!
 - a possibility to 'construct' my own object types in UI (1: specify list of their fields and 2: choose "oid-like/forward" com.example.api or "domain-like/reverse" api.example.com naming scheme), so they would appear as the whole new type
 
 Recently added TODO entries:
@@ -87,7 +86,6 @@ Ideas
 	* Own color settings
 	* Newly created OIDs: Always open, Never open, Ask (default)
 	But what do we do if multiple users are logged in??
-- "Download Complete Backup" plugin (contains a full SQL backup for all DBMS, as well as everything inside "userdata" and "userdata_pub")
 - if a third-party plugin throws an exception in the init() method, maybe OIDplus should avoid loading the plugin?
 - "hidden" alt ids which are not shown in the GUI, but can be used for reverse-Alt-ID ? (I believe we have excluded some AltIDs which are "not neccessary", e.g. an GUID already is a GUID and therefore does not need a Namespace GUID, or something like that)
 
@@ -294,7 +292,8 @@ LOGS
 - At "oidplus:system_log", user log section and object log section, the users and/or objects should be clickable
 
 IDEAS
-- Database plugin (adminPage 401): Use an INTF_OID_ interface let other plugins backup/restore their own data/tables, too.
+- Backup plugin (adminPage 401): Use an INTF_OID_ interface let other plugins backup/restore their own data/tables, too.
+- Backup plugin (adminPage 401): In addition to the already existing database backup, also let the user choose to download a ZIP containing userdata and userdata_pub
 - admin plugin that shows the recent oid edits / inserts?
 - in the search feature, search for object creation/update date?
 - adminPages/800_plugins: We could also list plugins that have been blacklisted in the config? But that is hard to achieve, because these plugins are ignored and not loaded at all

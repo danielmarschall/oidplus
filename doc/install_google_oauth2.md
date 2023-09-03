@@ -22,7 +22,8 @@ Create a new "OAuth 2.0-Client-ID"
 - Name: OIDplus 2.0
 - Authorized JavaScript origins: None
 - Authorized redirect URIs:
-  Add https://<Your OIDplus URL>/plugins/viathinksoft/publicPages/810_login_google/oauth.php
+  Add `https://<Your OIDplus URL>/plugins/viathinksoft/publicPages/810_login_google/oauth.php`
+	If your system has multiple URIs, add all possible URIs
 
 You will now receive a client ID and a client key (secret!)
 
