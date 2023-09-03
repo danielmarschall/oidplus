@@ -2,7 +2,7 @@
 How to setup Facebook Authentication
 ====================================
 
-(1) https://developers.facebook.com/ , register as developer
+(1) Go to https://developers.facebook.com/ and register as developer
 
 (2) Create a new project
 
@@ -11,7 +11,7 @@ Select "Web", enter your OIDplus system URL and ignore all other steps.
 
 (4) In the app settings (at the left menu):
 
-Privacy Policyis set to:
+Privacy Policy is set to:
 
     https://<...>/?goto=oidplus%3Aresources%24OIDplus%2Fprivacy_documentation.html
 

@@ -23,14 +23,15 @@ have the prefix "INTF_OID_" followed by an OID (dots replaced by underscores), e
 The OIDplus autoloader will make sure that interfaces following this naming convention
 are replaced with an empty "fake" interface if the plugin defining the interface is not installed.
 Therefore, the interface is "optional" and there won't be a fatal error if a plugin implements (references)
-a feature that is not known.
+a feature that is unknown.
 
 Previously, the plugin-to-plugin-communication used a function called implementsFeature(), which
 has been discontinued as of 26 March 2023, because types could not be easily checked.
 
 ### Usage example (new method):
 
-    // Implement feature in a class:
+Implement feature in a class:
+
     class OIDplusPageAdminNostalgia
           extends OIDplusPagePluginAdmin
           implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8 /* getNotifications */
@@ -41,7 +42,8 @@ has been discontinued as of 26 March 2023, because types could not be easily che
         }
     }
 
-    // Call all plugins supporting the feature:
+Call all plugins supporting the feature:
+
     foreach (OIDplus::getAllPlugins() as $plugin) {
         if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8) {
             $plugin->getNotifications(...);
@@ -50,12 +52,13 @@ has been discontinued as of 26 March 2023, because types could not be easily che
 
 ### Old method (deprecated as of 26 March 2023):
 
-    // Implement feature in a class:
+Implement feature in a class:
+
     class OIDplusPageAdminNostalgia
           extends OIDplusPagePluginAdmin
     {
         public function implementsFeature(string $oid): bool {
-            if ($oid == '1.3.6.1.4.1.37476.2.5.2.3.8') return true;
+            if ($oid == '1.3.6.1.4.1.37476.2.5.2.3.8') return true; /*getNotifications*/
             return false;
         }
         public function getNotifications(...) {
@@ -64,7 +67,8 @@ has been discontinued as of 26 March 2023, because types could not be easily che
         }
     }
 
-    // Call all plugins supporting the feature:
+Call all plugins supporting the feature:
+
     foreach (OIDplus::getAllPlugins() as $plugin) {
         if ($plugin->implementsFeature('1.3.6.1.4.1.37476.2.5.2.3.8')) {
             $plugin->getNotifications(...);
