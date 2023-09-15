@@ -83,6 +83,8 @@ if ($encrypt) {
 
 $title = OIDplus::config()->getValue('system_title', 'oidplus');
 
+$sysid = OIDplus::getSystemId();
+
 OIDplus::invoke_shutdown();
 
 $cont = ob_get_contents();
@@ -93,7 +95,6 @@ if ($cont) {
 	die($cont);
 }
 
-$sysid = OIDplus::getSystemId();
 $filename = preg_replace('@[^a-z0-9]@', '-', strtolower($title)).($sysid ? '-'.$sysid : '').'-backup-' . date('Y-m-d-H-i-s');
 if ($encrypt) {
 	$filename .= '-encrypted.bak';
