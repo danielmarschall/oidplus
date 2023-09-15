@@ -136,8 +136,6 @@ try {
 
 		OIDplus::db()->query("UPDATE ###ra set last_login = ".OIDplus::db()->sqlDate()." where email = ?", array($email));
 
-		OIDplus::invoke_shutdown();
-
 		// Go back to OIDplus
 
 		header('Location:'.OIDplus::webpath(null,OIDplus::PATH_RELATIVE));
@@ -160,5 +158,7 @@ try {
 	if ($cont === false) {
 		// throw new OIDplusException(_L('Communication with %1 server failed', 'Google'));
 	}
+
+	OIDplus::invoke_shutdown();
 
 }
