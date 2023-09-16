@@ -1,32 +1,32 @@
 <?php /* <ViaThinkSoftSignature>
-QoZ88Uk+0bsqwHYjMZ5dp5xPx6r1En9+loEwswsXD8grSVXtxqkcuW/iu7bJNusTk
-aufV9B2vIRXketty/Elm2F19KtbS9egj8AWXQ76RUfJ7hDVdzfvABjKxpLxNzb1SN
-wn3Fa2t3V4Li/UEJlSoNUtmMSWYpULwwpBQeZPjCtF6iRwP6nUgFQczREnuYKDO7W
-S43iFGwAQPHZ3UgGQDxO3EBNZn5SzzgngwhIegSYVKVV2oQjUHD0Qnp7lDaJIwlE0
-4vq2Mo/TiltvtryEiwn6xJbs67+qtC8FdJKIzy+q6TnHN122Zrk+qwoL6MqlFhvXv
-mMHtf5bc/0+4BpT30EjNtHWpDmDae9uFO0fjeotMGAnhG/FAHqiRvHPYL62xyG+of
-3kooFcSVXYcFjAnIWMoGSOl7VcJ4yRgO3sW6atLQmSQG5vEBTP9ZzLXbd6NDSxuVa
-5Sse9JGELVW+tAUJux99LpMveKi37X6frXJyPcVdrsz68vqtQrTOwKq5yZ3dEfAVM
-H6sjhMh4tGCVI88jak6TbRIzNgae0xT0BegBE5sxYxA5+ZmwqBuFNYmUtm1rsv/Q1
-SQy+i8uvS7DdVo29ZD/+hn3ebocOx8GEA5jXzJtKik3IgGHlLF5XFycoRbSt72z2/
-Ik6PK4osg2gQnTUY0++XLdGejEg3Mja+aOvSyXDd+gJbT3ed1Fsv6CXmIa2cmt82c
-P2YbR/Eqbxu22lKXVq0iqnN2vigtOvUIHey4Mi/A0zzCYBARBzMMzlahJQH5R24ub
-y63OylvBLtuu66PWB1ebZnnPLEzBdU5YzFiHkS+xTgDqjNB4BlTGmHwGbFujWUcwi
-JKUbPBjFguVetaedI6kMe5D6BMdK+UBk+rhV3M7u0r/nV6S0RqK0tOKZSmZMhiECn
-GKgMPVoiroN+DLSC6dlc/uVMdLD6pJHmcNht8ExAwe214w9Afr/uNCkrpJBX/B3gu
-sLtBmAlXXUiHCXzD+uN1/QK1ZG5npIgPodDouWDg8nSnokK4XcxqqpfnUSk67qeu7
-r0wIFCRCLyBceUAeGSZyqgQyP8wZ6A6+9+or/jey0E/pCDUhqB5gjVyYrp8UNG54X
-EHv/hM6EnaoZwbOptxKkVwkzXrT1Fj2W6BfnFme6xSqSi7MkkDpfsVoNYqamabWGp
-A6Pn/wW4XdJdoUOZ4hVR433AnQl0Yl9u2qQwUO/nFtNYPSxitH6h8CMjN0A1OzZje
-IBUfyPrItQhMAUYBOewxXhqbRF0NrNxW7zHBtDn7jmZnJFzM0d0JGmTvBIwVr5nxD
-OxPQ+uJpangO69Nx1KTWTlwmav8V3lfcS2rJrh0s8N+A7CBgZ+YqdCgga6mt+JEMe
-Q==
+BEVRboq5hkwbOT0Gkx96NQV+AryItRRkSW10PEkTSbC55Oe8geeNWyFnN0b2BZmYw
+Dbrw/pEuTs1J8Dyu0yEzZBu0JtxVRdgOtJJSMM9PM/FV+holxrFR8UALRJBL3Masp
+Dp/yCpP+R/X0osOMz+rKW+T3RfnwM4hQ+QyFlXy9wEYFhxUBVeoJZFvcFGGnWR8DT
+bQqKGdD+VIfQlX9FO0r93Z2xJVfGMZ+QSzh0+8yCGPJqI6yAS4YWjnygH+AxYuA/t
+R4hUG2bfbsQiEa2Ix8GlmvfCQ5mWhVgYkzSom1nAorhDnTZrXXhHbaMPIeMXyBxky
+bT6JGZV2VjWg6UqDZTPMlqAJ+QAQ+W9rJBCwtBIGUzokqYtAf+cW0+GRQSgz7G8NU
+hnKqzbsrn+ogfDA4PRP8P6IZI4qY9XcsMm6Kxw3Aw9wQ6qtkQwhu2ixrLUPjIYN4Y
+KFJuV4FIv2J5gHEtKclx1SrqewOoXcJ4kicrBT8rK4f7jXHjGua5FMROIB/Ihny73
+DxPewkiV5eZSQouasg5du+3HGswsUfhjHyVn5Q3TH0CL/qnTM+NMchB4PXtsfPDUK
+S7F4c4yZ1kCdEtoELPx2IwM4WaLEn0bXo4ZxOmbYd1WBzFkpkFO0wRNpNBMU50NVd
+HGygyWSfwzfE947fP3sIZ67fOKyJQ07AjS7JamjfLRFHF045CfKQsrsSdMBmUfCpY
+Kd+UJK/UBPow2cRS01mbJrsHF/DZlykRPzNLjgqioSPxoFK1q2TEQ786hh4hsmbWo
+SVY6jA/6ONoNI94Telzwe73xMe+lmGBUV7zDLe89Mlp9GndlhZTLRti+KY9yoVArg
+xUnLBKHVhvXFzOtYtwY4lhtTgoqL9mx4lqzPQaaRRZ3rqLwE8uFXKAuwNrwC5PAIs
++x8DQ2KM5mYPo3jqyBJoW4fipm9NULuiVxC8i6UP1B4/5bSdK3OFUB5lLMXYNzyfI
+9r70N4t9tnSS08CUQwxZlBUq2pPZqYyJXYRrLuuJcsuZNaun0pLcncp2aKOB6MBPd
+Y6GgQt4QBZloPZFmF+Uw6AXs6KhiOc44VPzJLm+cwjKWYo+CIR112hBieVTRGDCPH
+51+e5dJVhqV0ZyOR7E4B4IPa6lq6Up2Ei5+8xK3Mi1lH7iGBydx8AoQ4w0Nn95w5o
+nk6SLdi5k7713yxkqjZ3zsfYGJwQrSE2dAjnoDFeIQtJjClx2119Q3eflOYj5Ihke
+ZkdRgRWLKod00NIy3rLCJQdSt7AFTXJwRPJzh15vuLGELAPC2mW6Rn+fqRY+pKmd6
+8oQEQw46/GHOyTyMHfJKqIfxlVOVlwAdKoWjTnQ8JtP4aBD3LQkfmZ89Uw7lujBir
+w==
 </ViaThinkSoftSignature> */ ?>
 <?php
 
 /*
 
-      VNag - Nagios Framework for PHP                  (C) 2014-2022
+      VNag - Nagios Framework for PHP                  (C) 2014-2023
       __     ___      _____ _     _       _     ____         __ _
       \ \   / (_) __ |_   _| |__ (_)_ __ | | __/ ___|  ___  / _| |_
        \ \ / /| |/ _` || | | '_ \| | '_ \| |/ /\___ \ / _ \| |_| __|
@@ -35,7 +35,7 @@ Q==
 
       Developed by Daniel Marschall             www.viathinksoft.com
       Licensed under the terms of the Apache 2.0 license
-      Revision 2022-12-18
+      Revision 2023-09-11
 
 */
 
@@ -343,7 +343,7 @@ $OVERWRITE_ARGUMENTS = null;
 
 function _empty($x) {
 	// Returns true for '' or null. Does not return true for value 0 or '0' (like empty() does)
-	return trim($x) == '';
+	return is_null($x) || (trim($x) == '');
 }
 
 abstract class VNag {
@@ -1314,7 +1314,7 @@ abstract class VNag {
 	protected function get_cache_dir() {
 		$homedir = @getenv('HOME');
 		if ($homedir && is_dir($homedir)) {
-			$try = "${homedir}/.vnag/cache";
+			$try = "$homedir/.vnag/cache";
 			if (is_dir($try)) return $try;
 			if (@mkdir($try,0777,true)) return $try;
 		}
@@ -1322,7 +1322,7 @@ abstract class VNag {
 		$user = posix_getpwuid(posix_geteuid());
 		if (isset($user['dir']) && is_dir($user['dir'])) {
 			$homedir = $user['dir'];
-			$try = "${homedir}/.vnag/cache";
+			$try = "$homedir/.vnag/cache";
 			if (is_dir($try)) return $try;
 			if (@mkdir($try,0777,true)) return $try;
 		}
@@ -2381,7 +2381,11 @@ VTSKEY;
 
 	protected function replaceStuff($text) {
 		global $argv;
-		$text = str_replace('$SCRIPTNAME$', $argv[0], $text);
+		if (php_sapi_name() == 'cli') {
+			$text = str_replace('$SCRIPTNAME$', $argv[0], $text);
+		} else {
+			$text = str_replace('$SCRIPTNAME$', basename($_SERVER['SCRIPT_NAME']), $text);
+		}
 		$text = str_replace('$CURYEAR$', date('Y'), $text);
 		return $text;
 	}
