@@ -1,5 +1,5 @@
 all:
-	gcc -O2 -lgmp -lm -o oid oid.c
+	gcc -O2 -o oid oid.c -lm -lgmp
 
 clean:
 	rm -f  *.o

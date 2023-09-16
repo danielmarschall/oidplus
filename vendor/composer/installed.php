@@ -53,7 +53,7 @@
         'danielmarschall/oidconverter' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '75088ebe78675e6a6ecb3842c7ce6177f8476fbb',
+            'reference' => 'd9eb98eb8aba3ca8c6a1003caaa9d6a4ed1a3153',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/oidconverter',
             'aliases' => array(
@@ -84,7 +84,7 @@
         'danielmarschall/php_utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '501a04fd8388576126521f608fea32b41d40f0e9',
+            'reference' => 'c8561e86a5233d3c93fb4520922666ee48ff615c',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/php_utils',
             'aliases' => array(
@@ -95,7 +95,7 @@
         'danielmarschall/uuid_mac_utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'ba56c34dde1796f771daf3353d12d6683e141f1b',
+            'reference' => 'd30b6f82635aa4dd1ffecd29ce16adf27578a555',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/uuid_mac_utils',
             'aliases' => array(
@@ -106,7 +106,7 @@
         'danielmarschall/vnag' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '1c017395570e2ab88eecf9e85d823f4e5e006909',
+            'reference' => '5cf9156274c2c9f51d4a6c054cca0852a71952a6',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/vnag',
             'aliases' => array(
@@ -189,7 +189,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => '615d6cfc7cf40d61bdaa9653c6a4118c6be3cf06',
+            'reference' => '38097913bd7584657bc670b51c01d3bb8503c413',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),
@@ -232,9 +232,9 @@
             'dev_requirement' => false,
         ),
         'twbs/bootstrap' => array(
-            'pretty_version' => 'v5.3.1',
-            'version' => '5.3.1.0',
-            'reference' => '2a1bf52b73fc9a97f6fef75aa1b29b3e9f0288b3',
+            'pretty_version' => 'v5.3.2',
+            'version' => '5.3.2.0',
+            'reference' => '344e912d04b5b6a04482113eff20ab416ff01048',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twbs/bootstrap',
             'aliases' => array(),
@@ -252,7 +252,7 @@
         'twitter/bootstrap' => array(
             'dev_requirement' => false,
             'replaced' => array(
-                0 => 'v5.3.1',
+                0 => 'v5.3.2',
             ),
         ),
         'vakata/jstree' => array(

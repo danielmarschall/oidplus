@@ -33,25 +33,18 @@ class ComposerAutoloaderInitOidPlusComposer
 
         $loader->register(true);
 
-        $includeFiles = \Composer\Autoload\ComposerStaticInitOidPlusComposer::$files;
-        foreach ($includeFiles as $fileIdentifier => $file) {
-            composerRequireOidPlusComposer($fileIdentifier, $file);
+        $filesToLoad = \Composer\Autoload\ComposerStaticInitOidPlusComposer::$files;
+        $requireFile = \Closure::bind(static function ($fileIdentifier, $file) {
+            if (empty($GLOBALS['__composer_autoload_files'][$fileIdentifier])) {
+                $GLOBALS['__composer_autoload_files'][$fileIdentifier] = true;
+
+                require $file;
+            }
+        }, null, null);
+        foreach ($filesToLoad as $fileIdentifier => $file) {
+            $requireFile($fileIdentifier, $file);
         }
 
         return $loader;
-    }
-}
-
-/**
- * @param string $fileIdentifier
- * @param string $file
- * @return void
- */
-function composerRequireOidPlusComposer($fileIdentifier, $file)
-{
-    if (empty($GLOBALS['__composer_autoload_files'][$fileIdentifier])) {
-        $GLOBALS['__composer_autoload_files'][$fileIdentifier] = true;
-
-        require $file;
     }
 }

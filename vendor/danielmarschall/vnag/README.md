@@ -16,7 +16,7 @@ Beside developing normal Nagios/Icinga plugins (PHP will be called via CLI), you
 Pre-Installed plugins
 ---------------------
 
-VNag comes with following plugins pre-installed:
+VNag comes with the following plugins pre-installed:
 
 - **4images_version**: Checks 4images installations for updates.
 - **aastra_430_voicemail**: Checks Aastra 430 phone system for new voicemails.
@@ -29,6 +29,7 @@ VNag comes with following plugins pre-installed:
 - **last**: Checks the output of the tool "last" and warns when logins from suspicious IP adresses are detected.
 - **mdstat**: Parses the output of "/proc/mdstat" and warns when drives inside a RAID array have failed.
 - **mediawiki_version**: Checks MediaWiki installations for updates.
+- **megaraid**: Checks MegaRAID (MegaCLI64) RAID arrays for degraded arrays, SMART warnings, or failing batteries.
 - **minecraft_java_version**: Checks the version of a local Minecraft Java server for updates.
 - **net2ftp_version**: Checks [net2ftp](https://www.net2ftp.com/) installations for updates.
 - **nextcloud_version**: Checks Nextcloud installations for updates.

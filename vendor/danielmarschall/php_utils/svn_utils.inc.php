@@ -3,7 +3,7 @@
 /*
  * PHP svn functions
  * Copyright 2021 - 2023 Daniel Marschall, ViaThinkSoft
- * Revision 2023-04-21
+ * Revision 2023-09-15
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,6 +66,7 @@ function get_svn_revision($dir='') {
 	return get_svn_revision_without_sqlite3($dir);
 }
 
+// Note: get_svn_revision_without_sqlite3() can be very unstable, so it is highly recommended to install php-sqlite in order to parse the file correctly.
 function get_svn_revision_without_sqlite3($svn_path, $base='trunk') {
 	if (!empty($svn_path)) $svn_path .= '/';
 	if (!is_dir($svn_path)) return false;
@@ -75,18 +76,18 @@ function get_svn_revision_without_sqlite3($svn_path, $base='trunk') {
 	preg_match_all('@('.preg_quote($base,'@').'/[a-z0-9!"#$%&\'()*+,.\/:;<=>?\@\[\] ^_`{|}~-]+)(..)normal(file|dir)@', $fil, $m, PREG_SET_ORDER);
 
 	$files = array();
-	foreach ($m as list($dummy, $fil, $revision)) {
+	foreach ($m as list($dummy, $fil, $revision, $type)) {
 		$val = hexdec(bin2hex($revision));
 
 		$tmp = explode("$base/", $fil);
 		$fil = end($tmp);
 
-		if (!file_exists($svn_path."/$base/$fil")) continue; // deleted files (deleted rows?!) might be still in the binary
+		// TODO: Problem: We don't know if it was checked out as / or checked out as /trunk/, or something else!
+		if (!file_exists($svn_path."/$base/$fil") && !file_exists($svn_path."/$fil")) continue; // deleted files (deleted rows?!) might be still in the binary
 
 		if (!isset($files[$fil])) $files[$fil] = -1;
 		if ($files[$fil] < $val) $files[$fil] = $val;
 	}
-
 	$arr = array_values($files);
 
 	/*
@@ -95,15 +96,16 @@ function get_svn_revision_without_sqlite3($svn_path, $base='trunk') {
 	}
 	*/
 
-    $num = count($arr);
-    $middleVal = floor(($num - 1) / 2);
-    if($num % 2) {
-        $median = $arr[$middleVal];
-    } else {
-        $lowMid = $arr[$middleVal];
-        $highMid = $arr[$middleVal + 1];
-        $median = (($lowMid + $highMid) / 2);
-    }
+	if (count($files) == 0) return 1; // should not happen
+	$num = count($arr);
+	$middleVal = floor(($num - 1) / 2);
+	if ($num % 2) {
+		$median = $arr[$middleVal];
+	} else {
+		$lowMid = $arr[$middleVal];
+		$highMid = $arr[$middleVal + 1];
+		$median = (($lowMid + $highMid) / 2);
+	}
 
-    return $median;
+	return $median;
 }
