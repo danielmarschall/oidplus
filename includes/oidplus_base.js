@@ -413,6 +413,7 @@ $(document).ready(function () {
 		west__togglerTip_closed:      _L("Open & Pin Menu"),
 		west__sliderTip:              _L("Slide Open Menu"),
 		west__slideTrigger_open:      "mouseover",
+		west__enableCursorHotkey:     false, // disable Ctrl+Shift+LeftArrow hotkey ( see https://github.com/danielmarschall/oidplus/issues/28 )
 		center__maskContents:         true, // IMPORTANT - enable iframe masking
 		onresize_start:               function() { if (typeof handle_glayout_onresize_start == 'function') handle_glayout_onresize_start(); }
 	});
