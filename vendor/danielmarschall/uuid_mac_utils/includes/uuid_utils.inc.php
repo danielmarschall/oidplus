@@ -3,7 +3,7 @@
 /*
  * UUID utils for PHP
  * Copyright 2011 - 2023 Daniel Marschall, ViaThinkSoft
- * Version 2023-09-07
+ * Version 2023-09-24
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -580,9 +580,17 @@ function uuid_info($uuid, $echo=true) {
 					Variant 1, Version 7 UUID
 					- 48 bit Unix Time in milliseconds
 					-  4 bit Version (fix 0x7)
-					- 12 bit Random
+					- 12 bit Data
 					-  2 bit Variant (fix 0b10)
-					- 62 bit Random
+					- 62 bit Data
+
+					Structure of data (74 bits):
+					- OPTIONAL : Sub-millisecond timestamp fraction (0-12 bits)
+					- OPTIONAL : Carefully seeded counter
+					- Random generated bits for any remaining space
+
+					Since we don't know if timestamp fraction or counters are implemented
+					(and if so, how many bits), we don't decode this information
 					*/
 
 					echo sprintf("%-32s %s\n", "Version:", "[0x7] Unix Epoch Time");
@@ -972,7 +980,7 @@ function gen_uuid_timebased($force_php_implementation=false) {
 		$uuid['time_low'] = gmp_and($time, gmp_init('ffffffff',16));
 		$high = gmp_shiftr($time,32);
 		$uuid['time_mid'] = gmp_and($high, gmp_init('ffff',16));
-		$uuid['time_hi'] = intval(gmp_and(gmp_shiftr($high,16),gmp_init('fff',16)),10) | (1/*TimeBased*/ << 12);
+		$uuid['time_hi'] = gmp_intval(gmp_and(gmp_shiftr($high,16),gmp_init('fff',16))) | (1/*TimeBased*/ << 12);
 	} else {
 		$time = ($tp['sec'] * 10000000) + ($tp['usec'] * 10) + 0x01B21DD213814000;
 		$uuid['time_low'] = $time & 0xffffffff;
@@ -1115,16 +1123,19 @@ function gen_uuid_random() {
 	}
 
 	if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
+		# On Debian Jessie: UUID V4 (Random)
+		if (file_exists($uuidv4_file = '/proc/sys/kernel/random/uuid')) {
+			$uuid = file_get_contents($uuidv4_file);
+			if (uuid_version($uuid) === '4') { // <-- just to make 100% sure that it did output UUIDv4
+				return $uuid;
+			}
+		}
+
 		# On Debian: apt-get install uuid-runtime
 		$out = array();
 		$ec = -1;
 		exec('uuidgen -r 2>/dev/null', $out, $ec);
 		if ($ec == 0) return trim($out[0]);
-
-		# On Debian Jessie: UUID V4 (Random)
-		if (file_exists('/proc/sys/kernel/random/uuid')) {
-			return trim(file_get_contents('/proc/sys/kernel/random/uuid'));
-		}
 	}
 
 	# Make the UUID by ourselves
@@ -1221,31 +1232,63 @@ function uuid1_to_uuid6($hex) {
 // Variant 1, Version 7 (Unix Epoch) UUID
 # --------------------------------------
 
-function gen_uuid_v7() {
-	return gen_uuid_unix_epoch();
+function gen_uuid_v7(int $num_ms_frac_bits=12) {
+	return gen_uuid_unix_epoch($num_ms_frac_bits);
 }
-function gen_uuid_unix_epoch() {
-	// Start with an UUIDv4
-	$uuid = gen_uuid_random();
+function gen_uuid_unix_epoch(int $num_ms_frac_bits=12) {
+	$uuid_nibbles = '';
 
-	// Add the timestamp
-	usleep(1000); // Wait 1ms, to make sure that the time part changes if multiple UUIDs are generated
+	// Add the timestamp (milliseconds Unix)
 	if (function_exists('gmp_init')) {
 		list($ms,$sec) = explode(' ', microtime(false));
 		$sec = gmp_init($sec, 10);
 		$ms = gmp_init(substr($ms,2,3), 10);
 		$unix_ts = gmp_strval(gmp_add(gmp_mul($sec, '1000'), $ms),16);
 	} else {
-		$unix_ts = dechex((int)round(microtime(true)*1000));
+		$unix_ts = dechex((int)ceil(microtime(true)*1000));
 	}
 	$unix_ts = str_pad($unix_ts, 12, '0', STR_PAD_LEFT);
-	for ($i=0;$i<8;$i++) $uuid[$i] = substr($unix_ts, $i, 1);
-	for ($i=0;$i<4;$i++) $uuid[9+$i] = substr($unix_ts, 8+$i, 1);
+	$uuid_nibbles = $unix_ts;
 
-	// set version
-	$uuid[14] = '7';
+	// Version = 7
+	$uuid_nibbles .= '7';
 
-	return $uuid;
+	// Optional: millisecond fraction (max 12 bits)
+	if (($num_ms_frac_bits < 0) || ($num_ms_frac_bits > 12)) throw new Exception("Invalid msec frac bits (must be 0..12)");
+	$resolution_ns = 1000000 / pow(2,$num_ms_frac_bits);
+	if ($num_ms_frac_bits > 0) {
+		$seconds_fraction = (float)explode(' ',microtime(false))[0]; // <sec=0>,<msec>
+
+		$ms_fraction = $seconds_fraction * 1000; // <msec>,<us>
+		$ms_fraction -= floor($ms_fraction); // <msec=0>,<us>
+
+		$ns_fraction = $ms_fraction * 1000000; // <ns>
+		$val = (int)ceil($ns_fraction / $resolution_ns);
+
+		// Currently, for the output we only allow frac bits 0, 4, 8, 12 (0-3 nibbles),
+		// since UUIDs are usually sorted in their hex notation, and one of the main
+		// reasons for using the sub-millisecond fractions it to increase monotonicity
+		$num_nibbles = (int)ceil($num_ms_frac_bits/4);
+		$uuid_nibbles .= str_pad(dechex($val), $num_nibbles, '0', STR_PAD_LEFT);
+	}
+
+	// TODO Not implemented: Optional counter (to be defined as parameter to this method)
+	// The counter bits need to be spread before and after the variant bits
+
+	// Fill with random bits (and the variant bits)
+	$uuid = gen_uuid_random();
+	$uuid = str_replace('-', '', $uuid);
+	for ($i=0; $i<strlen($uuid_nibbles); $i++) $uuid[$i] = $uuid_nibbles[$i];
+
+	// Wait to make sure that the time part changes if multiple UUIDs are generated
+	if (time_nanosleep(0,(int)ceil($resolution_ns)) !== true) usleep((int)ceil($resolution_ns/1000));
+
+	// Output
+	return substr($uuid,  0, 8).'-'.
+	       substr($uuid,  8, 4).'-'.
+	       substr($uuid, 12, 4).'-'.
+	       substr($uuid, 16, 4).'-'.
+	       substr($uuid, 20, 12);
 }
 
 # --------------------------------------
@@ -1274,34 +1317,37 @@ function gen_uuid_custom($block1_32bit, $block2_16bit, $block3_12bit, $block4_14
 	return strtolower($block1.'-'.$block2.'-'.$block3.'-'.$block4.'-'.$block5);
 }
 
-function gen_uuid_v8_namebased($hash_uuid, $namespace_uuid, $name) {
-	if (($hash_uuid ?? '') === '') throw new Exception("Hash space UUID missing");
-	if (!uuid_valid($hash_uuid)) throw new Exception("Invalid hash space ID '$hash_uuid'");
+function gen_uuid_v8_namebased($hash_algo, $namespace_uuid, $name) {
+	if (($hash_algo ?? '') === '') throw new Exception("Hash algorithm argument missing");
 
 	if (($namespace_uuid ?? '') === '') throw new Exception("Namespace UUID missing");
 	if (!uuid_valid($namespace_uuid)) throw new Exception("Invalid namespace UUID '$namespace_uuid'");
 
-	$uuid1 = hex2bin(str_replace('-','',uuid_canonize($hash_uuid)));
+	$uuid1 = uuid_valid($hash_algo) ? hex2bin(str_replace('-','',uuid_canonize($hash_algo))) : '';
 	$uuid2 = hex2bin(str_replace('-','',uuid_canonize($namespace_uuid)));
 	$payload = $uuid1 . $uuid2 . $name;
 
-	$hash = null;
-	foreach (get_uuidv8_hash_space_ids() as list($algo,$space,$friendlyName,$author,$available)) {
-		if (uuid_equal($hash_uuid,$space)) {
-			if (!$available) {
-				throw new Exception("Algorithm $algo is not available on this system (PHP version too old)");
+	if (uuid_valid($hash_algo)) {
+		foreach (get_uuidv8_hash_space_ids() as list($algo,$space,$friendlyName,$author,$available)) {
+			if (uuid_equal($hash_algo,$space)) {
+				if (!$available) {
+					throw new Exception("Algorithm $algo is not available on this system (PHP version too old)");
+				}
+				$hash_algo = $algo;
+				break;
 			}
-
-			if ($algo == 'shake128') $hash = shake128($payload, 16/*min. required bytes*/, false);
-			else if ($algo == 'shake256') $hash = shake256($payload, 16/*min. required bytes*/, false);
-			else $hash = hash($algo, $payload, false);
-			break;
 		}
 	}
 
+	if ($hash_algo == 'shake128') $hash = shake128($payload, 16/*min. required bytes*/, false);
+	else if ($hash_algo == 'shake256') $hash = shake256($payload, 16/*min. required bytes*/, false);
+	else $hash = hash($hash_algo, $payload, false);
+
 	if ($hash == null) {
-		throw new Exception("Unknown Hash Space UUID $hash_uuid");
+		throw new Exception("Unknown Hash Algorithm $hash_algo");
 	}
+
+	$hash = str_pad($hash, 32, '0', STR_PAD_RIGHT); // fill short hashes with zeros to the right
 
 	$hash[12] = '8'; // Set version: 8 = Custom
 	$hash[16] = dechex(hexdec($hash[16]) & 0b0011 | 0b1000); // Set variant to "0b10__" (RFC4122/DCE1.1)
@@ -1315,112 +1361,25 @@ function gen_uuid_v8_namebased($hash_uuid, $namespace_uuid, $name) {
 
 /**
  * Collection of Namebased UUIDv8 Hash Space IDs
- * @return array An array containing tuples of [PHP Algo Name, Hash Space UUID, Human friendly name, Hash Space Author, Available, AlgorithmOID]
+ * @return array An array containing tuples of [PHP Algo Name, Hash Space UUID, Human friendly name, Hash Space Author, Available]
  */
 function get_uuidv8_hash_space_ids(): array {
 	$out = array();
 
 	// The following Hash Space UUIDs are defined in draft-ietf-uuidrev-rfc4122bis-11 as Example for Namebased UUIDv8
 	$category = 'Internet Draft 11, Appendix B';
-	$out[] = ['sha224', '59031ca3-fbdb-47fb-9f6c-0f30e2e83145', 'SHA-224', $category, PHP_VERSION_ID >= 70100, null];
-	$out[] = ['sha256', '3fb32780-953c-4464-9cfd-e85dbbe9843d', 'SHA-256', $category, PHP_VERSION_ID >= 70100, null];
-	$out[] = ['sha384', 'e6800581-f333-484b-8778-601ff2b58da8', 'SHA-384', $category, PHP_VERSION_ID >= 70100, null];
-	$out[] = ['sha512', '0fde22f2-e7ba-4fd1-9753-9c2ea88fa3f9', 'SHA-512', $category, PHP_VERSION_ID >= 70100, null];
-	$out[] = ['sha512/224', '003c2038-c4fe-4b95-a672-0c26c1b79542', 'SHA-512/224', $category, PHP_VERSION_ID >= 70100, null];
-	$out[] = ['sha512/256', '9475ad00-3769-4c07-9642-5e7383732306', 'SHA-512/256', $category, PHP_VERSION_ID >= 70100, null];
-	$out[] = ['sha3-224', '9768761f-ac5a-419e-a180-7ca239e8025a', 'SHA3-224', $category, PHP_VERSION_ID >= 70100, null];
-	$out[] = ['sha3-256', '2034d66b-4047-4553-8f80-70e593176877', 'SHA3-256', $category, PHP_VERSION_ID >= 70100, null];
-	$out[] = ['sha3-384', '872fb339-2636-4bdd-bda6-b6dc2a82b1b3', 'SHA3-384', $category, PHP_VERSION_ID >= 70100, null];
-	$out[] = ['sha3-512', 'a4920a5d-a8a6-426c-8d14-a6cafbe64c7b', 'SHA3-512', $category, PHP_VERSION_ID >= 70100, null];
-	$out[] = ['shake128'/*Currently no PHP core algorithm!*/, '7ea218f6-629a-425f-9f88-7439d63296bb', 'SHAKE128', $category, file_exists(__DIR__.'/SHA3.php'), null];
-	$out[] = ['shake256'/*Currently no PHP core algorithm!*/, '2e7fc6a4-2919-4edc-b0ba-7d7062ce4f0a', 'SHAKE256', $category, file_exists(__DIR__.'/SHA3.php'), null];
-
-	// ---
-
-	// Proposal https://github.com/ietf-wg-uuidrev/rfc4122bis/issues/143#issuecomment-1709117798 , probably to be put into Draft 12
-	$category = 'Internet Draft 12 Proposal';
-	$out[] = ['sha224', gen_uuid_v5(UUID_NAMEBASED_NS_OID, $oid='2.16.840.1.101.3.4.2.4'), 'SHA-224', $category, PHP_VERSION_ID >= 70100, $oid];
-	$out[] = ['sha256', gen_uuid_v5(UUID_NAMEBASED_NS_OID, $oid='2.16.840.1.101.3.4.2.1'), 'SHA-256', $category, PHP_VERSION_ID >= 70100, $oid];
-	$out[] = ['sha384', gen_uuid_v5(UUID_NAMEBASED_NS_OID, $oid='2.16.840.1.101.3.4.2.2'), 'SHA-384', $category, PHP_VERSION_ID >= 70100, $oid];
-	$out[] = ['sha512', gen_uuid_v5(UUID_NAMEBASED_NS_OID, $oid='2.16.840.1.101.3.4.2.3'), 'SHA-512', $category, PHP_VERSION_ID >= 70100, $oid];
-	$out[] = ['sha512/224', gen_uuid_v5(UUID_NAMEBASED_NS_OID, $oid='2.16.840.1.101.3.4.2.5'), 'SHA-512/224', $category, PHP_VERSION_ID >= 70100, $oid];
-	$out[] = ['sha512/256', gen_uuid_v5(UUID_NAMEBASED_NS_OID, $oid='2.16.840.1.101.3.4.2.6'), 'SHA-512/256', $category, PHP_VERSION_ID >= 70100, $oid];
-	$out[] = ['sha3-224', gen_uuid_v5(UUID_NAMEBASED_NS_OID, $oid='2.16.840.1.101.3.4.2.7'), 'SHA3-224', $category, PHP_VERSION_ID >= 70100, $oid];
-	$out[] = ['sha3-256', gen_uuid_v5(UUID_NAMEBASED_NS_OID, $oid='2.16.840.1.101.3.4.2.8'), 'SHA3-256', $category, PHP_VERSION_ID >= 70100, $oid];
-	$out[] = ['sha3-384', gen_uuid_v5(UUID_NAMEBASED_NS_OID, $oid='2.16.840.1.101.3.4.2.9'), 'SHA3-384', $category, PHP_VERSION_ID >= 70100, $oid];
-	$out[] = ['sha3-512', gen_uuid_v5(UUID_NAMEBASED_NS_OID, $oid='2.16.840.1.101.3.4.2.10'), 'SHA3-512', $category, PHP_VERSION_ID >= 70100, $oid];
-	$out[] = ['shake128'/*Currently no PHP core algorithm!*/, gen_uuid_v5(UUID_NAMEBASED_NS_OID, $oid='2.16.840.1.101.3.4.2.11'), 'SHAKE128', $category, file_exists(__DIR__.'/SHA3.php'), $oid];
-	$out[] = ['shake256'/*Currently no PHP core algorithm!*/, gen_uuid_v5(UUID_NAMEBASED_NS_OID, $oid='2.16.840.1.101.3.4.2.12'), 'SHAKE256', $category, file_exists(__DIR__.'/SHA3.php'), $oid];
-
-	// ---
-
-	// The following Hash Space UUIDs are defined by ViaThinkSoft
-	//      UUIDv8_NamebasedViaThinkSoft := <HashAlgo>_AsUUIDv8( BinaryHashSpaceUUID + BinaryNamespaceUUID + Data )
-	// Algorithms which have an OID get defined as follows:
-	//      BinaryHashSpaceUUID := SHA1_AsUUIDv5( hex2bin(NS_OID) + AlgorithmOID )
-	// If no OID can be found, the hash space is constructed using a custom namespace and the PHP name as payload:
-	//      BinaryHashSpaceUUID := SHA1_AsUUIDv5( hex2bin('1ee317e2-1853-64b2-8fe9-3c4a92df8582') + PhpHashAlgoName )
-	$available_algos = hash_algos();
-	$unavailable_algos = [];
-	if (PHP_VERSION_ID < 80100/*8.1.0*/) {
-		$unavailable_algos[] = 'murmur3c'; // length: 16 bytes
-		$unavailable_algos[] = 'murmur3f'; // length: 16 bytes
-		$unavailable_algos[] = 'xxh128';   // length: 16 bytes
-	}
-	if (PHP_VERSION_ID < 99999) {
-		// How to update this list $unavailable_algos:
-		// 1. Look if new hashes are listed in the PHP documentation: https://www.php.net/manual/de/function.hash-algos.php
-		// 2. If the required version is lower than our server version, then you don't need to do anything
-		// 3. Otherwise, run this command on a different machine (where the algorithms are implemented) to check if the hashes have the correct length
-		//	foreach (hash_algos() as $algo) {
-		//		$len = strlen(hash($algo, '', false));
-		//		if ($len >= 32) echo "$algo, length $len\n";
-		//	}
-		// 4. Then, include all fitting hashes here
-		// 5. Please publish the new hash space IDs here: https://oidplus.viathinksoft.com/oidplus/?goto=guid%3Auuid_mac_utils%2Fuuidv8_hash_space_vts
-	}
-	$all_algos = array_merge($available_algos, $unavailable_algos);
-
-	foreach ($all_algos as $algo) {
-		if ($algo == 'md5') continue; // MD5 is already used in UUIDv3
-		if ($algo == 'sha1') continue; // SHA1 is already used in UUIDv5
-		foreach ($out as list($algo2,$space,$friendlyName,$author)) {
-			if ($algo == $algo2) continue 2; // UUID is already defined by RFC, don't need a VTS Hash Space UUID
-		}
-		if (in_array($algo,$available_algos) && (strlen(hash($algo,'',false)) < 32)) continue; // Hash too short (needs at least 16 bytes)
-
-		// List of OIDs here: https://github.com/ietf-wg-uuidrev/rfc4122bis/issues/143#issuecomment-1709117798
-		$oid = null;
-		if ($algo == 'gost') $oid = '1.2.643.2.2.30.0';
-		if ($algo == 'gost-crypto') $oid = '1.2.643.2.2.30.1';
-		if ($algo == 'haval128,3') $oid = '1.3.6.1.4.1.18105.2.1.1.1';
-		if ($algo == 'haval160,3') $oid = '1.3.6.1.4.1.18105.2.1.1.2';
-		if ($algo == 'haval192,3') $oid = '1.3.6.1.4.1.18105.2.1.1.3';
-		if ($algo == 'haval224,3') $oid = '1.3.6.1.4.1.18105.2.1.1.4';
-		if ($algo == 'haval256,3') $oid = '1.3.6.1.4.1.18105.2.1.1.5';
-		if ($algo == 'haval128,4') $oid = '1.3.6.1.4.1.18105.2.1.1.6';
-		if ($algo == 'haval160,4') $oid = '1.3.6.1.4.1.18105.2.1.1.7';
-		if ($algo == 'haval192,4') $oid = '1.3.6.1.4.1.18105.2.1.1.8';
-		if ($algo == 'haval224,4') $oid = '1.3.6.1.4.1.18105.2.1.1.9';
-		if ($algo == 'haval256,4') $oid = '1.3.6.1.4.1.18105.2.1.1.10';
-		if ($algo == 'haval128,5') $oid = '1.3.6.1.4.1.18105.2.1.1.11';
-		if ($algo == 'haval160,5') $oid = '1.3.6.1.4.1.18105.2.1.1.12';
-		if ($algo == 'haval192,5') $oid = '1.3.6.1.4.1.18105.2.1.1.13';
-		if ($algo == 'haval224,5') $oid = '1.3.6.1.4.1.18105.2.1.1.14';
-		if ($algo == 'haval256,5') $oid = '1.3.6.1.4.1.18105.2.1.1.15';
-		if ($algo == 'md2') $oid = '1.2.840.113549.2.2';
-		if ($algo == 'md4') $oid = '1.2.840.113549.2.4';
-		if ($algo == 'ripemd128') $oid = '1.3.36.3.2.2'; // or 1.0.10118.3.0.50
-		if ($algo == 'ripemd160') $oid = '1.3.36.3.2.1'; // or 1.0.10118.3.0.49
-		if ($algo == 'ripemd256') $oid = '1.3.36.3.2.3';
-		if ($algo == 'whirlpool') $oid = '1.0.10118.3.0.55';
-
-		if ($oid == null) {
-			$out[] = [$algo, gen_uuid_v5('1ee317e2-1853-64b2-8fe9-3c4a92df8582', $algo), strtoupper($algo), 'ViaThinkSoft by PHP name', in_array($algo,$available_algos), $oid];
-		} else {
-			$out[] = [$algo, gen_uuid_v5(UUID_NAMEBASED_NS_OID, $oid), strtoupper($algo), 'ViaThinkSoft by OID', in_array($algo,$available_algos), $oid];
-		}
-	}
+	$out[] = ['sha224', '59031ca3-fbdb-47fb-9f6c-0f30e2e83145', 'SHA-224', $category, PHP_VERSION_ID >= 70100];
+	$out[] = ['sha256', '3fb32780-953c-4464-9cfd-e85dbbe9843d', 'SHA-256', $category, PHP_VERSION_ID >= 70100];
+	$out[] = ['sha384', 'e6800581-f333-484b-8778-601ff2b58da8', 'SHA-384', $category, PHP_VERSION_ID >= 70100];
+	$out[] = ['sha512', '0fde22f2-e7ba-4fd1-9753-9c2ea88fa3f9', 'SHA-512', $category, PHP_VERSION_ID >= 70100];
+	$out[] = ['sha512/224', '003c2038-c4fe-4b95-a672-0c26c1b79542', 'SHA-512/224', $category, PHP_VERSION_ID >= 70100];
+	$out[] = ['sha512/256', '9475ad00-3769-4c07-9642-5e7383732306', 'SHA-512/256', $category, PHP_VERSION_ID >= 70100];
+	$out[] = ['sha3-224', '9768761f-ac5a-419e-a180-7ca239e8025a', 'SHA3-224', $category, PHP_VERSION_ID >= 70100];
+	$out[] = ['sha3-256', '2034d66b-4047-4553-8f80-70e593176877', 'SHA3-256', $category, PHP_VERSION_ID >= 70100];
+	$out[] = ['sha3-384', '872fb339-2636-4bdd-bda6-b6dc2a82b1b3', 'SHA3-384', $category, PHP_VERSION_ID >= 70100];
+	$out[] = ['sha3-512', 'a4920a5d-a8a6-426c-8d14-a6cafbe64c7b', 'SHA3-512', $category, PHP_VERSION_ID >= 70100];
+	$out[] = ['shake128'/*Currently no PHP core algorithm!*/, '7ea218f6-629a-425f-9f88-7439d63296bb', 'SHAKE128', $category, file_exists(__DIR__.'/SHA3.php')];
+	$out[] = ['shake256'/*Currently no PHP core algorithm!*/, '2e7fc6a4-2919-4edc-b0ba-7d7062ce4f0a', 'SHAKE256', $category, file_exists(__DIR__.'/SHA3.php')];
 
 	return $out;
 }
