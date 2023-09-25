@@ -4,7 +4,7 @@ Licenses: Apache-2.0
 Dependencies:
 
 Name                             Version             Licenses              
-components/jquery                3.6.0               MIT                   
+components/jquery                v3.7.1              MIT                   
 components/jqueryui              1.12.1              MIT                   
 danielmarschall/fileformats      9999999-dev 67fb751 Apache-2.0            
 danielmarschall/fileformats      dev-master 67fb751  Apache-2.0            
@@ -16,8 +16,8 @@ danielmarschall/php-sha3         9999999-dev 5605bd5 MIT
 danielmarschall/php-sha3         dev-master 5605bd5  MIT                   
 danielmarschall/php_utils        9999999-dev c8561e8 Apache-2.0            
 danielmarschall/php_utils        dev-master c8561e8  Apache-2.0            
-danielmarschall/uuid_mac_utils   9999999-dev d30b6f8 Apache-2.0            
-danielmarschall/uuid_mac_utils   dev-master d30b6f8  Apache-2.0            
+danielmarschall/uuid_mac_utils   9999999-dev ba81df1 Apache-2.0            
+danielmarschall/uuid_mac_utils   dev-master ba81df1  Apache-2.0            
 danielmarschall/vnag             9999999-dev 5cf9156 Apache-2.0            
 danielmarschall/vnag             dev-master 5cf9156  Apache-2.0            
 dcodeio/bcrypt.js                master master       BSD-3-Clause, MIT     
@@ -28,11 +28,11 @@ matthiasmullie/minify            1.3.71              MIT
 matthiasmullie/path-converter    1.1.3               MIT                   
 paragonie/constant_time_encoding v2.6.3              MIT                   
 paragonie/random_compat          v9.99.100           MIT                   
-phpseclib/phpseclib              3.0.x-dev 3809791   MIT                   
+phpseclib/phpseclib              3.0.x-dev c5b4d08   MIT                   
 script47/bs5-utils               master master       MIT                   
 spamspan/spamspan                master              GPL-2.0-only          
 symfony/polyfill-mbstring        v1.19.0             MIT                   
 tinymce/tinymce                  5.x-dev f078d8e     LGPL-2.1-only         
 twbs/bootstrap                   v5.3.2              MIT                   
 tweeb/tinymce-i18n               2.0.4               MIT                   
-vakata/jstree                    3.3.15              MIT                   
+vakata/jstree                    3.3.16              MIT                   

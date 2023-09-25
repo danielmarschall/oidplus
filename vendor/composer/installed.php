@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         'components/jquery' => array(
-            'pretty_version' => '3.6.0',
-            'version' => '3.6.0.0',
-            'reference' => '6cf38ee1fd04b6adf8e7dda161283aa35be818c3',
+            'pretty_version' => 'v3.7.1',
+            'version' => '3.7.1.0',
+            'reference' => '8edc7785239bb8c2ad2b83302b856a1d61de60e7',
             'type' => 'component',
             'install_path' => __DIR__ . '/../components/jquery',
             'aliases' => array(),
@@ -95,7 +95,7 @@
         'danielmarschall/uuid_mac_utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'd30b6f82635aa4dd1ffecd29ce16adf27578a555',
+            'reference' => 'ba81df1a9ff2b883ba28741abe8fa147061d424e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/uuid_mac_utils',
             'aliases' => array(
@@ -189,7 +189,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => '38097913bd7584657bc670b51c01d3bb8503c413',
+            'reference' => 'c5b4d08669b87c89bf14af74bdee14d5aa997e03',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),
@@ -256,9 +256,9 @@
             ),
         ),
         'vakata/jstree' => array(
-            'pretty_version' => '3.3.15',
-            'version' => '3.3.15.0',
-            'reference' => '8c1bcc87771f5be0b70cd49d6a7888707ebcc64e',
+            'pretty_version' => '3.3.16',
+            'version' => '3.3.16.0',
+            'reference' => 'b3135cfc65eba90d4c670e6959273ef92cd1b447',
             'type' => 'component',
             'install_path' => __DIR__ . '/../vakata/jstree',
             'aliases' => array(),
