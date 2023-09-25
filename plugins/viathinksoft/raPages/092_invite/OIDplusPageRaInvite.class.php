@@ -32,17 +32,14 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 	 * @throws OIDplusMailException
 	 */
 	private function action_Request(array $params): array {
-		$email = $params['email'];
-
-		if (!OIDplus::mailUtils()->validMailAddress($email)) {
-			throw new OIDplusException(_L('Invalid email address'));
-		}
+		$email = $params['email'] ?? "";
 
 		OIDplus::getActiveCaptchaPlugin()->captchaVerify($params, 'captcha');
 
 		$this->inviteSecurityCheck($email);
-		// TODO: should we also log who has invited?
-		OIDplus::logger()->log("V2:[INFO]RA(%1)", "RA '%1' has been invited", $email);
+
+		$by = OIDplus::authUtils()->isAdminLoggedIn() ? 'the system administrator' : 'a superior Registration Authority';
+		OIDplus::logger()->log("V2:[INFO]RA(%1)", "RA '%1' has been invited by %2", $email, $by);
 
 		$activate_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL) . '?goto='.urlencode('oidplus:activate_ra$'.$email.'$'.OIDplus::authUtils()->makeAuthKey(['ed840c3e-f4fa-11ed-b67e-3c4a92df8582',$email]));
 
@@ -73,6 +70,10 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 
 		if (!OIDplus::authUtils()->validateAuthKey(['ed840c3e-f4fa-11ed-b67e-3c4a92df8582',$email], $auth, OIDplus::config()->getValue('max_ra_invite_time',-1))) {
 			throw new OIDplusException(_L('Invalid or expired authentication key'));
+		}
+
+		if (!$email || !OIDplus::mailUtils()->validMailAddress($email)) {
+			throw new OIDplusException(_L('Invalid email address'));
 		}
 
 		if ($password1 !== $password2) {
@@ -138,8 +139,8 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 		if (explode('$',$id)[0] == 'oidplus:invite_ra') {
 			$handled = true;
 
-			$email = explode('$',$id)[1];
-			$origin = explode('$',$id)[2];
+			$email = explode('$',$id)[1] ?? null;
+			$origin = explode('$',$id)[2] ?? "oidplus:system";
 
 			$out['title'] = _L('Invite a Registration Authority');
 
@@ -153,12 +154,13 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 				$this->inviteSecurityCheck($email);
 				$cont = $this->getInvitationText($email);
 
-				$out['text'] .= '<p>'._L('You have chosen to invite %1 as a Registration Authority. If you click "Send", the following email will be sent to %2:','<b>'.$email.'</b>',$email).'</p><p><i>'.nl2br(htmlentities($cont)).'</i></p>
+				$out['text'] .= '<p>'._L('You have chosen to invite %1 as a Registration Authority. If you click "Send invitation", the following email will be sent to %2:','<b>'.$email.'</b>',$email).'</p><p><i>'.nl2br(htmlentities($cont)).'</i></p>
 				  <form id="inviteForm" action="javascript:void(0);" onsubmit="return OIDplusPageRaInvite.inviteFormOnSubmit();">
 				    <input type="hidden" id="email" value="'.htmlentities($email).'"/>
 				    <input type="hidden" id="origin" value="'.htmlentities($origin).'"/>
 				    '.OIDplus::getActiveCaptchaPlugin()->captchaGenerate().'
 				    <br>
+				    <input type="button" value="'._L('Cancel').'" onclick="history.back()"><!-- TODO: redirect to $origin instead? -->
 				    <input type="submit" value="'._L('Send invitation').'">
 				  </form>';
 
@@ -224,6 +226,10 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 	 * @throws OIDplusException
 	 */
 	private function inviteSecurityCheck(string $email) {
+		if (!$email || !OIDplus::mailUtils()->validMailAddress($email)) {
+			throw new OIDplusException(_L('Invalid email address'));
+		}
+
 		$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));
 		if ($res->any()) {
 			throw new OIDplusException(_L('This RA is already registered and does not need to be invited.'));
@@ -258,15 +264,19 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 		while ($row = $res->fetch_array()) {
 			$list_of_oids[] = $row['id'];
 		}
+		if (count($list_of_oids) == 0) {
+			$list_of_oids[] = '(' . _L('None') . ')';
+		}
 
 		$message = file_get_contents(__DIR__ . '/invite_msg.tpl');
 
 		// Resolve stuff
-		// Note: {{ACTIVATE_URL}} will be resolved in ajax.php
+		
 
 		$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL), $message);
 		$message = str_replace('{{OID_LIST}}', implode("\n", $list_of_oids), $message);
 		$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
+		$message = str_replace('{{ACTIVATE_URL}}', '[...]', $message); // Note: {{ACTIVATE_URL}} will be resolved in ajax.php, not here!
 
 		return str_replace('{{PARTY}}', OIDplus::authUtils()->isAdminLoggedIn() ? 'the system administrator' : 'a superior Registration Authority', $message);
 	}
