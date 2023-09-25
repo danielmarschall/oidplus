@@ -1066,7 +1066,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				$out['text'] = str_replace('%%CRUD%%', self::showCrud($obj->nodeId()), $out['text']);
 			}
 			if (strpos($out['text'], '%%RA_INFO%%') !== false) {
-				$out['text'] = str_replace('%%RA_INFO%%', OIDplusPagePublicRaInfo::showRaInfo($obj->getRaMail()), $out['text']);
+				$out['text'] = str_replace('%%RA_INFO%%', OIDplusPagePublicRaInfo::showRaInfo($obj->getRaMail(), $obj), $out['text']);
 			}
 
 			$out['text'] .= '<!-- MARKER 3 -->'; // use this to better control modifyContent!

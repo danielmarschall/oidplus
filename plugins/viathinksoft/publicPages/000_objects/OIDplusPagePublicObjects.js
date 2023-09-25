@@ -108,34 +108,13 @@ var OIDplusPagePublicObjects = {
 			error: oidplus_ajax_error,
 			success: function (data) {
 				oidplus_ajax_success(data, function (data) {
+
 					var message = _L("Insert OK.");
 					var isWarning = false;
 
 					if ((data.status & 4) == 4/*IsWellKnownOID*/) {
 						isWarning = true;
 						message = message + ' ' + _L("However, the RA and the ASN.1 and IRI identifiers were overwritten, because this OID is a well-known OID.");
-					}
-
-					if ((data.status & 2) == 2/*RaNotExistingNoInvitation*/) {
-						//message = _L("Insert OK.");
-					}
-
-					message = message + "\n\n";
-
-					if ((data.status & 1) == 1/*RaNotExisting*/) {
-						if (confirm(message + _L("The email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?", $("#ra_email")[0].value))) {
-							OIDplusPagePublicObjects.crudActionSendInvitation(parent, $("#ra_email")[0].value);
-							return;
-						}
-						message = ""; // In the further messages, do not show this part of the message a second time
-					}
-
-					if ((data.status & 8) == 8/*HasWriteRights*/) {
-						if (confirm(message + _L("Do you want to open the newly created object now?"))) {
-							openAndSelectNode(data.inserted_id, parent);
-							return;
-						}
-						message = ""; // In the further messages, do not show this part of the message a second time
 					}
 
 					if (message.trim() != "") {
@@ -146,8 +125,7 @@ var OIDplusPagePublicObjects = {
 						}
 					}
 
-					// TODO: Don't use reloadContent(); instead add a node at the tree at the left add at the right add a new row to the table
-					reloadContent();
+					openAndSelectNode(data.inserted_id, parent);
 				});
 			}
 		});
@@ -194,22 +172,6 @@ var OIDplusPagePublicObjects = {
 					}
 
 					message = message + "\n\n";
-
-					if ((data.status & 1) == 1/*RaNotExisting*/) {
-						if (confirm(message + _L("The email address you have entered (%1) is not in our system. Do you want to send an invitation, so that the RA can register an account to manage their OIDs?", $("#ra_email_" + $.escapeSelector(id))[0].value))) {
-							OIDplusPagePublicObjects.crudActionSendInvitation(parent, $("#ra_email_" + $.escapeSelector(id))[0].value);
-							return;
-						}
-						message = ""; // In the further messages, do not show this part of the message a second time
-					}
-
-					//if ((data.status & 8) == 8/*HasWriteRights*/) {
-					//	if (confirm(message + _L("Do you want to open the updated object now?"))) {
-					//		openAndSelectNode(id, parent);
-					//		return;
-					//	}
-					//	message = ""; // In the further messages, do not show this part of the message a second time
-					//}
 
 					if (message.trim() != "") {
 						if (isWarning) {
@@ -294,11 +256,6 @@ var OIDplusPagePublicObjects = {
 				});
 			}
 		});
-	},
-
-	crudActionSendInvitation: function(origin, email) {
-		// window.location.href = "?goto=oidplus%3Ainvite_ra%24"+encodeURIComponent(email)+"%24"+encodeURIComponent(origin);
-		openOidInPanel('oidplus:invite_ra$'+email+'$'+origin, false);
 	},
 
 	frdl_weid_change: function() {

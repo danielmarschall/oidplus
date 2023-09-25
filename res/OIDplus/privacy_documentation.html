@@ -20,7 +20,7 @@
 
 <body>
 	<h1>Procedural documentation related to privacy</h1>
-	<p><em>Revision: 18 June 2023</em></p>
+	<p><em>Revision: 25 September 2023</em></p>
 	<p><strong><em>Important</em></strong><em>: This document is written by ViaThinkSoft (the developer of the software "OIDplus") and gives general information on how OIDplus works regarding privacy-related topics. Since OIDplus is a web application that can be downloaded, installed, and operated by anyone on their server systems, this document DOES NOT describe how the owners/administrators of this particular installation of OIDplus are handling your data. Therefore, the owner of this system should provide an additional/individual privacy statement.</em></p>
 
 	<a id="terminology"></a><h2>Parties / Terminology</h2>
@@ -204,8 +204,8 @@
 
 	<a id="ra_invitation"></a><h2>Invitation of Registration Authorities</h2>
 	<p>When an OID is created by a Registration Authority or by the system administrator, the owner of the OID will be defined by an email address (which will be shown publicly). Therefore, it is possible to own an OID, even if you are not registered in the OIDplus system.</p>
-	<p>When the OID is created and the Registration Authority with such an email address does not exist	in the OIDplus system, the creator will be asked if they want to send an invitation. If they agree, an email will be sent to this email address, allowing them to click a link to register to the OIDplus system, so that they can add more contact data as well as be able to delegate and edit OID information.</p>
-	<p>Currently, a Registration Authority cannot register themselves using the regular login method. (They can register themselves if they are using some alternative login methods as described below). Using the regular login method, they need an invitation from the system administrator or their superior Registration Authority to be able to register to the OIDplus system. (Note: To resend an invitation, the system administrator or superior Registration Authority needs to click "Update" at the OID delegation table, so that they are asked again to send the invitation).</p>
+	<p>When the OID is created and the Registration Authority with such an email address does not exist	in the OIDplus system, the creator can instruct the system to send an invitation. In that case, an email will be sent to this email address, allowing them to click a link to register to the OIDplus system, so that they can add more contact data as well as be able to delegate and edit OID information.</p>
+	<p>Currently, a Registration Authority cannot register themselves using the regular login method. (They can register themselves if they are using some alternative login methods as described below). Using the regular login method, they need an invitation from the system administrator or their superior Registration Authority to be able to register to the OIDplus system. (Note: To resend an invitation, the system administrator or superior Registration Authority needs to open your OID and click "Invite RA to join OIDplus" in order to send you an email).</p>
 	<p>In addition to the invitation system, the system administrator can create Registration Authority accounts without email address verification.</p>
 
 	<a id="oidinfo_publishing"></a><h2>Publishing RAs/OIDs to oid-info.com</h2>

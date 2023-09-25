@@ -68,7 +68,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 				if (empty($out['title'])) {
 					$out['title'] = $antispam_email;
 				}
-				$out['text'] .= $this->showRAInfo($ra_email);
+				$out['text'] .= $this->showRAInfo($ra_email, null);
 				$out['text'] .= '<br><br>';
 			}
 
@@ -171,10 +171,11 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 
 	/**
 	 * @param string|null $email
+	 * @param OIDplusObject|null $oid
 	 * @return string
 	 * @throws OIDplusException
 	 */
-	public static function showRAInfo(/*?string*/ $email): string {
+	public static function showRAInfo(/*?string*/ $email, OIDplusObject $oid=null): string {
 		$out = '';
 
 		if (empty($email)) {
@@ -188,8 +189,11 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 			if (OIDplus::authUtils()->isAdminLoggedIn()) {
 				$createRAPlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.3.130'); // OIDplusPageAdminCreateRa
 				if (!is_null($createRAPlugin)) {
-					$out .= '<p><a '.OIDplus::gui()->link('oidplus:create_ra$'.$email).'>'._L('Create RA manually').'</a></p>';
+					$out .= '<p><a class="btn btn-success" '.OIDplus::gui()->link('oidplus:create_ra$'.$email).'>'._L('Create RA manually').'</a></p>';
 				}
+			}
+			if (!is_null($oid) && $oid->userHasParentalWriteRights()) {
+				$out .= '<p><a class="btn btn-success" '.OIDplus::gui()->link('oidplus:invite_ra$'.$email.'$'.$oid->nodeId(true)).'>'._L('Invite RA to join OIDplus').'</a></p>';
 			}
 
 		} else {

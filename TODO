@@ -68,7 +68,6 @@ Ideas by Simon T.:
 - a possibility to upload & assign custom icons to objects (both in the tree & in the page)
 - a possibility to move objects/nodes from one hierarchy level to another (for now, I have to reconstruct them)
 - 2FA TOTP support (+backup codes) - good for public instances, like FreeOID (Yes, I'm that one person who always asks for true totp 2FA everywhere xD )
-- a setting for a permanent choice between 'Always switch to newly created object' / 'Never switch' / 'Ask user if they want to switch'
 - a possibility to 'construct' my own object types in UI (1: specify list of their fields and 2: choose "oid-like/forward" com.example.api or "domain-like/reverse" api.example.com naming scheme), so they would appear as the whole new type
 
 Recently added TODO entries:
@@ -363,7 +362,7 @@ QUESTIONS
 - should the collation be case sensitive or case insensitive? For Java package names, it should be case senstivie
 - use word "guid" or "uuid"?
 - should "OID updated" be split into two categories "updated by superior" (e.g. identifiers) and "updated by owner" (description etc)?
-- Don't renew "updated" field if you just click "Update" but didn't change anything (e.g. because you just wanted to send an invitation again)
+- Don't renew "updated" field if you just click "Update" but didn't change anything
 - "Documents" section: Can base of URLs/images inside the HTML be changed automatically?
 
 PRIVACY
