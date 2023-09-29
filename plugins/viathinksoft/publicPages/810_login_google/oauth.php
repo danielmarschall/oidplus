@@ -47,8 +47,8 @@ $ary = explode('|', $_GET['state'], 2);
 if (count($ary) !== 2) {
 	die(_L('Invalid State'));
 }
-$redirect_uri = $ary[0]; // Attention: Comes from the client. The OAuth2 server MUST verify it! (Google and Facebook does this)
-$check_csrf = $ary[1];
+$redirect_uri = $ary[0] ?? ''; // Attention: Comes from the client. The OAuth2 server MUST verify it! (Google and Facebook does this)
+$check_csrf = $ary[1] ?? '';
 
 if ($check_csrf != $_COOKIE['csrf_token_weak']) {
 	die(_L('Missing or wrong CSRF Token'));
