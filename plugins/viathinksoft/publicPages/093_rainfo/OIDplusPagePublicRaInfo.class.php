@@ -191,8 +191,8 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 				if (!is_null($createRAPlugin)) {
 					$out .= '<p><a class="btn btn-success" '.OIDplus::gui()->link('oidplus:create_ra$'.$email).'>'._L('Create RA manually').'</a></p>';
 				}
-			}
-			if (!is_null($oid) && $oid->userHasParentalWriteRights()) {
+				$out .= '<p><a class="btn btn-success" '.OIDplus::gui()->link('oidplus:invite_ra$'.$email).'>'._L('Invite RA to join OIDplus').'</a></p>';
+			}  else if (!is_null($oid) && $oid->userHasParentalWriteRights()) {
 				$out .= '<p><a class="btn btn-success" '.OIDplus::gui()->link('oidplus:invite_ra$'.$email.'$'.$oid->nodeId(true)).'>'._L('Invite RA to join OIDplus').'</a></p>';
 			}
 
