@@ -773,12 +773,12 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @param string $id
+	 * @param string $search_id
 	 * @return OIDplusObject|false
 	 * @throws OIDplusException
 	 */
-	public static function findFitting(string $id) {
-		$obj = OIDplusObject::parse($id);
+	public static function findFitting(string $search_id) {
+		$obj = OIDplusObject::parse($search_id);
 		if (!$obj) return false; // e.g. if ObjectType plugin is disabled
 
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {

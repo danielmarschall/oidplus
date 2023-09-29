@@ -182,9 +182,9 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 						$obj = OIDplusObject::parse($query)->getParent(); // For objects, we assume that they are parents of each other
 						if ($obj) {
 							$distance = $obj->distance($query);
-							assert(OIDplusObject::findFitting($query));
 
 							$query = $obj->nodeId();
+							assert(OIDplusObject::findFitting($query));
 						}
 
 						if ($distance > 0) {
