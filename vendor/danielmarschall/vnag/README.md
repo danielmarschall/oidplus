@@ -57,3 +57,12 @@ Use-case diagrams
 2. [Extended case](https://raw.githubusercontent.com/danielmarschall/vnag/master/doc/vnag_model_2.png "Extended case"): Nagios/CLI checks an object, and a user can additionally view the status in a web-browser
 3. [More extended case](https://raw.githubusercontent.com/danielmarschall/vnag/master/doc/vnag_model_3.png "More extended case"): Nagios/CLI checks an object, a user can additionally view the status in a web-browser, and another Nagios/CLI instance can remotely access the output of the primary Nagios/CLI
 
+Create your own plugins
+-----------------------
+
+To create your own plugins, you can look at the source codes of the existing plugins
+to get inspiration and use them as templates.
+
+Also, a small documentation is found at the beginning of the file **framework/vnag_framework.inc.php**.
+
+If you have created useful plugins, we would be happy if you could share them with us!

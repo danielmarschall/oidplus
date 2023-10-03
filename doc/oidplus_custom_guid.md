@@ -12,7 +12,7 @@ The general structure of these UUIDs is:
 |     |       | 31 bits | OIDplus SystemID (lower 31 bits of the SHA1 hash of the Public Key in raw binary representation)
 |  2  | 4-5   | 16 bits | Creation timestamp: Days since 01.01.1970 00:00 GMT; 0 if unknown or not applicable. Max possible: 0xFFFF = 06 June 2149
 |  3  | 6-7   | 4 bits  | UUID Version, must be 0x8 (Custom UUID)
-|     |       | 12 bits | Reserved, must be 0x0000
+|     |       | 12 bits | Reserved, must be 0x000
 |  4  | 8-9   | 2 bits  | UUID Variant, must be 0b10 (RFC 4122)
 |     |       | 14 bits | Namespace
 |  5  | 10-15 | 48 bits | Data as defined by the namespace
@@ -38,7 +38,7 @@ It contains the information as follows:
 |-----|-------------------|------------------|----------------|
 |  1  | System ID         | 0x6E932DD7       | SHA1(PubKey) & 0x7FFF.FFFF = 1855139287
 |  2  | Timestamp         | 0x0000           | Unknown
-|  3  | Reserved+Version  | 0x8000           | 0x0000 \| 0x8000
+|  3  | Reserved+Version  | 0x8000           | 0x000 \| 0x8000
 |  4  | Namespace+Variant | 0x8000           | 0x0000 \| 0x8000
 |  5  | Data              | 0x1890AFD80709   | SHA1('') & 0xFFFF.FFFF.FFFF
 
@@ -73,7 +73,7 @@ It contains the information as follows:
 |-----|-------------------|----------------|--------------------------------------------|
 |  1  | System ID         | 0x6E932DD7     | SHA1(PubKey) & 0x7FFF.FFFF = 1855139287    
 |  2  | Timestamp         | 0x0000         | Unknown                                    
-|  3  | Reserved+Version  | 0x8000         | 0x0000 \| 0x8000                           
+|  3  | Reserved+Version  | 0x8000         | 0x000 \| 0x8000                            
 |  4  | Namespace+Variant | 0x8001         | 0x0001 \| 0x8000                           
 |  5  | Data              | 0x2938F50E857E | SHA1('joe@example.com') & 0xFFFF.FFFF.FFFF 
 
@@ -102,7 +102,7 @@ It contains the information as follows:
 |-----|-------------------|----------------|----------------------------------------------|
 |  1  | System ID         | 0x6E932DD7     | SHA1(PubKey) & 0x7FFF.FFFF = 1855139287      
 |  2  | Timestamp         | 0x458C         | 30 September 2018 (17804 days since 1 January 1970)                                      
-|  3  | Reserved+Version  | 0x8000         | 0x0000 \| 0x8000                             
+|  3  | Reserved+Version  | 0x8000         | 0x000 \| 0x8000                              
 |  4  | Namespace+Variant | 0x8002         | 0x0002 \| 0x8000                             
 |  5  | Data              | 0x0000000004D2 | Sequence 1234 
 
@@ -130,7 +130,7 @@ It contains the information as follows:
 |-----|-------------------|----------------|--------------------------------------------|
 |  1  | System ID         | 0x6E932DD7     | SHA1(PubKey) & 0x7FFF.FFFF = 1855139287    
 |  2  | Timestamp         | 0x0000         | Unknown                                    
-|  3  | Reserved+Version  | 0x8000         | 0x0000 \| 0x8000                           
+|  3  | Reserved+Version  | 0x8000         | 0x000 \| 0x8000                            
 |  4  | Namespace+Variant | 0x8003         | 0x0003 \| 0x8000                           
 |  5  | Data              | 0xF14DDA42862A | SHA1('max_ra_invite_time') & 0xFFFF.FFFF.FFFF 
 
@@ -156,10 +156,10 @@ It contains the information as follows:
 |-------|-------------------|------------|-----------------------------------------|
 | 1     | System ID         | 0x6E932DD7 | SHA1(PubKey) & 0x7FFF.FFFF = 1855139287 
 | 2     | Timestamp         | 0x0000     | Unknown                                 
-| 3     | Reserved+Version  | 0x8000     | 0x0000 \| 0x8000                        
+| 3     | Reserved+Version  | 0x8000     | 0x000 \| 0x8000                         
 | 4     | Namespace+Variant | 0x8004     | 0x0004 \| 0x8000                        
-| 5     | Data (High)       | 0x208DED   | SHA1('2.999') & 0xFF.FFFF        
-|       | Data (Low)        | 0x8A3F8F   | SHA1('example') & 0xFF.FFFF      
+| 5     | Data (High)       | 0x208DED   | SHA1('2.999') & 0xFF.FFFF               
+|       | Data (Low)        | 0x8A3F8F   | SHA1('example') & 0xFF.FFFF             
 
 
 ## OIDplus OID-IRI Unicode Label UUID (Block 4 = 0x8005)
@@ -183,9 +183,9 @@ It contains the information as follows:
 |-------|-------------------|------------|-------------------------------------------------|
 | 1     | System ID         | 0x6E932DD7 | SHA1(PubKey) & 0x7FFF.FFFF = 1855139287         
 | 2     | Timestamp         | 0x0000     | Unknown                                         
-| 3     | Reserved+Version  | 0x8000     | 0x0000 \| 0x8000                                
+| 3     | Reserved+Version  | 0x8000     | 0x000 \| 0x8000                                 
 | 4     | Namespace+Variant | 0x8005     | 0x0005 \| 0x8000                                
-| 5     | Data (High)       | 0x208DED   | SHA1('2.999') & 0xFF.FFFF                
+| 5     | Data (High)       | 0x208DED   | SHA1('2.999') & 0xFF.FFFF                       
 |       | Data (Low)        | 0xAF9A96   | SHA1(utf8_encode('Example')) & 0xFF.FFFF 
 
 
@@ -218,7 +218,7 @@ It contains the information as follows:
 |-----|-------------------|----------------|----------------|
 |  1  | System ID         | 0x6E932DD7     | SHA1(PubKey) & 0x7FFF.FFFF = 1855139287
 |  2  | Timestamp         | 0x458C         | 30 September 2018 (17804 days since 1 January 1970)
-|  3  | Reserved+Version  | 0x8000         | 0x0000 \| 0x8000
+|  3  | Reserved+Version  | 0x8000         | 0x000 \| 0x8000
 |  4  | Namespace+Variant | 0xB9E9         | SHA1('1.3.6.1.4.1.37476.2.5.2.4.8.6') & 0x3FFF \| 0x8000
 |  5  | Data              | 0xC1E3894D1105 | SHA1('com.example') & 0xFFFF.FFFF.FFFF
 

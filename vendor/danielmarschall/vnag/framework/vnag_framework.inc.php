@@ -1,26 +1,26 @@
 <?php /* <ViaThinkSoftSignature>
-BEVRboq5hkwbOT0Gkx96NQV+AryItRRkSW10PEkTSbC55Oe8geeNWyFnN0b2BZmYw
-Dbrw/pEuTs1J8Dyu0yEzZBu0JtxVRdgOtJJSMM9PM/FV+holxrFR8UALRJBL3Masp
-Dp/yCpP+R/X0osOMz+rKW+T3RfnwM4hQ+QyFlXy9wEYFhxUBVeoJZFvcFGGnWR8DT
-bQqKGdD+VIfQlX9FO0r93Z2xJVfGMZ+QSzh0+8yCGPJqI6yAS4YWjnygH+AxYuA/t
-R4hUG2bfbsQiEa2Ix8GlmvfCQ5mWhVgYkzSom1nAorhDnTZrXXhHbaMPIeMXyBxky
-bT6JGZV2VjWg6UqDZTPMlqAJ+QAQ+W9rJBCwtBIGUzokqYtAf+cW0+GRQSgz7G8NU
-hnKqzbsrn+ogfDA4PRP8P6IZI4qY9XcsMm6Kxw3Aw9wQ6qtkQwhu2ixrLUPjIYN4Y
-KFJuV4FIv2J5gHEtKclx1SrqewOoXcJ4kicrBT8rK4f7jXHjGua5FMROIB/Ihny73
-DxPewkiV5eZSQouasg5du+3HGswsUfhjHyVn5Q3TH0CL/qnTM+NMchB4PXtsfPDUK
-S7F4c4yZ1kCdEtoELPx2IwM4WaLEn0bXo4ZxOmbYd1WBzFkpkFO0wRNpNBMU50NVd
-HGygyWSfwzfE947fP3sIZ67fOKyJQ07AjS7JamjfLRFHF045CfKQsrsSdMBmUfCpY
-Kd+UJK/UBPow2cRS01mbJrsHF/DZlykRPzNLjgqioSPxoFK1q2TEQ786hh4hsmbWo
-SVY6jA/6ONoNI94Telzwe73xMe+lmGBUV7zDLe89Mlp9GndlhZTLRti+KY9yoVArg
-xUnLBKHVhvXFzOtYtwY4lhtTgoqL9mx4lqzPQaaRRZ3rqLwE8uFXKAuwNrwC5PAIs
-+x8DQ2KM5mYPo3jqyBJoW4fipm9NULuiVxC8i6UP1B4/5bSdK3OFUB5lLMXYNzyfI
-9r70N4t9tnSS08CUQwxZlBUq2pPZqYyJXYRrLuuJcsuZNaun0pLcncp2aKOB6MBPd
-Y6GgQt4QBZloPZFmF+Uw6AXs6KhiOc44VPzJLm+cwjKWYo+CIR112hBieVTRGDCPH
-51+e5dJVhqV0ZyOR7E4B4IPa6lq6Up2Ei5+8xK3Mi1lH7iGBydx8AoQ4w0Nn95w5o
-nk6SLdi5k7713yxkqjZ3zsfYGJwQrSE2dAjnoDFeIQtJjClx2119Q3eflOYj5Ihke
-ZkdRgRWLKod00NIy3rLCJQdSt7AFTXJwRPJzh15vuLGELAPC2mW6Rn+fqRY+pKmd6
-8oQEQw46/GHOyTyMHfJKqIfxlVOVlwAdKoWjTnQ8JtP4aBD3LQkfmZ89Uw7lujBir
-w==
+oaCDAKN7XIqonGgZV3naE1MsJxh3TFaZyTKTdLYx8hr38k4cg/z79ACGiN0STlaW+
+LIDKKalDDRBbOk3Obk/Ld2TVSyEpu91BL1BD1RCotns/cqfqCW+4L5tLxGfRvb/qf
+2s68MrVY4FdhFDfMX8j4XKnwcGCAKp8QQuiwZwHNiGnHzbfTU0dXIAn1LXMjqBQ9T
+cfkT7rqiQ2uG7PTgWWkKWuw5+06WO5vyF+aPtXRNGVJjz93FwBzR3QFl2PLzMHEcc
+M38HFs25OYrBSBHS1HzPxt7gDE7hLZYZzSHxfodZq9dwCqqmsEx5aVkDx3tY6flWR
+I8jTlQmQUj8EEFv1UJzp043LIt0+jRdWqisVXBjmqzhB0i7ipr/LJezcTphodnhN3
+eaRhZc4Hq3DblBTuui6GALJk/S+RX2VUSdVEmE2OUd7S3BL/Hb9WWY48N1RnI2hs7
+FI17sRDc0O7pHtQ/EU3Z186kptI/kmPYfL2MygIBq00Eu0SK/g+4zWzI0aazKbWl+
+lQUvE1xe8FIAn2nsICvrYNnDo8qhwQ2SMsL8/fAraNcJSR7QCSzVYuGFPivzdMkc7
+NkRvVv9N9llLUov0NF5DsZEacgJiZcCgQk1wEwQB2xBdKcYU8jKoX0D94dkEYU7ua
+ED2Nqon8PsQx4IAlsytyvhvYf7BsHJh2RTEZDZLLBs6vIgGLPdMkf/++n8jS5UwHU
+8hYrxVGbHCAaZK+YLMwqztO6GoK5lvT+YYXXjTiuGTLOkGcfnW6+NMZAD65KavESG
+7hG9p68HXRJOweOM2KeCQ60+kG51uEA5po1JHrXC5JLwDXlns9HjoSpjJhlQ44f+S
+N4whZlpOOYOF69qlVZJkVQYzMzwc+TgcmErOdZyfXkQivI9L3ajTZV/849Csc7dnH
+ks17XdTf0BlXes5sarBU31FLmM40mmnzNWhrDF7f0+hH5VOK2Jge2keq2DlBpIlOx
+zkXs8XjzJEE09O0TMqN+zOHupJRV73d7y5RTnnQFJ+NRZdeXo3AwBWlNkUQIGDJZb
+bTjwv6utl1djL2HYgownc/aEJo4pWUuXoNRCRwxCKfYOPTAzLh7YvLMQ6aeMJUmYG
+X6X1rqMrFXlCECcXFH8UKD3ToCmLDEv9GmkkBvRu0wJuKr2ecqFt5qMKyXH+DMqxz
+xAcmtc4EfTDRgpQoPqzfWHvF7dBTt1UD2mC2YKuTcsU3H4huzU3L3DlPFdo/kWxGw
+P9qHSDMANNVXkPPm9OL+MUq0f42uaVBZY7ylpvvnJyQYTj9Uk/tbsFqIQYUcESoO/
+UHE2JPHs7GI7ByjsYdnIDRGmvREGbPrGCMx0VSQtN54Cc+FjWdClfZWEXznOOZRV9
+Q==
 </ViaThinkSoftSignature> */ ?>
 <?php
 
@@ -278,8 +278,8 @@ Guidelines:
 	  Reason: We believe that this guideline is contraproductive.
 	          Nagios plugins usually run as user 'nagios'. It is the task of the system administrator
 	          to ensure that the user 'nagios' must not read/write to files which are not intended
-	          for access by the Nagios service. Instead, symlinks are useful for several tasks.
-	          See also http://stackoverflow.com/questions/27112949/nagios-plugins-why-not-following-symlinks
+	          for access by the Nagios service. Symlinks, on the other hand, are useful for several tasks.
+	          See also https://stackoverflow.com/questions/27112949/nagios-plugins-why-not-following-symlinks
 
 VNag over HTTP:
 
@@ -347,7 +347,7 @@ function _empty($x) {
 }
 
 abstract class VNag {
-	/*public*/ const VNAG_VERSION = '2022-12-18';
+	/*public*/ const VNAG_VERSION = '2023-09-11';
 
 	// Status 0..3 for STATUSMODEL_SERVICE (the default status model):
 	# The guideline states: "Higher-level errors (such as name resolution errors, socket timeouts, etc) are outside of the control of plugins and should generally NOT be reported as UNKNOWN states."

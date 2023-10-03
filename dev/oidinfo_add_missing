@@ -21,6 +21,7 @@
 use ViaThinkSoft\OIDplus\OIDplus;
 
 require_once __DIR__ . '/../includes/oidplus.inc.php';
+require_once __DIR__ . '/ft_get_oid_data.inc.php';
 
 OIDplus::init(false);
 if (!OIDplus::baseConfig()->exists('OIDINFO_API_URL')) {
@@ -117,21 +118,6 @@ function add_oid(string $oid, string $root=DESIRED_ROOT) {
 
 	sql_execute("insert into ###objects (id, parent, title, description, ra_email, created, updated) values (?, ?, ?, ?, ?, ?, ?)",
 		array("oid:$oid", "oid:$parent", $title, $description, $ra_email, $created, $updated));
-}
-
-/**
- * @param string $oid
- * @return false|array
- */
-function ft_get_oid_data(string $oid) {
-	$url = OIDplus::baseConfig()->getValue('OIDINFO_API_URL') . '&oid='.urlencode($oid);
-	$cont_json = @file_get_contents($url);
-	if (!$cont_json) {
-		sleep(5);
-                $cont_json = @file_get_contents($url);
-                if (!$cont_json) return false;
-	}
-	return json_decode($cont_json,true);
 }
 
 /**
