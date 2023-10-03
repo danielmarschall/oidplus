@@ -28,6 +28,7 @@
 use ViaThinkSoft\OIDplus\OIDplus;
 
 require_once __DIR__ . '/../includes/oidplus.inc.php';
+require_once __DIR__ . '/ft_get_oid_data.inc.php';
 
 OIDplus::init(false);
 if (!OIDplus::baseConfig()->exists('OIDINFO_API_URL')) {
@@ -229,18 +230,3 @@ foreach ($output as $oid => $data) {
 	echo "\n";
 }
 echo '-- Generator "generate_wellknown_other_sqlite" checksum '.dechex(crc32($check_sum))."\n";
-
-# ---
-
-function ft_get_oid_data($oid) {
-	$url = OIDplus::baseConfig()->getValue('OIDINFO_API_URL') . '&oid='.urlencode($oid);
-	$cont_json = @file_get_contents($url);
-	if (!$cont_json) {
-		sleep(5);
-		$cont_json = @file_get_contents($url);
-		if (!$cont_json) return false;
-	}
-	$data = json_decode($cont_json,true);
-
-	return $data;
-}

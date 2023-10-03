@@ -84,7 +84,7 @@
         'danielmarschall/php_utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'c8561e86a5233d3c93fb4520922666ee48ff615c',
+            'reference' => '06a97168b4b7a9726581decf7d75dc5b077b71a6',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/php_utils',
             'aliases' => array(
@@ -106,7 +106,7 @@
         'danielmarschall/vnag' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '5cf9156274c2c9f51d4a6c054cca0852a71952a6',
+            'reference' => '672c22e9a02559529e8213e898e1115798969ea1',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/vnag',
             'aliases' => array(

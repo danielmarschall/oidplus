@@ -14,12 +14,12 @@ danielmarschall/oidconverter     9999999-dev d9eb98e Apache-2.0
 danielmarschall/oidconverter     dev-master d9eb98e  Apache-2.0            
 danielmarschall/php-sha3         9999999-dev 5605bd5 MIT                   
 danielmarschall/php-sha3         dev-master 5605bd5  MIT                   
-danielmarschall/php_utils        9999999-dev c8561e8 Apache-2.0            
-danielmarschall/php_utils        dev-master c8561e8  Apache-2.0            
+danielmarschall/php_utils        9999999-dev 06a9716 Apache-2.0            
+danielmarschall/php_utils        dev-master 06a9716  Apache-2.0            
 danielmarschall/uuid_mac_utils   9999999-dev ba81df1 Apache-2.0            
 danielmarschall/uuid_mac_utils   dev-master ba81df1  Apache-2.0            
-danielmarschall/vnag             9999999-dev 5cf9156 Apache-2.0            
-danielmarschall/vnag             dev-master 5cf9156  Apache-2.0            
+danielmarschall/vnag             9999999-dev 672c22e Apache-2.0            
+danielmarschall/vnag             dev-master 672c22e  Apache-2.0            
 dcodeio/bcrypt.js                master master       BSD-3-Clause, MIT     
 emn178/js-sha3                   master master       MIT                   
 firebase/php-jwt                 v5.5.1              BSD-3-Clause          
