@@ -155,27 +155,36 @@ class OIDplusDomain extends OIDplusObject {
 		$dns = $this->nodeId(false);
 		$punycode = Punycode::encode($dns);
 
-		// - common (www.example.com) <== we have this nateively
+		// More informatin about the three formats, see RFC 8499
+
+		// - common (www.example.com) <== we have this natively
 		if ($dns != $punycode) {
-			$tmp = _L('Common notation (IDN)');
+			$tmp = _L('Common display (IDN)');
 			$tech_info[$tmp] = $dns;
-			$tmp = _L('Common notation (Punycode)');
+			$tmp = _L('Common display (Punycode)');
 			$tech_info[$tmp] = $punycode;
 		} else {
-			$tmp = _L('Common notation');
+			$tmp = _L('Common display');
 			$tech_info[$tmp] = $punycode;
 		}
 
 		// - presentation (www.example.com.)
-		$tmp = _L('Presentation notation');
+		$tmp = _L('Presentation format');
 		$tech_info[$tmp] = $punycode.'.';
 
-		// - wire format (3www7example3com0)
-		$wireformat = '';
+		// - wire format (3www7example3com0, but actually, the numbers are octets (binary), not decimal)
+		$bytes = [];
 		$ary = explode('.', $punycode.'.');
 		foreach ($ary as $a) {
-			$wireformat .= strlen($a).$a;
+			$bytes[] = strlen($a);
+			for ($i=0; $i<strlen($a); $i++) {
+				$bytes[] = ord($a[$i]);
+			}
 		}
+		$wireformat = c_literal($bytes);
+		# TODO: am besten farbmarkierung innerhalb c_literal_machen ? mit <abbr> und dann <abbr> irgendwie behandeln?
+		$wireformat = preg_replace('@(\\\\\\d{3})@i', '<span class="dns_wireformat_specialhexchar">\\1</span>', $wireformat);
+		$wireformat = preg_replace('@(\\\\x[0-9A-Fa-f]{2})@i', '<span class="dns_wireformat_specialhexchar">\\1</span>', $wireformat);
 		$tmp = _L('Wire format');
 		$tech_info[$tmp] = $wireformat;
 
@@ -293,9 +302,10 @@ class OIDplusDomain extends OIDplusObject {
 		$ids = parent::getAltIds();
 
 		// Note: The payload for the namebased UUID can be any notation:
-		// - common (www.example.com) <== we have this
-		// - presentation (www.example.com.)
-		// - wire format (3www7example3com0)
+		// - common display (www.example.com) <== we use this
+		// - presentation format (www.example.com.)
+		// - wire format format (3www7example3com0, actually contains octets, not decimals!)
+		// More informatin about the three formats, see RFC 8499
 		$ids[] = new OIDplusAltId('guid', gen_uuid_md5_namebased(UUID_NAMEBASED_NS_DNS, $this->nodeId(false)), _L('Name based version 3 / MD5 UUID with namespace %1','UUID_NAMEBASED_NS_DNS'));
 		$ids[] = new OIDplusAltId('guid', gen_uuid_sha1_namebased(UUID_NAMEBASED_NS_DNS, $this->nodeId(false)), _L('Name based version 5 / SHA1 UUID with namespace %1','UUID_NAMEBASED_NS_DNS'));
 

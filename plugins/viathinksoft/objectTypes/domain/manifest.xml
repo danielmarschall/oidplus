@@ -18,5 +18,9 @@
 	<php>
 		<mainclass>ViaThinkSoft\OIDplus\OIDplusObjectTypePluginDomain</mainclass>
 	</php>
+
+	<css>
+		<file>OIDplusDomain.css</file>
+	</css>
 	
 </manifest>
