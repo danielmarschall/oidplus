@@ -26,6 +26,10 @@ if [ -d ".svn" ]; then
 	mv .svn _svn
 fi
 
+# For some reason, sometimes composer downgrades packages for now reason.
+# Clearing the cache helps!
+composer clear-cache
+
 # Remove vendor and composer.lock, so we can download everything again
 # (We need to receive everything again, because we had to delete the .git
 # .svn files and therefore we cannot do a simple "svn update" delta update anymore)
