@@ -95,7 +95,7 @@
         'danielmarschall/uuid_mac_utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'ba81df1a9ff2b883ba28741abe8fa147061d424e',
+            'reference' => '4a4fbab31b474f8025aa213641e99b9354192086',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/uuid_mac_utils',
             'aliases' => array(
@@ -189,7 +189,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => 'c5b4d08669b87c89bf14af74bdee14d5aa997e03',
+            'reference' => '967210fb469c1cb335900dda9092e4594bdf12ea',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),
@@ -211,6 +211,17 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../spamspan/spamspan',
             'aliases' => array(),
+            'dev_requirement' => false,
+        ),
+        'spomky-labs/php-punycode' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => 'd12fe5cd18acedc79851ddc8effd7767d00485f1',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../spomky-labs/php-punycode',
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
             'dev_requirement' => false,
         ),
         'symfony/polyfill-mbstring' => array(

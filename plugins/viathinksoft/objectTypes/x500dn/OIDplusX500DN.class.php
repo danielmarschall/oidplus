@@ -784,6 +784,21 @@ class OIDplusX500DN extends OIDplusObject {
 	}
 
 	/**
+	 * @return OIDplusAltId[]
+	 * @throws OIDplusException
+	 */
+	public function getAltIds(): array {
+		if ($this->isRoot()) return array();
+		$ids = parent::getAltIds();
+
+		// Note: The payload for the namebased UUID can be binary (DER) oder text-based. But there is no definition about the format of the text (LDAP or DCE notation; with or without whitespace, etc.)
+		$ids[] = new OIDplusAltId('guid', gen_uuid_md5_namebased(UUID_NAMEBASED_NS_X500_DN, $this->nodeId(false)), _L('Name based version 3 / MD5 UUID with namespace %1','UUID_NAMEBASED_NS_X500_DN'));
+		$ids[] = new OIDplusAltId('guid', gen_uuid_sha1_namebased(UUID_NAMEBASED_NS_X500_DN, $this->nodeId(false)), _L('Name based version 5 / SHA1 UUID with namespace %1','UUID_NAMEBASED_NS_X500_DN'));
+
+		return $ids;
+	}
+
+	/**
 	 * @return string
 	 */
 	public function getDirectoryName(): string {

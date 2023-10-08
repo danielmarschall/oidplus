@@ -3,7 +3,7 @@
 /*
  * UUID utils for PHP
  * Copyright 2011 - 2023 Daniel Marschall, ViaThinkSoft
- * Version 2023-09-24
+ * Version 2023-10-06
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1323,20 +1323,23 @@ function gen_uuid_v8_namebased($hash_algo, $namespace_uuid, $name) {
 	if (($namespace_uuid ?? '') === '') throw new Exception("Namespace UUID missing");
 	if (!uuid_valid($namespace_uuid)) throw new Exception("Invalid namespace UUID '$namespace_uuid'");
 
-	$uuid1 = uuid_valid($hash_algo) ? hex2bin(str_replace('-','',uuid_canonize($hash_algo))) : '';
+	$uuid1 = uuid_valid($hash_algo) ? hex2bin(str_replace('-','',uuid_canonize($hash_algo))) : ''; // old "hash space" concept (dropped in Internet Draft 12)
 	$uuid2 = hex2bin(str_replace('-','',uuid_canonize($namespace_uuid)));
 	$payload = $uuid1 . $uuid2 . $name;
 
 	if (uuid_valid($hash_algo)) {
-		foreach (get_uuidv8_hash_space_ids() as list($algo,$space,$friendlyName,$author,$available)) {
-			if (uuid_equal($hash_algo,$space)) {
-				if (!$available) {
-					throw new Exception("Algorithm $algo is not available on this system (PHP version too old)");
-				}
-				$hash_algo = $algo;
-				break;
-			}
-		}
+		if (uuid_equal($hash_algo, '59031ca3-fbdb-47fb-9f6c-0f30e2e83145')) $hash_algo = 'sha224';
+		if (uuid_equal($hash_algo, '3fb32780-953c-4464-9cfd-e85dbbe9843d')) $hash_algo = 'sha256';
+		if (uuid_equal($hash_algo, 'e6800581-f333-484b-8778-601ff2b58da8')) $hash_algo = 'sha384';
+		if (uuid_equal($hash_algo, '0fde22f2-e7ba-4fd1-9753-9c2ea88fa3f9')) $hash_algo = 'sha512';
+		if (uuid_equal($hash_algo, '003c2038-c4fe-4b95-a672-0c26c1b79542')) $hash_algo = 'sha512/224';
+		if (uuid_equal($hash_algo, '9475ad00-3769-4c07-9642-5e7383732306')) $hash_algo = 'sha512/256';
+		if (uuid_equal($hash_algo, '9768761f-ac5a-419e-a180-7ca239e8025a')) $hash_algo = 'sha3-224';
+		if (uuid_equal($hash_algo, '2034d66b-4047-4553-8f80-70e593176877')) $hash_algo = 'sha3-256';
+		if (uuid_equal($hash_algo, '872fb339-2636-4bdd-bda6-b6dc2a82b1b3')) $hash_algo = 'sha3-384';
+		if (uuid_equal($hash_algo, 'a4920a5d-a8a6-426c-8d14-a6cafbe64c7b')) $hash_algo = 'sha3-512';
+		if (uuid_equal($hash_algo, '7ea218f6-629a-425f-9f88-7439d63296bb')) $hash_algo = 'shake128';
+		if (uuid_equal($hash_algo, '2e7fc6a4-2919-4edc-b0ba-7d7062ce4f0a')) $hash_algo = 'shake256';
 	}
 
 	if ($hash_algo == 'shake128') $hash = shake128($payload, 16/*min. required bytes*/, false);
@@ -1357,31 +1360,6 @@ function gen_uuid_v8_namebased($hash_algo, $namespace_uuid, $name) {
 	       substr($hash, 12, 4).'-'.
 	       substr($hash, 16, 4).'-'.
 	       substr($hash, 20, 12);
-}
-
-/**
- * Collection of Namebased UUIDv8 Hash Space IDs
- * @return array An array containing tuples of [PHP Algo Name, Hash Space UUID, Human friendly name, Hash Space Author, Available]
- */
-function get_uuidv8_hash_space_ids(): array {
-	$out = array();
-
-	// The following Hash Space UUIDs are defined in draft-ietf-uuidrev-rfc4122bis-11 as Example for Namebased UUIDv8
-	$category = 'Internet Draft 11, Appendix B';
-	$out[] = ['sha224', '59031ca3-fbdb-47fb-9f6c-0f30e2e83145', 'SHA-224', $category, PHP_VERSION_ID >= 70100];
-	$out[] = ['sha256', '3fb32780-953c-4464-9cfd-e85dbbe9843d', 'SHA-256', $category, PHP_VERSION_ID >= 70100];
-	$out[] = ['sha384', 'e6800581-f333-484b-8778-601ff2b58da8', 'SHA-384', $category, PHP_VERSION_ID >= 70100];
-	$out[] = ['sha512', '0fde22f2-e7ba-4fd1-9753-9c2ea88fa3f9', 'SHA-512', $category, PHP_VERSION_ID >= 70100];
-	$out[] = ['sha512/224', '003c2038-c4fe-4b95-a672-0c26c1b79542', 'SHA-512/224', $category, PHP_VERSION_ID >= 70100];
-	$out[] = ['sha512/256', '9475ad00-3769-4c07-9642-5e7383732306', 'SHA-512/256', $category, PHP_VERSION_ID >= 70100];
-	$out[] = ['sha3-224', '9768761f-ac5a-419e-a180-7ca239e8025a', 'SHA3-224', $category, PHP_VERSION_ID >= 70100];
-	$out[] = ['sha3-256', '2034d66b-4047-4553-8f80-70e593176877', 'SHA3-256', $category, PHP_VERSION_ID >= 70100];
-	$out[] = ['sha3-384', '872fb339-2636-4bdd-bda6-b6dc2a82b1b3', 'SHA3-384', $category, PHP_VERSION_ID >= 70100];
-	$out[] = ['sha3-512', 'a4920a5d-a8a6-426c-8d14-a6cafbe64c7b', 'SHA3-512', $category, PHP_VERSION_ID >= 70100];
-	$out[] = ['shake128'/*Currently no PHP core algorithm!*/, '7ea218f6-629a-425f-9f88-7439d63296bb', 'SHAKE128', $category, file_exists(__DIR__.'/SHA3.php')];
-	$out[] = ['shake256'/*Currently no PHP core algorithm!*/, '2e7fc6a4-2919-4edc-b0ba-7d7062ce4f0a', 'SHAKE256', $category, file_exists(__DIR__.'/SHA3.php')];
-
-	return $out;
 }
 
 # --------------------------------------

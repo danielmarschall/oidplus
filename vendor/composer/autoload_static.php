@@ -7,8 +7,8 @@ namespace Composer\Autoload;
 class ComposerStaticInitOidPlusComposer
 {
     public static $files = array (
-        'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
         '0e6d7bf4a5811bfa5cf40c5ccd6fae6a' => __DIR__ . '/..' . '/symfony/polyfill-mbstring/bootstrap.php',
+        'decc78cc4436b1292c6c0d151b19445c' => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib/bootstrap.php',
     );
 
     public static $prefixLengthsPsr4 = array (
@@ -27,6 +27,7 @@ class ComposerStaticInitOidPlusComposer
         'S' => 
         array (
             'Symfony\\Polyfill\\Mbstring\\' => 26,
+            'SpomkyLabs\\' => 11,
         ),
         'P' => 
         array (
@@ -59,6 +60,10 @@ class ComposerStaticInitOidPlusComposer
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
+        ),
+        'SpomkyLabs\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/spomky-labs/php-punycode/src',
         ),
         'ParagonIE\\ConstantTime\\' => 
         array (

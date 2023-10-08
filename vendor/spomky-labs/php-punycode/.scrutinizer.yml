@@ -1,0 +1,21 @@
+before_commands:
+    - "composer install --no-interaction"
+
+checks:
+    php:
+        code_rating: true
+        duplication: true
+
+tools:
+    php_sim: true
+    php_changetracking: true
+    php_cpd: true
+    php_mess_detector: true
+    php_code_sniffer: true
+    php_analyzer: true
+    sensiolabs_security_checker: true
+    php_code_coverage: false
+    php_pdepend:
+        excluded_dirs: [vendor, doc, tests]
+filter:
+    excluded_paths: [vendor/*, doc/*, tests/*]

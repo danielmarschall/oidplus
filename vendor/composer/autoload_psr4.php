@@ -10,6 +10,7 @@ return array(
     'bb\\Sha3\\' => array($vendorDir . '/danielmarschall/php-sha3/src'),
     'ViaThinkSoft\\Glip\\' => array($vendorDir . '/danielmarschall/glip/src'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
+    'SpomkyLabs\\' => array($vendorDir . '/spomky-labs/php-punycode/src'),
     'ParagonIE\\ConstantTime\\' => array($vendorDir . '/paragonie/constant_time_encoding/src'),
     'MatthiasMullie\\PathConverter\\' => array($vendorDir . '/matthiasmullie/path-converter/src'),
     'MatthiasMullie\\Minify\\' => array($vendorDir . '/matthiasmullie/minify/src'),
