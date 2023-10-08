@@ -122,7 +122,8 @@
 		"phpseclib/phpseclib": "~3.0",
 		"script47/bs5-utils": "*",
 		"danielmarschall/glip": "0.1.3.x-dev",
-		"ext-json": "*"
+		"ext-json": "*",
+		"spomky-labs/php-punycode": "dev-master"
 	},
 	"config": {
 		"secure-http": false,

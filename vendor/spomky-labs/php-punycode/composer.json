@@ -1,0 +1,33 @@
+{
+  "name": "spomky-labs/php-punycode",
+  "description": "A Bootstring encoding of Unicode for Internationalized Domain Names in Applications (IDNA)",
+  "keywords": ["IDNA", "punycode"],
+  "homepage": "https://github.com/spomky-labs/php-punycode",
+  "license": "MIT",
+  "authors": [
+    {
+        "name": "Renan Gonçalves",
+        "email": "renan.saddam@gmail.com"
+    },
+    {
+        "name": "Florent Morselli"
+    },
+    {
+        "name": "All contributors",
+        "homepage": "https://github.com/Spomky-Labs/oauth2-server-library/contributors"
+    }
+  ],
+  "autoload": {
+        "psr-4": {
+        "SpomkyLabs\\": "src/"
+    }
+  },
+  "require": {
+        "php": ">=5.4",
+        "symfony/polyfill-mbstring": "^1.1"
+  },
+  "require-dev": {
+        "phpunit/phpunit": "^4.8|^5.0",
+        "satooshi/php-coveralls": "^1.0"
+  }
+}

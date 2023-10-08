@@ -1,7 +1,7 @@
 /**
  * [js-sha3]{@link https://github.com/emn178/js-sha3}
  *
- * @version 0.9.1
+ * @version 0.9.0
  * @author Chen, Yi-Cyuan [emn178@gmail.com]
  * @copyright Chen, Yi-Cyuan 2015-2023
  * @license MIT
@@ -57,31 +57,6 @@
       return typeof obj === 'object' && obj.buffer && obj.buffer.constructor === ArrayBuffer;
     };
   }
-
-  var formatMessage = function (message) {
-    var notString, type = typeof message;
-    if (type !== 'string') {
-      if (type === 'object') {
-        if (message === null) {
-          throw new Error(INPUT_ERROR);
-        } else if (ARRAY_BUFFER && message.constructor === ArrayBuffer) {
-          message = new Uint8Array(message);
-        } else if (!Array.isArray(message)) {
-          if (!ARRAY_BUFFER || !ArrayBuffer.isView(message)) {
-            throw new Error(INPUT_ERROR);
-          }
-        }
-      } else {
-        throw new Error(INPUT_ERROR);
-      }
-      notString = true;
-    }
-    return [message, notString];
-  }
-
-  var empty = function (message) {
-    return formatMessage(message)[0].length === 0;
-  };
 
   var createOutputMethod = function (bits, padding, outputType) {
     return function (message) {
@@ -141,7 +116,7 @@
     var w = CSHAKE_BYTEPAD[bits];
     var method = createCshakeOutputMethod(bits, padding, 'hex');
     method.create = function (outputBits, n, s) {
-      if (empty(n) && empty(s)) {
+      if (!n && !s) {
         return methods['shake' + bits].create(outputBits);
       } else {
         return new Keccak(bits, padding, outputBits).bytepad([n, s], w);
@@ -213,9 +188,23 @@
     if (this.finalized) {
       throw new Error(FINALIZE_ERROR);
     }
-    var result = formatMessage(message);
-    message = result[0];
-    var notString = result[1];
+    var notString, type = typeof message;
+    if (type !== 'string') {
+      if (type === 'object') {
+        if (message === null) {
+          throw new Error(INPUT_ERROR);
+        } else if (ARRAY_BUFFER && message.constructor === ArrayBuffer) {
+          message = new Uint8Array(message);
+        } else if (!Array.isArray(message)) {
+          if (!ARRAY_BUFFER || !ArrayBuffer.isView(message)) {
+            throw new Error(INPUT_ERROR);
+          }
+        }
+      } else {
+        throw new Error(INPUT_ERROR);
+      }
+      notString = true;
+    }
     var blocks = this.blocks, byteCount = this.byteCount, length = message.length,
       blockCount = this.blockCount, index = 0, s = this.s, i, code;
 
@@ -289,9 +278,23 @@
   };
 
   Keccak.prototype.encodeString = function (str) {
-    var result = formatMessage(str);
-    str = result[0];
-    var notString = result[1];
+    var notString, type = typeof str;
+    if (type !== 'string') {
+      if (type === 'object') {
+        if (str === null) {
+          throw new Error(INPUT_ERROR);
+        } else if (ARRAY_BUFFER && str.constructor === ArrayBuffer) {
+          str = new Uint8Array(str);
+        } else if (!Array.isArray(str)) {
+          if (!ARRAY_BUFFER || !ArrayBuffer.isView(str)) {
+            throw new Error(INPUT_ERROR);
+          }
+        }
+      } else {
+        throw new Error(INPUT_ERROR);
+      }
+      notString = true;
+    }
     var bytes = 0, length = str.length;
     if (notString) {
       bytes = length;

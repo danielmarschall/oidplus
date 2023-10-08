@@ -392,18 +392,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/uuid_mac_utils.git",
-                "reference": "ba81df1a9ff2b883ba28741abe8fa147061d424e"
+                "reference": "4a4fbab31b474f8025aa213641e99b9354192086"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/uuid_mac_utils/zipball/ba81df1a9ff2b883ba28741abe8fa147061d424e",
-                "reference": "ba81df1a9ff2b883ba28741abe8fa147061d424e",
+                "url": "https://api.github.com/repos/danielmarschall/uuid_mac_utils/zipball/4a4fbab31b474f8025aa213641e99b9354192086",
+                "reference": "4a4fbab31b474f8025aa213641e99b9354192086",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2023-09-24T21:36:15+00:00",
+            "time": "2023-10-06T21:40:12+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -837,12 +837,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "c5b4d08669b87c89bf14af74bdee14d5aa997e03"
+                "reference": "967210fb469c1cb335900dda9092e4594bdf12ea"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/c5b4d08669b87c89bf14af74bdee14d5aa997e03",
-                "reference": "c5b4d08669b87c89bf14af74bdee14d5aa997e03",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/967210fb469c1cb335900dda9092e4594bdf12ea",
+                "reference": "967210fb469c1cb335900dda9092e4594bdf12ea",
                 "shasum": ""
             },
             "require": {
@@ -860,7 +860,7 @@
                 "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
                 "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
             },
-            "time": "2023-09-25T15:56:47+00:00",
+            "time": "2023-10-07T23:25:46+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -974,6 +974,67 @@
                 "GPL-2.0-only"
             ],
             "install-path": "../spamspan/spamspan"
+        },
+        {
+            "name": "spomky-labs/php-punycode",
+            "version": "dev-master",
+            "version_normalized": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Spomky-Labs/php-punycode.git",
+                "reference": "d12fe5cd18acedc79851ddc8effd7767d00485f1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Spomky-Labs/php-punycode/zipball/d12fe5cd18acedc79851ddc8effd7767d00485f1",
+                "reference": "d12fe5cd18acedc79851ddc8effd7767d00485f1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4",
+                "symfony/polyfill-mbstring": "^1.1"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^4.8|^5.0",
+                "satooshi/php-coveralls": "^1.0"
+            },
+            "time": "2016-04-29T13:09:14+00:00",
+            "default-branch": true,
+            "type": "library",
+            "installation-source": "dist",
+            "autoload": {
+                "psr-4": {
+                    "SpomkyLabs\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Renan Gonçalves",
+                    "email": "renan.saddam@gmail.com"
+                },
+                {
+                    "name": "Florent Morselli"
+                },
+                {
+                    "name": "All contributors",
+                    "homepage": "https://github.com/Spomky-Labs/oauth2-server-library/contributors"
+                }
+            ],
+            "description": "A Bootstring encoding of Unicode for Internationalized Domain Names in Applications (IDNA)",
+            "homepage": "https://github.com/spomky-labs/php-punycode",
+            "keywords": [
+                "idna",
+                "punycode"
+            ],
+            "support": {
+                "issues": "https://github.com/Spomky-Labs/php-punycode/issues",
+                "source": "https://github.com/Spomky-Labs/php-punycode/tree/master"
+            },
+            "install-path": "../spomky-labs/php-punycode"
         },
         {
             "name": "symfony/polyfill-mbstring",
