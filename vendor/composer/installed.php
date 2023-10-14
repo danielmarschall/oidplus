@@ -106,7 +106,7 @@
         'danielmarschall/vnag' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '672c22e9a02559529e8213e898e1115798969ea1',
+            'reference' => '61ec850281a587927dc15a12e75feea5a8085aeb',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/vnag',
             'aliases' => array(

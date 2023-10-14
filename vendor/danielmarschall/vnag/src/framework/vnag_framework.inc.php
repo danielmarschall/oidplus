@@ -1,25 +1,25 @@
 <?php /* <ViaThinkSoftSignature>
-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
+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
 Q==
 </ViaThinkSoftSignature> */ ?>
 <?php
@@ -35,7 +35,7 @@ Q==
 
       Developed by Daniel Marschall             www.viathinksoft.com
       Licensed under the terms of the Apache 2.0 license
-      Revision 2023-09-11
+      Revision 2023-10-13
 
 */
 
@@ -347,7 +347,7 @@ function _empty($x) {
 }
 
 abstract class VNag {
-	/*public*/ const VNAG_VERSION = '2023-09-11';
+	/*public*/ const VNAG_VERSION = '2023-10-13';
 
 	// Status 0..3 for STATUSMODEL_SERVICE (the default status model):
 	# The guideline states: "Higher-level errors (such as name resolution errors, socket timeouts, etc) are outside of the control of plugins and should generally NOT be reported as UNKNOWN states."
@@ -1309,7 +1309,7 @@ abstract class VNag {
 		}
 	}
 
-	// This is not used by the framework itself, but can be useful for plugins
+	// This is not used by the framework itself, but can be useful for a lot of plugins
 	// Note: For icinga2, the path is /var/lib/nagios/.vnag/cache/
 	protected function get_cache_dir() {
 		$homedir = @getenv('HOME');
@@ -1335,6 +1335,28 @@ abstract class VNag {
 		}
 
 		throw new VNagException("Cannot get cache dir"); // TODO: translate and own exception type
+	}
+
+	// This is not used by the framework itself, but can be useful for a lot of plugins
+	protected function url_get_contents($url, $max_cache_time=1*60*60, $context=null) {
+		$cache_file = $this->get_cache_dir().'/'.hash('sha256',$url);
+		if (file_exists($cache_file) && (time()-filemtime($cache_file) < $max_cache_time)) {
+			$cont = @file_get_contents($cache_file);
+			if ($cont === false) throw new Exception("Failed to get contents from $cache_file");
+		} else {
+			$options = array(
+			  'http'=>array(
+			    'method'=>"GET",
+			    'header'=>"Accept-language: en\r\n" .
+			              "User-Agent: Mozilla/5.0 (iPad; U; CPU OS 3_2 like Mac OS X; en-us) AppleWebKit/531.21.10 (KHTML, like Gecko) Version/4.0.4 Mobile/7B334b Safari/531.21.102011-10-16 20:23:10\r\n"
+			  )
+			);
+			if (is_null($context)) $context = stream_context_create($options);
+			$cont = @file_get_contents($url, false, $context);
+			if ($cont === false) throw new Exception("Failed to get contents from $url");
+			file_put_contents($cache_file, $cont);
+		}
+		return $cont;
 	}
 }
 
@@ -2260,57 +2282,6 @@ class VNagHelp {
 		}
 	}
 
-	private static function isCertified($file) {
-		$cont = file_get_contents($file);
-
-		$regex = '@<\?php /\* <ViaThinkSoftSignature>(.+)</ViaThinkSoftSignature> \*/ \?>\n@ismU';
-
-		$m = array();
-		if (!preg_match($regex, $cont, $m)) {
-			return false;
-		}
-		$signature = base64_decode($m[1]);
-
-		$naked = preg_replace($regex, '', $cont);
-		$hash = hash("sha256", $naked.basename($file));
-
-		$public_key = <<<'VTSKEY'
------BEGIN PUBLIC KEY-----
-MIIEIjANBgkqhkiG9w0BAQEFAAOCBA8AMIIECgKCBAEA4UEmad2KHWzfGLcAzbOD
-IhqWyoPA1Cg4zN5YK/CWUiE7sh2CNinIwYqGnIOhZLp54/Iyv3H05QeWJU7kD+jQ
-5JwR8+pqk8ZGBfqlxXUBJ2bZhYIBJZYfilSROa7jgPPrrw0CjdGLmM3wmc8ztQRv
-4GpP7MaKVyVOsRz5xEcpzghWZ+Cl8Nxq1Vo02RkMYOOPA16abxZ65lVM8Vv2EKGf
-/VAVViTFvLWPxggvt1fbJJniC0cwt8gjzFXt6IJJSRlqc1lOO9ZIa/EWDKuHKQ1n
-ENQCqnuVPFDZU3lU20Z+6+EA0YngcvNYi3ucdIvgBd4Yv5FetzuxiOZUoDRfh/3R
-6dCJ8CvRiq0BSZcynTIWNmF3AVsH7vjxZe8kMDbwZNnR0suZ5MfBh6L/s1lCEWlS
-GwmCLc3MnOLxq3JLnfmbVa509YxlUamdSswnvzes28AjnzQ3LQchspP2a8bSXH6/
-qpbwvmV5WiNgwJck04VhaXrRRy3XFSwuk7KU/L4aqadXP26kgDqIYNvPXSa9JyGc
-14zwdmAtn36o8vpXM/A7GhdWqgPLlJbdTdK6IfwpBs8P/JB6y3t6RzAGiEOITdj9
-QUhW+sAoKno0j4WT7s80vWNWz37WoFJcvVLnVEYitnW6DqM+GOt2od3g6WgI6dOa
-MESA4J44Y4x1gXBw/M6F/ZngP4EJoAUG0GbzsaZ6HKLt4pDTZmw8PnNcXrOMYkr/
-N5EliTXil45DCaLkgNJmpdXjNpIvShW4ogq2osw+SQUalnAbW8ddiaOVCdgXkDFq
-gvnl5QSeUrKPF5v+vlnwWar6Rp7iInQpnA+PTSbAlO3Dd9WqbWx+uNoI/kXUlN0O
-a/vi5Uwat2Bz3N+jIpnBqg4+O+SG0z3UCVmT6Leg+kqO/rXbzoVv/DV7E30vTqdo
-wsswdJEM1BI7Wyid6HPwBek+rdv77gUg3W37vUcdfKxsYRcoHriXLHpmENznJcEx
-/nvilw6To1zx2LKmM/p56MQriKkXnqoOBpkpn3PaWyXZKY9xJNTAbcSP3haE7z9p
-PzJw88KI8dnYuFg4yS/AgmVGAUtu3bhDG4qF9URu2ck868zViH996lraYkmFIWJG
-r7h1LImhrwDEJvb/rOW8QvOZBX9H6pcSKs/LQbeoy6HMIOTlny+S15xtiS4t6Ayv
-3m0ry5c0qkl/mgKvGpeRnNlrcr6mb2fzxxGvcuBzi25wgIbRLPgJoqsmeBvW1OLU
-+9DpkNvitEJnPRo86v0VF86aou12Sm8Wb4mtrQ7h3qLIYvw2LN2mYh4WlgrSwPpx
-YvE2+vWapilnnDWoiu2ZmDWa7WW/ihqvX9fmp/qzxQvJmBYIN8dFpgcNLqSx526N
-bwIDAQAB
------END PUBLIC KEY-----
-VTSKEY;
-
-		if (!function_exists('openssl_verify')) return null;
-
-		if (!openssl_verify($hash, $signature, $public_key, OPENSSL_ALGO_SHA256)) {
-			return false;
-		}
-
-		return true;
-	}
-
 	// $version should contain the version, not the program name or copyright.
 	protected $version;
 	public function setVersion($version) {
@@ -2328,14 +2299,6 @@ VTSKEY;
 			$ret = sprintf(VNagLang::$x_version_x, $ret, $ver);
 		}
 		$ret = trim($ret);
-
-		$certified = true;
-		foreach (get_included_files() as $file) {
-			$certified &= self::isCertified($file);
-		}
-		if ($certified) {
-			$ret .= ' (' . VNagLang::$certified . ')';
-		}
 
 		return $ret;
 	}
@@ -2476,7 +2439,6 @@ class VNagLang {
 	// Argument names (help page)
 	static $argname_value = 'value';
 	static $argname_seconds = 'seconds';
-	static $certified = 'Certified by ViaThinkSoft';
 
 	// Exceptions
 	static $query_without_expected_argument = "The argument '%s' is queried, but was not added to the list of expected arguments. Please contact the plugin author.";
