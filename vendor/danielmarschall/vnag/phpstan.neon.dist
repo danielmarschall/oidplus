@@ -6,10 +6,10 @@ parameters:
 	paths:
 		- .
 	excludePaths:
-		analyse:
-			# Symlinks:
-			- plugins/*/vnag_framework.inc.php
-			- plugins_intern/*/vnag_framework.inc.php
+		#analyse:
+		#	# Symlinks:
+		#	- src/plugins/*/vnag_framework.inc.php
+		#	- src/plugins_intern/*/vnag_framework.inc.php
 		analyseAndScan:
 			- _mock
 			- .phpstan.tmp

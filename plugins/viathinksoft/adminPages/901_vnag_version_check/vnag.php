@@ -22,7 +22,7 @@ use ViaThinkSoft\OIDplus\OIDplusException;
 use ViaThinkSoft\OIDplus\OIDplusGui;
 use ViaThinkSoft\OIDplus\OIDplusPageAdminVNagVersionCheck;
 
-include __DIR__ . '/../../../../vendor/danielmarschall/vnag/framework/vnag_framework.inc.php';
+include __DIR__ . '/../../../../vendor/danielmarschall/vnag/src/framework/vnag_framework.inc.php';
 include __DIR__ . '/../../../../includes/oidplus.inc.php';
 
 const OIDPLUS_VNAG_MAX_CACHE_AGE = 60; // seconds (TODO: in base config?)
