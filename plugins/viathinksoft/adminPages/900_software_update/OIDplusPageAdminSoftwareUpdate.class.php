@@ -293,8 +293,36 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 					$out['text'] .= '</div>';
 				} else {
 					if (($installType === 'svn-wc') || ($installType === 'git-wc')) {
+						if ($installType === 'svn-wc') {
+							$shell_diff_cmd = 'svn stat';
+						} else if ($installType === 'git-wc') {
+							$shell_diff_cmd = 'git status -s';
+						} else {
+							$shell_diff_cmd = '';
+						}
+
+						$can_access_shell = true;
+						if ($shell_diff_cmd) {
+							$cout = [];
+							exec("svn stat", $cout, $ec);
+							if ($ec === 0) {
+								// TODO: should this also be shown when there is no update available?
+								if (trim(implode('',$cout)) !== '') {
+									$out['text'] .= '<p><font color="red">'._L('WARNING: There are changes in your working copy which WILL be reverted if you continue!').'</font></p>';
+									$out['text'] .= '<p><font color="red">'._L('Detected changes:').'</font></p>';
+									$out['text'] .= '<p><font color="red"><pre>'.htmlentities(implode("\n",$cout)).'</pre></font></p>';
+								} else {
+									$out['text'] .= '<p><font color="green">'._L('Working copy is clean.').'</font></p>';
+								}
+							} else {
+								$can_access_shell = false;
+							}
+						}
+
 						$out['text'] .= '<p><font color="blue">'._L('Please enter %1 into the SSH shell to update OIDplus to the latest version.','<code>'.$updateCommand.'</code>').'</font></p>';
-						$out['text'] .= '<p>'._L('Alternatively, click this button to execute the command through the web-interface (command execution and write permissions required).').'</p>';
+						if ($can_access_shell) {
+							$out['text'] .= '<p>'._L('Alternatively, click this button to execute the command through the web-interface (command execution and write permissions required).').'</p>';
+						}
 					}
 
 					$out['text'] .= '<p><input type="button" onclick="OIDplusPageAdminSoftwareUpdate.doUpdateOIDplus('.((int)substr($local_installation,4)+1).', '.substr($newest_version,4).')" value="'._L('Update NOW').'"></p>';

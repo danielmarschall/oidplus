@@ -13,10 +13,10 @@ Beside developing normal Nagios/Icinga plugins (PHP will be called via CLI), you
 
 - It is also possible to create websites which only have a machine readable part (i.e. you include your VNag output in your existing website). This machine readable part can be optionally signed and/or encrypted.
 
-Pre-Installed plugins
----------------------
+Included plugins
+----------------
 
-VNag comes with the following plugins pre-installed:
+VNag comes with the following plugins pre-installed (in the bin directory):
 
 - **4images_version**: Checks 4images installations for updates.
 - **aastra_430_voicemail**: Checks Aastra 430 phone system for new voicemails.
@@ -63,6 +63,7 @@ Create your own plugins
 To create your own plugins, you can look at the source codes of the existing plugins
 to get inspiration and use them as templates.
 
-Also, a small documentation is found at the beginning of the file **framework/vnag_framework.inc.php**.
+Also, a small documentation is found in
+[doc/Plugin_Development.md](https://github.com/danielmarschall/vnag/blob/master/doc/Plugin_Development.md).
 
 If you have created useful plugins, we would be happy if you could share them with us!

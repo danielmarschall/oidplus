@@ -106,7 +106,7 @@
         'danielmarschall/vnag' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '61ec850281a587927dc15a12e75feea5a8085aeb',
+            'reference' => 'f354f73264e6d3fd3280ee0a0d546b048868eeba',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/vnag',
             'aliases' => array(
@@ -189,7 +189,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => '967210fb469c1cb335900dda9092e4594bdf12ea',
+            'reference' => '33fa69b2514a61138dd48e7a49f99445711e0ad0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),
@@ -236,7 +236,7 @@
         'tinymce/tinymce' => array(
             'pretty_version' => '5.x-dev',
             'version' => '5.9999999.9999999.9999999-dev',
-            'reference' => 'f078d8eb7de81f20d34b2ae4326870d20e22d4ff',
+            'reference' => 'b9c50833d455adcf5ae89a6da7648ae5d65468df',
             'type' => 'component',
             'install_path' => __DIR__ . '/../tinymce/tinymce',
             'aliases' => array(),

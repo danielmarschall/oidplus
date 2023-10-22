@@ -433,18 +433,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/vnag.git",
-                "reference": "61ec850281a587927dc15a12e75feea5a8085aeb"
+                "reference": "f354f73264e6d3fd3280ee0a0d546b048868eeba"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/vnag/zipball/61ec850281a587927dc15a12e75feea5a8085aeb",
-                "reference": "61ec850281a587927dc15a12e75feea5a8085aeb",
+                "url": "https://api.github.com/repos/danielmarschall/vnag/zipball/f354f73264e6d3fd3280ee0a0d546b048868eeba",
+                "reference": "f354f73264e6d3fd3280ee0a0d546b048868eeba",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2023-10-14T19:44:54+00:00",
+            "time": "2023-10-15T10:14:46+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -837,12 +837,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "967210fb469c1cb335900dda9092e4594bdf12ea"
+                "reference": "33fa69b2514a61138dd48e7a49f99445711e0ad0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/967210fb469c1cb335900dda9092e4594bdf12ea",
-                "reference": "967210fb469c1cb335900dda9092e4594bdf12ea",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/33fa69b2514a61138dd48e7a49f99445711e0ad0",
+                "reference": "33fa69b2514a61138dd48e7a49f99445711e0ad0",
                 "shasum": ""
             },
             "require": {
@@ -860,7 +860,7 @@
                 "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
                 "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
             },
-            "time": "2023-10-07T23:25:46+00:00",
+            "time": "2023-10-21T14:00:39+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -1126,15 +1126,15 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "f078d8eb7de81f20d34b2ae4326870d20e22d4ff"
+                "reference": "b9c50833d455adcf5ae89a6da7648ae5d65468df"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/f078d8eb7de81f20d34b2ae4326870d20e22d4ff",
-                "reference": "f078d8eb7de81f20d34b2ae4326870d20e22d4ff",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/b9c50833d455adcf5ae89a6da7648ae5d65468df",
+                "reference": "b9c50833d455adcf5ae89a6da7648ae5d65468df",
                 "shasum": ""
             },
-            "time": "2022-12-07T03:50:54+00:00",
+            "time": "2023-10-19T03:02:47+00:00",
             "type": "component",
             "extra": {
                 "component": {
@@ -1175,7 +1175,7 @@
                 "wysiwyg"
             ],
             "support": {
-                "source": "https://github.com/tinymce/tinymce-dist/tree/5.10.7"
+                "source": "https://github.com/tinymce/tinymce-dist/tree/5.10.8"
             },
             "install-path": "../tinymce/tinymce"
         },
