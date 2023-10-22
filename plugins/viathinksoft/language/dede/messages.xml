@@ -1470,6 +1470,30 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Common display
+		]]></source>
+		<target><![CDATA[
+		Common display
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Common display (IDN)
+		]]></source>
+		<target><![CDATA[
+		Common display (IDN)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Common display (Punycode)
+		]]></source>
+		<target><![CDATA[
+		Common display (Punycode)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Communication with %1 server failed
 		]]></source>
 		<target><![CDATA[
@@ -2090,6 +2114,14 @@
 		]]></source>
 		<target><![CDATA[
 		Designs
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Detected changes:
+		]]></source>
+		<target><![CDATA[
+		Erkannte Änderungen:
 		]]></target>
 	</message>
 	<message>
@@ -6198,6 +6230,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Presentation format
+		]]></source>
+		<target><![CDATA[
+		Presentation format
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Preview of update %1 &rarr; %2
 		]]></source>
 		<target><![CDATA[
@@ -8670,6 +8710,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		WARNING: There are changes in your working copy which WILL be reverted if you continue!
+		]]></source>
+		<target><![CDATA[
+		ACHTUNG: Es gibt Änderungen an der ARbeitskopie die ENTFERNT werden wenn Sie fortfahren!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		WEID notation
 		]]></source>
 		<target><![CDATA[
@@ -8806,10 +8854,26 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Wire format
+		]]></source>
+		<target><![CDATA[
+		Wire format
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		With the OID Information Protocol (OID-IP), you can query object information in a format that is human-readable and machine-readable.
 		]]></source>
 		<target><![CDATA[
 		Mit dem OID Information Protokoll (OID-IP) können Sie Objekt-Informationen in einem Format abfragen, das sowohl menschenlesbar als auch maschinenlesbar ist.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Working copy is clean.
+		]]></source>
+		<target><![CDATA[
+		Die Arbeitskopie ist sauber.
 		]]></target>
 	</message>
 	<message>

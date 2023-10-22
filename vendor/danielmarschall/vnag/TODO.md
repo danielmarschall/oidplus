@@ -2,7 +2,6 @@
 TODO
 ----
 
-- make proper documentation
 - allow changing automatic help page to describe which individual ranges stand for (is it already possible, by getting the argument object and then changing its help text?)
 - everywhere getter and setter instead of accessing class member variables
 - ipfm monitor: dygraph has MIT license

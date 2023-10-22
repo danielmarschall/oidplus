@@ -68,6 +68,7 @@ remove_vendor_rubbish() {
 	rm -rf $1vendor/danielmarschall/vnag/logos
 	rm -rf $1vendor/danielmarschall/vnag/doc
 	rm -rf $1vendor/danielmarschall/vnag/bin
+	rm -rf $1vendor/danielmarschall/vnag/web
 	rm -rf $1vendor/danielmarschall/vnag/create_conf_symlinks.phps
 	rm -rf $1vendor/danielmarschall/vnag/set_chmod.sh
 	rm -rf $1vendor/danielmarschall/vnag/Makefile
