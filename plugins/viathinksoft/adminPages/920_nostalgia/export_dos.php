@@ -81,7 +81,7 @@ while ($row = $res->fetch_object()) {
 			fill_iri($real_parent, $iri); // well-known OIDs?
 			$title[$real_parent] = '';
 			$description[$real_parent] = '';
-			$res2 = OIDplus::db()->query("select * from ###objects where id = 'oid:$real_parent'");
+			$res2 = OIDplus::db()->query("select * from ###objects where id = ?", ["oid:$real_parent"]);
 			while ($row2 = $res2->fetch_object()) {
 				$title[$real_parent] = vts_utf8_decode($row2->title);
 				$description[$real_parent] = vts_utf8_decode($row2->description);
@@ -192,7 +192,7 @@ OIDplus::invoke_shutdown();
  */
 function fill_asn1(string $oid, array &$asn1) {
 	if (!isset($asn1[$oid])) $asn1[$oid] = array();
-	$res = OIDplus::db()->query("select * from ###asn1id where oid = 'oid:$oid'");
+	$res = OIDplus::db()->query("select * from ###asn1id where oid = ?", ["oid:$oid"]);
 	while ($row = $res->fetch_object()) {
 		$asn1[$oid][] = $row->name;
 	}
@@ -206,7 +206,7 @@ function fill_asn1(string $oid, array &$asn1) {
  */
 function fill_iri(string $oid, array &$iri) {
 	if (!isset($iri[$oid])) $iri[$oid] = array();
-	$res = OIDplus::db()->query("select * from ###iri where oid = 'oid:$oid'");
+	$res = OIDplus::db()->query("select * from ###iri where oid = ?", ["oid:$oid"]);
 	while ($row = $res->fetch_object()) {
 		$iri[$oid][] = $row->name;
 	}

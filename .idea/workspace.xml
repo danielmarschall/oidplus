@@ -8,8 +8,14 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="df2a484b-bed2-4376-a9d2-11f38408a62e" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/.idea/codeception.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/phpspec.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/phpunit.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/php.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/php.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/doc/oidplus_custom_guid.md" beforeDir="false" afterPath="$PROJECT_DIR$/doc/oidplus_custom_guid.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/adminPages/920_nostalgia/export_dos.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/adminPages/920_nostalgia/export_dos.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/plugins/viathinksoft/adminPages/920_nostalgia/export_win.php" beforeDir="false" afterPath="$PROJECT_DIR$/plugins/viathinksoft/adminPages/920_nostalgia/export_win.php" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/userdata/database/oidplus_example.accdb" beforeDir="false" afterPath="$PROJECT_DIR$/userdata/database/oidplus_example.accdb" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -35,6 +41,7 @@
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
   </component>
+  <component name="PhpDebugGeneral" listening_started="true" />
   <component name="PhpStanProjectConfiguration">
     <option name="selectedConfigurationId" value="2e64b330-8649-4ce7-94bb-0389c61e7d73" />
   </component>
@@ -71,11 +78,15 @@
       <path value="$PROJECT_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/composer" />
       <path value="$PROJECT_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/aywan/php-json-canonicalization" />
       <path value="$PROJECT_DIR$/vendor/danielmarschall/glip" />
+      <path value="$PROJECT_DIR$/vendor/spomky-labs/php-punycode" />
     </include_path>
   </component>
   <component name="ProblemsViewState">
     <option name="selectedTabId" value="CurrentFile" />
   </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 1
+}</component>
   <component name="ProjectId" id="2N1iLsvnSxtAjQSwVh6njExUvVK" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true">
     <ConfirmationsSetting value="2" id="Add" />
@@ -299,11 +310,42 @@
       <workItem from="1689461875606" duration="88000" />
       <workItem from="1690578635294" duration="6929000" />
       <workItem from="1690585681333" duration="119000" />
+      <workItem from="1690646137841" duration="7100000" />
+      <workItem from="1690665811631" duration="3257000" />
+      <workItem from="1690669148053" duration="643000" />
+      <workItem from="1690744122992" duration="9370000" />
+      <workItem from="1690818373046" duration="15561000" />
+      <workItem from="1690836286015" duration="25000" />
+      <workItem from="1690836752732" duration="328000" />
+      <workItem from="1690839855907" duration="30000" />
+      <workItem from="1690840033315" duration="351000" />
+      <workItem from="1690841101897" duration="6710000" />
+      <workItem from="1690909494680" duration="2199000" />
+      <workItem from="1690913308527" duration="763000" />
+      <workItem from="1691014617404" duration="2163000" />
+      <workItem from="1691235107262" duration="11021000" />
+      <workItem from="1691536501203" duration="602000" />
+      <workItem from="1693238705817" duration="173000" />
+      <workItem from="1693238927450" duration="802000" />
+      <workItem from="1693241994871" duration="14339000" />
+      <workItem from="1694821395989" duration="767000" />
+      <workItem from="1694978429758" duration="814000" />
+      <workItem from="1695238052230" duration="1363000" />
+      <workItem from="1695668480612" duration="4223000" />
+      <workItem from="1695758551399" duration="155000" />
+      <workItem from="1696012471111" duration="306000" />
+      <workItem from="1696026024161" duration="1044000" />
+      <workItem from="1696372811909" duration="174000" />
+      <workItem from="1698706352534" duration="228000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="dependencySupport" implementationName="executable:docker" />
+    <option featureType="dependencySupport" implementationName="executable:kubectl" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

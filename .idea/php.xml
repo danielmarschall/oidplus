@@ -43,6 +43,7 @@
       <path value="$PROJECT_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/composer" />
       <path value="$PROJECT_DIR$/plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/aywan/php-json-canonicalization" />
       <path value="$PROJECT_DIR$/vendor/danielmarschall/glip" />
+      <path value="$PROJECT_DIR$/vendor/spomky-labs/php-punycode" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="7.0" />
@@ -51,6 +52,11 @@
     <option name="config" value="D:\SVN\OIDplus\trunk\phpstan.neon.dist" />
     <option name="level" value="6" />
     <option name="transferred" value="true" />
+  </component>
+  <component name="PhpUnit">
+    <phpunit_settings>
+      <PhpUnitSettings custom_loader_path="$PROJECT_DIR$/vendor/autoload.php" />
+    </phpunit_settings>
   </component>
   <component name="PsalmOptionsConfiguration">
     <option name="transferred" value="true" />
