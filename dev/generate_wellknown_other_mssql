@@ -144,7 +144,7 @@ $interesting_oids[] = '1'; // iso
 				$interesting_oids[] = '1.2.840.113556'; // microsoft
 					$interesting_oids[] = '1.2.840.113556.1'; // Microsoft Active Directory
 						$interesting_oids[] = '1.2.840.113556.1.8000'; // companies
-							$interesting_oids[] = '1.2.840.113556.1.8000.2554'; // customer usage
+							$interesting_oids[] = '1.2.840.113556.1.8000.2554'; // customer usage (UUID-to-OID)
 					$interesting_oids[] = '1.2.840.113556.2'; // DICOM
 	$interesting_oids[] = '1.3'; // identified-organization
 		$interesting_oids[] = '1.3.6'; // dod
@@ -171,6 +171,15 @@ $interesting_oids[] = '1'; // iso
 										$interesting_oids[] = '1.3.6.1.4.1.37553.8.9'; // ns
 											$interesting_oids[] = '1.3.6.1.4.1.37553.8.9.17704'; // dns
 											$interesting_oids[] = '1.3.6.1.4.1.37553.8.9.1439221'; // uuid
+								$interesting_oids[] = '1.3.6.1.4.1.54392'; // Waterjuice
+# Is not on oid-info.com, but has no alphanum/unicode ID anyway
+#									$interesting_oids[] = '1.3.6.1.4.1.54392.1'; // Waterjuice "UUID-to-OID" (2x64 bits)
+#									$interesting_oids[] = '1.3.6.1.4.1.54392.2'; // Waterjuice "UUID-to-OID" (4x32 bits)
+#									$interesting_oids[] = '1.3.6.1.4.1.54392.3'; // Waterjuice "UUID-to-OID" (8x16 bits)
+#									$interesting_oids[] = '1.3.6.1.4.1.54392.4'; // Waterjuice FreeOID "old"
+#									$interesting_oids[] = '1.3.6.1.4.1.54392.5'; // Waterjuice FreeOID "new"
+								$interesting_oids[] = '1.3.6.1.4.1.61117'; // R74n
+									$interesting_oids[] = '1.3.6.1.4.1.61117.9000'; // R74n FreeOID
 $interesting_oids[] = '2'; // joint-iso-itu-t
 	$interesting_oids[] = '2.16'; // country
 		// country_getter defines the country OIDs
