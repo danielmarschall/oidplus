@@ -95,7 +95,7 @@
         'danielmarschall/uuid_mac_utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '4a4fbab31b474f8025aa213641e99b9354192086',
+            'reference' => '499e25760ea87439d4167266d76f01454282639b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/uuid_mac_utils',
             'aliases' => array(
@@ -106,7 +106,7 @@
         'danielmarschall/vnag' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'f354f73264e6d3fd3280ee0a0d546b048868eeba',
+            'reference' => '0d4b0b4d80430cc4b723657ad73b35f23b4fd367',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/vnag',
             'aliases' => array(
@@ -189,7 +189,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => '33fa69b2514a61138dd48e7a49f99445711e0ad0',
+            'reference' => '3ecde6bf6a934e70f4dee95794c045ade788ac04',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),

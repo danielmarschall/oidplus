@@ -2958,10 +2958,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		GUID representation of this OID
+		UUID representation of this OID
 		]]></source>
 		<target><![CDATA[
-		GUID-Darstellung dieser OID
+		UUID-Darstellung dieser OID
 		]]></target>
 	</message>
 	<message>

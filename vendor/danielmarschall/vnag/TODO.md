@@ -8,7 +8,7 @@ TODO
 - *.conf files: /daten sollte nicht in den example conf's stehen. irgendwie anders machen (Aber achtung: wir symlinken die config files in unserem /etc )
 - idea: a script that converts the output of an EXISTING nagios plugin into VNag Weboutput. So an arbitary Nagios script can be forwarded to other systems over HTTP
 - make all plugins "web enabled"
-  In the framework create an easy function, which generates a simple default HTML header and footer
+- In the framework create an easy function, which generates a simple default HTML header and footer
 - should error details, e.g. defective hard disks at the mdstat monitor be Verbosity=Summary, or Verbosity=AdditionalInformation ?
 - idea for a new plugin: sudo /daten/scripts/tools/check_etc_perms | grep -v "world readable" | grep -v "world executable"
 - should putputID, passwordOut and privateKey be a default argument? Then you can use encryption/signing for all plugins by default

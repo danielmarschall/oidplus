@@ -3,7 +3,7 @@
 /*
  * UUID utils for PHP
  * Copyright 2011 - 2023 Daniel Marschall, ViaThinkSoft
- * Version 2023-10-06
+ * Version 2023-11-11
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,11 +87,19 @@ function uuid_info($uuid, $echo=true) {
 	echo sprintf("%-32s %s\n", "Microsoft GUID syntax:", '{' . strtoupper(oid_to_uuid(uuid_to_oid($uuid))) . '}');
 	echo sprintf("%-32s %s\n", "C++ struct syntax:", uuid_c_syntax($uuid));
 	echo "\n";
-	echo sprintf("%-32s %s\n", "As OID:", $oid);
-	if (class_exists('OidDerConverter')) {
-		echo sprintf("%-32s %s\n", "DER encoding of OID:", OidDerConverter::hexarrayToStr(OidDerConverter::oidToDER($oid)));
-	}
+
+	echo sprintf("%-32s %s\n", "As OID (ISO/ITU-T 128 bits):", $oid=uuid_to_oid($uuid, '2.25'));
+	# Removed because it is too much information (we would also need to add this to the other OIDs too)
+	#if (class_exists('OidDerConverter')) {
+	#	echo sprintf("%-32s %s\n", "DER encoding of OID:", OidDerConverter::hexarrayToStr(OidDerConverter::oidToDER($oid)));
+	#}
+	echo sprintf("%-32s %s\n", "As OID (Microsoft):", $oid=uuid_to_oid($uuid, '1.2.840.113556.1.8000.2554'));
+	echo sprintf("%-32s %s\n", "As OID (Waterjuice 2x64 bits):", $oid=uuid_to_oid($uuid, '1.3.6.1.4.1.54392.1'));
+	echo sprintf("%-32s %s\n", "As OID (Waterjuice 4x32 bits):", $oid=uuid_to_oid($uuid, '1.3.6.1.4.1.54392.2'));
+	echo sprintf("%-32s %s\n", "As OID (Waterjuice 8x16 bits):", $oid=uuid_to_oid($uuid, '1.3.6.1.4.1.54392.3'));
+
 	echo "\n";
+
 	echo "<u>Interpretation of the UUID:</u>\n\n";
 
 	if (!$echo) ob_start();
@@ -840,6 +848,7 @@ function uuid_canonize($uuid) {
 }
 
 function oid_to_uuid($oid) {
+	// TODO: Also support Non-2.25 base UUID-to-OID
 	if (!is_uuid_oid($oid,true)) return false;
 
 	if (substr($oid,0,1) == '.') {
@@ -862,6 +871,7 @@ function oid_to_uuid($oid) {
 }
 
 function is_uuid_oid($oid, $only_allow_root=false) {
+	// TODO: Also support Non-2.25 base UUID-to-OID
 	if (substr($oid,0,1) == '.') $oid = substr($oid, 1); // remove leading dot
 
 	$ary = explode('.', $oid);
@@ -888,12 +898,49 @@ function is_uuid_oid($oid, $only_allow_root=false) {
 	return true;
 }
 
-function uuid_to_oid($uuid) {
+function uuid_to_oid($uuid, $base='2.25') {
 	if (!uuid_valid($uuid)) return false;
+	#$base = oid_sanitize($base);
 
 	$uuid = str_replace(array('-', '{', '}'), '', $uuid);
-	$x = gmp_init($uuid, 16);
-	return '2.25.'.gmp_strval($x, 10);
+
+	// Information about Microsoft and Waterjuice UUID-OID: https://waterjuiceweb.wordpress.com/2019/09/24/guids-to-oids/
+
+	if ($base == '2.25') {
+		$x = gmp_init($uuid, 16);
+		return $base.'.'.gmp_strval($x, 10);
+	} else if ($base == '1.2.840.113556.1.8000.2554') {
+		return $base.'.'.
+			gmp_strval(gmp_init(substr($uuid,0,4),16),10).'.'.
+			gmp_strval(gmp_init(substr($uuid,4,4),16),10).'.'.
+			gmp_strval(gmp_init(substr($uuid,8,4),16),10).'.'.
+			gmp_strval(gmp_init(substr($uuid,12,4),16),10).'.'.
+			gmp_strval(gmp_init(substr($uuid,16,4),16),10).'.'.
+			gmp_strval(gmp_init(substr($uuid,20,6),16),10).'.'.
+			gmp_strval(gmp_init(substr($uuid,26,6),16),10);
+	} else if ($base == '1.3.6.1.4.1.54392.1') {
+		return $base.'.'.
+			gmp_strval(gmp_init(substr($uuid,0,16),16),10).'.'.
+			gmp_strval(gmp_init(substr($uuid,16,16),16),10);
+	} else if ($base == '1.3.6.1.4.1.54392.2') {
+		return $base.'.'.
+			gmp_strval(gmp_init(substr($uuid,0,8),16),10).'.'.
+			gmp_strval(gmp_init(substr($uuid,8,8),16),10).'.'.
+			gmp_strval(gmp_init(substr($uuid,16,8),16),10).'.'.
+			gmp_strval(gmp_init(substr($uuid,24,8),16),10);
+	} else if ($base == '1.3.6.1.4.1.54392.3') {
+		return $base.'.'.
+			gmp_strval(gmp_init(substr($uuid,0,4),16),10).'.'.
+			gmp_strval(gmp_init(substr($uuid,4,4),16),10).'.'.
+			gmp_strval(gmp_init(substr($uuid,8,4),16),10).'.'.
+			gmp_strval(gmp_init(substr($uuid,12,4),16),10).'.'.
+			gmp_strval(gmp_init(substr($uuid,16,4),16),10).'.'.
+			gmp_strval(gmp_init(substr($uuid,20,4),16),10).'.'.
+			gmp_strval(gmp_init(substr($uuid,24,4),16),10).'.'.
+			gmp_strval(gmp_init(substr($uuid,28,4),16),10);
+	} else {
+		throw new Exception("Unsupported UUID-to-OID base");
+	}
 }
 
 function uuid_numeric_value($uuid) {

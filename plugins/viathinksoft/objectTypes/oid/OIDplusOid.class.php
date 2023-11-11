@@ -628,9 +628,10 @@ class OIDplusOid extends OIDplusObject {
 		if ($this->isRoot()) return array();
 		$ids = parent::getAltIds();
 
+		// TODO: Also support Waterjuice UUID-to-OID and Microsoft UUID-to-OID
 		if ($uuid = oid_to_uuid($this->oid)) {
 			// UUID-OIDs are representation of an UUID
-			$ids[] = new OIDplusAltId('guid', $uuid, _L('GUID representation of this OID'));
+			$ids[] = new OIDplusAltId('guid', $uuid, _L('UUID representation of this OID'));
 		} else {
 			// All other OIDs can be formed into an UUID by making them a namebased OID
 			// You could theoretically also do this to an UUID-OID, but we exclude this case to avoid that users are confused

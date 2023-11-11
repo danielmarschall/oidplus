@@ -392,18 +392,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/uuid_mac_utils.git",
-                "reference": "4a4fbab31b474f8025aa213641e99b9354192086"
+                "reference": "499e25760ea87439d4167266d76f01454282639b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/uuid_mac_utils/zipball/4a4fbab31b474f8025aa213641e99b9354192086",
-                "reference": "4a4fbab31b474f8025aa213641e99b9354192086",
+                "url": "https://api.github.com/repos/danielmarschall/uuid_mac_utils/zipball/499e25760ea87439d4167266d76f01454282639b",
+                "reference": "499e25760ea87439d4167266d76f01454282639b",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2023-10-06T21:40:12+00:00",
+            "time": "2023-11-11T00:22:44+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -433,18 +433,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/vnag.git",
-                "reference": "f354f73264e6d3fd3280ee0a0d546b048868eeba"
+                "reference": "0d4b0b4d80430cc4b723657ad73b35f23b4fd367"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/vnag/zipball/f354f73264e6d3fd3280ee0a0d546b048868eeba",
-                "reference": "f354f73264e6d3fd3280ee0a0d546b048868eeba",
+                "url": "https://api.github.com/repos/danielmarschall/vnag/zipball/0d4b0b4d80430cc4b723657ad73b35f23b4fd367",
+                "reference": "0d4b0b4d80430cc4b723657ad73b35f23b4fd367",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2023-10-15T10:14:46+00:00",
+            "time": "2023-11-05T18:32:23+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -837,12 +837,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "33fa69b2514a61138dd48e7a49f99445711e0ad0"
+                "reference": "3ecde6bf6a934e70f4dee95794c045ade788ac04"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/33fa69b2514a61138dd48e7a49f99445711e0ad0",
-                "reference": "33fa69b2514a61138dd48e7a49f99445711e0ad0",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/3ecde6bf6a934e70f4dee95794c045ade788ac04",
+                "reference": "3ecde6bf6a934e70f4dee95794c045ade788ac04",
                 "shasum": ""
             },
             "require": {
@@ -860,7 +860,7 @@
                 "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
                 "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
             },
-            "time": "2023-10-21T14:00:39+00:00",
+            "time": "2023-11-04T21:13:09+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {

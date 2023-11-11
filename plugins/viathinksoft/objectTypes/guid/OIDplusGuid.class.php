@@ -273,7 +273,19 @@ class OIDplusGuid extends OIDplusObject {
 		if ($this->isRoot()) return array();
 		if (!$this->isLeafNode()) return array();
 		$ids = parent::getAltIds();
-		$ids[] = new OIDplusAltId('oid', uuid_to_oid($this->guid), _L('OID representation of UUID'));
+
+		// TODO: this should be included to uuid_utils.inc.php
+		$uuid_to_oid_bases = array(
+			'2.25' => 'ISO/ITU-T 128 bits',
+			'1.2.840.113556.1.8000.2554' => 'Microsoft',
+			'1.3.6.1.4.1.54392.1' => 'Waterjuice 2x64 bits',
+			'1.3.6.1.4.1.54392.2' => 'Waterjuice 4x32 bits',
+			'1.3.6.1.4.1.54392.3' => 'Waterjuice 8x16 bits'
+		);
+		foreach ($uuid_to_oid_bases as $base_oid => $base_desc) {
+			$ids[] = new OIDplusAltId('oid', uuid_to_oid($this->guid, $base_oid), _L('OID representation of UUID').' ('.$base_desc.')');
+		}
+
 		return $ids;
 	}
 
