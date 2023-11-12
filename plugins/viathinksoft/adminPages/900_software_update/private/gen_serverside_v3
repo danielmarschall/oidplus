@@ -76,13 +76,13 @@ if (($force != '1') && ($force != '0')) {
 foreach (['a','b'] as $ab) {
 	$tmpdir = '/tmp/oidplus_git_'.$ab;
 	if (!is_dir($tmpdir)) {
-		exec('git clone '.escapeshellarg(OIDplus::getEditionInfo()['gitrepo']).' '.escapeshellarg($tmpdir), $out, $ec);
+		exec('git clone '.escapeshellarg(OIDplus::getEditionInfo()['gitrepo']).' '.escapeshellarg($tmpdir).' --quiet', $out, $ec);
 		if ($ec != 0) {
 			fwrite(STDERR, "GIT Clone failed\n");
 			exit(1);
 		}
 	}
-	exec('cd '.escapeshellarg($tmpdir).' && git reset --hard && git checkout master && git pull', $out, $ec);
+	exec('cd '.escapeshellarg($tmpdir).' && git reset --hard --quiet && git checkout master --quiet && git pull --quiet', $out, $ec);
 	if ($ec != 0) {
 		fwrite(STDERR, "GIT Pull failed\n");
 		exit(1);
@@ -91,12 +91,12 @@ foreach (['a','b'] as $ab) {
 
 // Step 1: List all GIT commits and determine its OIDplus versions
 
-git_version_cache_file = OIDplus::localpath() . 'userdata/cache/git_version_cache.json';
+$git_version_cache_file = OIDplus::localpath() . 'userdata/cache/git_version_cache.json';
 $git_version_cache = file_exists($git_version_cache_file) ? json_decode(file_get_contents($git_version_cache_file),true) : ["git-to-ver"=>[],"version-first-commit"=>[]];
 
 $ec = -1;
 $out = array();
-exec('cd /tmp/oidplus_git_a && git reset --hard && git checkout master && git log --reverse', $out, $ec);
+exec('cd /tmp/oidplus_git_a && git reset --hard --quiet && git checkout master --quiet && git log --reverse --quiet', $out, $ec);
 if ($ec != 0) {
 	fwrite(STDERR, "GIT Log failed\n");
 	exit(1);
@@ -142,16 +142,16 @@ file_put_contents($git_version_cache_file, json_encode($git_version_cache, JSON_
 $prev_commit = '-';
 $prev_version = '2.0.0.0';
 foreach ($git_version_cache["version-first-commit"] as $version => $version_first_commit) {
-	$changescript_file = $output_dir.'/output/changescript_'.$version.'.txt';
+	$changescript_file = $output_dir.'/changescript_'.$version.'.txt';
 	if ($force || !file_exists($changescript_file) || !file_exists($changescript_file.'.gz')) {
-		#echo "$version = $prev_commit ... $version_first_commit => $changescript_file\n";
+		echo "Generate changescript for version $version ($version_first_commit)\n";
 
 		if ($prev_commit == '-') {
 			$old_dir = '/tmp/oidplus_git_empty';
 			if (!is_dir($old_dir)) mkdir($old_dir);
 		} else {
 			$old_dir = '/tmp/oidplus_git_a';
-			exec('cd '.escapeshellarg($old_dir).' && git reset --hard && git checkout '.escapeshellarg($prev_commit).' >/dev/null 2>&1', $out, $ec);
+			exec('cd '.escapeshellarg($old_dir).' && git reset --hard --quiet && git checkout '.escapeshellarg($prev_commit).' --quiet >/dev/null 2>&1', $out, $ec);
 			if ($ec != 0) {
 				fwrite(STDERR, "GIT Checkout $prev_commit failed\n");
 				exit(1);
@@ -160,7 +160,7 @@ foreach ($git_version_cache["version-first-commit"] as $version => $version_firs
 		}
 
 		$new_dir = '/tmp/oidplus_git_b';
-		exec('cd '.escapeshellarg($new_dir).' && git reset --hard && git checkout '.escapeshellarg($version_first_commit).' >/dev/null 2>&1', $out, $ec);
+		exec('cd '.escapeshellarg($new_dir).' && git reset --hard --quiet && git checkout '.escapeshellarg($version_first_commit).' --quiet >/dev/null 2>&1', $out, $ec);
 		if ($ec != 0) {
 			fwrite(STDERR, "GIT Checkout $version_first_commit failed\n");
 			exit(1);
