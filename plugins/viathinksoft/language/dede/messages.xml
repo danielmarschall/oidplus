@@ -718,14 +718,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Attention: Takes a long time!
-		]]></source>
-		<target><![CDATA[
-		Achtung: Dauert lange!
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Attention: The following directory is world-readable: %1 ! You need to configure your web server to restrict access to this directory! (For Apache see <i>.htaccess</i>, for Microsoft IIS see <i>web.config</i>, for Nginx see <i>nginx.conf</i>).
 		]]></source>
 		<target><![CDATA[
@@ -1190,22 +1182,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Cannot determine version of the system
-		]]></source>
-		<target><![CDATA[
-		Die Systemversion konnte nicht ermittelt werden
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Cannot download checksum file. Please try again later.
-		]]></source>
-		<target><![CDATA[
-		Die Prüfsummendatei konnte nicht heruntergeladen werden. Bitte versuchen Sie es später noch einmal.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Cannot download the binary file from GitHub (%1)
 		]]></source>
 		<target><![CDATA[
@@ -1578,6 +1554,14 @@
 		]]></source>
 		<target><![CDATA[
 		Kann JSON-Struktur der Datensicherungs-Datei nicht lesen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Could not determine next version. Please try again later.
+		]]></source>
+		<target><![CDATA[
+		Fehler beim Bestimmen der nächsten Version. Bitte versuchen Sie es später noch einmal.
 		]]></target>
 	</message>
 	<message>
@@ -2310,6 +2294,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Downloading update beginning from version %1 up to %2...
+		]]></source>
+		<target><![CDATA[
+		Updates version %1 bis %2 herunterladen...
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		E-Mail
 		]]></source>
 		<target><![CDATA[
@@ -2654,14 +2646,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Expected file contents
-		]]></source>
-		<target><![CDATA[
-		Erwarteter Dateiinhalt
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Export
 		]]></source>
 		<target><![CDATA[
@@ -2954,14 +2938,6 @@
 		]]></source>
 		<target><![CDATA[
 		GUID
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		UUID representation of this OID
-		]]></source>
-		<target><![CDATA[
-		UUID-Darstellung dieser OID
 		]]></target>
 	</message>
 	<message>
@@ -3566,10 +3542,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Install OIDplus by downloading a TAR.GZ file from %1, which contains an SVN snapshot, and extract it to your webspace. The TAR.GZ file contains a file named ".version.php" which contains the SVN revision of the snapshot. This update-tool will then try to update your files on-the-fly by downloading them from the ViaThinkSoft SVN repository directly into your webspace directory. A change conflict detection is NOT implemented. It is required that the files on your webspace have create/write/delete permissions. Only recommended if you have no access to the SSH/Linux shell.
+		Install OIDplus by downloading a TAR.GZ file from %1, which contains an SVN snapshot, and extract it to your webspace. The TAR.GZ file contains a file named "changelog.json.php" which contains the current program version. This update-tool will then try to update your files on-the-fly by downloading them from the ViaThinkSoft SVN repository directly into your webspace directory. A change conflict detection is NOT implemented. It is required that the files on your webspace have create/write/delete permissions. Only recommended if you have no access to the SSH/Linux shell.
 		]]></source>
 		<target><![CDATA[
-		OIDplus durch das Downloaden und Entpacken eines TAR.GZ-Archivs von %1 installieren. Dieses TAR.GZ-Archiv enthält einen Snapshot der aktuellen SVN-Revision, sowie eine Datei ".version.php", die die SVN-Revisionsnummer enthält. Dieses Update-Tool wird versuchen, die geänderten Dateien "on-the-fly" aus dem ViaThinkSoft SVN-Repository herunterzuladen und im Serververzeichnis zu entpacken (Schreibrechte erforderlich). Achtung: Ein Änderungskonflikt wird nicht erkannt und führt zum Überschreiben der Datei! Die TAR.GZ-Archiv-Methode ist nur empfohlen, wenn die andere Methode (Verwenden eines Subversion-Clients) nicht möglich ist.
+		OIDplus durch das Downloaden und Entpacken eines TAR.GZ-Archivs von %1 installieren. Dieses TAR.GZ-Archiv enthält einen Snapshot der aktuellen SVN-Revision, sowie eine Datei "changelog.json.php", die die aktuelle Programmversion enthält. Dieses Update-Tool wird versuchen, die geänderten Dateien "on-the-fly" aus dem ViaThinkSoft SVN-Repository herunterzuladen und im Serververzeichnis zu entpacken (Schreibrechte erforderlich). Achtung: Ein Änderungskonflikt wird nicht erkannt und führt zum Überschreiben der Datei! Die TAR.GZ-Archiv-Methode ist nur empfohlen, wenn die andere Methode (Verwenden eines Subversion-Clients) nicht möglich ist.
 		]]></target>
 	</message>
 	<message>
@@ -4430,10 +4406,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Multiple version files/directories (oidplus_version.txt, .version.php, .git, or .svn) are existing! Therefore, the version is ambiguous!
+		Multiple version files/directories (.git and .svn) are existing! Therefore, the distribution channel is ambiguous!
 		]]></source>
 		<target><![CDATA[
-		Mehrfache Versionsdateien und -verzeichnisse existieren (oidplus_version.txt, .version.php, .git oder .svn). Aus diesem Grund ist die Version mehrdeutig!
+		Mehrfache Versionsdateien und -verzeichnisse existieren (.git oder .svn). Aus diesem Grund ist der Installationstyp mehrdeutig!
 		]]></target>
 	</message>
 	<message>
@@ -4530,14 +4506,6 @@
 		]]></source>
 		<target><![CDATA[
 		Das neue Passwort ist zu kurz. Minimale Länge: %1
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		New revision %1 by %2
-		]]></source>
-		<target><![CDATA[
-		Neue Version %1 von %2
 		]]></target>
 	</message>
 	<message>
@@ -5894,10 +5862,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Please make a backup of your files before updating. In case of an error, the OIDplus system (including this update-assistant) might become unavailable. Also, since the web-update does not contain collision-detection, changes you have applied (like adding, removing or modified files) might get reverted/lost! (<a href="%1">Click here to check which files have been modified</a>) In case the update fails, you can download and extract the complete <a href="%s">SVN-Snapshot TAR.GZ file</a> again. Since all your data should lay inside the folder "userdata" and "userdata_pub", this should be safe.
+		Please make a backup of your files before updating. In case of an error, the OIDplus system (including this update-assistant) might become unavailable. Also, since the web-update does not contain collision-detection, changes you have applied (like adding, removing or modified files) might get reverted/lost! (<a href="%1">Click here to check which files have been modified</a>) In case the update fails, you can download and extract the complete <a href="%s">TAR.GZ file</a> again. Since all your data should lay inside the folder "userdata" and "userdata_pub", this should be safe.
 		]]></source>
 		<target><![CDATA[
-		Bitte fertigen Sie eine Datensicherung Ihrer Dateien vor der Aktualisierung an. Im Falle eines Fehlers könnte das OIDplus-System (inklusive diesem Update-Assistenten) ausfallen. Außerdem besitzt dieses WebSVN-Update keine Kollissions-Kontrolle, d.h. Datei-Änderungen, die Sie durchgeführt haben, können zurückgesetzt/verloren gehen. (<a href="%1">Klicken Sie hier um zu sehen, welche Dateien geändert wurden</a>) Im Falle eines Fehlschlags können Sie einen kompletten <a href="%s">SVN-Snapshot als TAR.GZ-Archiv</a> herunterladen und hier entpacken. Da alle Ihre Daten innerhalb des Ordners "userdata" und "userdata_pub" liegen sollten, sollte dies sicher sein.
+		Bitte fertigen Sie eine Datensicherung Ihrer Dateien vor der Aktualisierung an. Im Falle eines Fehlers könnte das OIDplus-System (inklusive diesem Update-Assistenten) ausfallen. Außerdem besitzt dieses Web-Update keine Kollissions-Kontrolle, d.h. Datei-Änderungen, die Sie durchgeführt haben, können zurückgesetzt/verloren gehen. (<a href="%1">Klicken Sie hier um zu sehen, welche Dateien geändert wurden</a>) Im Falle eines Fehlschlags können Sie ein komplettes <a href="%s">TAR.GZ-Archiv</a> herunterladen und hier entpacken. Da alle Ihre Daten innerhalb des Ordners "userdata" und "userdata_pub" liegen sollten, sollte dies sicher sein.
 		]]></target>
 	</message>
 	<message>
@@ -6286,10 +6254,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Probably the ViaThinkSoft server could not be reached.
+		Probably the remote server could not be reached.
 		]]></source>
 		<target><![CDATA[
-		Möglicherweise ist der ViaThinkSoft-Server nicht erreichbar.
+		Möglicherweise ist der Ziel-Server nicht erreichbar.
 		]]></target>
 	</message>
 	<message>
@@ -6726,10 +6694,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Result (comparison with SVN revision %1)
+		Result
 		]]></source>
 		<target><![CDATA[
-		Ergebnis (Vergleich mit SVN Revision %1)
+		Ergebnis
 		]]></target>
 	</message>
 	<message>
@@ -7170,14 +7138,6 @@
 		]]></source>
 		<target><![CDATA[
 		Prüfung starten
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Started update from %1 to %2
-		]]></source>
-		<target><![CDATA[
-		Update von %1 nach %2 gestartet
 		]]></target>
 	</message>
 	<message>
@@ -8230,10 +8190,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		This tool compares the checksums of the files of your OIDplus installation with the checksums of the OIDplus original SVN version.
+		This tool compares the checksums of the files of your OIDplus installation with the checksums of the OIDplus original version.
 		]]></source>
 		<target><![CDATA[
-		Dieses Werkzeug vergleicht die Prüfsummen dieser OIDplus-Installation mit den Prüfsummen aus dem originalen Quelltext, der auf dem ViaThinkSoft Server liegt.
+		Dieses Werkzeug vergleicht die Prüfsummen dieser OIDplus-Installation mit den Prüfsummen aus dem originalen Quelltext.
 		]]></target>
 	</message>
 	<message>
@@ -8366,6 +8326,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		UUID representation of this OID
+		]]></source>
+		<target><![CDATA[
+		UUID-Darstellung dieser OID
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		UUIDv8 based on the System ID of your OIDplus system.
 		]]></source>
 		<target><![CDATA[
@@ -8486,10 +8454,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Update %1 could not be downloaded from ViaThinkSoft server. Please try again later.
+		Update %1 could not be downloaded from the remote server (%2). Please try again later.
 		]]></source>
 		<target><![CDATA[
-		Update %1 konnte nicht vom ViaThinkSoft-Server heruntergeladen werden. Bitte versuchen Sie es später noch einmal.
+		Update %1 konnte nicht vom entfernten Server heruntergeladen werden (%2). Bitte versuchen Sie es später noch einmal.
 		]]></target>
 	</message>
 	<message>
@@ -8566,6 +8534,30 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Update successful
+		]]></source>
+		<target><![CDATA[
+		Update erfolgreich
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Update to OIDplus version %1 is running...
+		]]></source>
+		<target><![CDATA[
+		Update auf OIDplus version %1 läuft...
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Update to OIDplus version %1 was successful!
+		]]></source>
+		<target><![CDATA[
+		Update auf OIDplus version %1 war erfolgreich!
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Update-script %1 could not be executed
 		]]></source>
 		<target><![CDATA[
@@ -8582,10 +8574,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Updating to Revision %1 ...
+		Updating to version %1 ...
 		]]></source>
 		<target><![CDATA[
-		Aktualisieren zu Version %1 ...
+		Zu Version %1 aktualisieren ...
 		]]></target>
 	</message>
 	<message>
@@ -8670,6 +8662,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Version %1
+		]]></source>
+		<target><![CDATA[
+		Version %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		ViaThinkSoft Client Challenge lets the client computer solve a cryptographic problem instead of letting the user solve a CAPTCHA. This slows down brute-force attacks.
 		]]></source>
 		<target><![CDATA[
@@ -8713,7 +8713,7 @@
 		WARNING: There are changes in your working copy which WILL be reverted if you continue!
 		]]></source>
 		<target><![CDATA[
-		ACHTUNG: Es gibt Änderungen an der ARbeitskopie die ENTFERNT werden wenn Sie fortfahren!
+		ACHTUNG: Es gibt Änderungen an der Arbeitskopie die ENTFERNT werden wenn Sie fortfahren!
 		]]></target>
 	</message>
 	<message>
@@ -8974,10 +8974,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		You are now at SVN revision %1
+		You are now at version %1
 		]]></source>
 		<target><![CDATA[
-		Das System ist nun bei SVN Revision %1
+		Das System ist nun bei Version %1
 		]]></target>
 	</message>
 	<message>
@@ -8998,10 +8998,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		You are using <b>method C</b> (Snapshot TAR.GZ file with .version.php file).
+		You are using <b>method C</b> (Snapshot TAR.GZ file).
 		]]></source>
 		<target><![CDATA[
-		Sie verwenden <b>Methode C</b> (TAR.GZ-Archiv mit SVN-Snapshot und .version.php-Datei).
+		Sie verwenden <b>Methode C</b> (TAR.GZ-Archiv mit Snapshot).
 		]]></target>
 	</message>
 	<message>

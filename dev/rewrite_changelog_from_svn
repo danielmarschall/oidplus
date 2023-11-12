@@ -1,0 +1,80 @@
+#!/usr/bin/php
+<?php
+
+/*
+ * OIDplus 2.0
+ * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+die("Please uncomment the die() statement if you want to use this script.\n"); // This script is only intended to run once during development of version 2.0.1.0 !
+
+$ret = [];
+
+#die(base64_encode("\"\n    }\n]\n"));
+$ret[] = ["dummy" => "<?php die(base64_decode('IgogICAgfQpdCg==')); /* for security reasons, do not show the current version @phpstan-ignore-line */ ?>" ];
+
+if (!is_dir('/tmp/oidplus_git_a')) {
+	exec('git clone https://github.com/danielmarschall/oidplus /tmp/oidplus_git_a', $out, $ec);
+	if ($ec != 0) {
+		fwrite(STDERR, "GIT Clone failed\n");
+		exit(1);
+	}
+}
+
+$git_svn = [];
+$ec = -1;
+$out = array();
+exec('cd /tmp/oidplus_git_a && git reset --hard && git checkout master && git pull && git log', $out, $ec);
+if ($ec != 0) {
+	fwrite(STDERR, "GIT Log failed\n");
+} else {
+	$cont = implode("\n", $out);
+	preg_match_all('%^commit (.+)\n.+trunk@(\d+) 02e%smU', $cont, $git_commits, PREG_SET_ORDER);
+	foreach ($git_commits as $git_commit) {
+		$git_svn[$git_commit[2]] = $git_commit[1];
+	}
+}
+
+$ec = -1;
+$out = array();
+exec('svn log https://svn.viathinksoft.com/svn/oidplus/trunk --xml', $out, $ec);
+if ($ec != 0) {
+	fwrite(STDERR, "SVN Log failed\n");
+} else {
+	$str = implode("\n",$out);
+
+	$xml = simplexml_load_string($str);
+
+	foreach ($xml as $a) {
+		$msg = trim((string)$a->msg);
+		assert(isset($git_svn[(string)$a->attributes()->revision]));
+		$ret[] = array(
+			'version' => '2.0.0.'.($a->attributes()->revision),
+			'date' => date('Y-m-d H:i:s O',strtotime((string)$a->date)),
+#			'author' => (string)$a->author,
+			'author' => 'Daniel Marschall (ViaThinkSoft)',
+			'changes' => ($msg == '' ? [] : explode("\n",$msg)),
+			'sources' => [
+				'svn' => ['https://svn.viathinksoft.com/svn/oidplus/trunk@'.($a->attributes()->revision)],
+				'git' => ['https://github.com/danielmarschall/oidplus/tree/'.$git_svn[(string)$a->attributes()->revision]]
+			]
+		);
+
+	}
+
+}
+
+$output = json_encode($ret, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
+file_put_contents(__DIR__.'/../changelog.json.php', $output);

@@ -234,9 +234,9 @@ SMALL THINGS
 - Actually, there should be two Update-Timestamps: An Update-Timestamp for the Superior RA (i.e. when was the ASN.1/IRI or the RA changed? And a RA Update-Timestamp (i.e. when did the RA change its description?)
 
 UPDATER
-- Internal problem with GIT distribution channel:
-	The GIT version might be behind the master SVN repository
-	So if you do "git pull", the update/index.php page might still show that an update is available!
+- since updater v3, the "software update" tool only checks if the version fits,
+  it does not check if there are new "development" versions, i.e. commits without new version.
+  There should be a GitClone or SvnUpdate button everytime, so you can manually update? Or show the -dev version news?
 - add some kind of loading cricle animation or a progress bar during the update
 
 DATABASE

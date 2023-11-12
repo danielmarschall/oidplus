@@ -63,35 +63,30 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), $out['title'], 401);
 			}
 
-			$out['text'] = '<p>'._L('This tool compares the checksums of the files of your OIDplus installation with the checksums of the OIDplus original SVN version.').'<br>';
+			$out['text'] = '<p>'._L('This tool compares the checksums of the files of your OIDplus installation with the checksums of the OIDplus original version.').'<br>';
 			$out['text'] .= _L('Differences could have various reasons, for example, a hotfix you have applied.').'<br>';
 			$out['text'] .= _L('The folders "userdata" and "userdata_pub" as well as third-party-plugins (folder "plugins" excluding "viathinksoft") are not listed.').'</p>';
 			$out['text'] .= '<p>'._L('Please note: If you believe that you were hacked, you should not trust the output of this tool, because it might be compromised, too.').'</p>';
 
 			if ($parts[1] !== 'go') {
-				$out['text'] .= '<p><input type="button" '.OIDplus::gui()->link('oidplus:system_file_check$go').' value="'._L('Start scan').'"> ('._L('Attention: Takes a long time!').')</p>';
+				$out['text'] .= '<p><input type="button" '.OIDplus::gui()->link('oidplus:system_file_check$go').' value="'._L('Start scan').'"></p>';
 			} else {
 				@set_time_limit(0);
 
-				$ver = OIDplus::getVersion();
-				if (substr($ver,0,4) !== 'svn-') {
-					$out['text'] = '<p><font color="red">'.mb_strtoupper(_L('Error')).': '._L('Cannot determine version of the system').'</font></p>';
-					return;
-				}
-				$ver = substr($ver,strlen('svn-'));
-
-
-				$out['text'] .= '<h2>'._L('Result (comparison with SVN revision %1)', $ver).'</h2>';
+				$out['text'] .= '<h2>'._L('Result').'</h2>';
 
 				$out['text'] .= '<pre>';
 
 				try {
-					$theirs = self::checksumFileToArray(sprintf(OIDplus::getEditionInfo()['checksum_file'],$ver));
-					if ($theirs === false) {
-						throw new OIDplusException(_L("Cannot download checksum file. Please try again later."));
-					}
+					$theirs = json_decode(file_get_contents(__DIR__.'/checksums.json'),true);
 
-					$mine = self::getDirContents(OIDplus::localpath());
+					$exclude = [
+						// Please keep in-sync with private/gen_serverside_v3
+						realpath(__DIR__.'/checksums.json'),
+						realpath(OIDplus::localpath().'/userdata'),
+						realpath(OIDplus::localpath().'/userdata_pub')
+					];
+					$mine = self::getDirContents(OIDplus::localpath(), null, $exclude);
 
 					$num = 0;
 
@@ -103,18 +98,18 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 								(substr($filename_old, 0, strlen('userdata_pub/')) !== 'userdata_pub/') &&
 
 								// Don't list third-party plugins
-								((
-										(substr($filename_old, 0, strlen('plugins/')) === 'plugins/') &&
-										(
-											(explode('/',$filename_old)[1] === 'viathinksoft') ||
-											(explode('/',$filename_old)[1] === 'index.html') ||
-											(substr(explode('/',$filename_old)[1],-4) === '.xsd')
-										)
-									) || (substr($filename_old, 0, strlen('plugins/')) !== 'plugins/')) &&
+								// TODO: but bundled ones should be listed!
+#								((
+#										(substr($filename_old, 0, strlen('plugins/')) === 'plugins/') &&
+#										(
+#											(explode('/',$filename_old)[1] === 'viathinksoft') ||
+#											(explode('/',$filename_old)[1] === 'index.html') ||
+#											(substr(explode('/',$filename_old)[1],-4) === '.xsd')
+#										)
+#									) || (substr($filename_old, 0, strlen('plugins/')) !== 'plugins/')) &&
 
-								($filename_old !== 'oidplus_version.txt') &&
-								($filename_old !== '.version.php') &&
-								($filename_old !== 'composer.lock')
+								($filename_old !== 'composer.lock') &&
+								($filename_old !== 'plugins/viathinksoft/adminPages/902_systemfile_check/checksums.json')
 							){
 								$num++;
 								if (is_dir(OIDplus::localpath().$filename_old)) {
@@ -138,8 +133,7 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 							$hash_new = $theirs[$filename_old];
 							if ($hash_old != $hash_new) {
 								$num++;
-								$svn_url = sprintf(OIDplus::getEditionInfo()['svn_original'],urlencode($filename_old),urlencode($ver));
-								$out['text'] .= "<b>"._L('Checksum mismatch').":</b> $filename_old (<a target=\"_blank\" href=\"$svn_url\">"._L('Expected file contents')."</a>)\n";
+								$out['text'] .= "<b>"._L('Checksum mismatch').":</b> $filename_old\n";
 							}
 						}
 					}
@@ -196,51 +190,32 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 	/**
 	 * @param string $dir
 	 * @param string|null $basepath
+	 * @param array $exclude
 	 * @param array $results
 	 * @return array
 	 */
-	private static function getDirContents(string $dir, string $basepath = null, array &$results = array()): array {
+	public static function getDirContents(string $dir, string $basepath = null, array $exclude=[], array &$results=[]): array {
 		if (is_null($basepath)) $basepath = $dir;
 		$basepath = realpath($basepath) . DIRECTORY_SEPARATOR;
 		$dir = realpath($dir) . DIRECTORY_SEPARATOR;
 		$files = scandir($dir);
 		foreach ($files as $file) {
 			$path = realpath($dir . DIRECTORY_SEPARATOR . $file);
+			if (in_array($path,$exclude)) continue;
 			if (empty($path)) $path = $dir . DIRECTORY_SEPARATOR . $file;
+			if ($file == 'composer.lock') continue;
 			if (!is_dir($path)) {
 				$xpath = substr($path, strlen($basepath));
 				$xpath = str_replace('\\', '/', $xpath);
 				$results[$xpath] = @hash_file('sha256', $path);
 			} else if ($file != "." && $file != ".." && $file != ".svn" && $file != ".git") {
-				self::getDirContents($path, $basepath, $results);
+				self::getDirContents($path, $basepath, $exclude, $results);
 				$xpath = substr($path, strlen($basepath));
 				$xpath = str_replace('\\', '/', $xpath);
 				$results[$xpath] = hash('sha256', '');
 			}
 		}
 		return $results;
-	}
-
-	/**
-	 * @param string $checksumfile
-	 * @return array|false
-	 */
-	private static function checksumFileToArray(string $checksumfile) {
-		$out = array();
-
-		$cont = url_get_contents($checksumfile);
-		if ($cont === false) return false;
-		$lines = explode("\n", $cont);
-
-		foreach ($lines as $line) {
-			$line = trim($line);
-			if ($line == '') continue;
-			list($hash, $filename) = explode("\t",$line);
-			if (substr($filename,0,strlen('trunk/')) == 'trunk/') {
-				$out[substr($filename,strlen('trunk/'))] = $hash;
-			}
-		}
-		return $out;
 	}
 
 }

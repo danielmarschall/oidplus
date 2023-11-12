@@ -1901,14 +1901,6 @@ class OIDplus extends OIDplusBaseClass {
 	public static function getInstallType() {
 		$counter = 0;
 
-		if ($new_version_file_exists = file_exists(OIDplus::localpath().'.version.php')) {
-			$counter++;
-		}
-		if ($old_version_file_exists = file_exists(OIDplus::localpath().'oidplus_version.txt')) {
-			$counter++;
-		}
-		$version_file_exists = $old_version_file_exists | $new_version_file_exists;
-
 		if ($svn_dir_exists = (OIDplus::findSvnFolder() !== false)) {
 			$counter++;
 		}
@@ -1916,10 +1908,7 @@ class OIDplus extends OIDplusBaseClass {
 			$counter++;
 		}
 
-		if ($counter === 0) {
-			return 'unknown'; // do not translate
-		}
-		else if ($counter > 1) {
+		if ($counter > 1) {
 			return 'ambigous'; // do not translate
 		}
 		else if ($svn_dir_exists) {
@@ -1928,8 +1917,8 @@ class OIDplus extends OIDplusBaseClass {
 		else if ($git_dir_exists) {
 			return 'git-wc'; // do not translate
 		}
-		else if ($version_file_exists) {
-			return 'svn-snapshot'; // do not translate
+		else {
+			return 'manual'; // do not translate
 		}
 	}
 
@@ -1955,13 +1944,35 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	/**
+	 * @param string $infoFile Path to a changelog.json.php file (It must be in its source code form!)
+	 * @param bool $allow_dev_version If set to false, then versions ending with "-dev" will be ignored
 	 * @return false|string
 	 */
-	public static function getVersion() {
-		static $cachedVersion = null;
-		if (!is_null($cachedVersion)) {
-			return $cachedVersion;
+	public static function getVersion(string $infoFile = __DIR__.'/../../changelog.json.php', bool $allow_dev_version=true) {
+		static $cachedVersion = [];
+		if ($cachedVersion[$infoFile] ?? false) {
+			return $cachedVersion[$infoFile];
 		}
+
+		if ((stripos($infoFile,'http://')===0) || (stripos($infoFile,'https://')===0)) {
+			$cont = @url_get_contents($infoFile);
+		} else {
+			$cont = @file_get_contents($infoFile);
+		}
+		if ($cont === false) return false;
+		$json = @json_decode($cont, true);
+		if ($json === null) return false;
+		$latest_version = false;
+		foreach ($json as $v) {
+			if (isset($v['version'])) {
+				if (!$allow_dev_version && str_ends_with($v['version'],'-dev')) continue;
+				$latest_version = $v['version'];
+				break; // the first item is the latest version
+			}
+		}
+		return ($cachedVersion[$infoFile] = $latest_version);
+
+		/*
 
 		$installType = OIDplus::getInstallType();
 
@@ -1969,17 +1980,17 @@ class OIDplus extends OIDplusBaseClass {
 			if (is_dir($svn_dir = OIDplus::findSvnFolder())) {
 				$ver = get_svn_revision($svn_dir);
 				if ($ver)
-					return ($cachedVersion = 'svn-'.$ver);
+					return ($cachedVersion[$infoFile] = 'svn-'.$ver);
 			}
 		}
 
 		if ($installType === 'git-wc') {
 			$ver = OIDplus::getGitsvnRevision();
 			if ($ver)
-				return ($cachedVersion = 'svn-'.$ver);
+				return ($cachedVersion[$infoFile] = 'svn-'.$ver);
 		}
 
-		if ($installType === 'svn-snapshot') {
+		if ($installType === 'manual') {
 			$cont = '';
 			if (file_exists($filename = OIDplus::localpath().'oidplus_version.txt'))
 				$cont = file_get_contents($filename);
@@ -1987,10 +1998,12 @@ class OIDplus extends OIDplusBaseClass {
 				$cont = file_get_contents($filename);
 			$m = array();
 			if (preg_match('@Revision (\d+)@', $cont, $m)) // do not translate
-				return ($cachedVersion = 'svn-'.$m[1]); // do not translate
+				return ($cachedVersion[$infoFile] = 'svn-'.$m[1]); // do not translate
 		}
 
-		return ($cachedVersion = false); // version ambigous or unknown
+		return ($cachedVersion[$infoFile] = false); // version ambigous or unknown
+
+		*/
 	}
 
 	const ENFORCE_SSL_NO   = 0;
