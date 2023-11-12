@@ -92,7 +92,7 @@ for ($i=2; $i<=$max_svn; $i++) {
 	if ($ec != 0) die("Checkout of SVN Rev ".($i)." failed!!!\n");
 	hotfix_dir('2.0.0.'.$i, $outdir_new);
 
-	oidplus_create_changescript($outdir_old, $outdir_new, $outfile, '2.0.0.'.($i-1), '2.0.0.'.$i, $priv_key);
+	oidplus_create_changescript($outdir_old, $outdir_new, $outfile, '2.0.0.'.($i-1), $i==1426?'2.0.1':'2.0.0.'.$i, $priv_key);
 
 	// Delete temp dirs
 

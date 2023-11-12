@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2022 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -457,7 +457,7 @@ function oidplus_create_changescript($outdir_old, $outdir_new, $outfile, $prev_v
 	$outscript .= "@header('Content-Type: text/plain');\n";
 	$outscript .= "\n";
 	$outscript .= "chdir(__DIR__);\n";
-	if (version_compare($version,"2.0.1") >= 0) {
+	if (version_compare($prev_version,"2.0.1") >= 0) {
 		// Version check see also OIDplus::getVersion()
 		$outscript .= "\$cont = @file_get_contents('changelog.json.php');\n";
 		$outscript .= "if (\$cont === false) err('Cannot read changelog.json.php');\n";
