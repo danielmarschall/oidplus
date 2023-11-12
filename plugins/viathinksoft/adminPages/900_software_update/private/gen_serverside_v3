@@ -1,0 +1,178 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * OIDplus 2.0
+ * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// This script will be called at the ViaThinkSoft server side
+
+use ViaThinkSoft\OIDplus\OIDplus;
+
+require_once __DIR__.'/funcs.inc.php';
+
+include __DIR__.'/../../../../../includes/oidplus.inc.php';
+
+
+// Generate keypair with:
+//	openssl genpkey -algorithm RSA -out private.pem -pkeyopt rsa_keygen_bits:8192
+//	openssl rsa -pubout -in private.pem -out public.pem
+
+$argc = $_SERVER['argc']; // to please Eclipse for PHP
+$argv = $_SERVER['argv']; // to please Eclipse for PHP
+
+if (PHP_SAPI != 'cli') {
+	fwrite(STDERR, "This file can only be invoked in CLI mode.\n");
+	die();
+}
+
+if (DIRECTORY_SEPARATOR != '/') {
+	fwrite(STDERR,  "This script can only run on Unix like systems\n");
+	exit(2);
+}
+
+if ($argc != 4) {
+	fwrite(STDERR, "Usage: ".$argv[0]." <targetpath> <privkey> <force(1|0)>\n");
+	exit(2);
+}
+
+$output_dir = $argv[1];
+$priv_key = $argv[2];
+$force = $argv[3];
+
+if (!is_dir($output_dir)) {
+	fwrite(STDERR, "Path $output_dir does not exist!\n");
+	exit(1);
+}
+
+if (!is_file($priv_key)) {
+	fwrite(STDERR, "Private key file $priv_key does not exist!\n");
+	exit(1);
+}
+
+if (($force != '1') && ($force != '0')) {
+	fwrite(STDERR, "Argument 'force' must be 0 or 1\n");
+	exit(1);
+}
+
+
+// Step 0: We need two copies of a up-to-date GIT working copy (to compare old-new for changescripts)
+// We do not delete the file in /tmp, because we can re-use it
+// It's no secret, so other users can read it. They must not write to it, though.
+
+foreach (['a','b'] as $ab) {
+	$tmpdir = '/tmp/oidplus_git_'.$ab;
+	if (!is_dir($tmpdir)) {
+		exec('git clone '.escapeshellarg(OIDplus::getEditionInfo()['gitrepo']).' '.escapeshellarg($tmpdir), $out, $ec);
+		if ($ec != 0) {
+			fwrite(STDERR, "GIT Clone failed\n");
+			exit(1);
+		}
+	}
+	exec('cd '.escapeshellarg($tmpdir).' && git reset --hard && git checkout master && git pull', $out, $ec);
+	if ($ec != 0) {
+		fwrite(STDERR, "GIT Pull failed\n");
+		exit(1);
+	}
+}
+
+// Step 1: List all GIT commits and determine its OIDplus versions
+
+git_version_cache_file = OIDplus::localpath() . 'userdata/cache/git_version_cache.json';
+$git_version_cache = file_exists($git_version_cache_file) ? json_decode(file_get_contents($git_version_cache_file),true) : ["git-to-ver"=>[],"version-first-commit"=>[]];
+
+$ec = -1;
+$out = array();
+exec('cd /tmp/oidplus_git_a && git reset --hard && git checkout master && git log --reverse', $out, $ec);
+if ($ec != 0) {
+	fwrite(STDERR, "GIT Log failed\n");
+	exit(1);
+} else {
+	$cont = implode("\n", $out);
+	preg_match_all('%^commit (.+)\n.+trunk@(\d+) 02e%smU', $cont, $git_commits, PREG_SET_ORDER);
+	$svn_git = [];
+	foreach ($git_commits as $git_commit) {
+		$svn_git[$git_commit[1]] = $git_commit[2];
+	}
+	preg_match_all('%^commit (.+)\n%smU', $cont, $git_commits, PREG_SET_ORDER);
+	foreach ($git_commits as $git_commit) {
+		if (isset($git_version_cache["git-to-ver"][$git_commit[1]])) continue;
+
+		$ary = explode('/',OIDplus::getEditionInfo()['gitrepo']);
+		$github_user = $ary[3];
+		$github_project = $ary[4];
+		$v3_versionfile = 'https://raw.githubusercontent.com/'.$github_user.'/'.$github_project.'/'.$git_commit[1].'/changelog.json.php';
+
+		$svn = $svn_git[$git_commit[1]] ?? 0;
+		if (($svn >= 1) && ($svn <= 1425)) {
+			$ver = "2.0.0.$svn";
+			$git_version_cache["git-to-ver"][$git_commit[1]] = $ver;
+			if (!isset($git_version_cache["version-first-commit"][$ver])) {
+				$git_version_cache["version-first-commit"][$ver] = $git_commit[1];
+			}
+		} else if ($ver = OIDplus::getVersion($v3_versionfile)) {
+			$git_version_cache["git-to-ver"][$git_commit[1]] = $ver;
+			if (!isset($git_version_cache["version-first-commit"][$ver])) {
+				$git_version_cache["version-first-commit"][$ver] = $git_commit[1];
+			}
+		} else {
+			fwrite(STDERR, "PROBLEM: " . $git_commit[1] . "\n");
+		}
+	}
+}
+
+file_put_contents($git_version_cache_file, json_encode($git_version_cache, JSON_PRETTY_PRINT));
+
+// Step 2: Write change-scripts (for ZIP/TAR-GZ distribution channel)
+// The order of $git_version_cache is very critical here!
+
+$prev_commit = '-';
+$prev_version = '2.0.0.0';
+foreach ($git_version_cache["version-first-commit"] as $version => $version_first_commit) {
+	$changescript_file = $output_dir.'/output/changescript_'.$version.'.txt';
+	if ($force || !file_exists($changescript_file) || !file_exists($changescript_file.'.gz')) {
+		#echo "$version = $prev_commit ... $version_first_commit => $changescript_file\n";
+
+		if ($prev_commit == '-') {
+			$old_dir = '/tmp/oidplus_git_empty';
+			if (!is_dir($old_dir)) mkdir($old_dir);
+		} else {
+			$old_dir = '/tmp/oidplus_git_a';
+			exec('cd '.escapeshellarg($old_dir).' && git reset --hard && git checkout '.escapeshellarg($prev_commit).' >/dev/null 2>&1', $out, $ec);
+			if ($ec != 0) {
+				fwrite(STDERR, "GIT Checkout $prev_commit failed\n");
+				exit(1);
+			}
+			hotfix_dir($prev_version, $old_dir);
+		}
+
+		$new_dir = '/tmp/oidplus_git_b';
+		exec('cd '.escapeshellarg($new_dir).' && git reset --hard && git checkout '.escapeshellarg($version_first_commit).' >/dev/null 2>&1', $out, $ec);
+		if ($ec != 0) {
+			fwrite(STDERR, "GIT Checkout $version_first_commit failed\n");
+			exit(1);
+		}
+		hotfix_dir($version, $new_dir);
+
+		oidplus_create_changescript($old_dir, $new_dir, $changescript_file, $prev_version, $version, $priv_key);
+
+		if ($prev_commit == '-') {
+			rmdir($old_dir);
+		}
+	}
+	$prev_commit = $version_first_commit;
+	$prev_version = $version;
+}

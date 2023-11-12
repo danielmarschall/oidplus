@@ -69,8 +69,8 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 
 			$res = _L('Execute command:').' '.$cmd."\n\n".trim(implode("\n",$out));
 			if ($ec === 0) {
-				$rev = 'HEAD'; // do not translate
-				return array("status" => 0, "content" => $res, "rev" => $rev);
+				$next_version = 'HEAD'; // do not translate
+				return array("status" => 0, "content" => $res, "rev" => $next_version);
 			} else {
 				return array("status" => -1, "error" => $res, "content" => "");
 			}
@@ -84,71 +84,90 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 
 			$res = _L('Execute command:').' '.$cmd."\n\n".trim(implode("\n",$out));
 			if ($ec === 0) {
-				$rev = 'HEAD'; // do not translate
-				return array("status" => 0, "content" => $res, "rev" => $rev);
+				$next_version = 'HEAD'; // do not translate
+				return array("status" => 0, "content" => $res, "rev" => $next_version);
 			} else {
 				return array("status" => -1, "error" => $res, "content" => "");
 			}
 		}
-		else if (OIDplus::getInstallType() === 'svn-snapshot') {
-
-			$rev = $params['rev'];
+		else if (OIDplus::getInstallType() === 'manual') {
 
 			$update_version = $params['update_version'] ?? 1;
-			if (($update_version != 1) && ($update_version != 2)) {
+			if (($update_version != 1) && ($update_version != 2) && ($update_version != 3)) {
 				throw new OIDplusException(_L('Unknown update version'));
 			}
 
-			// Download and unzip
-
-			$cont = false;
-			for ($retry=1; $retry<=3; $retry++) {
-				if (function_exists('gzdecode')) {
-					$url = sprintf(OIDplus::getEditionInfo()['update_package_gz'], $rev-1, $rev);
-					$cont = url_get_contents($url);
-					if ($cont !== false) $cont = @gzdecode($cont);
-				} else {
-					$url = sprintf(OIDplus::getEditionInfo()['update_package'], $rev-1, $rev);
-					$cont = url_get_contents($url);
-				}
-				if ($cont !== false) {
-					break;
-				} else {
-					sleep(1);
-				}
-			}
-			if ($cont === false) throw new OIDplusException(_L("Update %1 could not be downloaded from ViaThinkSoft server. Please try again later.",$rev));
-
-			// Check signature...
-
-			if (function_exists('openssl_verify')) {
-
-				$m = array();
-				if (!preg_match('@<\?php /\* <ViaThinkSoftSignature>(.+)</ViaThinkSoftSignature> \*/ \?>\n@ismU', $cont, $m)) {
-					throw new OIDplusException(_L("Update package file of revision %1 not digitally signed",$rev));
-				}
-				$signature = base64_decode($m[1]);
-
-				$naked = preg_replace('@<\?php /\* <ViaThinkSoftSignature>(.+)</ViaThinkSoftSignature> \*/ \?>\n@ismU', '', $cont);
-				$hash = hash("sha256", $naked."update_".($rev-1)."_to_".($rev).".txt");
-
-				$public_key = file_get_contents(__DIR__.'/public.pem');
-				if (!openssl_verify($hash, $signature, $public_key, OPENSSL_ALGO_SHA256)) {
-					throw new OIDplusException(_L("Update package file of revision %1: Signature invalid",$rev));
-				}
-
+			if ($update_version >= 3) {
+				$next_version = $params['next_version'];
+				$max_version = $params['max_version'] ?? null;
+			} else {
+				$next_version = $params['rev'];
+				$max_version = null;
 			}
 
-			// All OK! Now write the file
+			// Prepare update for all next versions
 
-			$tmp_filename = 'update_'.generateRandomString(10).'.tmp.php';
-			$local_file = OIDplus::localpath().$tmp_filename;
+			$downloaded_changescripts = [];
 
-			@file_put_contents($local_file, $cont);
+			$ver = $next_version;
+			do {
+				// Download and unzip
 
-			if (!file_exists($local_file) || (@file_get_contents($local_file) !== $cont)) {
-				throw new OIDplusException(_L('Update file could not written. Probably there are no write-permissions to the root folder.'));
-			}
+				$cont = false;
+				$basename = 'changescript_'.$ver.'.txt';
+				for ($retry=1; $retry<=3; $retry++) {
+					if (function_exists('gzdecode')) {
+						$url = OIDplus::getEditionInfo()['update_packages'].$basename.'.gz';
+						$cont = url_get_contents($url);
+						if ($cont !== false) $cont = @gzdecode($cont);
+					} else {
+						$url = OIDplus::getEditionInfo()['update_packages'].$basename;
+						$cont = url_get_contents($url);
+					}
+					if ($cont !== false) {
+						break;
+					} else {
+						sleep(1);
+					}
+				}
+				if ($cont === false) throw new OIDplusException(_L("Update %1 could not be downloaded from the remote server (%2). Please try again later.",$ver,$url));
+
+				// Check signature...
+
+				if (function_exists('openssl_verify')) {
+					$m = array();
+					if (!preg_match('@<\?php /\* <ViaThinkSoftSignature>(.+)</ViaThinkSoftSignature> \*/ \?>\n@ismU', $cont, $m)) {
+						throw new OIDplusException(_L("Update package file of revision %1 not digitally signed",$ver));
+					}
+					$signature = base64_decode($m[1]);
+
+					$naked = preg_replace('@<\?php /\* <ViaThinkSoftSignature>(.+)</ViaThinkSoftSignature> \*/ \?>\n@ismU', '', $cont);
+					$hash = hash("sha256", $naked.$basename);
+
+					$public_key = file_get_contents(__DIR__.'/public.pem');
+					if (!openssl_verify($hash, $signature, $public_key, OPENSSL_ALGO_SHA256)) {
+						throw new OIDplusException(_L("Update package file of revision %1: Signature invalid",$ver));
+					}
+
+				}
+
+				// All OK! Now write the file
+
+				$tmp_filename = 'update_'.generateRandomString(10).'.tmp.php';
+				$local_file = OIDplus::localpath().$tmp_filename;
+
+				@file_put_contents($local_file, $cont);
+
+				if (!file_exists($local_file) || (@file_get_contents($local_file) !== $cont)) {
+					throw new OIDplusException(_L('Update file could not written. Probably there are no write-permissions to the root folder.'));
+				}
+
+				$downloaded_changescripts[] = [ $ver, $tmp_filename ];
+
+			} while (($update_version>=3)&&($ver!=$max_version)&&($ver=$this->getNextVersionFrom($ver,false)));
+
+			# ---
+
 
 			if ($update_version == 1) {
 				// Now call the written file
@@ -163,17 +182,23 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 						throw new OIDplusException(_L('Update-script %1 could not be executed',$web_file));
 					}
 				}
-				return array("status" => 0, "content" => $res, "rev" => $rev);
+				return array("status" => 0, "content" => $res, "rev" => $next_version);
 			} else if ($update_version == 2) {
 				// In this version, the client will call the web-update file.
 				// This has the advantage that it will also work if the system is htpasswd protected
-				return array("status" => 0, "update_file" => $tmp_filename, "rev" => $rev);
+				return array("status" => 0, "update_file" => $tmp_filename, "rev" => $next_version);
+			} else if ($update_version == 3) {
+				// Version 3:
+				// - All changescripts are downloaded at once and then processed purely in JS (reduces risk of bricking if an intermediate version is broken)
+				// - We return the next version(s) in the list of changescripts
+				// - Versions are not SVN revisions anymore, but version strings
+				return array("status" => 0, "update_files" => $downloaded_changescripts);
 			} else {
 				throw new OIDplusException(_L("Unexpected update version"));
 			}
 		}
 		else {
-			throw new OIDplusException(_L('Multiple version files/directories (oidplus_version.txt, .version.php, .git, or .svn) are existing! Therefore, the version is ambiguous!'));
+			throw new OIDplusException(_L('Multiple version files/directories (.git and .svn) are existing! Therefore, the distribution channel is ambiguous!'));
 		}
 	}
 
@@ -235,7 +260,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 			}
 
 			if (isset(OIDplus::getEditionInfo()['downloadpage']) && (OIDplus::getEditionInfo()['downloadpage'] != '')) {
-				$out['text'] .= '<p><b>'._L('Method C').'</b>: '._L('Install OIDplus by downloading a TAR.GZ file from %1, which contains an SVN snapshot, and extract it to your webspace. The TAR.GZ file contains a file named ".version.php" which contains the SVN revision of the snapshot. This update-tool will then try to update your files on-the-fly by downloading them from the ViaThinkSoft SVN repository directly into your webspace directory. A change conflict detection is NOT implemented. It is required that the files on your webspace have create/write/delete permissions. Only recommended if you have no access to the SSH/Linux shell.','<a href="'.OIDplus::getEditionInfo()['downloadpage'].'">'.parse_url(OIDplus::getEditionInfo()['downloadpage'])['host'].'</a>').'</p>';
+				$out['text'] .= '<p><b>'._L('Method C').'</b>: '._L('Install OIDplus by downloading a TAR.GZ file from %1, which contains an SVN snapshot, and extract it to your webspace. The TAR.GZ file contains a file named "changelog.json.php" which contains the current program version. This update-tool will then try to update your files on-the-fly by downloading them from the ViaThinkSoft SVN repository directly into your webspace directory. A change conflict detection is NOT implemented. It is required that the files on your webspace have create/write/delete permissions. Only recommended if you have no access to the SSH/Linux shell.','<a href="'.OIDplus::getEditionInfo()['downloadpage'].'">'.parse_url(OIDplus::getEditionInfo()['downloadpage'])['host'].'</a>').'</p>';
 			} else {
 				$out['text'] .= '<p><b>'._L('Method C').'</b>: '._L('Distribution via %1 is not possible with this edition of OIDplus','Snapshot').'</p>';
 			}
@@ -246,12 +271,12 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 			$installType = OIDplus::getInstallType();
 
 			if ($installType === 'ambigous') {
-				$out['text'] .= '<font color="red">'.mb_strtoupper(_L('Error')).': '._L('Multiple version files/directories (oidplus_version.txt, .version.php, .git, or .svn) are existing! Therefore, the version is ambiguous!').'</font>';
+				$out['text'] .= '<font color="red">'.mb_strtoupper(_L('Error')).': '._L('Multiple version files/directories (.git and .svn) are existing! Therefore, the distribution channel is ambiguous!').'</font>';
 				$out['text'] .= '</div>';
 			} else if ($installType === 'unknown') {
 				$out['text'] .= '<font color="red">'.mb_strtoupper(_L('Error')).': '._L('The version cannot be determined, and the update needs to be applied manually!').'</font>';
 				$out['text'] .= '</div>';
-			} else if (($installType === 'svn-wc') || ($installType === 'git-wc') || ($installType === 'svn-snapshot')) {
+			} else if (($installType === 'svn-wc') || ($installType === 'git-wc') || ($installType === 'manual')) {
 				if ($installType === 'svn-wc') {
 					$out['text'] .= '<p>'._L('You are using <b>method A</b> (SVN working copy).').'</p>';
 					$requireInfo = _L('shell access with svn/svnversion tool, or PDO/SQLite3 PHP extension');
@@ -260,8 +285,8 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 					$out['text'] .= '<p>'._L('You are using <b>method B</b> (Git working copy).').'</p>';
 					$requireInfo = _L('shell access with Git client');
 					$updateCommand = $this->getGitCommand();
-				} else if ($installType === 'svn-snapshot') {
-					$out['text'] .= '<p>'._L('You are using <b>method C</b> (Snapshot TAR.GZ file with .version.php file).').'</p>';
+				} else if ($installType === 'manual') {
+					$out['text'] .= '<p>'._L('You are using <b>method C</b> (Snapshot TAR.GZ file).').'</p>';
 					$requireInfo = ''; // unused
 					$updateCommand = ''; // unused
 				} else {
@@ -269,7 +294,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 				}
 
 				$local_installation = OIDplus::getVersion();
-				$newest_version = $this->getLatestRevision();
+				$newest_version = $this->getLatestRevision(false);
 
 				$out['text'] .= _L('Local installation: %1',($local_installation ?: _L('unknown'))).'<br>';
 				$out['text'] .= _L('Latest published version: %1',($newest_version ?: _L('unknown'))).'<br><br>';
@@ -278,11 +303,11 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 					if (!url_get_contents_available(true, $reason)) {
 						$out['text'] .= '<p><font color="red">'._L('OIDplus could not determine the latest version.').'<br>'.$reason.'</p>';
 					} else {
-						$out['text'] .= '<p><font color="red">'._L('OIDplus could not determine the latest version.').'<br>'._L('Probably the ViaThinkSoft server could not be reached.').'</font></p>';
+						$out['text'] .= '<p><font color="red">'._L('OIDplus could not determine the latest version.').'<br>'._L('Probably the remote server could not be reached.').'</font></p>';
 					}
 					$out['text'] .= '</div>';
 				} else if (!$local_installation) {
-					if ($installType === 'svn-snapshot') {
+					if ($installType === 'manual') {
 						$out['text'] .= '<p><font color="red">'._L('OIDplus could not determine its version.').'</font></p>';
 					} else {
 						$out['text'] .= '<p><font color="red">'._L('OIDplus could not determine its version. (Required: %1). Please update your system manually via the "%2" command regularly.',$requireInfo,$updateCommand).'</font></p>';
@@ -325,11 +350,16 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 						}
 					}
 
-					$out['text'] .= '<p><input type="button" onclick="OIDplusPageAdminSoftwareUpdate.doUpdateOIDplus('.((int)substr($local_installation,4)+1).', '.substr($newest_version,4).')" value="'._L('Update NOW').'"></p>';
+					$next_version = $this->getNextVersionFrom($local_installation,false);
+					if ($next_version) {
+						$out['text'] .= '<p><input type="button" onclick="OIDplusPageAdminSoftwareUpdate.doUpdateOIDplus('.js_escape($next_version).', '.js_escape($newest_version).')" value="'._L('Update NOW').'"></p>';
+					} else {
+						$out['text'] .= '<p><font color="red">'._L('Could not determine next version. Please try again later.').'</font></p>';
+					}
 
 					// TODO: Open "system_file_check" without page reload.
 					// TODO: Only show link if the plugin is installed
-					$out['text'] .= '<p><font color="red">'.mb_strtoupper(_L('Warning')).': '._L('Please make a backup of your files before updating. In case of an error, the OIDplus system (including this update-assistant) might become unavailable. Also, since the web-update does not contain collision-detection, changes you have applied (like adding, removing or modified files) might get reverted/lost! (<a href="%1">Click here to check which files have been modified</a>) In case the update fails, you can download and extract the complete <a href="%s">SVN-Snapshot TAR.GZ file</a> again. Since all your data should lay inside the folder "userdata" and "userdata_pub", this should be safe.','?goto='.urlencode('oidplus:system_file_check'),OIDplus::getEditionInfo()['downloadpage']).'</font></p>';
+					$out['text'] .= '<p><font color="red">'.mb_strtoupper(_L('Warning')).': '._L('Please make a backup of your files before updating. In case of an error, the OIDplus system (including this update-assistant) might become unavailable. Also, since the web-update does not contain collision-detection, changes you have applied (like adding, removing or modified files) might get reverted/lost! (<a href="%1">Click here to check which files have been modified</a>) In case the update fails, you can download and extract the complete <a href="%s">TAR.GZ file</a> again. Since all your data should lay inside the folder "userdata" and "userdata_pub", this should be safe.','?goto='.urlencode('oidplus:system_file_check'),OIDplus::getEditionInfo()['downloadpage']).'</font></p>';
 
 					$out['text'] .= '</div>';
 
@@ -375,77 +405,97 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 		return false;
 	}
 
-	/**
-	 * @var string|null
+
+	/*
+	 * @return array|false
 	 */
-	private $releases_ser = null;
+	private function changeLogJson() {
+		static $cache = null;
+		if (!is_null($cache)) return $cache;
+
+		$cache_file = OIDplus::localpath() . 'userdata/cache/master_changelog.json';
+		if ((file_exists($cache_file)) && (time()-filemtime($cache_file) <= 10*60/*10 Minutes*/)) {
+			$changelog = file_get_contents($cache_file);
+		} else {
+			$master_changelog = OIDplus::getEditionInfo()['master_changelog'];
+			if ((stripos($master_changelog,'http://')===0) || (stripos($master_changelog,'https://')===0)) {
+				$changelog = @url_get_contents($master_changelog);
+			} else {
+				$changelog = @file_get_contents($master_changelog);
+			}
+			if (!$changelog) return false;
+			file_put_contents($cache_file, $changelog);
+		}
+
+		$json = @json_decode($changelog, true);
+		if (!$json) return false;
+
+		$cache = $json;
+		return $json;
+	}
 
 	/**
 	 * @param string $local_ver
 	 * @return false|string
 	 */
 	private function showChangelog(string $local_ver) {
-
 		try {
-			if (is_null($this->releases_ser)) {
-				if (function_exists('gzdecode')) {
-					$url = OIDplus::getEditionInfo()['revisionlog_gz'];
-					$cont = url_get_contents($url);
-					if ($cont !== false) $cont = @gzdecode($cont);
-				} else {
-					$url = OIDplus::getEditionInfo()['revisionlog'];
-					$cont = url_get_contents($url);
-				}
-				if ($cont === false) return false;
-				$this->releases_ser = $cont;
-			} else {
-				$cont = $this->releases_ser;
-			}
+			$json = $this->changeLogJson();
+			if (!$json) return false;
+
 			$content = '';
-			$ary = @unserialize($cont);
-			if ($ary === false) return false;
-			krsort($ary);
-			foreach ($ary as $rev => $data) {
-				if (version_compare("svn-$rev", $local_ver) <= 0) continue;
+
+			foreach ($json as $data) {
+				if (!isset($data['version'])) continue;
+				if (version_compare($data['version'], $local_ver) <= 0) continue;
+
+				$data['msg'] = implode("\n", $data['changes']);
 				$comment = empty($data['msg']) ? _L('No comment') : $data['msg'];
-				$tex = _L("New revision %1 by %2",$rev,$data['author'])." (".$data['date'].") ";
+				$tex = _L("Version %1",$data['version'])." (".$data['date'].") ";
+				$tex = str_pad($tex, 48, ' ', STR_PAD_RIGHT);
 				$content .= trim($tex . str_replace("\n", "\n".str_repeat(' ', strlen($tex)), $comment));
 				$content .= "\n";
+
+
 			}
+
 			return $content;
 		} catch (\Exception $e) {
 			return false;
 		}
-
 	}
 
 	/**
+	 * @param bool $allow_dev_version
 	 * @return false|string
 	 */
-	private function getLatestRevision() {
+	private function getLatestRevision(bool $allow_dev_version=true) {
 		try {
-			if (is_null($this->releases_ser)) {
-				if (function_exists('gzdecode')) {
-					$url = OIDplus::getEditionInfo()['revisionlog_gz'];
-					$cont = url_get_contents($url);
-					if ($cont !== false) $cont = @gzdecode($cont);
-				} else {
-					$url = OIDplus::getEditionInfo()['revisionlog'];
-					$cont = url_get_contents($url);
-				}
-				if ($cont === false) return false;
-				$this->releases_ser = $cont;
-			} else {
-				$cont = $this->releases_ser;
-			}
-			$ary = @unserialize($cont);
-			if ($ary === false) return false;
-			krsort($ary);
-			$max_rev = array_keys($ary)[0];
-			return 'svn-' . $max_rev;
+			$master_changelog = OIDplus::getEditionInfo()['master_changelog'];
+			return OIDplus::getVersion($master_changelog, $allow_dev_version);
 		} catch (\Exception $e) {
 			return false;
 		}
+	}
+
+	/**
+	 * @param string $prev_version
+	 * @param bool $allow_dev_version
+	 * @return false|string
+	 */
+	private function getNextVersionFrom(string $prev_version, bool $allow_dev_version=true) {
+		$json = $this->changeLogJson();
+		if (!$json) return false;
+		$next_version = false;
+		foreach ($json as $v) {
+			if (!isset($v['version'])) continue;
+			if (!$allow_dev_version && str_ends_with($v['version'],'-dev')) continue;
+			if ($v['version'] == $prev_version) {
+				break;
+			}
+			$next_version = $v['version']; // the order of $json is critical: the version in front of our current version is the next available version
+		}
+		return $next_version;
 	}
 
 	/**
@@ -489,7 +539,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 
 			if ($installType === 'ambigous') {
 				$out_stat = 'WARN';
-				$out_msg  = _L('Multiple version files/directories (oidplus_version.txt, .version.php, .git, or .svn) are existing! Therefore, the version is ambiguous!');
+				$out_msg  = _L('Multiple version files/directories (.git and .svn) are existing! Therefore, the distribution channel is ambiguous!');
 			} else if ($installType === 'unknown') {
 				$out_stat = 'WARN';
 				$out_msg  = _L('The version cannot be determined, and the update needs to be applied manually!');
@@ -499,14 +549,14 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 					$out_msg  = _L('OIDplus could not determine the latest version.').' '.$reason;
 				} else {
 					$local_installation = OIDplus::getVersion();
-					$newest_version = $this->getLatestRevision();
+					$newest_version = $this->getLatestRevision(false);
 
 					$requireInfo = ($installType === 'svn-wc') ? _L('shell access with svn/svnversion tool, or PDO/SQLite3 PHP extension') : _L('shell access with Git client');
 					$updateCommand = ($installType === 'svn-wc') ? 'svn update' : 'git pull';
 
 					if (!$newest_version) {
 						$out_stat = 'WARN';
-						$out_msg = _L('OIDplus could not determine the latest version.') . ' ' . _L('Probably the ViaThinkSoft server could not be reached.');
+						$out_msg = _L('OIDplus could not determine the latest version.') . ' ' . _L('Probably the remote server could not be reached.');
 					} else if (!$local_installation) {
 						$out_stat = 'WARN';
 						$out_msg = _L('OIDplus could not determine its version (Required: %1). Please update your system manually via the "%2" command regularly.', $requireInfo, $updateCommand);
@@ -518,17 +568,17 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 						$out_msg = _L('OIDplus is outdated. (%1 local / %2 remote)', $local_installation, $newest_version);
 					}
 				}
-			} else if ($installType === 'svn-snapshot') {
+			} else if ($installType === 'manual') {
 				if (!url_get_contents_available(true, $reason)) {
 					$out_stat = 'WARN';
 					$out_msg  = _L('OIDplus could not determine the latest version.').' '.$reason;
 				} else {
 					$local_installation = OIDplus::getVersion();
-					$newest_version = $this->getLatestRevision();
+					$newest_version = $this->getLatestRevision(false);
 
 					if (!$newest_version) {
 						$out_stat = 'WARN';
-						$out_msg = _L('OIDplus could not determine the latest version.') . ' ' . _L('Probably the ViaThinkSoft server could not be reached.');
+						$out_msg = _L('OIDplus could not determine the latest version.') . ' ' . _L('Probably the remote server could not be reached.');
 					} else if (!$local_installation) {
 						$out_stat = 'WARN';
 						$out_msg = _L('OIDplus could not determine its version. Please update your system manually by downloading the latest archive file from oidplus.com.');
