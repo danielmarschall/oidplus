@@ -524,7 +524,7 @@ function oidplus_create_changescript($outdir_old, $outdir_new, $outfile, $prev_v
 	$outscript .= "\n";
 	$outscript .= "\n";
 	//$outscript .= "info('Update to OIDplus version $version done!');\n";
-	$outscript .= "echo 'DONE'; // This exact string will be compared in Update v\n";
+	$outscript .= "echo 'DONE'; // This exact string will be compared in Update v3\n";
 	$outscript .= "\n";
 	$outscript .= "unlink(__FILE__);\n";
 	$outscript .= "\n";
@@ -571,7 +571,7 @@ function oidplus_create_changescript($outdir_old, $outdir_new, $outfile, $prev_v
 	exec('php -l '.escapeshellarg($outfile), $out, $ec);
 	if ($ec != 0) {
 		fwrite(STDERR, "STOP! $outfile PHP syntax error!\n");
-		unlink($outfile);
+		@unlink($outfile);
 		return;
 	}
 	file_put_contents($outfile.'.gz', gzencode($outscript));

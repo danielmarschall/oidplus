@@ -35,34 +35,9 @@ select yn in "Yes" "No"; do
     esac
 done
 
-# 2. Run dev/translation/message_regenerate.phps and translate things which are missing in plugins/viathinksoft/language/dede/messages.xml (search for "TODO")
-echo "2. Checking translation..."
-while true; do
-	"$DIR"/translation/message_regenerate.phps
-	cat "$DIR"/../plugins/viathinksoft/language/dede/messages.xml | grep TODO > /dev/null
-	if [ $? -eq 0 ]; then
-		echo "Problem: There are untranslated strings! Please translate them."
-		sleep 2
-		nano "$DIR"/../plugins/viathinksoft/language/dede/messages.xml
-	else
-		break
-	fi
-done
-
-# 3. Run phpstan
-echo "3. Running PHPSTAN..."
-cd "$DIR"/.. && phpstan
-echo "Is PHPSTAN output OK?"
-select yn in "Yes" "No"; do
-    case $yn in
-        Yes ) break;;
-        No ) echo "Please fix the issues and run release script again"; exit 1;;
-    esac
-done
-
-# 4. Make sure there are no unversioned files (otherwise systemfile check will generate wrong stuff)
+# 2. Make sure there are no unversioned files (otherwise systemfile check will generate wrong stuff)
 # PLEASE MAKE SURE that the SVN/Git-Working copy has no unversioned files, otherwise they would be included in the checksum catalog
-echo "4. Checking unversioned files"
+echo "2. Checking unversioned files"
 if [ -d "$DIR"/../.svn ]; then
 	cd "$DIR"/.. && svn stat | grep "^?"
 	if [ $? -eq 0 ]; then
@@ -85,6 +60,31 @@ if [ -d "$DIR"/../.git ]; then
 	    esac
 	done
 fi
+
+# 3. Run dev/translation/message_regenerate.phps and translate things which are missing in plugins/viathinksoft/language/dede/messages.xml (search for "TODO")
+echo "3. Checking translation..."
+while true; do
+	"$DIR"/translation/message_regenerate.phps
+	cat "$DIR"/../plugins/viathinksoft/language/dede/messages.xml | grep TODO > /dev/null
+	if [ $? -eq 0 ]; then
+		echo "Problem: There are untranslated strings! Please translate them."
+		sleep 2
+		nano "$DIR"/../plugins/viathinksoft/language/dede/messages.xml
+	else
+		break
+	fi
+done
+
+# 4. Run phpstan
+echo "4. Running PHPSTAN..."
+cd "$DIR"/.. && phpstan
+echo "Is PHPSTAN output OK?"
+select yn in "Yes" "No"; do
+    case $yn in
+        Yes ) break;;
+        No ) echo "Please fix the issues and run release script again"; exit 1;;
+    esac
+done
 
 # 5. Only if you want to start a new release: Add new entry to the top of changelog.json.php
 echo "5. Please edit changelog.json.php (add '-dev' for non-stable versions)"
