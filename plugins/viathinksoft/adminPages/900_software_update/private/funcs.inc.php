@@ -465,7 +465,7 @@ function oidplus_create_changescript($outdir_old, $outdir_new, $outfile, $prev_v
 		$outscript .= "if (\$json === null) err('Cannot parse changelog.json.php');\n";
 		$outscript .= "\$latest_version = false;\n";
 		$outscript .= "foreach (\$json as \$v) {\n";
-		$outscript .= "\tif (isset(\$v['version'])) {\n";
+		$outscript .= "\tif (isset(\$v['version']) && (substr(\$v['version'], -4) != '-dev')) {\n";
 		$outscript .= "\t\t\$latest_version = \$v['version'];\n";
 		$outscript .= "\t\tbreak; // the first item is the latest version\n";
 		$outscript .= "\t}\n";
@@ -506,7 +506,8 @@ function oidplus_create_changescript($outdir_old, $outdir_new, $outfile, $prev_v
 		// Nothing to do in order to set the version, because changelog.json.php contains this information
 		if (version_compare($version, "2.0.1") == 0) {
 			$outscript .= "@unlink('.version.php');\n";
-			$outscript .= "if (is_file('.version.php')) err('Could not delete .version.php! Please delete it manually');\n";
+			// This is just a warning, not an error, because the existance of that file does not cause an error anymore
+			$outscript .= "if (is_file('.version.php')) warn('Could not delete .version.php! Please delete it manually');\n";
 		}
 	} else if (version_compare($version, "2.0.0.661") >= 0) {
 		$rev = str_replace('2.0.0.', '', $version);
@@ -526,7 +527,8 @@ function oidplus_create_changescript($outdir_old, $outdir_new, $outfile, $prev_v
 	//$outscript .= "info('Update to OIDplus version $version done!');\n";
 	$outscript .= "echo 'DONE'; // This exact string will be compared in Update v3\n";
 	$outscript .= "\n";
-	$outscript .= "unlink(__FILE__);\n";
+	$outscript .= "@unlink(__FILE__);\n";
+	$outscript .= "if (is_file(__FILE__)) warn('Could not delete '.basename(__FILE__).'! Please delete it manually');\n";
 	$outscript .= "\n";
 
 	// Now add digital signature
