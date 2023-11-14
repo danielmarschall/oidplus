@@ -69,7 +69,7 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 			$out['text'] .= '<p>'._L('Please note: If you believe that you were hacked, you should not trust the output of this tool, because it might be compromised, too.').'</p>';
 
 			if ($parts[1] !== 'go') {
-				$out['text'] .= '<p><input type="button" '.OIDplus::gui()->link('oidplus:system_file_check$go').' value="'._L('Start scan').'"></p>';
+				$out['text'] .= '<p><input type="button" '.OIDplus::gui()->link('oidplus:system_file_check$go').' value="'._L('Start scan').'"> ('._L('This process might be slow on some systems').')</p>';
 			} else {
 				@set_time_limit(0);
 

@@ -3542,10 +3542,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Install OIDplus by downloading a TAR.GZ file from %1, which contains an SVN snapshot, and extract it to your webspace. The TAR.GZ file contains a file named "changelog.json.php" which contains the current program version. This update-tool will then try to update your files on-the-fly by downloading them from the ViaThinkSoft SVN repository directly into your webspace directory. A change conflict detection is NOT implemented. It is required that the files on your webspace have create/write/delete permissions. Only recommended if you have no access to the SSH/Linux shell.
+		Install OIDplus by downloading an archive file from %1, which contains the latest development version, and extract it to your webspace. This update-tool will then update the files using change-scripts from the remote update server. It is required that the files on your webspace have create/write/delete permissions.
 		]]></source>
 		<target><![CDATA[
-		OIDplus durch das Downloaden und Entpacken eines TAR.GZ-Archivs von %1 installieren. Dieses TAR.GZ-Archiv enthält einen Snapshot der aktuellen SVN-Revision, sowie eine Datei "changelog.json.php", die die aktuelle Programmversion enthält. Dieses Update-Tool wird versuchen, die geänderten Dateien "on-the-fly" aus dem ViaThinkSoft SVN-Repository herunterzuladen und im Serververzeichnis zu entpacken (Schreibrechte erforderlich). Achtung: Ein Änderungskonflikt wird nicht erkannt und führt zum Überschreiben der Datei! Die TAR.GZ-Archiv-Methode ist nur empfohlen, wenn die andere Methode (Verwenden eines Subversion-Clients) nicht möglich ist.
+		OIDplus durch das Downloaden und Entpacken eines komprimierten Archivs von %1 installieren. Diese Archivdatei enthält die aktuelle Entwickler-Version von OIDplus. Dieses Update-Tool aktualisiert das System durch Herunterladen von Änderungs-Scripts von einem Update-Server. Hierfür sind Schreibrechte am Serververzeichnis erforderlich.
 		]]></target>
 	</message>
 	<message>
@@ -4222,10 +4222,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Make sure that you invoke the <code>%1</code> command as the user who runs PHP or that you <code>chown -R</code> the files after invoking <code>%1</code>
+		Make sure that you invoke the <code>%1</code> command as the user who runs PHP or that you <code>%1</code> the files after invoking <code>%2</code>
 		]]></source>
 		<target><![CDATA[
-		Stellen Sie bitte sicher, dass der Befehl <code>%1</code> als der Benutzer ausgeführt wird, der die PHP-Scripte ausführt, oder führen Sie nach dem Update (<code>%1</code>) noch ein <code>chown -R</code> durch.
+		Stellen Sie bitte sicher, dass der Befehl <code>%1</code> als der Benutzer ausgeführt wird, der die PHP-Scripte ausführt, oder führen Sie nach dem Update (<code>%2</code>) noch ein <code>%1</code> durch.
 		]]></target>
 	</message>
 	<message>
@@ -5862,10 +5862,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Please make a backup of your files before updating. In case of an error, the OIDplus system (including this update-assistant) might become unavailable. Also, since the web-update does not contain collision-detection, changes you have applied (like adding, removing or modified files) might get reverted/lost! (<a href="%1">Click here to check which files have been modified</a>) In case the update fails, you can download and extract the complete <a href="%s">TAR.GZ file</a> again. Since all your data should lay inside the folder "userdata" and "userdata_pub", this should be safe.
+		Please make a backup of your files before updating. In case of an error, the OIDplus system (including this update-assistant) might become unavailable. Also, since the web-update does not contain collision-detection, changes you have applied (like adding, removing or modified files) might get reverted/lost! (<a href="%1">Click here to check which files have been modified</a>) In case the update fails, you can download and extract the complete <a href="%s">archive file</a> again. Since all your data should lay inside the folder "userdata" and "userdata_pub", this should be safe.
 		]]></source>
 		<target><![CDATA[
-		Bitte fertigen Sie eine Datensicherung Ihrer Dateien vor der Aktualisierung an. Im Falle eines Fehlers könnte das OIDplus-System (inklusive diesem Update-Assistenten) ausfallen. Außerdem besitzt dieses Web-Update keine Kollissions-Kontrolle, d.h. Datei-Änderungen, die Sie durchgeführt haben, können zurückgesetzt/verloren gehen. (<a href="%1">Klicken Sie hier um zu sehen, welche Dateien geändert wurden</a>) Im Falle eines Fehlschlags können Sie ein komplettes <a href="%s">TAR.GZ-Archiv</a> herunterladen und hier entpacken. Da alle Ihre Daten innerhalb des Ordners "userdata" und "userdata_pub" liegen sollten, sollte dies sicher sein.
+		Bitte fertigen Sie eine Datensicherung Ihrer Dateien vor der Aktualisierung an. Im Falle eines Fehlers könnte das OIDplus-System (inklusive diesem Update-Assistenten) ausfallen. Außerdem besitzt dieses Web-Update keine Kollissions-Kontrolle, d.h. Datei-Änderungen, die Sie durchgeführt haben, können zurückgesetzt/verloren gehen. (<a href="%1">Klicken Sie hier um zu sehen, welche Dateien geändert wurden</a>) Im Falle eines Fehlschlags können Sie eine <a href="%s">Archivdatei</a> herunterladen und hier entpacken. Da alle Ihre Daten innerhalb des Ordners "userdata" und "userdata_pub" liegen sollten, sollte dies sicher sein.
 		]]></target>
 	</message>
 	<message>
@@ -6790,10 +6790,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		SQL-Slang plugin "%1" is missing. Please check if it exists in the directory "plugin/sqlSlang". If it is not existing, please recover it from an SVN snapshot or OIDplus TAR.GZ file.
+		SQL-Slang plugin "%1" is missing. Please check if it exists in the directory "plugin/sqlSlang". If it is not existing, please recover it from an GIT/SVN snapshot or OIDplus archive file.
 		]]></source>
 		<target><![CDATA[
-		SQL-Dialekt-Plugin "%1" fehlt. Bitte prüfen Sie, ob es im Verzeichnis "plugin/sqlSlang" existiert. Wenn nicht, dann stellen Sie es bitte aus einem SVN-Snapshot oder OIDplus-TAR.GZ-Archiv wieder her.
+		SQL-Dialekt-Plugin "%1" fehlt. Bitte prüfen Sie, ob es im Verzeichnis "plugin/sqlSlang" existiert. Wenn nicht, dann stellen Sie es bitte aus einem GIT/SVN-Snapshot oder OIDplus-Archivdatei wieder her.
 		]]></target>
 	</message>
 	<message>
@@ -8158,6 +8158,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		This process might be slow on some systems
+		]]></source>
+		<target><![CDATA[
+		Dieser Vorgang kann auf einigen Systemen langsam sein
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		This request is invalid
 		]]></source>
 		<target><![CDATA[
@@ -8998,10 +9006,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		You are using <b>method C</b> (Snapshot TAR.GZ file).
+		You are using <b>method C</b> (Snapshot file).
 		]]></source>
 		<target><![CDATA[
-		Sie verwenden <b>Methode C</b> (TAR.GZ-Archiv mit Snapshot).
+		Sie verwenden <b>Methode C</b> (Datei mit Snapshot).
 		]]></target>
 	</message>
 	<message>

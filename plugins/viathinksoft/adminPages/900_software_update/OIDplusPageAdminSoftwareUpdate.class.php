@@ -242,7 +242,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 			if (isset(OIDplus::getEditionInfo()['svnrepo']) && (OIDplus::getEditionInfo()['svnrepo'] != '')) {
 				$out['text'] .= '<p><b>'._L('Method A').'</b>: '._L('Install OIDplus using the subversion tool in your SSH/Linux shell using the command <code>svn co %1</code> and update it regularly with the command <code>svn update</code> . This will automatically download the latest version and check for conflicts.',htmlentities(OIDplus::getEditionInfo()['svnrepo']).'/trunk/');
 				if (!str_starts_with(PHP_OS, 'WIN')) {
-					$out['text'] .= ' '._L('Make sure that you invoke the <code>%1</code> command as the user who runs PHP or that you <code>chown -R</code> the files after invoking <code>%1</code>','svn update');
+					$out['text'] .= ' '._L('Make sure that you invoke the <code>%1</code> command as the user who runs PHP or that you <code>%1</code> the files after invoking <code>%2</code>','chown -R ...','svn update');
 				}
 				$out['text'] .= '</p>';
 			} else {
@@ -252,7 +252,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 			if (isset(OIDplus::getEditionInfo()['gitrepo']) && (OIDplus::getEditionInfo()['gitrepo'] != '')) {
 				$out['text'] .= '<p><b>'._L('Method B').'</b>: '._L('Install OIDplus using the Git client in your SSH/Linux shell using the command <code>git clone %1</code> and update it regularly with the command <code>git pull</code> . This will automatically download the latest version and check for conflicts.',htmlentities(OIDplus::getEditionInfo()['gitrepo'].'.git'));
 				if (!str_starts_with(PHP_OS, 'WIN')) {
-					$out['text'] .= ' '._L('Make sure that you invoke the <code>%1</code> command as the user who runs PHP or that you <code>chown -R</code> the files after invoking <code>%1</code>','git pull');
+					$out['text'] .= ' '._L('Make sure that you invoke the <code>%1</code> command as the user who runs PHP or that you <code>%1</code> the files after invoking <code>%2</code>','chown -R ...','git pull');
 				}
 				$out['text'] .= '</p>';
 			} else {
@@ -260,7 +260,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 			}
 
 			if (isset(OIDplus::getEditionInfo()['downloadpage']) && (OIDplus::getEditionInfo()['downloadpage'] != '')) {
-				$out['text'] .= '<p><b>'._L('Method C').'</b>: '._L('Install OIDplus by downloading a TAR.GZ file from %1, which contains an SVN snapshot, and extract it to your webspace. The TAR.GZ file contains a file named "changelog.json.php" which contains the current program version. This update-tool will then try to update your files on-the-fly by downloading them from the ViaThinkSoft SVN repository directly into your webspace directory. A change conflict detection is NOT implemented. It is required that the files on your webspace have create/write/delete permissions. Only recommended if you have no access to the SSH/Linux shell.','<a href="'.OIDplus::getEditionInfo()['downloadpage'].'">'.parse_url(OIDplus::getEditionInfo()['downloadpage'])['host'].'</a>').'</p>';
+				$out['text'] .= '<p><b>'._L('Method C').'</b>: '._L('Install OIDplus by downloading an archive file from %1, which contains the latest development version, and extract it to your webspace. This update-tool will then update the files using change-scripts from the remote update server. It is required that the files on your webspace have create/write/delete permissions.','<a href="'.OIDplus::getEditionInfo()['downloadpage'].'">'.parse_url(OIDplus::getEditionInfo()['downloadpage'])['host'].'</a>').'</p>';
 			} else {
 				$out['text'] .= '<p><b>'._L('Method C').'</b>: '._L('Distribution via %1 is not possible with this edition of OIDplus','Snapshot').'</p>';
 			}
@@ -286,7 +286,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 					$requireInfo = _L('shell access with Git client');
 					$updateCommand = $this->getGitCommand();
 				} else if ($installType === 'manual') {
-					$out['text'] .= '<p>'._L('You are using <b>method C</b> (Snapshot TAR.GZ file).').'</p>';
+					$out['text'] .= '<p>'._L('You are using <b>method C</b> (Snapshot file).').'</p>';
 					$requireInfo = ''; // unused
 					$updateCommand = ''; // unused
 				} else {
@@ -359,7 +359,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 
 					// TODO: Open "system_file_check" without page reload.
 					// TODO: Only show link if the plugin is installed
-					$out['text'] .= '<p><font color="red">'.mb_strtoupper(_L('Warning')).': '._L('Please make a backup of your files before updating. In case of an error, the OIDplus system (including this update-assistant) might become unavailable. Also, since the web-update does not contain collision-detection, changes you have applied (like adding, removing or modified files) might get reverted/lost! (<a href="%1">Click here to check which files have been modified</a>) In case the update fails, you can download and extract the complete <a href="%s">TAR.GZ file</a> again. Since all your data should lay inside the folder "userdata" and "userdata_pub", this should be safe.','?goto='.urlencode('oidplus:system_file_check'),OIDplus::getEditionInfo()['downloadpage']).'</font></p>';
+					$out['text'] .= '<p><font color="red">'.mb_strtoupper(_L('Warning')).': '._L('Please make a backup of your files before updating. In case of an error, the OIDplus system (including this update-assistant) might become unavailable. Also, since the web-update does not contain collision-detection, changes you have applied (like adding, removing or modified files) might get reverted/lost! (<a href="%1">Click here to check which files have been modified</a>) In case the update fails, you can download and extract the complete <a href="%s">archive file</a> again. Since all your data should lay inside the folder "userdata" and "userdata_pub", this should be safe.','?goto='.urlencode('oidplus:system_file_check'),OIDplus::getEditionInfo()['downloadpage']).'</font></p>';
 
 					$out['text'] .= '</div>';
 
