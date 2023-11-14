@@ -488,7 +488,7 @@
     "plugins/viathinksoft/adminPages/900_software_update/img": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "plugins/viathinksoft/adminPages/900_software_update/index.html": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
     "plugins/viathinksoft/adminPages/900_software_update/manifest.xml": "e34edc2196422605c0e5d6602cb495bb57eef20c7b6343f6e7346ce0ebc42c86",
-    "plugins/viathinksoft/adminPages/900_software_update/private/funcs.inc.php": "4daccc02ed695fccfa574f2ddcbf88913efd5cc167b51f69271d793a8b2f265a",
+    "plugins/viathinksoft/adminPages/900_software_update/private/funcs.inc.php": "89cdabd3ca89e5c93f6e9a402da15838769d90d78d6689198840af18582be812",
     "plugins/viathinksoft/adminPages/900_software_update/private/gen_serverside_git": "5315ed96e7eff923fd6923b7a5461c0c21219ed24bdb2cfa569919b26bf41904",
     "plugins/viathinksoft/adminPages/900_software_update/private/gen_serverside_svn": "772df3c4c14a0b52bd25519978dc7ad6768521c7afc74efd415aa0d736ae6f4e",
     "plugins/viathinksoft/adminPages/900_software_update/private/index.html": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
