@@ -113,7 +113,8 @@ function getDirContents_diff(string &$outscript, string $dir_old, string $dir_ne
 				$func_idx++;
 				$outscript .= "function writefile_".$func_idx."() {\n";
 				special_save_file($xpath_old, $path_new, $outscript, "\t@");
-				$outscript .= "\t@touch('$xpath_old',".filemtime($path_new).");\n";
+				// Commented out because both SVN and GIT choose the current timestamp and not the original file timestamp
+				//$outscript .= "\t@touch('$xpath_old',".filemtime($path_new).");\n";
 				$outscript .= "}\n";
 
 				$outscript .= "if (!is_file('$xpath_old')) {\n";
@@ -238,7 +239,8 @@ function getDirContents_add(string &$outscript, string $dir_old, string $dir_new
 			$func_idx++;
 			$outscript .= "function writefile_".$func_idx."() {\n";
 			special_save_file($xpath_new, $path_new, $outscript, "\t@");
-			$outscript .= "\t@touch('$xpath_new',".filemtime($path_new).");\n";
+			// Commented out because both SVN and GIT choose the current timestamp and not the original file timestamp
+			//$outscript .= "\t@touch('$xpath_new',".filemtime($path_new).");\n";
 			$outscript .= "}\n";
 
 			// Note: We will not warn if the file was created and is exactly the file we want
