@@ -225,7 +225,7 @@ class OIDplusDatabaseConnectionSqlSrv extends OIDplusDatabaseConnection {
 	protected function doGetSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
 		$slang = OIDplus::getSqlSlangPlugin('mssql');
 		if (is_null($slang)) {
-			throw new OIDplusConfigInitializationException(_L('SQL-Slang plugin "%1" is missing. Please check if it exists in the directory "plugin/sqlSlang". If it is not existing, please recover it from an SVN snapshot or OIDplus TAR.GZ file.','mssql'));
+			throw new OIDplusConfigInitializationException(_L('SQL-Slang plugin "%1" is missing. Please check if it exists in the directory "plugin/sqlSlang". If it is not existing, please recover it from an GIT/SVN snapshot or OIDplus archive file.','mssql'));
 		}
 		return $slang;
 	}

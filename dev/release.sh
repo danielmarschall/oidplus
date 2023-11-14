@@ -108,5 +108,7 @@ exit 0
 
 # 8. (ViaThinkSoft internal / runs automatically) Sync SVN to GitHub
 
-# 9. (ViaThinkSoft internal / runs automatically) Run plugins/viathinksoft/adminPages/900_software_update/private/gen_serverside_v3
-
+# 9. (ViaThinkSoft internal / runs automatically) Run plugins/viathinksoft/adminPages/900_software_update/private/gen_serverside_git
+#                                                 or  plugins/viathinksoft/adminPages/900_software_update/private/gen_serverside_svn
+#                                                 depending wheather you want to use GIT or SVN as your development base
+#                                                 (Repos are read from includes/edition.ini)

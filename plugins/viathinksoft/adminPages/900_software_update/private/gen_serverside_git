@@ -100,37 +100,43 @@ exec('cd /tmp/oidplus_git_a && git reset --hard --quiet && git checkout master -
 if ($ec != 0) {
 	fwrite(STDERR, "GIT Log failed\n");
 	exit(1);
-} else {
-	$cont = implode("\n", $out);
-	preg_match_all('%^commit (.+)\n.+trunk@(\d+) 02e%smU', $cont, $git_commits, PREG_SET_ORDER);
-	$svn_git = [];
-	foreach ($git_commits as $git_commit) {
-		$svn_git[$git_commit[1]] = $git_commit[2];
-	}
-	preg_match_all('%^commit (.+)\n%smU', $cont, $git_commits, PREG_SET_ORDER);
-	foreach ($git_commits as $git_commit) {
-		if (isset($git_version_cache["git-to-ver"][$git_commit[1]])) continue;
+}
 
-		$ary = explode('/',OIDplus::getEditionInfo()['gitrepo']);
-		$github_user = $ary[3];
-		$github_project = $ary[4];
-		$v3_versionfile = 'https://raw.githubusercontent.com/'.$github_user.'/'.$github_project.'/'.$git_commit[1].'/changelog.json.php';
+$cont = implode("\n", $out);
+preg_match_all('%^commit (.+)\n.+trunk@(\d+) 02e%smU', $cont, $git_commits, PREG_SET_ORDER);
+$svn_git = [];
+foreach ($git_commits as $git_commit) {
+	// ViaThinkSoft uses "Git-to-Svn" to synchronize SVN revisions to GitHub
+	// We need to find the revision numbers for each commit, so we can identify
+	// which commits were revision 1..1425, so we can see where version 2.0.0.<svnrev> applies
+	// and when changelog.json.php applies.
+	$svn_git[$git_commit[1]] = $git_commit[2];
+}
+preg_match_all('%^commit (.+)\n%smU', $cont, $git_commits, PREG_SET_ORDER);
+foreach ($git_commits as $git_commit) {
+	if (isset($git_version_cache["git-to-ver"][$git_commit[1]])) continue;
 
-		$svn = $svn_git[$git_commit[1]] ?? 0;
-		if (($svn >= 1) && ($svn <= 1425)) {
-			$ver = "2.0.0.$svn";
-			$git_version_cache["git-to-ver"][$git_commit[1]] = $ver;
-			if (!isset($git_version_cache["version-first-commit"][$ver])) {
-				$git_version_cache["version-first-commit"][$ver] = $git_commit[1];
-			}
-		} else if ($ver = OIDplus::getVersion($v3_versionfile)) {
-			$git_version_cache["git-to-ver"][$git_commit[1]] = $ver;
-			if (!isset($git_version_cache["version-first-commit"][$ver])) {
-				$git_version_cache["version-first-commit"][$ver] = $git_commit[1];
-			}
-		} else {
-			fwrite(STDERR, "PROBLEM: " . $git_commit[1] . "\n");
+	$ary = explode('/',OIDplus::getEditionInfo()['gitrepo']);
+	$github_user = $ary[3];
+	$github_project = $ary[4];
+	$v3_versionfile = 'https://raw.githubusercontent.com/'.$github_user.'/'.$github_project.'/'.$git_commit[1].'/changelog.json.php';
+
+	$svn = $svn_git[$git_commit[1]] ?? 0;
+	if (($svn >= 1) && ($svn <= 1425)) {
+		// SVN Revision 0..1425 were named 2.0.0.<svnrev>. They did not have a changelog.json.php. Every revision was a new version.
+		$ver = "2.0.0.$svn";
+		$git_version_cache["git-to-ver"][$git_commit[1]] = $ver;
+		if (!isset($git_version_cache["version-first-commit"][$ver])) {
+			$git_version_cache["version-first-commit"][$ver] = $git_commit[1];
 		}
+	} else if ($ver = OIDplus::getVersion($v3_versionfile)) {
+		// Beginning with SVN revision 1426, versions are defined by the first revision/commit that adds a new version to changelog.json.php
+		$git_version_cache["git-to-ver"][$git_commit[1]] = $ver;
+		if (!isset($git_version_cache["version-first-commit"][$ver])) {
+			$git_version_cache["version-first-commit"][$ver] = $git_commit[1];
+		}
+	} else {
+		fwrite(STDERR, "PROBLEM: " . $git_commit[1] . "\n");
 	}
 }
 

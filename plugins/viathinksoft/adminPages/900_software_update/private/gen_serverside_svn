@@ -1,0 +1,168 @@
+#!/usr/bin/env php
+<?php
+
+/*
+ * OIDplus 2.0
+ * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+// This script will be called at the ViaThinkSoft server side
+
+use ViaThinkSoft\OIDplus\OIDplus;
+
+require_once __DIR__.'/funcs.inc.php';
+
+include __DIR__.'/../../../../../includes/oidplus.inc.php';
+
+
+// Generate keypair with:
+//	openssl genpkey -algorithm RSA -out private.pem -pkeyopt rsa_keygen_bits:8192
+//	openssl rsa -pubout -in private.pem -out public.pem
+
+$argc = $_SERVER['argc']; // to please Eclipse for PHP
+$argv = $_SERVER['argv']; // to please Eclipse for PHP
+
+if (PHP_SAPI != 'cli') {
+	fwrite(STDERR, "This file can only be invoked in CLI mode.\n");
+	die();
+}
+
+if (DIRECTORY_SEPARATOR != '/') {
+	fwrite(STDERR,  "This script can only run on Unix like systems\n");
+	exit(2);
+}
+
+if ($argc != 4) {
+	fwrite(STDERR, "Usage: ".$argv[0]." <targetpath> <privkey> <force(1|0)>\n");
+	exit(2);
+}
+
+$output_dir = $argv[1];
+$priv_key = $argv[2];
+$force = $argv[3];
+
+if (!is_dir($output_dir)) {
+	fwrite(STDERR, "Path $output_dir does not exist!\n");
+	exit(1);
+}
+
+if (!is_file($priv_key)) {
+	fwrite(STDERR, "Private key file $priv_key does not exist!\n");
+	exit(1);
+}
+
+if (($force != '1') && ($force != '0')) {
+	fwrite(STDERR, "Argument 'force' must be 0 or 1\n");
+	exit(1);
+}
+
+
+// Step 1: List all SVN revisions and determine their OIDplus versions
+
+$svn_version_cache_file = OIDplus::localpath() . 'userdata/cache/svn_version_cache.json';
+$svn_version_cache = file_exists($svn_version_cache_file) ? json_decode(file_get_contents($svn_version_cache_file),true) : ["svn-to-ver"=>[],"version-first-revision"=>[]];
+
+
+$out = array();
+$ec = -1;
+exec('svn info '.OIDplus::getEditionInfo()['svnrepo'].'/trunk/ | grep "Revision:" | cut -d " " -f 2', $out, $ec);
+if ($ec != 0) {
+	fwrite(STDERR, "SVN Info failed\n");
+	exit(1);
+}
+$max_svn = implode("", $out);
+
+for ($i=2; $i<=$max_svn; $i++) {
+	echo "SVN revision $i / $max_svn\r";
+
+	if (isset($svn_version_cache["svn-to-ver"][$i])) continue;
+
+	$v3_versionfile = OIDplus::getEditionInfo()['svnrepo'].'/trunk/changelog.json.php?p='.$i;
+
+	if (($i >= 1) && ($i <= 1425)) {
+		// SVN Revision 0..1425 were named 2.0.0.<svnrev>. They did not have a changelog.json.php. Every revision was a new version.
+		$ver = "2.0.0.$i";
+		$svn_version_cache["svn-to-ver"][$i] = $ver;
+		if (!isset($svn_version_cache["version-first-revision"][$ver])) {
+			$svn_version_cache["version-first-revision"][$ver] = $i;
+		}
+	} else if ($ver = OIDplus::getVersion($v3_versionfile)) {
+		// Beginning with SVN revision 1426, versions are defined by the first revision/commit that adds a new version to changelog.json.php
+		$svn_version_cache["svn-to-ver"][$i] = $ver;
+		if (!isset($svn_version_cache["version-first-revision"][$ver])) {
+			$svn_version_cache["version-first-revision"][$ver] = $i;
+		}
+	} else {
+		fwrite(STDERR, "PROBLEM: " . $i . "\n");
+	}
+}
+
+file_put_contents($svn_version_cache_file, json_encode($svn_version_cache, JSON_PRETTY_PRINT));
+
+// Step 2: Write change-scripts (for ZIP/TAR-GZ distribution channel)
+// The order of $svn_version_cache is very critical here!
+
+$prev_commit = '-';
+$prev_version = '2.0.0.0';
+foreach ($svn_version_cache["version-first-revision"] as $version => $version_first_revision) {
+	$i = $version_first_revision;
+
+	// changescript_file = $output_dir."/update_".($i-1)."_to_$i.txt"; // Version 2 name
+	$changescript_file = $output_dir.'/changescript_'.$version.'.txt'; // Version 3 name
+	if ($force || !file_exists($changescript_file) || !file_exists($changescript_file.'.gz')) {
+		echo "Generate changescript for version $version ($version_first_revision)\n";
+
+		if ($prev_commit == '-') {
+			$old_dir = '/tmp/oidplus_svntmp2_0/';
+			if (!is_dir($old_dir)) mkdir($old_dir);
+		} else {
+			$old_dir = "/tmp/oidplus_svntmp2_".($i-1)."/";
+			if ($old_dir && is_dir($old_dir)) exec("rm -rf $old_dir", $out, $ec);
+			exec("svn co ".OIDplus::getEditionInfo()['svnrepo']."/trunk/@".($i-1)." $old_dir", $out, $ec);
+			if ($ec != 0) {
+				fwrite(STDERR, "Checkout of SVN Rev ".($i-1)." failed!!!\n");
+				exit(1);
+			}
+			hotfix_dir($prev_version, $old_dir);
+		}
+
+		$new_dir = "/tmp/oidplus_svntmp2_".$i."/";
+		if ($new_dir && is_dir($new_dir)) exec("rm -rf $new_dir", $out, $ec);
+		exec("svn co ".OIDplus::getEditionInfo()['svnrepo']."/trunk/@$i $new_dir", $out, $ec);
+		if ($ec != 0) {
+			fwrite(STDERR, "Checkout of SVN Rev ".($i)." failed!!!\n");
+			exit(1);
+		}
+		hotfix_dir($version, $new_dir);
+
+		oidplus_create_changescript($old_dir, $new_dir, $changescript_file, $prev_version, $version, $priv_key);
+
+		if ($prev_commit == '-') {
+			if ($old_dir && is_dir($old_dir)) {
+				$ec = -1;
+				$out = array();
+				exec("rm -rf $old_dir", $out, $ec);
+			}
+		}
+		if ($new_dir && is_dir($new_dir)) {
+			$ec = -1;
+			$out = array();
+			exec("rm -rf $new_dir", $out, $ec);
+		}
+	}
+
+	$prev_commit = $version_first_revision;
+	$prev_version = $version;
+}
