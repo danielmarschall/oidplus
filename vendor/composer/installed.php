@@ -236,7 +236,7 @@
         'tinymce/tinymce' => array(
             'pretty_version' => '5.x-dev',
             'version' => '5.9999999.9999999.9999999-dev',
-            'reference' => 'b9c50833d455adcf5ae89a6da7648ae5d65468df',
+            'reference' => 'e5650a256f8941a0593ec0b9d3c435f20f1d4245',
             'type' => 'component',
             'install_path' => __DIR__ . '/../tinymce/tinymce',
             'aliases' => array(),

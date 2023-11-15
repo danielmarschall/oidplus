@@ -19,13 +19,13 @@ var OIDplusPageAdminSoftwareUpdate = {
 
 	oid: "1.3.6.1.4.1.37476.2.5.2.4.3.900",
 
-	doUpdateOIDplus: function(next_rev, max_rev) {
+	doUpdateOIDplus: function(cur_rev, next_rev, max_rev) {
 		$("#update_versioninfo").hide();
-		OIDplusPageAdminSoftwareUpdate._downloadUpdate(next_rev, max_rev);
+		OIDplusPageAdminSoftwareUpdate._downloadUpdate(cur_rev, next_rev, max_rev);
 	},
 
-	_downloadUpdate: function(next_rev, max_rev) {
-		var msg = _L("Downloading update beginning from version %1 up to %2...",next_rev,max_rev);
+	_downloadUpdate: function(cur_rev, next_rev, max_rev) {
+		var msg = _L("Downloading update beginning from version %1 up to %2...",cur_rev,max_rev);
 		$("#update_infobox").html(/*$("#update_infobox").html() +*/ '<span class="severity_2"><strong>' + _L('INFO') + ":</strong></span> "+msg+"\n");
 
 		//show_waiting_anim();

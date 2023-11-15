@@ -3,11 +3,19 @@
         "dummy": "<?php die(base64_decode('IgogICAgfQpdCg==')); /* for security reasons, do not show the current version @phpstan-ignore-line */ ?>"
     },
     {
+        "version": "2.0.1.3",
+        "date": "2023-11-15 14:41:00 +0100",
+        "author": "Daniel Marschall (ViaThinkSoft)",
+        "changes": [
+            "Fixed SSL detection for Setup (GitHub issue #35)"
+        ]
+    },
+    {
         "version": "2.0.1.2",
         "date": "2023-11-15 13:29:00 +0100",
         "author": "Daniel Marschall (ViaThinkSoft)",
         "changes": [
-            "Small fixes for the oid-info.com importer"
+            "Small fixes for the oid-info.com importer (GitHub issue #37 and internal)"
         ]
     },
     {
