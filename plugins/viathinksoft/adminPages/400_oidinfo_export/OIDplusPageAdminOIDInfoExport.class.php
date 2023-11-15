@@ -1027,7 +1027,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 			}
 
 			$id = "oid:$dot_notation";
-			$title = isset($xoid->{'description'}) ? $xoid->{'description'}->__toString() : '';
+			$title = isset($xoid->{'description'}) ? html_entity_decode(strip_tags($xoid->{'description'}->__toString())) : '';
 			$info = isset($xoid->{'description'}) ? $xoid->{'information'}->__toString() : '';
 
 			// For ASN.1 definitions, "Description" is filled with the definition and "Information" is usually empty
@@ -1060,30 +1060,22 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 				}
 			}
 
-			if (OIDplus::db()->transaction_supported()) OIDplus::db()->transaction_begin();
-			try {
-				$obj_test = OIDplusObject::findFitting($id);
-				if ($obj_test) {
-					if ($replaceExistingOIDs) {
-						OIDplus::db()->query("delete from ###objects where id = ?", array($id));
-						OIDplus::db()->query("delete from ###asn1id where oid = ?", array($id));
-						OIDplus::db()->query("delete from ###iri where oid = ?", array($id));
-					} else {
-						//$errors[] = "Ignore OID '$dot_notation' because it already exists";
-						//$count_errors++;
-						$count_already_existing++;
-						continue;
-					}
+			$obj_test = OIDplusObject::findFitting($id);
+			if ($obj_test) {
+				if ($replaceExistingOIDs) {
+					OIDplus::db()->query("delete from ###objects where id = ?", array($id));
+					OIDplus::db()->query("delete from ###asn1id where oid = ?", array($id));
+					OIDplus::db()->query("delete from ###iri where oid = ?", array($id));
+				} else {
+					//$errors[] = "Ignore OID '$dot_notation' because it already exists";
+					//$count_errors++;
+					$count_already_existing++;
+					continue;
 				}
-
-				// TODO: we can probably get the created and modified timestamp from oid-info.com XML
-				OIDplus::db()->query("insert into ###objects (id, parent, title, description, confidential, ra_email) values (?, ?, ?, ?, ?, ?)", array($id, $parent, $title, $info, false, $ra));
-
-				if (OIDplus::db()->transaction_supported()) OIDplus::db()->transaction_commit();
-			} catch (\Exception $e) {
-				if (OIDplus::db()->transaction_supported()) OIDplus::db()->transaction_rollback();
-				throw new $e;
 			}
+
+			// TODO: we can probably get the created and modified timestamp from oid-info.com XML
+			OIDplus::db()->query("insert into ###objects (id, parent, title, description, confidential, ra_email) values (?, ?, ?, ?, ?, ?)", array($id, $parent, $title, $info, false, $ra));
 
 			OIDplusObject::resetObjectInformationCache();
 

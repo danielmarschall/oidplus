@@ -144,8 +144,8 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 			$out['text'] .= '<p>'._L('The query according to OID Information Protocol is:').'</p>';
 			$out['text'] .= '	<p><pre id="whois_query_bar"></pre></p>';
 			$out['text'] .= '	<p><input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(whois_query_bar)"></p>';
-			$out['text'] .= '<p>'._L('You can use any WHOIS compatible client to query the information from the WHOIS or OID-IP port.').'</p>';
 			if ($whois_server != '') {
+				$out['text'] .= '<p>'._L('You can use any WHOIS compatible client to query the information from the WHOIS or OID-IP port.').'</p>';
 				$out['text'] .= '<p>'._L('The hostname and port number is:').'</p>';
 				$out['text'] .= '<p><pre>'.htmlentities($whois_server).'</pre></p>';
 			}

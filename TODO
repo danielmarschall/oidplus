@@ -1,6 +1,6 @@
 May 2023 planned:
-- Don't send "information object OIDs" (= Non-OIDs) OIDs to oid-info.com anymore
-	=> 17 May 2023 mitigated at VTS internal side
+- Don't send "information object OIDs" (= Non-OIDs mapped to OID) OIDs or OID-AltIds to oid-info.com anymore
+	=> 17 May 2023 mitigated at VTS internal side for Information Object OIDs
 - In re Internet access:
           * Check if all instances of https://github.com/danielmarschall/oidplus/issues/5 ("Offline mode") have been addressed
     [OK!] * Everywhere where url_post_contents() is used, we need to check url_post_contents_available() too.
@@ -167,6 +167,7 @@ DATA TRANSFER PLUGIN
 - XML import: Let the user decide if "created=now" should be set
 - XML import: Waiting animation
 - XML import: If output (errors) is too long, show them in a page rather than an alert() box
+- oidplus:oidinfo_compare_import : It would be nice to have an "import all" button
 
 SMALL THINGS
 - when you copy something into the clipboard, please show a toast message
