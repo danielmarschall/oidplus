@@ -352,7 +352,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 
 					$next_version = $this->getNextVersionFrom($local_installation,false);
 					if ($next_version) {
-						$out['text'] .= '<p><input type="button" onclick="OIDplusPageAdminSoftwareUpdate.doUpdateOIDplus('.js_escape($next_version).', '.js_escape($newest_version).')" value="'._L('Update NOW').'"></p>';
+						$out['text'] .= '<p><input type="button" onclick="OIDplusPageAdminSoftwareUpdate.doUpdateOIDplus('.js_escape($local_installation).', '.js_escape($next_version).', '.js_escape($newest_version).')" value="'._L('Update NOW').'"></p>';
 					} else {
 						$out['text'] .= '<p><font color="red">'._L('Could not determine next version. Please try again later.').'</font></p>';
 					}
