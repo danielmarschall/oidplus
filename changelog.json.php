@@ -3,6 +3,14 @@
         "dummy": "<?php die(base64_decode('IgogICAgfQpdCg==')); /* for security reasons, do not show the current version @phpstan-ignore-line */ ?>"
     },
     {
+        "version": "2.0.1.1",
+        "date": "2023-11-15 00:58:00 +0100",
+        "author": "Daniel Marschall (ViaThinkSoft)",
+        "changes": [
+            "Waterjuice UUID-to-OID and Microsoft UUID-to-OID will not be transmitted to oid-info.com anymore."
+        ]
+    },
+    {
         "version": "2.0.1",
         "date": "2023-11-12 19:21:00 +0100",
         "author": "Daniel Marschall (ViaThinkSoft)",
