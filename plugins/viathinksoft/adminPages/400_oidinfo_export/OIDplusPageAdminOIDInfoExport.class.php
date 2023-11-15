@@ -902,6 +902,10 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 						if ($ns == 'oid') {
 							// TODO: Let Object Type plugins decide if they want that their OID representations get published or not (via a Feature OID implementation)
 							if (strpos($id, '2.25.') === 0) continue; // don't spam the uuid arc with GUID objects
+							if (strpos($id, '1.2.840.113556.1.8000.2554.') === 0) continue; // don't spam the uuid arc with GUID objects
+							if (strpos($id, '1.3.6.1.4.1.54392.1.') === 0) continue; // don't spam the uuid arc with GUID objects
+							if (strpos($id, '1.3.6.1.4.1.54392.2.') === 0) continue; // don't spam the uuid arc with GUID objects
+							if (strpos($id, '1.3.6.1.4.1.54392.3.') === 0) continue; // don't spam the uuid arc with GUID objects
 							$out_content .= $oa->createXMLEntry($id, $elements, $params, $comment=$obj->nodeId());
 						}
 					}

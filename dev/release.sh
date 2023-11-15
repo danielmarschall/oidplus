@@ -89,7 +89,16 @@ done
 # 5. Only if you want to start a new release: Add new entry to the top of changelog.json.php
 echo "5. Please edit changelog.json.php (add '-dev' for non-stable versions)"
 sleep 2
-nano "$DIR"/../changelog.json.php
+while true; do
+    nano "$DIR"/../changelog.json.php
+    echo '<?php if (!@json_decode(@file_get_contents("'$DIR'/../changelog.json.php"))) exit(1);' | php
+    if [ $? -eq 0 ]; then
+        break
+    else
+        echo "JSON Syntax error! Please fix it"
+	sleep 2
+    fi
+done
 
 # 6. Run plugins/viathinksoft/adminPages/902_systemfile_check/private/gen_serverside_v3
 echo "6. Generate system file check checksum file..."

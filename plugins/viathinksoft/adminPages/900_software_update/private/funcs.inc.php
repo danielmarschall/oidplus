@@ -474,14 +474,14 @@ function oidplus_create_changescript($outdir_old, $outdir_new, $outfile, $prev_v
 		$outscript .= "}\n";
 		$outscript .= "if (\$latest_version != '$prev_version') err('This update can only be applied to OIDplus version $prev_version!');\n";
 	} else if (version_compare($version, "2.0.0.662") >= 0) {
-		$rev = str_replace('2.0.0.', '', $version);
-		$prev_rev = str_replace('2.0.0.', '', $prev_version);
+		$rev = (int)str_replace('2.0.0.', '', $version);
+		$prev_rev = (int)str_replace('2.0.0.', '', $prev_version);
 		$outscript .= "if (trim(@file_get_contents('.version.php')) !== '<?php // Revision $prev_rev') {\n";
 		$outscript .= "\terr('This update can only be applied to OIDplus version 2.0.0.$prev_rev!');\n";
 		$outscript .= "}\n";
 	} else {
-		$rev = str_replace('2.0.0.', '', $version);
-		$prev_rev = str_replace('2.0.0.', '', $prev_version);
+		$rev = (int)str_replace('2.0.0.', '', $version);
+		$prev_rev = (int)str_replace('2.0.0.', '', $prev_version);
 		$outscript .= "if (trim(@file_get_contents('oidplus_version.txt')) !== 'Revision $prev_rev') {\n";
 		$outscript .= "\terr('This update can only be applied to OIDplus version 2.0.0.$prev_rev!');\n";
 		$outscript .= "}\n";
@@ -512,7 +512,7 @@ function oidplus_create_changescript($outdir_old, $outdir_new, $outfile, $prev_v
 			$outscript .= "if (is_file('.version.php')) warn('Could not delete .version.php! Please delete it manually');\n";
 		}
 	} else if (version_compare($version, "2.0.0.661") >= 0) {
-		$rev = str_replace('2.0.0.', '', $version);
+		$rev = (int)str_replace('2.0.0.', '', $version);
 		$outscript .= "file_put_contents('.version.php', \"<?php // Revision $rev\\n\");\n";
 		$outscript .= "if (trim(@file_get_contents('.version.php')) !== '<?php // Revision $rev') err('Could not write to .version.php!');\n";
 		if (version_compare($version, "2.0.0.661") == 0) {
@@ -520,7 +520,7 @@ function oidplus_create_changescript($outdir_old, $outdir_new, $outfile, $prev_v
 			$outscript .= "if (is_file('oidplus_version.txt')) err('Could not delete oidplus_version.txt! Please delete it manually');\n";
 		}
 	} else {
-		$rev = str_replace('2.0.0.', '', $version);
+		$rev = (int)str_replace('2.0.0.', '', $version);
 		$outscript .= "file_put_contents('oidplus_version.txt', \"Revision $rev\\n\");\n";
 		$outscript .= "if (trim(@file_get_contents('oidplus_version.txt')) !== 'Revision $rev') err('Could not write to oidplus_version.txt!');\n";
 	}
@@ -542,7 +542,12 @@ function oidplus_create_changescript($outdir_old, $outdir_new, $outfile, $prev_v
 
 	$naked = preg_replace('@<\?php /\* <ViaThinkSoftSignature>(.+)</ViaThinkSoftSignature> \*/ \?>\n@ismU', '', $outscript);
 
-	$hash = hash("sha256", $naked.basename($outfile));
+	if (version_compare($prev_version, "2.0.1") < 0) {
+		$rev = (int)str_replace('2.0.0.', '', $prev_version);
+		$hash = hash("sha256", $naked."update_".($rev)."_to_".($rev+1).".txt");
+	} else {
+		$hash = hash("sha256", $naked.basename($outfile));
+	}
 
 	$pkeyid = openssl_pkey_get_private('file://'.$priv_key);
 	openssl_sign($hash, $signature, $pkeyid, OPENSSL_ALGO_SHA256);
