@@ -146,6 +146,7 @@ class OIDplus extends OIDplusBaseClass {
 
 		if ($first_init) {
 			if (self::insideSetup()) return self::$baseConfig;
+			if ((basename($_SERVER['SCRIPT_NAME']) === 'polyfill.min.js.php') && isset($_REQUEST['noBaseConfig']) && ($_REQUEST['noBaseConfig'] == '1')) return self::$baseConfig;
 			if ((basename($_SERVER['SCRIPT_NAME']) === 'oidplus.min.js.php') && isset($_REQUEST['noBaseConfig']) && ($_REQUEST['noBaseConfig'] == '1')) return self::$baseConfig;
 			if ((basename($_SERVER['SCRIPT_NAME']) === 'oidplus.min.css.php') && isset($_REQUEST['noBaseConfig']) && ($_REQUEST['noBaseConfig'] == '1')) return self::$baseConfig;
 

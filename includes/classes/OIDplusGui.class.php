@@ -274,7 +274,7 @@ class OIDplusGui extends OIDplusBaseClass {
 		}
 		$head_elems[] = '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
 		$head_elems[] = '<title>'.htmlentities($title).'</title>';
-		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'polyfill.min.js.php"></script>';
+		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'polyfill.min.js.php?noBaseConfig=1"></script>';
 		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.js.php?noBaseConfig=1" type="text/javascript"></script>';
 		$head_elems[] = '<link rel="stylesheet" href="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.css.php?noBaseConfig=1">';
 		$head_elems[] = '<link rel="icon" type="image/png" href="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'favicon.png.php">';
