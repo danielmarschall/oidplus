@@ -31,6 +31,8 @@ use ViaThinkSoft\OIDplus\OIDplusLogger;
 
 // ---
 
+$errors_found = false;
+
 $cntfiles = 0;
 $cntcodes = 0;
 $it = new RecursiveDirectoryIterator($dir);
@@ -53,6 +55,7 @@ foreach(new RecursiveIteratorIterator($it) as $file) {
 			if (OIDplusLogger::parse_maskcode($str) === false) {
 				$file = substr($file, strlen($dir));
 				echo "Invalid maskcode '$str' in file '$file'\n";
+				$errors_found = true;
 			} else {
 				if (VERBOSE) echo 'Valid: '.$str."\n";
 			}
@@ -60,6 +63,8 @@ foreach(new RecursiveIteratorIterator($it) as $file) {
 	}
 }
 echo "Done. Checked $cntcodes mask codes in $cntfiles files.\n";
+
+exit($errors_found ? 1 : 0);
 
 # ---
 
