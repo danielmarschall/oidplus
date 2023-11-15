@@ -3,6 +3,14 @@
         "dummy": "<?php die(base64_decode('IgogICAgfQpdCg==')); /* for security reasons, do not show the current version @phpstan-ignore-line */ ?>"
     },
     {
+        "version": "2.0.1.4",
+        "date": "2023-11-15 14:56:00 +0100",
+        "author": "Daniel Marschall (ViaThinkSoft)",
+        "changes": [
+            "Fixed issue \"polyfill.min.js.php does not work without baseconfig file\" (GitHub issue #36)"
+        ]
+    },
+    {
         "version": "2.0.1.3",
         "date": "2023-11-15 14:41:00 +0100",
         "author": "Daniel Marschall (ViaThinkSoft)",
