@@ -8846,10 +8846,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Which object types do you want to manage using OIDplus?
+		Which object types do you want to manage using OIDplus? (This can be changed at a later time)
 		]]></source>
 		<target><![CDATA[
-		Welche Objekt-Typen möchten Sie mit OIDplus verwalten?
+		Welche Objekt-Typen möchten Sie mit OIDplus verwalten? (Kann zu einem späteren Zeitpunkt geändert werden)
 		]]></target>
 	</message>
 	<message>

@@ -3,6 +3,14 @@
         "dummy": "<?php die(base64_decode('IgogICAgfQpdCg==')); /* for security reasons, do not show the current version @phpstan-ignore-line */ ?>"
     },
     {
+        "version": "2.0.1.2",
+        "date": "2023-11-15 13:29:00 +0100",
+        "author": "Daniel Marschall (ViaThinkSoft)",
+        "changes": [
+            "Small fixes for the oid-info.com importer"
+        ]
+    },
+    {
         "version": "2.0.1.1",
         "date": "2023-11-15 00:58:00 +0100",
         "author": "Daniel Marschall (ViaThinkSoft)",
