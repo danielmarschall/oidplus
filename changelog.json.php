@@ -3,6 +3,15 @@
         "dummy": "<?php die(base64_decode('IgogICAgfQpdCg==')); /* for security reasons, do not show the current version @phpstan-ignore-line */ ?>"
     },
     {
+        "version": "2.0.1.5",
+        "date": "2023-11-15 22:01:00 +0100",
+        "author": "Daniel Marschall (ViaThinkSoft)",
+        "changes": [
+            "Software update: Fixed problem with outdated changelog due to caching (GitHub issue #38)",
+            "Various smaller improvements"
+        ]
+    },
+    {
         "version": "2.0.1.4",
         "date": "2023-11-15 14:56:00 +0100",
         "author": "Daniel Marschall (ViaThinkSoft)",

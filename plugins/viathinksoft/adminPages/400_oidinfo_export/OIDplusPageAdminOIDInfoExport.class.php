@@ -644,12 +644,14 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 			$tabcont .= '<p><input type="button" onclick="window.open(\''.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'oidinfo_export.php?online=1\',\'_blank\')" value="'._L('Generate XML (only OIDs which do not exist at oid-info.com)').'"></p>';
 			$tabcont .= '<p><a href="http://oid-info.com/submit.htm" target="_blank">'._L('Upload XML files manually to oid-info.com').'</a></p>';
 			$tabcont .= '<br><p>'._L('Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!<br>It will cause various loss of information, e.g. because Non-OIDs like GUIDs are converted in OIDs and can\'t be converted back.').'</p>';
-			$tabcont .= '<h2>'._L('Automatic export to oid-info.com').'</h2>';
-			$privacy_level = OIDplus::config()->getValue('reg_privacy');
-			if ($privacy_level == 0) {
-				$tabcont .= '<p>'._L('All your OIDs will automatically submitted to oid-info.com through the remote directory service in regular intervals.').' (<a '.OIDplus::gui()->link('oidplus:srv_registration').'>'._L('Change preference').'</a>)</p>';
-			} else {
-				$tabcont .= '<p>'._L('If you set the privacy option to "0" (your system is registered), then all your OIDs will be automatically exported to oid-info.com.').' (<a '.OIDplus::gui()->link('oidplus:srv_registration').'>'._L('Change preference').'</a>)</p>';
+			if (OIDplus::getEditionInfo()['vendor'] == 'ViaThinkSoft') {
+				$tabcont .= '<h2>'._L('Automatic export to oid-info.com').'</h2>';
+				$privacy_level = OIDplus::config()->getValue('reg_privacy');
+				if ($privacy_level == 0) {
+					$tabcont .= '<p>'._L('All your OIDs will automatically submitted to oid-info.com through the remote directory service in regular intervals.').' (<a '.OIDplus::gui()->link('oidplus:srv_registration').'>'._L('Change preference').'</a>)</p>';
+				} else {
+					$tabcont .= '<p>'._L('If you set the privacy option to "0" (your system is registered), then all your OIDs will be automatically exported to oid-info.com.').' (<a '.OIDplus::gui()->link('oidplus:srv_registration').'>'._L('Change preference').'</a>)</p>';
+				}
 			}
 			$tabcont .= '<h2>'._L('Comparison with oid-info.com').'</h2>';
 			$tabcont .= '<p><a '.OIDplus::gui()->link('oidplus:oidinfo_compare_export').'>'._L('List OIDs in your system which are missing at oid-info.com').'</a></p>';

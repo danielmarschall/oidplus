@@ -294,7 +294,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 				}
 
 				$local_installation = OIDplus::getVersion();
-				$newest_version = $this->getLatestRevision(false);
+				$newest_version = $this->getLatestVersion(false);
 
 				$out['text'] .= _L('Local installation: %1',($local_installation ?: _L('unknown'))).'<br>';
 				$out['text'] .= _L('Latest published version: %1',($newest_version ?: _L('unknown'))).'<br><br>';
@@ -455,8 +455,6 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 				$tex = str_pad($tex, 48, ' ', STR_PAD_RIGHT);
 				$content .= trim($tex . str_replace("\n", "\n".str_repeat(' ', strlen($tex)), $comment));
 				$content .= "\n";
-
-
 			}
 
 			return $content;
@@ -469,10 +467,10 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 	 * @param bool $allow_dev_version
 	 * @return false|string
 	 */
-	private function getLatestRevision(bool $allow_dev_version=true) {
+	private function getLatestVersion(bool $allow_dev_version=true) {
 		try {
-			$master_changelog = OIDplus::getEditionInfo()['master_changelog'];
-			return OIDplus::getVersion($master_changelog, $allow_dev_version);
+			$json = $this->changeLogJson();
+			return OIDplus::getVersion($json, $allow_dev_version);
 		} catch (\Exception $e) {
 			return false;
 		}
@@ -549,7 +547,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 					$out_msg  = _L('OIDplus could not determine the latest version.').' '.$reason;
 				} else {
 					$local_installation = OIDplus::getVersion();
-					$newest_version = $this->getLatestRevision(false);
+					$newest_version = $this->getLatestVersion(false);
 
 					$requireInfo = ($installType === 'svn-wc') ? _L('shell access with svn/svnversion tool, or PDO/SQLite3 PHP extension') : _L('shell access with Git client');
 					$updateCommand = ($installType === 'svn-wc') ? 'svn update' : 'git pull';
@@ -574,7 +572,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 					$out_msg  = _L('OIDplus could not determine the latest version.').' '.$reason;
 				} else {
 					$local_installation = OIDplus::getVersion();
-					$newest_version = $this->getLatestRevision(false);
+					$newest_version = $this->getLatestVersion(false);
 
 					if (!$newest_version) {
 						$out_stat = 'WARN';

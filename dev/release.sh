@@ -20,11 +20,17 @@ echo "PREPARE FOR NEW OIDPLUS VERSION"
 echo "==============================="
 echo ""
 
-# TODO: Maybe we should also check for the word "SPONGE" and do not let commit if it is there (see TempleOS)
-
 # Please make sure to do all these steps before committing ANYTHING:
 
 DIR=$( dirname "$0" )
+
+# 0. Search for SPONGE (why Sponge? See TempleOS)
+echo "0. Checking for forgotten sponges"
+grep -r "SPONGE" | grep -v "\.svn/pristine" | grep -v "dev/release.sh"
+if [ $? -eq 0 ]; then
+	echo "STOP! There are missing files. Please fix this problem (remove them from the SVN)"
+	exit 1
+fi
 
 # 1. Recommended: Run dev/vendor_update.sh and make sure new/deleted files are added/deleted from the SVN/Git working copy
 echo "1. Run composer vendor update? (Recommended to do regularly)"
@@ -75,8 +81,16 @@ while true; do
 	fi
 done
 
-# 4. Run phpstan
-echo "4. Running PHPSTAN..."
+# 4. Run dev/logger/verify_maskcodes.phps
+echo "4. Verify OIDplus Logger Maskcodes..."
+"$DIR"/logger/verify_maskcodes.phps
+if [ $? -ne 0 ]; then
+	echo "Please fix the issues and run release script again"
+	exit 1
+fi
+
+# 5. Run phpstan
+echo "5. Running PHPSTAN..."
 cd "$DIR"/.. && phpstan
 echo "Is PHPSTAN output OK?"
 select yn in "Yes" "No"; do
@@ -86,8 +100,8 @@ select yn in "Yes" "No"; do
     esac
 done
 
-# 5. Only if you want to start a new release: Add new entry to the top of changelog.json.php
-echo "5. Please edit changelog.json.php (add '-dev' for non-stable versions)"
+# 6. Only if you want to start a new release: Add new entry to the top of changelog.json.php
+echo "6. Please edit changelog.json.php (add '-dev' for non-stable versions)"
 sleep 2
 while true; do
     nano "$DIR"/../changelog.json.php
@@ -100,24 +114,24 @@ while true; do
     fi
 done
 
-# 6. Run plugins/viathinksoft/adminPages/902_systemfile_check/private/gen_serverside_v3
-echo "6. Generate system file check checksum file..."
+# 7. Run plugins/viathinksoft/adminPages/902_systemfile_check/private/gen_serverside_v3
+echo "7. Generate system file check checksum file..."
 "$DIR"/../plugins/viathinksoft/adminPages/902_systemfile_check/private/gen_serverside_v3
 
-# 7. Commit to SVN or GIT
+# 8. Commit to SVN or GIT
 if [ -d "$DIR"/../.svn ]; then
-	echo "7. Committing to SVN"
+	echo "8. Committing to SVN"
 	svn commit
 elif [ -d "$DIR"/../.git ]; then
-	echo "7. ALL GOOD! PLEASE NOW COMMIT TO GIT"
+	echo "8. ALL GOOD! PLEASE NOW COMMIT TO GIT"
 else
-	echo "7. ALL GOOD! YOU CAN RELEASE IT"
+	echo "8. ALL GOOD! YOU CAN RELEASE IT"
 fi
 exit 0
 
-# 8. (ViaThinkSoft internal / runs automatically) Sync SVN to GitHub
+# 9. (ViaThinkSoft internal / runs automatically) Sync SVN to GitHub
 
-# 9. (ViaThinkSoft internal / runs automatically) Run plugins/viathinksoft/adminPages/900_software_update/private/gen_serverside_git
-#                                                 or  plugins/viathinksoft/adminPages/900_software_update/private/gen_serverside_svn
-#                                                 depending wheather you want to use GIT or SVN as your development base
-#                                                 (Repos are read from includes/edition.ini)
+# 10. (ViaThinkSoft internal / runs automatically) Run plugins/viathinksoft/adminPages/900_software_update/private/gen_serverside_git
+#                                                  or  plugins/viathinksoft/adminPages/900_software_update/private/gen_serverside_svn
+#                                                  depending wheather you want to use GIT or SVN as your development base
+#                                                  (Repos are read from includes/edition.ini)
