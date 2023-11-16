@@ -3,6 +3,14 @@
         "dummy": "<?php die(base64_decode('IgogICAgfQpdCg==')); /* for security reasons, do not show the current version @phpstan-ignore-line */ ?>"
     },
     {
+        "version": "2.0.1.6",
+        "date": "2023-11-16 11:53:00 +0100",
+        "author": "Daniel Marschall (ViaThinkSoft)",
+        "changes": [
+            "Fixed problems with canonical URLs (baseconfig was not used in CSS/JS)"
+        ]
+    },
+    {
         "version": "2.0.1.5",
         "date": "2023-11-15 22:01:00 +0100",
         "author": "Daniel Marschall (ViaThinkSoft)",

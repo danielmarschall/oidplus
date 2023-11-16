@@ -124,7 +124,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	private static function insideSetup(): bool {
+	public static function insideSetup(): bool {
 		if (PHP_SAPI == 'cli') return false;
 		if (!isset($_SERVER['REQUEST_URI'])) return false;
 		return (strpos($_SERVER['REQUEST_URI'], OIDplus::webpath(null,OIDplus::PATH_RELATIVE_TO_ROOT).'setup/') === 0);
@@ -146,6 +146,7 @@ class OIDplus extends OIDplusBaseClass {
 
 		if ($first_init) {
 			if (self::insideSetup()) return self::$baseConfig;
+			// noBaseConfig=1 setting: see OIDplusGui.class.php
 			if ((basename($_SERVER['SCRIPT_NAME']) === 'polyfill.min.js.php') && isset($_REQUEST['noBaseConfig']) && ($_REQUEST['noBaseConfig'] == '1')) return self::$baseConfig;
 			if ((basename($_SERVER['SCRIPT_NAME']) === 'oidplus.min.js.php') && isset($_REQUEST['noBaseConfig']) && ($_REQUEST['noBaseConfig'] == '1')) return self::$baseConfig;
 			if ((basename($_SERVER['SCRIPT_NAME']) === 'oidplus.min.css.php') && isset($_REQUEST['noBaseConfig']) && ($_REQUEST['noBaseConfig'] == '1')) return self::$baseConfig;
