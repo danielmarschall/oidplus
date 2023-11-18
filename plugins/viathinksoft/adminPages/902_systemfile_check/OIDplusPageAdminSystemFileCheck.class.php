@@ -109,6 +109,10 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 #									) || (substr($filename_old, 0, strlen('plugins/')) !== 'plugins/')) &&
 
 								($filename_old !== 'composer.lock') &&
+								($filename_old !== 'phpstan.phar') &&
+								($filename_old !== 'phpstan.neon') &&
+								($filename_old !== 'phpstan.bat') &&
+								($filename_old !== 'phpstan.sh') &&
 								($filename_old !== 'plugins/viathinksoft/adminPages/902_systemfile_check/checksums.json')
 							){
 								$num++;
@@ -204,6 +208,10 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 			if (in_array($path,$exclude)) continue;
 			if (empty($path)) $path = $dir . DIRECTORY_SEPARATOR . $file;
 			if ($file == 'composer.lock') continue;
+			if ($file == 'phpstan.phar') continue;
+			if ($file == 'phpstan.neon') continue;
+			if ($file == 'phpstan.bat') continue;
+			if ($file == 'phpstan.sh') continue;
 			if (!is_dir($path)) {
 				$xpath = substr($path, strlen($basepath));
 				$xpath = str_replace('\\', '/', $xpath);

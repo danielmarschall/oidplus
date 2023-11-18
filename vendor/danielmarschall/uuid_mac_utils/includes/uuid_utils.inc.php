@@ -3,7 +3,7 @@
 /*
  * UUID utils for PHP
  * Copyright 2011 - 2023 Daniel Marschall, ViaThinkSoft
- * Version 2023-11-11
+ * Version 2023-11-18
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -847,55 +847,100 @@ function uuid_canonize($uuid) {
 	return oid_to_uuid(uuid_to_oid($uuid));
 }
 
+/*
+assert(oid_to_uuid('2.25.111325678376819997685911819737516232943')=='53c08bb6-b2eb-5038-bf28-ad41a08c50ef');
+assert(oid_to_uuid('1.2.840.113556.1.8000.2554.21440.35766.45803.20536.48936.11354528.9195759')=='53c08bb6-b2eb-5038-bf28-ad41a08c50ef');
+assert(oid_to_uuid('1.3.6.1.4.1.54392.1.6034977117478539320.13774449957690691823')=='53c08bb6-b2eb-5038-bf28-ad41a08c50ef');
+assert(oid_to_uuid('1.3.6.1.4.1.54392.2.1405127606.3001765944.3207114049.2693550319')=='53c08bb6-b2eb-5038-bf28-ad41a08c50ef');
+assert(oid_to_uuid('1.3.6.1.4.1.54392.3.21440.35766.45803.20536.48936.44353.41100.20719')=='53c08bb6-b2eb-5038-bf28-ad41a08c50ef');
+*/
 function oid_to_uuid($oid) {
-	// TODO: Also support Non-2.25 base UUID-to-OID
-	if (!is_uuid_oid($oid,true)) return false;
+	if (substr($oid,0,1) == '.') $oid = substr($oid, 1); // remove leading dot
 
-	if (substr($oid,0,1) == '.') {
-		$oid = substr($oid, 1);
-	}
+	// Information about Microsoft and Waterjuice UUID-OID: https://waterjuiceweb.wordpress.com/2019/09/24/guids-to-oids/
+
 	$ary = explode('.', $oid);
-
-	if (!isset($ary[2])) return false;
-
-	$val = $ary[2];
-
-	$x = gmp_init($val, 10);
-	$y = gmp_strval($x, 16);
-	$y = str_pad($y, 32, "0", STR_PAD_LEFT);
-	return substr($y,  0, 8).'-'.
-	       substr($y,  8, 4).'-'.
-	       substr($y, 12, 4).'-'.
-	       substr($y, 16, 4).'-'.
-	       substr($y, 20, 12);
+	if ((count($ary) == 3) && (strpos($oid, '2.25.') === 0)) {
+		// ISO/ITU-T UUID-to-OID
+		// Example: {53c08bb6-b2eb-5038-bf28-ad41a08c50ef} = 2.25.111325678376819997685911819737516232943
+		$val = $ary[2];
+		$dec = gmp_init($val, 10);
+		$hex = gmp_strval($dec, 16);
+		$hex = str_pad($hex, 32, "0", STR_PAD_LEFT);
+		return substr($hex,0,8).'-'.substr($hex,8,4).'-'.substr($hex,12,4).'-'.substr($hex,16,4).'-'.substr($hex,20,12);
+	} else if ((count($ary) == 14) && (strpos($oid, '1.2.840.113556.1.8000.2554.') === 0)) {
+		// Microsoft UUID-to-OID
+		// Example: {53c08bb6-b2eb-5038-bf28-ad41a08c50ef} = 1.2.840.113556.1.8000.2554.21440.35766.45803.20536.48936.11354528.9195759
+		$a = $ary[7];
+		$b = $ary[8];
+		$c = $ary[9];
+		$d = $ary[10];
+		$e = $ary[11];
+		$f = $ary[12];
+		$g = $ary[13];
+		return dechex($a).dechex($b).'-'.dechex($c).'-'.dechex($d).'-'.dechex($e).'-'.dechex($f).dechex($g);
+	} else if ((count($ary) == 10) && (strpos($oid, '1.3.6.1.4.1.54392.1.') === 0)) {
+		// Waterjuice UUID-to-OID 2x64 Bits
+		// Example: {53c08bb6-b2eb-5038-bf28-ad41a08c50ef} = 1.3.6.1.4.1.54392.1.6034977117478539320.13774449957690691823
+		$a1 = gmp_strval(gmp_init($ary[8],10),16); if (strlen($a1)>16) return false;
+		$a2 = gmp_strval(gmp_init($ary[9],10),16); if (strlen($a2)>16) return false;
+		$hex =
+			str_pad($a1, 16, "0", STR_PAD_LEFT).
+			str_pad($a2, 16, "0", STR_PAD_LEFT);
+		return substr($hex,0,8).'-'.substr($hex,8,4).'-'.substr($hex,12,4).'-'.substr($hex,16,4).'-'.substr($hex,20,12);
+	} else if ((count($ary) == 12) && (strpos($oid, '1.3.6.1.4.1.54392.2.') === 0)) {
+		// Waterjuice UUID-to-OID 4x32 Bits
+		// Example: {53c08bb6-b2eb-5038-bf28-ad41a08c50ef} = 1.3.6.1.4.1.54392.2.1405127606.3001765944.3207114049.2693550319
+		$a1 = gmp_strval(gmp_init($ary[8],10),16); if (strlen($a1)>8) return false;
+		$a2 = gmp_strval(gmp_init($ary[9],10),16); if (strlen($a2)>8) return false;
+		$a3 = gmp_strval(gmp_init($ary[10],10),16); if (strlen($a3)>8) return false;
+		$a4 = gmp_strval(gmp_init($ary[11],10),16); if (strlen($a4)>8) return false;
+		$hex =
+			str_pad($a1, 8, "0", STR_PAD_LEFT).
+			str_pad($a2, 8, "0", STR_PAD_LEFT).
+			str_pad($a3, 8, "0", STR_PAD_LEFT).
+			str_pad($a4, 8, "0", STR_PAD_LEFT);
+		return substr($hex,0,8).'-'.substr($hex,8,4).'-'.substr($hex,12,4).'-'.substr($hex,16,4).'-'.substr($hex,20,12);
+	} else if ((count($ary) == 16) && (strpos($oid, '1.3.6.1.4.1.54392.3.') === 0)) {
+		// Waterjuice UUID-to-OID 8x16 Bits
+		// Example: {53c08bb6-b2eb-5038-bf28-ad41a08c50ef} = 1.3.6.1.4.1.54392.3.21440.35766.45803.20536.48936.44353.41100.20719
+		$a1 = gmp_strval(gmp_init($ary[8],10),16); if (strlen($a1)>4) return false;
+		$a2 = gmp_strval(gmp_init($ary[9],10),16); if (strlen($a2)>4) return false;
+		$a3 = gmp_strval(gmp_init($ary[10],10),16); if (strlen($a3)>4) return false;
+		$a4 = gmp_strval(gmp_init($ary[11],10),16); if (strlen($a4)>4) return false;
+		$a5 = gmp_strval(gmp_init($ary[12],10),16); if (strlen($a5)>4) return false;
+		$a6 = gmp_strval(gmp_init($ary[13],10),16); if (strlen($a6)>4) return false;
+		$a7 = gmp_strval(gmp_init($ary[14],10),16); if (strlen($a7)>4) return false;
+		$a8 = gmp_strval(gmp_init($ary[15],10),16); if (strlen($a8)>4) return false;
+		$hex =
+			str_pad($a1, 4, "0", STR_PAD_LEFT).
+			str_pad($a2, 4, "0", STR_PAD_LEFT).
+			str_pad($a3, 4, "0", STR_PAD_LEFT).
+			str_pad($a4, 4, "0", STR_PAD_LEFT).
+			str_pad($a5, 4, "0", STR_PAD_LEFT).
+			str_pad($a6, 4, "0", STR_PAD_LEFT).
+			str_pad($a7, 4, "0", STR_PAD_LEFT).
+			str_pad($a8, 4, "0", STR_PAD_LEFT);
+		return substr($hex,0,8).'-'.substr($hex,8,4).'-'.substr($hex,12,4).'-'.substr($hex,16,4).'-'.substr($hex,20,12);
+	} else {
+		return false;
+	}
 }
 
 function is_uuid_oid($oid, $only_allow_root=false) {
-	// TODO: Also support Non-2.25 base UUID-to-OID
 	if (substr($oid,0,1) == '.') $oid = substr($oid, 1); // remove leading dot
 
-	$ary = explode('.', $oid);
-
 	if ($only_allow_root) {
-		if (count($ary) != 3) return false;
+		return oid_to_uuid($oid) !== false;
 	} else {
-		if (count($ary) < 3) return false;
+		// TODO: Check range of the components (e.g. max 128 bits for 2.25)
+		if (strpos($oid,'2.25.') === 0) return true;
+		if (strpos($oid,'1.2.840.113556.1.8000.2554.') === 0) return true;
+		if (strpos($oid,'1.3.6.1.4.1.54392.1.') === 0) return true;
+		if (strpos($oid,'1.3.6.1.4.1.54392.2.') === 0) return true;
+		if (strpos($oid,'1.3.6.1.4.1.54392.3.') === 0) return true;
+		return false;
 	}
-
-	if ($ary[0] != '2') return false;
-	if ($ary[1] != '25') return false;
-	for ($i=2; $i<count($ary); $i++) {
-		$v = $ary[$i];
-		if (!is_numeric($v)) return false;
-		if ($i == 2) {
-			// Must be in the range of 128 bit UUID
-			$test = gmp_init($v, 10);
-			if (strlen(gmp_strval($test, 16)) > 32) return false;
-		}
-		if ($v < 0) return false;
-	}
-
-	return true;
 }
 
 function uuid_to_oid($uuid, $base='2.25') {

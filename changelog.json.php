@@ -3,6 +3,16 @@
         "dummy": "<?php die(base64_decode('IgogICAgfQpdCg==')); /* for security reasons, do not show the current version @phpstan-ignore-line */ ?>"
     },
     {
+        "version": "2.0.1.7",
+        "date": "2023-11-18 21:38:00 +0100",
+        "author": "Daniel Marschall (ViaThinkSoft)",
+        "changes": [
+            "Implemented OID-to-R74n-Multiplane AltID",
+            "Implemented Microsoft OID-to-UUID AltID",
+            "Implemented Waterjuice OID-to-UUID AltID"
+        ]
+    },
+    {
         "version": "2.0.1.6",
         "date": "2023-11-16 11:53:00 +0100",
         "author": "Daniel Marschall (ViaThinkSoft)",

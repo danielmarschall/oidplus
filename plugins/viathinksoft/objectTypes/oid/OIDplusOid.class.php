@@ -628,7 +628,35 @@ class OIDplusOid extends OIDplusObject {
 		if ($this->isRoot()) return array();
 		$ids = parent::getAltIds();
 
-		// TODO: Also support Waterjuice UUID-to-OID and Microsoft UUID-to-OID
+		// R74n "Multiplane", see https://r74n.com/multiplane/
+		// Vendor space:
+		// [0x2aabb] = 1.3.6.1.4.1.61117.1.[0x2aa00].[0xbb]
+		// Every other space:
+		// [0xcaabb] = 1.3.6.1.4.1.61117.1.[0xcaabb]
+		$multiplane = null;
+		$tmp_oid = oid_up($this->oid);
+		for ($i=0; $i<=0xFF; $i++) {
+			$vid = 0x20000 + ($i<<16);
+			if ($tmp_oid == '1.3.6.1.4.1.61117.1.'.$vid) {
+				$j = (int)substr($this->oid,strlen($tmp_oid)+1);
+				if (($j>=0) && ($j<=0xFF)) {
+					$xi = str_pad(dechex($i), 2, '0', STR_PAD_LEFT);
+					$xj = str_pad(dechex($j), 2, '0', STR_PAD_LEFT);
+					$multiplane = strtoupper('R2'.$xi.$xj);
+				}
+				break;
+			}
+		}
+		if ($tmp_oid == '1.3.6.1.4.1.61117.1') {
+			$ij = (int)substr($this->oid,strlen('1.3.6.1.4.1.61117.1.'));
+			if ((($ij>=0) && ($ij<=0x1FFFF)) || (($ij>0x30000) && ($ij<=0xFFFFF))) {
+				$multiplane = strtoupper('R'.str_pad(dechex($ij), 5, '0', STR_PAD_LEFT));
+			}
+		}
+		if (!is_null($multiplane)) {
+			$ids[] = new OIDplusAltId('r74n-multiplane', $multiplane, _L('R74n-Multiplane'));
+		}
+
 		if ($uuid = oid_to_uuid($this->oid)) {
 			// UUID-OIDs are representation of an UUID
 			$ids[] = new OIDplusAltId('guid', $uuid, _L('UUID representation of this OID'));
