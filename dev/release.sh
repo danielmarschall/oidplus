@@ -24,7 +24,7 @@ echo ""
 
 DIR=$( dirname "$0" )
 
-# 0. Search for SPONGE (why Sponge? See TempleOS)
+# 0. Search for SPONGE (Marker invented by Terry A Davis)
 echo "0. Checking for forgotten sponges"
 grep -r "SPONGE" | grep -v "\.svn/pristine" | grep -v "dev/release.sh"
 if [ $? -eq 0 ]; then
