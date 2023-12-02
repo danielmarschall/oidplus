@@ -673,13 +673,13 @@ class OIDplusOid extends OIDplusObject {
 		if ($this->nodeId(false) == '1.3.6.1.4.1.37476.1') {
 			$aid = 'D276000186B1';
 			$aid_is_ok = aid_canonize($aid);
-			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('No PIX allowed').')', 'https://oidplus.viathinksoft.com/oidplus/?goto=aid%3AD276000186B1');
+			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('No PIX allowed').')', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186B1');
 		} else {
 			if ((count($oid_parts) == 9) && ($oid_parts[0] == '1') && ($oid_parts[1] == '3') && ($oid_parts[2] == '6') && ($oid_parts[3] == '1') && ($oid_parts[4] == '4') && ($oid_parts[5] == '1') && ($oid_parts[6] == '37476') && ($oid_parts[7] == '1')) {
 				$number = str_pad($oid_parts[8],4,'0',STR_PAD_LEFT);
 				$aid = 'D276000186B1'.$number;
 				$aid_is_ok = aid_canonize($aid);
-				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, without prefix').')', 'https://oidplus.viathinksoft.com/oidplus/?goto=aid%3AD276000186B1');
+				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, without prefix').')', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186B1');
 			}
 		}
 
@@ -687,13 +687,13 @@ class OIDplusOid extends OIDplusObject {
 		if ($this->nodeId(false) == '1.3.6.1.4.1.37476.2') {
 			$aid = 'D276000186B2';
 			$aid_is_ok = aid_canonize($aid);
-			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('No PIX allowed').')', 'https://oidplus.viathinksoft.com/oidplus/?goto=aid%3AD276000186B2');
+			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('No PIX allowed').')', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186B2');
 		} else {
 			if ((count($oid_parts) == 9) && ($oid_parts[0] == '1') && ($oid_parts[1] == '3') && ($oid_parts[2] == '6') && ($oid_parts[3] == '1') && ($oid_parts[4] == '4') && ($oid_parts[5] == '1') && ($oid_parts[6] == '37476') && ($oid_parts[7] == '2')) {
 				$number = str_pad($oid_parts[8],4,'0',STR_PAD_LEFT);
 				$aid = 'D276000186B2'.$number;
 				$aid_is_ok = aid_canonize($aid);
-				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, without prefix').')', 'https://oidplus.viathinksoft.com/oidplus/?goto=aid%3AD276000186B2');
+				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, without prefix').')', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186B2');
 			}
 		}
 
@@ -703,7 +703,7 @@ class OIDplusOid extends OIDplusObject {
 			$sid_hex = strtoupper(str_pad(dechex((int)$sid),8,'0',STR_PAD_LEFT));
 			$aid = 'D276000186B20005'.$sid_hex;
 			$aid_is_ok = aid_canonize($aid);
-			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('OIDplus System Application Identifier (ISO/IEC 7816)'), ' ('._L('No PIX allowed').')', 'https://oidplus.viathinksoft.com/oidplus/?goto=aid%3AD276000186B20005');
+			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('OIDplus System Application Identifier (ISO/IEC 7816)'), ' ('._L('No PIX allowed').')', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186B20005');
 		}
 		else if ((count($oid_parts) == 11) && ($oid_parts[0] == '1') && ($oid_parts[1] == '3') && ($oid_parts[2] == '6') && ($oid_parts[3] == '1') && ($oid_parts[4] == '4') && ($oid_parts[5] == '1') && ($oid_parts[6] == '37476') && ($oid_parts[7] == '30') && ($oid_parts[8] == '9')) {
 			$sid = $oid_parts[9];
@@ -712,7 +712,7 @@ class OIDplusOid extends OIDplusObject {
 			$obj_hex = strtoupper(str_pad(dechex((int)$obj),8,'0',STR_PAD_LEFT));
 			$aid = 'D276000186B20005'.$sid_hex.$obj_hex;
 			$aid_is_ok = aid_canonize($aid);
-			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('OIDplus Information Object Application Identifier (ISO/IEC 7816)'), ' ('._L('No PIX allowed').')', 'https://oidplus.viathinksoft.com/oidplus/?goto=aid%3AD276000186B20005');
+			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('OIDplus Information Object Application Identifier (ISO/IEC 7816)'), ' ('._L('No PIX allowed').')', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186B20005');
 		}
 
 		// (VTS F0) IANA PEN to AID Mapping (PIX allowed)
@@ -721,7 +721,7 @@ class OIDplusOid extends OIDplusObject {
 			$aid = 'D276000186F0'.$pen;
 			if (strlen($aid)%2 == 1) $aid .= 'F';
 			$aid_is_ok = aid_canonize($aid);
-			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, with "FF" prefix').')', 'https://oidplus.viathinksoft.com/oidplus/?goto=aid%3AD276000186F0');
+			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, with "FF" prefix').')', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186F0');
 			$ids[] = new OIDplusAltId('iana-pen', $pen, _L('IANA Private Enterprise Number (PEN)'));
 		}
 
@@ -731,7 +731,7 @@ class OIDplusOid extends OIDplusObject {
 			$aid = 'D276000186F1'.$number;
 			if (strlen($aid)%2 == 1) $aid .= 'F';
 			$aid_is_ok = aid_canonize($aid);
-			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, with "FF" prefix').')', 'https://oidplus.viathinksoft.com/oidplus/?goto=aid%3AD276000186F1');
+			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, with "FF" prefix').')', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186F1');
 		}
 
 		// (VTS F6) Mapping OID-to-AID if possible
@@ -752,7 +752,7 @@ class OIDplusOid extends OIDplusObject {
 					$aid_candidate = 'D2 76 00 01 86 E0 ' . strtoupper(implode(' ',str_split($small_hash,2)));
 					$aid_is_ok = aid_canonize($aid_candidate);
 				}
-				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid_candidate, _L('Application Identifier (ISO/IEC 7816)'), '', 'https://oidplus.viathinksoft.com/oidplus/?goto=aid%3AD276000186E0');
+				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid_candidate, _L('Application Identifier (ISO/IEC 7816)'), '', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186E0');
 			} else if (($oid_parts[0] == '0') && ($oid_parts[1] == '4') && ($oid_parts[2] == '0') && ($oid_parts[3] == '127') && ($oid_parts[4] == '0') && ($oid_parts[5] == '7')) {
 				// Illegal usage of E8 by German BSI, plus using E8+Len+OID instead of E8+OID like ISO does
 				// PIX probably not used
@@ -770,7 +770,7 @@ class OIDplusOid extends OIDplusObject {
 				// No PIX allowed
 				$aid_candidate = 'D2 76 00 01 86 F6 '.substr($test_der, strlen('06 xx ')); // Remove ASN.1 06=Type and xx=Length
 				$aid_is_ok = aid_canonize($aid_candidate);
-				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid_candidate, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('No PIX allowed').')', 'https://oidplus.viathinksoft.com/oidplus/?goto=aid%3AD276000186F6');
+				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid_candidate, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('No PIX allowed').')', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186F6');
 			}
 		}
 

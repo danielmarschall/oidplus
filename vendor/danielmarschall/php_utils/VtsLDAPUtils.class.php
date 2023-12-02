@@ -3,7 +3,7 @@
 /*
  * VtsLDAPUtils - Simple LDAP helper functions
  * Copyright 2021 - 2023 Daniel Marschall, ViaThinkSoft
- * Revision: 2023-04-09
+ * Revision: 2023-11-30
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -87,15 +87,20 @@ class VtsLDAPUtils {
 		}
 	}
 
-	public function connect($cfg_ldap_server, $cfg_ldap_port) {
+	public function connect($cfg_ldap_server, $cfg_ldap_port=389) {
 		$this->disconnect();
 
 		// Connect to the server
-		if (!empty($cfg_ldap_port)) {
-			if (!($ldapconn = @ldap_connect($cfg_ldap_server, $cfg_ldap_port))) throw new Exception(self::_L('Cannot connect to LDAP server'));
+		if (strpos($cfg_ldap_server, '://') !== false) {
+			// e.g. ldap://hostname:port or ldaps://hostname:port
+			$uri = $cfg_ldap_server;
 		} else {
-			if (!($ldapconn = @ldap_connect($cfg_ldap_server))) throw new Exception(self::_L('Cannot connect to LDAP server'));
+			$secure = ($cfg_ldap_port == 636) || ($cfg_ldap_port == 3268) || ($cfg_ldap_port == 3269);
+			$schema = $secure ? 'ldaps' : 'ldap';
+			$uri =  $schema . '://' . $cfg_ldap_server . ':' . $cfg_ldap_port;
 		}
+		if (!($ldapconn = @ldap_connect($uri))) throw new Exception(self::_L('Cannot connect to LDAP server'));
+
 		ldap_set_option($ldapconn, LDAP_OPT_PROTOCOL_VERSION, 3);
 		ldap_set_option($ldapconn, LDAP_OPT_REFERRALS, 0);
 

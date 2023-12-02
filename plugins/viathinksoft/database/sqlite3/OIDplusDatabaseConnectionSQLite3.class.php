@@ -153,7 +153,7 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 		}
 
 		$this->conn->createCollation('NATURAL_CMP', 'strnatcmp'); // we need that for natSort()
-		$this->conn->enableExceptions(true); // Throw exceptions instead of PHP warnings
+		$this->conn->enableExceptions(true); // Throw exceptions instead of PHP warnings (preferred as of PHP 8.3)
 
 		$this->prepare_cache = array();
 		$this->last_error = null;

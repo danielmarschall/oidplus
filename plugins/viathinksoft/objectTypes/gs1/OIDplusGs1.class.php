@@ -362,7 +362,7 @@ class OIDplusGs1 extends OIDplusObject {
 		$aid = 'D276000186F5'.$gs1;
 		if (strlen($aid)%2 == 1) $aid .= 'F';
 		$aid_is_ok = aid_canonize($aid);
-		if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, with "FF" prefix').')', 'https://oidplus.viathinksoft.com/oidplus/?goto=aid%3AD276000186F5');
+		if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, with "FF" prefix').')', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186F5');
 
 		return $ids;
 	}

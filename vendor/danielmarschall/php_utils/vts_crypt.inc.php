@@ -57,7 +57,7 @@ Valid <mode> :
 Like most Crypt-hashes, <salt> and <hash> are Radix64 coded
 with alphabet './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' and no padding.
 Link to the online specification:
-	https://oidplus.viathinksoft.com/oidplus/?goto=oid%3A1.3.6.1.4.1.37476.3.0.1.1
+	https://hosted.oidplus.com/viathinksoft/?goto=oid%3A1.3.6.1.4.1.37476.3.0.1.1
 Reference implementation in PHP:
 	https://github.com/danielmarschall/php_utils/blob/master/vts_crypt.inc.php
 

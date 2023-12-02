@@ -131,7 +131,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 		}
 
 		$res_curl = url_post_contents(
-			'https://oidplus.viathinksoft.com/reg2/query.php',
+			'https://www.oidplus.com/reg2/query.php',
 			array(
 				"query"      => $query,
 				"compressed" => $compressed,
@@ -254,7 +254,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 			}
 
 			$res_curl = url_post_contents(
-				'https://oidplus.viathinksoft.com/reg2/query.php',
+				'https://www.oidplus.com/reg2/query.php',
 				array(
 					"query"      => $query,
 					"compressed" => $compressed,
@@ -525,7 +525,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 			}
 
 			$res = url_post_contents(
-				'https://oidplus.viathinksoft.com/reg2/query.php',
+				'https://www.oidplus.com/reg2/query.php',
 				array(
 					"query"      => $query,
 					"compressed" => $compressed,

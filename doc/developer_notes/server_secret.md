@@ -66,4 +66,4 @@ Plugin VTS Client Challenge Captcha:
 GUID Registry
 -------------
 
-The "realm GUIDs" are documented at the [ViaThinkSoft OIDplus Registration Authority](https://oidplus.viathinksoft.com/oidplus/?goto=guid%3Aoidplus%2FauthRealms). 
+The "realm GUIDs" are documented at the [ViaThinkSoft OIDplus Registration Authority](https://hosted.oidplus.com/viathinksoft/?goto=guid%3Aoidplus%2FauthRealms). 
