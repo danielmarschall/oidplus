@@ -119,7 +119,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 					$ids[] = new OIDplusAltId('aid', $aid,
 						_L('OIDplus Information Object Application Identifier (ISO/IEC 7816)'),
 						' ('._L('No PIX allowed').')',
-						'https://oidplus.viathinksoft.com/oidplus/?goto=aid%3AD276000186B20005');
+						'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186B20005');
 				}
 			}
 

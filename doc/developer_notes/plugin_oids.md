@@ -18,4 +18,4 @@ For ViaThinkSoft plugins:
 | raPages     | 1.3.6.1.4.1.37476.2.5.2.5.2.1  | 1.3.6.1.4.1.37476.2.5.2.4.2  | OIDplusPagePluginRa
 | sqlSlang    | 1.3.6.1.4.1.37476.2.5.2.5.11.1 | 1.3.6.1.4.1.37476.2.5.2.4.6  | OIDplusSqlSlangPlugin
 
-These OIDs are listed at ViaThinkSoft's [OIDplus OID Registry](https://oidplus.viathinksoft.com/oidplus/?goto=oid%3A1.3.6.1.4.1.37476.2.5.2). 
+These OIDs are listed at ViaThinkSoft's [OIDplus OID Registry](https://hosted.oidplus.com/viathinksoft/?goto=oid%3A1.3.6.1.4.1.37476.2.5.2). 

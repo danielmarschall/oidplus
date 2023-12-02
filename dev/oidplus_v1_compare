@@ -26,7 +26,7 @@ OIDplus::init(true);
 
 # ---
 
-#$cont = file_get_contents('https://oidplus.viathinksoft.com/oidplus_old/?action=list_all');
+#$cont = file_get_contents('https://hosted.oidplus.com/viathinksoft_old/?action=list_all');
 $cont = file_get_contents(__DIR__ . '/oidplus_1_with_token.html');
 
 preg_match_all('@oid=\.(.+)">@ismU', $cont, $m);

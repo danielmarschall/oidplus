@@ -380,7 +380,7 @@ class OIDplusMac extends OIDplusObject {
 		if (($size_nibble >= 0) && ($size_nibble <= 0xF)) {
 			$aid = 'D276000186F2'.dechex($size_nibble).$this->number;
 			$aid_is_ok = aid_canonize($aid);
-			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, without prefix').')', 'https://oidplus.viathinksoft.com/oidplus/?goto=aid%3AD276000186F2');
+			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, without prefix').')', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186F2');
 		}
 
 		return $ids;

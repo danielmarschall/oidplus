@@ -215,7 +215,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 			}
 
 			$res = url_post_contents(
-				'https://oidplus.viathinksoft.com/reg2/query.php',
+				'https://www.oidplus.com/reg2/query.php',
 				array(
 					"query"      => $query,
 					"compressed" => $compressed,
@@ -252,7 +252,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 	 */
 	protected function areWeRegistered(): bool {
 		// To check if we are registered. Check it "anonymously" (i.e. without revealing our system ID)
-		$res = url_get_contents('https://oidplus.viathinksoft.com/reg2/query.php?query='.self::QUERY_LISTALLSYSTEMIDS_V1);
+		$res = url_get_contents('https://www.oidplus.com/reg2/query.php?query='.self::QUERY_LISTALLSYSTEMIDS_V1);
 		if ($res === false) return false;
 
 		$json = @json_decode($res, true);
@@ -324,7 +324,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 				}
 
 				$res = url_post_contents(
-					'https://oidplus.viathinksoft.com/reg2/query.php',
+					'https://www.oidplus.com/reg2/query.php',
 					array(
 						"query" => $query,
 						"compressed" => $compressed,
@@ -410,7 +410,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 			}
 
 			$res = url_post_contents(
-				'https://oidplus.viathinksoft.com/reg2/query.php',
+				'https://www.oidplus.com/reg2/query.php',
 				array(
 					"query"      => $query,
 					"compressed" => $compressed,

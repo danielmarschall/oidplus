@@ -44,7 +44,7 @@ class OIDplusObjectTypePluginOid extends OIDplusObjectTypePlugin
 			return '<br><a href="javascript:OIDplusObjectTypePluginOid.generateRandomUUID(false)">('._L('Generate a random UUID OID').')</a>';
 		} else if ($objParent->isRoot()) {
 			return '<br><a href="javascript:OIDplusObjectTypePluginOid.generateRandomUUID(true)">('._L('Generate a random UUID OID').')</a>'.
-			       '<br><a href="https://oidplus.viathinksoft.com/oidplus/?goto=oidplus%3Acom.viathinksoft.freeoid" target="_blank">('._L('Request a free OID from ViaThinkSoft').')</a>'.
+			       '<br><a href="https://hosted.oidplus.com/viathinksoft/?goto=oidplus%3Acom.viathinksoft.freeoid" target="_blank">('._L('Request a free OID from ViaThinkSoft').')</a>'.
 			       '<br><a href="https://pen.iana.org/pen/PenApplication.page" target="_blank">('._L('Request a free PEN/OID from IANA').')</a>';
 		} else {
 			// No generation for normal OIDs atm. TODO: MAYBE in the future a feature like "next free / sequencial OID"

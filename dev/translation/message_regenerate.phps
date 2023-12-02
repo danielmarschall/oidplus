@@ -118,7 +118,7 @@ foreach ($langs as $lang) {
 	$cont .= '<translation'."\n";
 	$cont .= '	xmlns="urn:oid:1.3.6.1.4.1.37476.2.5.2.5.4.1"'."\n";
 	$cont .= '	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'."\n";
-	$cont .= '	xsi:schemaLocation="urn:oid:1.3.6.1.4.1.37476.2.5.2.5.4.1 https://oidplus.viathinksoft.com/oidplus/plugins/messages.xsd">'."\n";
+	$cont .= '	xsi:schemaLocation="urn:oid:1.3.6.1.4.1.37476.2.5.2.5.4.1 https://hosted.oidplus.com/viathinksoft/plugins/messages.xsd">'."\n";
 	$cont .= "\n";
 	foreach ($all_strings as $string) {
 		$stats_total++;

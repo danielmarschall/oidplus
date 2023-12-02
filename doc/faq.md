@@ -24,9 +24,9 @@ The term "Information Objects" has gained various meanings over time, but the ov
 3.  To achieve Information Objects, it is often important to get identifiers of a specific type. For example, you have a Java package name (java:com.example.xyz), but you want an Information Object based on an OID. Then you can use the various conversion algorithms and schemas which have been developed to automatically assign an identifier based on another identifier (that might already identify an object/file/...). These derivated identifiers are also called Alternative Identifiers in OIDplus. Note that not all Alternative Identifiers are developed for OIDplus; there are Alternative Identifiers that were already available, for example, a UUID can be natively mapped to OID through the arc 2.25.
 
 The following schemas were developed for OIDplus:
-1.  "Information Object AID" is an AID derivated from an OIDplus Object Hash. The base AID is `D276000186F` and the schemas are described [here](https://oidplus.viathinksoft.com/oidplus/?goto=aid:D276000186F).
+1.  "Information Object AID" is an AID derivated from an OIDplus Object Hash. The base AID is `D276000186F` and the schemas are described [here](https://hosted.oidplus.com/viathinksoft/?goto=aid:D276000186F).
 2.  "Information Object AAI" is a MAC address type (not globally unique!) derivated from the lower 48 bits of a SHA1 hash.
 3.  "Information Object GUID" is a UUID derivated from an OIDplus Object Hash using an UUIDv8 Custom Schema which is described [here](https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md).
-4.  "Information Object OID" is an OID derivated from an OIDplus Object Hash in `1.3.6.1.4.1.37476.30.9`. The schema is described [here](https://oidplus.viathinksoft.com/oidplus/?goto=oid:1.3.6.1.4.1.37476.30.9).
+4.  "Information Object OID" is an OID derivated from an OIDplus Object Hash in `1.3.6.1.4.1.37476.30.9`. The schema is described [here](https://hosted.oidplus.com/viathinksoft/?goto=oid:1.3.6.1.4.1.37476.30.9).
 5.  "Information Object X.500 RDN" can be used to create an X.500 DN identifying a system and/or its objects (identified by the hash of the object name).
 

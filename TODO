@@ -343,7 +343,7 @@ IDEAS
 		1. The OIDplus installation contains a file "signature.md5" that contains the MD5 sums of all files.
 		   The whole file is RSA signed with a ViaThinkSoft key.
 		2. We should offer a tool which can be started on-demand by running something like:
-		   curl -sSL https://oidplus.viathinksoft.com/signature_check/ | bash
+		   curl -sSL https://www.oidplus.com/signature_check/ | bash
 		   This tool contains a check procedure and the ViaThinkSoft public key,
 		   and verifies the OIDplus installation.
 		3. The tool should also warn if there are missing or additional files,

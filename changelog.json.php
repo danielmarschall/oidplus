@@ -3,6 +3,15 @@
         "dummy": "<?php die(base64_decode('IgogICAgfQpdCg==')); /* for security reasons, do not show the current version @phpstan-ignore-line */ ?>"
     },
     {
+        "version": "2.0.1.8",
+        "date": "2023-12-02 22:49:00 +0100",
+        "author": "Daniel Marschall (ViaThinkSoft)",
+        "changes": [
+            "Introduced support for PHP 8.3",
+            "oidplus.viathinksoft.com is now www.oidplus.com"
+        ]
+    },
+    {
         "version": "2.0.1.7",
         "date": "2023-11-18 21:38:00 +0100",
         "author": "Daniel Marschall (ViaThinkSoft)",
