@@ -22,6 +22,8 @@ echo ""
 
 # Please make sure to do all these steps before committing ANYTHING:
 
+# TODO: should we ask the user to do a "svn update"?
+
 DIR=$( dirname "$0" )
 
 # 0. Search for SPONGE (Marker invented by Terry A Davis)

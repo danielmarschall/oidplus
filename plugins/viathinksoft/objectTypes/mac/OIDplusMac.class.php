@@ -378,7 +378,8 @@ class OIDplusMac extends OIDplusObject {
 		// (VTS F2) MAC address (EUI/ELI/...) to AID (PIX allowed)
 		$size_nibble = strlen($this->number)-1;
 		if (($size_nibble >= 0) && ($size_nibble <= 0xF)) {
-			$aid = 'D276000186F2'.dechex($size_nibble).$this->number;
+			$aid = 'D276000186F2'.strtoupper(dechex($size_nibble)).$this->number;
+			if ((strlen($aid)%2) == 1) $aid .= 'F';
 			$aid_is_ok = aid_canonize($aid);
 			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, without prefix').')', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186F2');
 		}
