@@ -3,6 +3,14 @@
         "dummy": "<?php die(base64_decode('IgogICAgfQpdCg==')); /* for security reasons, do not show the current version @phpstan-ignore-line */ ?>"
     },
     {
+        "version": "2.0.1.9",
+        "date": "2023-12-03 18:45:00 +0100",
+        "author": "Daniel Marschall (ViaThinkSoft)",
+        "changes": [
+            "Updated definition to \"VTS F2\" AID (added padding for odd number of nibbles)"
+        ]
+    },
+    {
         "version": "2.0.1.8",
         "date": "2023-12-02 22:49:00 +0100",
         "author": "Daniel Marschall (ViaThinkSoft)",

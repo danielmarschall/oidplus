@@ -406,8 +406,10 @@ class OIDplusAid extends OIDplusObject {
 		if (str_starts_with($aid,'D276000186F2')) {
 			$size_nibble = substr($aid,strlen('D276000186F2'),1);
 			if ($size_nibble != '') {
-				$mac = substr($aid, strlen('D276000186F2X'), hexdec($size_nibble) + 1);
-				if (strlen($aid) <= strlen('D276000186F2X') + hexdec($size_nibble) + 1) {
+				$mac = substr($aid, strlen('D276000186F2'.$size_nibble), hexdec($size_nibble) + 1);
+				$test_aid = 'D276000186F2'.$size_nibble.$mac;
+				if (strlen($test_aid)%2 == 1) $test_aid .= 'F'; // padding
+				if ($aid == $test_aid) {
 					$mac_type = mac_type(str_pad($mac, 12, '0', STR_PAD_RIGHT));
 					$ids[] = new OIDplusAltId('mac', $mac, $mac_type);
 				}

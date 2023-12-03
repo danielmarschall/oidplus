@@ -645,6 +645,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			}
 		}
 
+		// TODO: Forbid shared ancestors, e.g. if root obejct "2.999" exists, then you shall not create a root object "2.999.1"
+		//       Please note that it should be allowed where there is an orphan in between, e.g. it is OK if "2.999" is owned by us (as root), and "2.999.1.2.3" is also a root (because an ownership was transferred back to us)
+
 		// Determine absolute OID name
 		// Note: At addString() and parse(), the syntax of the ID will be checked
 		if (oidplus_is_true($params['id_fully_qualified'] ?? false)) {
