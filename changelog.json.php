@@ -3,6 +3,17 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.1.10",
+		"date": "2023-12-25 23:20:00 +0100",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"Login with two users simultanously is now possible again.",
+			"REST API Objects Endpoint: Added output field \"children\".",
+			"REST API Objects Endpoint: PUT and POST works again.",
+			"Updates are now also stored in a GitHub repo."
+		]
+	},
+	{
 		"version": "2.0.1.9",
 		"date": "2023-12-03 18:45:00 +0100",
 		"author": "Daniel Marschall (ViaThinkSoft)",

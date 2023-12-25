@@ -128,6 +128,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			}
 		}
 
+		$output['children'] = array();
+		$children = $obj->getChildren();
+		foreach ($children as $child) {
+			$output['children'][] = $child->nodeId(true);
+		}
+
 		http_response_code(200);
 		return $output;
 	}
@@ -159,7 +165,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			// TODO: Problem: The superior RA cannot set title/description, so they cannot perform the PUT command!
 			$output = self::action_Update($params);
 		} else {
-			$params['parent'] = $obj->getParent();
+			$params['parent'] = $obj->getParent()->nodeId(true);
 			$params['id_fully_qualified'] = true;
 			$output = self::action_Insert($params);
 		}
@@ -185,7 +191,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		$obj = OIDplusObject::parse($id);
 		if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!', 'GET', $id), null, 400);
 		$params = $json_in;
-		$params['parent'] = $obj->getParent();
+		$params['parent'] = $obj->getParent()->nodeId(true);
 		$params['id_fully_qualified'] = true;
 		$params['id'] = $id;
 		$output = self::action_Insert($params);
@@ -281,7 +287,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		if ($kind === 'html') {
 			$struct = [
 				_L('Receive') => [
-					'<b>GET</b> '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'rest/v1/objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>',
+					'<b>GET</b> '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'rest/v1/objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[ns]:[id]</abbr>',
 					_L('Input parameters') => [
 						'<i>'._L('None').'</i>'
 					],
@@ -295,11 +301,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 						'asn1ids ('._L('for OID only').')',
 						'confidential',
 						'title',
-						'description'
+						'description',
+						'children'
 					]
 				],
 				_L('Re-Create') => [
-					'<b>PUT</b> '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'rest/v1/objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>',
+					'<b>PUT</b> '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'rest/v1/objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[ns]:[id]</abbr>',
 					_L('Input parameters') => [
 						'ra_email ('._L('optional').')',
 						'comment ('._L('optional').')',
@@ -317,7 +324,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					]
 				],
 				_L('Create') => [
-					'<b>POST</b> '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'rest/v1/objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>',
+					'<b>POST</b> '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'rest/v1/objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[ns]:[id]</abbr>',
 					_L('Input parameters') => [
 						'ra_email ('._L('optional').')',
 						'comment ('._L('optional').')',
@@ -335,7 +342,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					]
 				],
 				_L('Update') => [
-					'<b>PATCH</b> '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'rest/v1/objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>',
+					'<b>PATCH</b> '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'rest/v1/objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[ns]:[id]</abbr>',
 					_L('Input parameters') => [
 						'ra_email ('._L('optional').')',
 						'comment ('._L('optional').')',
@@ -352,7 +359,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					]
 				],
 				_L('Remove') => [
-					'<b>DELETE</b> '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'rest/v1/objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[id]</abbr>',
+					'<b>DELETE</b> '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'rest/v1/objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[ns]:[id]</abbr>',
 					_L('Input parameters') => [
 						'<i>'._L('None').'</i>'
 					],

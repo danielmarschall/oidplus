@@ -664,16 +664,18 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	 */
 	public function loadJWT(string $jwt) {
 		\Firebase\JWT\JWT::$leeway = 60; // leeway in seconds
+		$cls_content = null;
 		if (OIDplus::getPkiStatus()) {
 			$pubKey = OIDplus::getSystemPublicKey();
 			$k = new \Firebase\JWT\Key($pubKey, 'RS256'); // RSA+SHA256 is hardcoded in getPkiStatus() generation
-			$this->content = (array) \Firebase\JWT\JWT::decode($jwt, $k);
+			$cls_content = \Firebase\JWT\JWT::decode($jwt, $k);
 		} else {
 			$key = OIDplus::authUtils()->makeSecret(['0be35e52-f4ef-11ed-b67e-3c4a92df8582']);
 			$key = hash_pbkdf2('sha512', $key, '', 10000, 32/*256bit*/, false);
 			$k = new \Firebase\JWT\Key($key, 'HS512'); // HMAC+SHA512 is hardcoded here
-			$this->content = (array) \Firebase\JWT\JWT::decode($jwt, $k);
+			$cls_content = \Firebase\JWT\JWT::decode($jwt, $k);
 		}
+		$this->content = json_decode(json_encode($cls_content), true); // convert stdClass to array
 	}
 
 	/**

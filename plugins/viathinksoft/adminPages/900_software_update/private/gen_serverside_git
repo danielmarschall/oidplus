@@ -147,7 +147,9 @@ file_put_contents($git_version_cache_file, json_encode($git_version_cache, JSON_
 
 $prev_commit = '-';
 $prev_version = '2.0.0.0';
+$latest_version = null;
 foreach ($git_version_cache["version-first-commit"] as $version => $version_first_commit) {
+	$latest_version = $version;
 	$changescript_file = $output_dir.'/changescript_'.$version.'.txt';
 	if ($force || !file_exists($changescript_file) || !file_exists($changescript_file.'.gz')) {
 		echo "Generate changescript for version $version ($version_first_commit)\n";
@@ -182,3 +184,10 @@ foreach ($git_version_cache["version-first-commit"] as $version => $version_firs
 	$prev_commit = $version_first_commit;
 	$prev_version = $version;
 }
+
+// Step 3 (optional): Upload to GitHub (a different repository, just for deploying updates)
+// How to setup a GitHub deployment key? See https://dylancastillo.co/how-to-use-github-deploy-keys/
+
+shell_exec("cd ".escapeshellarg($output_dir)." && git add * 2>/dev/null");
+shell_exec("cd ".escapeshellarg($output_dir)." && git commit -m ".escapeshellarg("Update $latest_version")." 2>/dev/null");
+shell_exec("cd ".escapeshellarg($output_dir)." && git push 2>/dev/null");
