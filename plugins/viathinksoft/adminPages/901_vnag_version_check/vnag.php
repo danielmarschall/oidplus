@@ -138,10 +138,18 @@ OIDplus::invoke_shutdown();
 
 function getLatestRevision() {
 	try {
-		$master_changelog = OIDplus::getEditionInfo()['master_changelog'];
-		return OIDplus::getVersion($master_changelog);
+		$changelog_candidates = OIDplus::getEditionInfo()['master_changelog'];
+		if (!is_array($changelog_candidates)) $changelog_candidates = [ $changelog_candidates ];
+
+		foreach ($changelog_candidates as $master_changelog) {
+			try {
+				$out = OIDplus::getVersion($master_changelog);
+				if ($out) return $out;
+			} catch (\Exception $e) {
+			}
+		}
+		return false;
 	} catch (\Exception $e) {
 		return false;
 	}
 }
-

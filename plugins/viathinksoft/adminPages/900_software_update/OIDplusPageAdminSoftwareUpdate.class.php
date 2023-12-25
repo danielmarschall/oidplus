@@ -417,12 +417,19 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 		if ((file_exists($cache_file)) && (time()-filemtime($cache_file) <= 10*60/*10 Minutes*/)) {
 			$changelog = file_get_contents($cache_file);
 		} else {
-			$master_changelog = OIDplus::getEditionInfo()['master_changelog'];
-			if ((stripos($master_changelog,'http://')===0) || (stripos($master_changelog,'https://')===0)) {
-				$changelog = @url_get_contents($master_changelog);
-			} else {
-				$changelog = @file_get_contents($master_changelog);
+			$changelog_candidates = OIDplus::getEditionInfo()['master_changelog'];
+			if (!is_array($changelog_candidates)) $changelog_candidates = [ $changelog_candidates ];
+
+			$changelog = false;
+			foreach ($changelog_candidates as $master_changelog) {
+				if ((stripos($master_changelog,'http://')===0) || (stripos($master_changelog,'https://')===0)) {
+					$changelog = @url_get_contents($master_changelog);
+				} else {
+					$changelog = @file_get_contents($master_changelog);
+				}
+				if ($changelog) break;
 			}
+
 			if (!$changelog) return false;
 			file_put_contents($cache_file, $changelog);
 		}
