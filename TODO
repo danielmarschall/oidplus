@@ -97,6 +97,7 @@ GS1 plugin:
                   But... how do we know if the last digit is a checkdigit or if it is a longer number with a missing check-digit?
 
 New Object Type plugins:
+- Security Identifier (Microsoft) ?
 - LSID ?
 
 Treeview / Navigation:
