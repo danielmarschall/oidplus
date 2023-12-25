@@ -89,7 +89,8 @@ try {
 	}
 	$verification_certs = json_decode($certs, true);
 	\Firebase\JWT\JWT::$leeway = 60; // leeway in seconds
-	$data = (array) \Firebase\JWT\JWT::decode($id_token, $verification_certs, array('ES256', 'ES384', 'RS256', 'RS384', 'RS512'));
+	$cls_data = \Firebase\JWT\JWT::decode($id_token, $verification_certs, array('ES256', 'ES384', 'RS256', 'RS384', 'RS512'));
+	$data = json_decode(json_encode($cls_data), true); // convert stdClass to array
 	if (!isset($data['iss']) || ($data['iss'] !== 'https://accounts.google.com')) {
 		throw new OIDplusException(_L('JWT token could not be decoded'));
 	}
