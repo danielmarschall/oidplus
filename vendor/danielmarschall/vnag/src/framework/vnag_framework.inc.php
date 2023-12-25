@@ -11,7 +11,7 @@
 
       Developed by Daniel Marschall             www.viathinksoft.com
       Licensed under the terms of the Apache 2.0 license
-      Revision 2023-11-05
+      Revision 2023-12-17
 
 */
 
@@ -20,6 +20,19 @@
 More information on how to develop your plugin, see doc/Plugin_Development.md
 
 ****************************************************************************************************/
+
+// https://nagios-plugins.org/doc/guidelines.html
+// Detected substantial changes between documents of copyright years 2013 and 2018 (HTML fetched on 17 December 2023):
+// Section "Performance data":
+//   2013: "UOM (unit of measurement) is one of: [s/us/ms, %, B/KB/MB/TB, c]"
+//   2018: "UOM (unit of measurement) is a string of zero or more characters, NOT including numbers, semicolons, or quotes. Some examples: [s/us/ms, %, B/KB/MB/TB, c]"
+// Section "Perl Plugins":
+//   2013: "(these simply do not compile under ePN)."
+//   2018: "(these simply do not compile under ePNP."   (introduced a typo!)
+// Section "Plugin Options":
+//   2013: "Code and output should try to respect the 80x25 size of a crt (remember when fixing stuff in the server room!)"
+//   2018: "Code and output should try to respect the 80x25 size of a standard terminal."
+// Various internal stuff like SourceForge, GitHub, etc., which is not relevant for the plugin interface.
 
 if (!VNag::is_http_mode()) error_reporting(E_ALL);
 
@@ -32,7 +45,8 @@ declare(ticks=1);
 # PHP should set this time limit to infinite.
 set_time_limit(0);
 
-define('VNAG_JSONDATA_V1', 'oid:1.3.6.1.4.1.37476.2.3.1.1'); // {iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 37476 products(2) vnag(3) jsondata(1) v1(1)}
+// {iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 37476 products(2) vnag(3) jsondata(1) v1(1)}
+define('VNAG_JSONDATA_V1', 'oid:1.3.6.1.4.1.37476.2.3.1.1');
 
 // Set this to an array to overwrite getopt() and $_REQUEST[], respectively.
 // Useful for mock tests.
@@ -44,7 +58,7 @@ function _empty($x) {
 }
 
 abstract class VNag {
-	/*public*/ const VNAG_VERSION = '2023-11-05';
+	/*public*/ const VNAG_VERSION = '2023-12-17';
 
 	// Status 0..3 for STATUSMODEL_SERVICE (the default status model):
 	# The guideline states: "Higher-level errors (such as name resolution errors, socket timeouts, etc) are outside of the control of plugins and should generally NOT be reported as UNKNOWN states."
@@ -1031,7 +1045,7 @@ abstract class VNag {
 			if (@mkdir($try,0777,true)) return $try;
 		}
 
-		throw new VNagException("Cannot get cache dir"); // TODO: translate and own exception type
+		throw new VNagException(VNagLang::$cannotGetCacheDir);
 	}
 
 	// This is not used by the framework itself, but can be useful for a lot of plugins
@@ -1652,17 +1666,22 @@ class VNagValueUomPair {
 
 	public static function isKnownUOM(string $uom) {
 		// see https://nagios-plugins.org/doc/guidelines.html#AEN200
-		// 10. UOM (unit of measurement) is one of:
+		// 10. UOM (unit of measurement)
+		// Definition as of 2013:
+		//      "UOM (unit of measurement) is one of: [s/us/ms, %, B/KB/MB/TB, c]"
+		// New definition since 2018:
+		//      "UOM (unit of measurement) is a string of zero or more characters, NOT including numbers, semicolons, or quotes. Some examples: [s/us/ms, %, B/KB/MB/TB, c]"
+		//      Added to VNag on 17 Dec 2023: d, m, h, ns, PB, EB, ZB, YB
 
 		// no unit specified - assume a number (int or float) of things (eg, users, processes, load averages)
 		$no_unit = ($uom === '');
 		// s - seconds (also us, ms)
-		$seconds = ($uom === 's') || ($uom === 'ms') || ($uom === 'us');
+		$seconds = ($uom === 'd') || ($uom === 'h') || ($uom === 'm') || ($uom === 's') || ($uom === 'ms') || ($uom === 'us') || ($uom === 'ns');
 		// % - percentage
 		$percentage = ($uom === '%');
 		// B - bytes (also KB, MB, TB)
 		// NOTE: GB is not in the official development guidelines,probably due to an error, so I've added them anyway
-		$bytes = ($uom === 'B') || ($uom === 'KB') || ($uom === 'MB') || ($uom === 'GB') || ($uom === 'TB');
+		$bytes = ($uom === 'B') || ($uom === 'KB') || ($uom === 'MB') || ($uom === 'GB') || ($uom === 'TB') || ($uom === 'PB') || ($uom === 'EB') || ($uom === 'ZB') || ($uom === 'YB');
 		// c - a continous counter (such as bytes transmitted on an interface)
 		$counter = ($uom === 'c');
 
@@ -1673,6 +1692,18 @@ class VNagValueUomPair {
 		$res = clone $this;
 
 		// The value is normalized to seconds or megabytes
+		if ($res->uom === 'd') { // Added by DM 17 Dec 2023
+			$res->uom = 's';
+			$res->value *= 60 * 60 * 24;
+		}
+		if ($res->uom === 'h') { // Added by DM 17 Dec 2023
+			$res->uom = 's';
+			$res->value *= 60 * 60;
+		}
+		if ($res->uom === 'm') { // Added by DM 17 Dec 2023
+			$res->uom = 's';
+			$res->value *= 60;
+		}
 		if ($res->uom === 'ms') {
 			$res->uom = 's';
 			$res->value /= 1000;
@@ -1680,6 +1711,10 @@ class VNagValueUomPair {
 		if ($res->uom === 'us') {
 			$res->uom = 's';
 			$res->value /= 1000 * 1000;
+		}
+		if ($res->uom === 'ns') { // Added by DM 17 Dec 2023
+			$res->uom = 's';
+			$res->value /= 1000 * 1000 * 1000;
 		}
 		if ($res->uom === 'B') {
 			$res->uom = 'MB';
@@ -1696,6 +1731,22 @@ class VNagValueUomPair {
 		if ($res->uom === 'TB') {
 			$res->uom = 'MB';
 			$res->value *= 1024 * 1024;
+		}
+		if ($res->uom === 'PB') { // Added by DM 17 Dec 2023
+			$res->uom = 'MB';
+			$res->value *= 1024 * 1024 * 1024;
+		}
+		if ($res->uom === 'EB') { // Added by DM 17 Dec 2023
+			$res->uom = 'MB';
+			$res->value *= 1024 * 1024 * 1024 * 1024;
+		}
+		if ($res->uom === 'ZB') { // Added by DM 17 Dec 2023
+			$res->uom = 'MB';
+			$res->value *= 1024 * 1024 * 1024 * 1024 * 1024;
+		}
+		if ($res->uom === 'YB') { // Added by DM 17 Dec 2023
+			$res->uom = 'MB';
+			$res->value *= 1024 * 1024 * 1024 * 1024 * 1024 * 1024;
 		}
 		if ($res->uom === 'c') {
 			$res->uom = '';
@@ -1719,19 +1770,43 @@ class VNagValueUomPair {
 				} else if ($target == 'TB') {
 					$res->uom = 'TB';
 					$res->value /= 1024 * 1024;
+				} else if ($target == 'PB') { // Added by DM 17 Dec 2023
+					$res->uom = 'PB';
+					$res->value /= 1024 * 1024 * 1024;
+				} else if ($target == 'EB') { // Added by DM 17 Dec 2023
+					$res->uom = 'EB';
+					$res->value /= 1024 * 1024 * 1024 * 1024;
+				} else if ($target == 'ZB') { // Added by DM 17 Dec 2023
+					$res->uom = 'ZB';
+					$res->value /= 1024 * 1024 * 1024 * 1024 * 1024;
+				} else if ($target == 'YB') { // Added by DM 17 Dec 2023
+					$res->uom = 'YB';
+					$res->value /= 1024 * 1024 * 1024 * 1024 * 1024 * 1024;
 				} else {
 					throw new VNagUomConvertException($res->uom, $target);
 				}
 			} else if ($res->uom == 's') {
-				if ($target == 's') {
+				if ($target == 'd') { // Added by DM 17 Dec 2023
+					$res->uom = 'd';
+					$res->value *= 24 * 60 * 60;
+				} else if ($target == 'h') { // Added by DM 17 Dec 2023
+					$res->uom = 'h';
+					$res->value *= 60 * 60;
+				} else if ($target == 'm') { // Added by DM 17 Dec 2023
+					$res->uom = 'm';
+					$res->value *= 60;
+				} else if ($target == 's') {
 					$res->uom = 's';
-					$res->value /= 1;
+					$res->value *= 1;
 				} else if ($target == 'ms') {
 					$res->uom = 'ms';
 					$res->value /= 1000;
 				} else if ($target == 'us') {
 					$res->uom = 'us';
 					$res->value /= 1000 * 1000;
+				} else if ($target == 'ns') { // Added by DM 17 Dec 2023
+					$res->uom = 'ns';
+					$res->value /= 1000 * 1000 * 1000;
 				} else {
 					throw new VNagUomConvertException($res->uom, $target);
 				}
@@ -2192,6 +2267,7 @@ class VNagLang {
 	static $php_error = 'PHP has detected an error in the plugin. Please contact the plugin author.';
 	static $output_level_lowered = "Output Buffer level lowered during cbRun(). Please contact the plugin author.";
 	static $openssl_missing = "OpenSSL is missing. Therefore, encryption and signatures are not available.";
+	static $cannotGetCacheDir = "Cannot get cache dir.";
 
 	// Help texts
 	static $warning_range = 'Warning range';

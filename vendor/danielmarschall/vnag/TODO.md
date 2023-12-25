@@ -30,4 +30,3 @@ Unsure
 ------
 
 - Automatically encrypt/sign via a global config setting?
-- Should we also allow other UOMs?

@@ -144,7 +144,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 					$naked = preg_replace('@<\?php /\* <ViaThinkSoftSignature>(.+)</ViaThinkSoftSignature> \*/ \?>\n@ismU', '', $cont);
 					$hash = hash("sha256", $naked.$basename);
 
-					$public_key = file_get_contents(__DIR__.'/public.pem');
+					$public_key = "-----BEGIN PUBLIC KEY-----\r\n".wordwrap(OIDplus::getEditionInfo()['update_public_key'], 64, "\r\n", true)."\r\n-----END PUBLIC KEY-----\r\n";
 					if (!openssl_verify($hash, $signature, $public_key, OPENSSL_ALGO_SHA256)) {
 						throw new OIDplusException(_L("Update package file of revision %1: Signature invalid",$ver));
 					}
