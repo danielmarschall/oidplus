@@ -115,20 +115,27 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 
 				$cont = false;
 				$basename = 'changescript_'.$ver.'.txt';
+				$url = '';
 				for ($retry=1; $retry<=3; $retry++) {
-					if (function_exists('gzdecode')) {
-						$url = OIDplus::getEditionInfo()['update_packages'].$basename.'.gz';
-						$cont = url_get_contents($url);
-						if ($cont !== false) $cont = @gzdecode($cont);
-					} else {
-						$url = OIDplus::getEditionInfo()['update_packages'].$basename;
-						$cont = url_get_contents($url);
+					$update_packages_candidates = OIDplus::getEditionInfo()['update_packages'];
+					if (!is_array($update_packages_candidates)) $update_packages_candidates = [ $update_packages_candidates ];
+
+					foreach ($update_packages_candidates as $update_packages_candidate) {
+						if (function_exists('gzdecode')) {
+							$url = $update_packages_candidate.$basename.'.gz';
+							$cont = url_get_contents($url);
+							if ($cont !== false) $cont = @gzdecode($cont);
+						} else {
+							$url = $update_packages_candidate.$basename;
+							$cont = url_get_contents($url);
+						}
+
+						if ($cont !== false) {
+							break 2;
+						}
 					}
-					if ($cont !== false) {
-						break;
-					} else {
-						sleep(1);
-					}
+
+					sleep(1);
 				}
 				if ($cont === false) throw new OIDplusException(_L("Update %1 could not be downloaded from the remote server (%2). Please try again later.",$ver,$url));
 

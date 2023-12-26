@@ -3,6 +3,14 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.1.12",
+		"date": "2023-12-26 23:55:00 +0100",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"Fix broken update procedure introcuced with 2.0.1.11"
+		]
+	},
+	{
 		"version": "2.0.1.11",
 		"date": "2023-12-26 16:55:00 +0100",
 		"author": "Daniel Marschall (ViaThinkSoft)",
