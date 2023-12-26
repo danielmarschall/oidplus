@@ -126,7 +126,10 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 
 		$res = OIDplus::db()->query("select * from ###objects where parent = ?", array($parent));
 		$res->naturalSortByField('id');
+		$max_ent = 0;
 		while ($row = $res->fetch_array()) {
+			$max_ent++;
+			if ($max_ent > 1000) break; // TODO: we need a solution for this!!!
 			$obj = OIDplusObject::parse($row['id']);
 			if (!$obj) continue; // e.g. object-type plugin disabled
 

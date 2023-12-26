@@ -95,6 +95,11 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 						if (!is_null($editContactDataPlugin)) {
 							$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:edit_ra$'.$ra_email).'>'._L('Edit contact data').'</a></p>';
 						}
+
+						$editContactDataPlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.2.200'); // OIDplusPageRaLogEvents
+						if (!is_null($editContactDataPlugin)) {
+							$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:ra_log$'.$ra_email).'>'._L('Show log entries').'</a></p>';
+						}
 					}
 
 					if (OIDplus::authUtils()->isAdminLoggedIn()) {

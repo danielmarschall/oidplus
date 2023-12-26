@@ -108,7 +108,8 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 		$alt_ids = array();
 		$rev_lookup = array();
 
-		$res = OIDplus::db()->query("select id from ###objects");
+		$res = OIDplus::db()->query("select id from ###objects ".
+		                            "where parent <> 'oid:1.3.6.1.4.1.37476.1.2.3.1'");  // TODO FIXME! readAll() is TOOOOO slow if a system has more than 50.000 OIDs!!! DEADLOCK!!!
 		while ($row = $res->fetch_array()) {
 			$obj = OIDplusObject::parse($row['id']);
 			if (!$obj) continue; // e.g. if plugin is disabled
@@ -239,12 +240,13 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 
 		$tmp = $this->getAlternativesForQuery($id);
 		sort($tmp); // DM 26.03.2023 : Added sorting (intended to sort "alternate-identifier")
+
 		foreach($tmp as $alt) {
 			if (strpos($alt,':') === false) continue;
 
 			list($ns, $altIdRaw) = explode(':', $alt, 2);
 
- 			if (($canonicalShown === false) && ($ns === 'oid')) {
+			if (($canonicalShown === false) && ($ns === 'oid')) {
 				$canonicalShown=true;
 
 				$out1[] = [

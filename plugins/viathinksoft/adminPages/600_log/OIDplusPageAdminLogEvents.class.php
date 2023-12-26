@@ -40,7 +40,8 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePluginAdmin {
 	 * @throws OIDplusException
 	 */
 	public function gui(string $id, array &$out, bool &$handled) {
-		if ($id == 'oidplus:system_log') {
+		$parts = explode('$', $id);
+		if ($parts[0] == 'oidplus:system_log') {
 			$handled = true;
 			$out['title'] = _L('All log messages');
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
@@ -49,10 +50,27 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePluginAdmin {
 				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), $out['title'], 401);
 			}
 
-			$res = OIDplus::db()->query("select lo.id, lo.unix_ts, lo.addr, lo.event from ###log lo ".
-			                            "order by lo.unix_ts desc");
+			$page = $parts[1] ?? null;
+			if ($page == null) {
+				$res = OIDplus::db()->query("select max(id) as cnt from ###log");
+				$page = floor($res->fetch_array()['cnt'] / 50) + 1;
+			}
+			$min = ($page-1) * 50 + 1;
+			$max = ($page  ) * 50;
+
+			$res = OIDplus::db()->query("select id, unix_ts, addr, event from ###log ".
+			                            "where id >= ? and id <= ? ".
+			                            "order by unix_ts desc", [$min, $max]);
+
+			$out['text'] = '<h2>'._L('Page %1 (Log ID %2 till %3)', $page, $min, $max).'</h2>';
+
+			$out['text'] .= '<p>';
+			if (!is_null($parts[1] ?? null)) $out['text'] .= '<a '.OIDplus::gui()->link($parts[0].'$'.($page+1)).'>Newer log entries</a> -- ';
+			$out['text'] .= '<a '.OIDplus::gui()->link($parts[0].'$'.($page-1)).'>Older log entries</a>';
+			$out['text'] .= '<p>';
+
 			if ($res->any()) {
-				$out['text'] = '<pre>';
+				$out['text'] .= '<pre>';
 				while ($row = $res->fetch_array()) {
 					$severity = 0;
 					$contains_messages_for_me = false;
@@ -85,11 +103,10 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePluginAdmin {
 				}
 				$out['text'] .= '</pre>';
 			} else {
-				$out['text'] .= '<p>'._L('Currently there are no log entries').'</p>';
+				$out['text'] .= '<p>'._L('There are no log entries on this page').'</p>';
 			}
 
 			// TODO: List logs in a table instead of a <pre> text
-			// TODO: Load only X events and then re-load new events via AJAX when the user scrolls down
 		}
 	}
 

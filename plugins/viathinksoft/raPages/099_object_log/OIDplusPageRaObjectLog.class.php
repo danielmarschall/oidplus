@@ -71,14 +71,19 @@ class OIDplusPageRaObjectLog extends OIDplusPagePluginRa
 		if (!$obj) return;
 		if (!$obj->userHasWriteRights()) return;
 
+		// TODO: !!! correctly implement page scrolling!!! Problem: We cannot use "limit" because this is MySQL. We cannot use "top" because it is SQL server
+		//           We cannot use  id>? and id<? like in admin_log, because users don't have all IDs, just a few, so we cannot filter by ID
 		$res = OIDplus::db()->query("select lo.id, lo.unix_ts, lo.addr, lo.event, lu.severity from ###log lo ".
 		                            "left join ###log_object lu on lu.log_id = lo.id ".
 		                            "where lu.object = ? " .
 		                            "order by lo.unix_ts desc", array($id));
 		$text .= '<h2>'._L('Log messages for object %1',htmlentities($id)).'</h2>';
+		$max_ent = 0;
 		if ($res->any()) {
 			$text .= '<pre>';
 			while ($row = $res->fetch_array()) {
+				$max_ent++;
+				if ($max_ent > 100) break; // TODO: also allow to watch older entries
 				$users = array();
 				$res2 = OIDplus::db()->query("select username, severity from ###log_user ".
 				                             "where log_id = ?", array((int)$row['id']));
@@ -94,7 +99,6 @@ class OIDplusPageRaObjectLog extends OIDplusPagePluginRa
 			$text .= '</pre>';
 
 			// TODO: List logs in a table instead of a <pre> text
-			// TODO: Load only X events and then re-load new events via AJAX when the user scrolls down
 		} else {
 			$text .= '<p>'._L('Currently there are no log entries').'</p>';
 		}

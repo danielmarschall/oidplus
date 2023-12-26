@@ -9,6 +9,21 @@ May 2023 planned:
 - Idea: If we enter "oid:2.999.123" in the goto box, and only "oid:2.999" exists, should we recommend the user to look at 2.999?
 - <font color="red"> replace with CSS class
 
+Important things:
+- OIDplus must be able to handle large amount of OIDs, e.g. 100.000 OIDs in a branch. It don't need to be perfect, but it must not crash the system
+  Currently there are the following "hacks" to make the system not crash if there are too many OIDs
+	plugins/viathinksoft/raPages/099_object_log/OIDplusPageRaObjectLog.class.php (show max 100 object log entries)
+	plugins/frdl/publicPages/altids/OIDplusPagePublicAltIds.class.php (hardcoded to ignore children of 1.3.6.1.4.1.37476.1.2.3.1)
+	plugins/viathinksoft/publicPages/000_objects/OIDplusPagePublicObjects.class.php (do not show ANY children if there are more than 1000)
+	includes/classes/OIDplusMenuUtils.class.php (do not show ANY children if there are more than 1000)
+
+Logging pages: ra_log and admin_log pages (RA / Admin) as wells as OIDplusPageRaObjectLog (Objects):
+- correctly implement ra_log (not show the system's pages, but the user's pages). Note that this is a hard task (see TODO entry)
+- deluxe: scroll down and automatically get new log entries via ajax
+- make it faster!!!
+- filter by severity? (this is also a hard task)
+- export CSV
+
 Future:
 - Check if we can also support these databases listed at the PHP documentation:
 	CUBRID
@@ -181,7 +196,6 @@ SMALL THINGS
 - Let the JavaScript value "oidplus_menu_width" being modified by a design plugin and/or the database config.
   A plugin can already do this by using htmlHeaderUpdate() and creating an inline JavaScript to modify the global variable "oidplus_menu_width"
 - At a lot of forms, if you press "enter", the "form" will not be submitted (e.g. "create ra" plugin), cannot reproduce?
-- system log plugin: Only show 100 events and let the user switch pages. To avoid that you load a page with 10000+ log entries!
 - Alpine Linux SVN update: I get the error "svn: warning: W000013: Can't open file '/root/.subversion/servers': Permission denied", although "whoami" is "apache"! (Maybe because the initial checkout was done by root?!)
 - AutoUpdate via cron?
 - Login page etc.: If user clicks on a tab, then the gotoedit and static link should change to e.g. "oidplus:login$admin" or "oidplus:login$ra", respectively.
@@ -287,7 +301,6 @@ REJECTED IDEAS
 
 LOGS
 - prune logs entries? automatically prune things like "logged in" but not prune OID changes, etc?
-- admin logs: don't show all logs. load more log entries as soon as the page is scrolled down
 - when user changed email from "A" => "B", then all previous log events for "A" are not visible for "B" anymore!
 	=> should we also change the log entry email address references when the user changes their email address?
 - At "oidplus:system_log", user log section and object log section, the users and/or objects should be clickable

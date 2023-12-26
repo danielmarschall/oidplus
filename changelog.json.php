@@ -3,6 +3,19 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.1.11",
+		"date": "2023-12-26 16:55:00 +0100",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"RA and System log plugin: Split into pages.",
+			"Object Log view: only the last 100 items are shown due to overload protection (currently, no scrolling possible).",
+			"Overload protection: For now, an OID with more than 1000 children cannot show its children.",
+			"REST API: \"oid:\" prefix is now optional. \"weid:\" is also possible to refer to an OID.",
+			"REST API: GET request now also returns the fields \"created\" and \"updated\".",
+			"Admin area: Viewing RA accounts: Added link to RA log entries."
+		]
+	},
+	{
 		"version": "2.0.1.10",
 		"date": "2023-12-25 23:20:00 +0100",
 		"author": "Daniel Marschall (ViaThinkSoft)",
