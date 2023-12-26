@@ -5478,6 +5478,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Page %1 (Log ID %2 till %3)
+		]]></source>
+		<target><![CDATA[
+		Seite %1 (Log-Eintrag %2 von %3)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Page plugins
 		]]></source>
 		<target><![CDATA[
@@ -7078,6 +7086,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Show log entries
+		]]></source>
+		<target><![CDATA[
+		Logbuch-Einträge zeigen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Signature failed
 		]]></source>
 		<target><![CDATA[
@@ -7966,10 +7982,26 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		There are no log entries on this page
+		]]></source>
+		<target><![CDATA[
+		Es gibt keine Logbuch-Einträge auf dieser Seite
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		There are three possibilities how to keep OIDplus up-to-date
 		]]></source>
 		<target><![CDATA[
 		Es gibt drei Möglichkeiten, um OIDplus auf dem aktuellsten Stand zu halten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		There are too many child items to display
+		]]></source>
+		<target><![CDATA[
+		Auflistung nicht möglich, da es zu viele Unterobjekte gibt
 		]]></target>
 	</message>
 	<message>

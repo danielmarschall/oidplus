@@ -40,10 +40,12 @@ class OIDplusPageRaLogEvents extends OIDplusPagePluginRa {
 	 * @throws OIDplusException
 	 */
 	public function gui(string $id, array &$out, bool &$handled) {
-		if (explode('$',$id)[0] == 'oidplus:ra_log') {
-			$handled = true;
+		$parts = explode('$', $id);
+		if ($parts[0] == 'oidplus:ra_log') {
+			$ra_email = $parts[1] ?? null;
+			if ($ra_email == null) return;
 
-			$ra_email = explode('$',$id)[1];
+			$handled = true;
 
 			$out['title'] = _L('Log messages for RA %1',$ra_email);
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
@@ -57,12 +59,35 @@ class OIDplusPageRaLogEvents extends OIDplusPagePluginRa {
 				throw new OIDplusHtmlException(_L('RA "%1" does not exist','<b>'.htmlentities($ra_email).'</b>'), $out['title']);
 			}
 
+
+			// TODO: !!! correctly implement page scrolling!!! Problem: We cannot use "limit" because this is MySQL. We cannot use "top" because it is SQL server
+			//           We cannot use  id>? and id<? like in admin_log, because users don't have all IDs, just a few, so we cannot filter by ID
+			$page = $parts[2] ?? null;
+			if ($page == null) {
+				$res = OIDplus::db()->query("select max(lo.id) as cnt from ###log lo ".
+				                            "left join ###log_user lu on lu.log_id = lo.id ".
+				                            "where lu.username = ? " .
+				                            "order by lo.unix_ts desc", array($ra_email));
+				$page = floor($res->fetch_array()['cnt'] / 50) + 1;
+			}
+			$min = ($page-1) * 50 + 1;
+			$max = ($page  ) * 50;
+
 			$res = OIDplus::db()->query("select lo.unix_ts, lo.addr, lo.event, lu.severity from ###log lo ".
 			                            "left join ###log_user lu on lu.log_id = lo.id ".
 			                            "where lu.username = ? " .
-			                            "order by lo.unix_ts desc", array($ra_email));
+			                            "and   lo.id >= ? and lo.id <= ? ".
+			                            "order by lo.unix_ts desc", array($ra_email, $min, $max));
+
+			$out['text'] = '<h2>'._L('Page %1 (Log ID %2 till %3)', $page, $min, $max).'</h2>';
+
+			$out['text'] .= '<p>';
+			if (!is_null($parts[2] ?? null)) $out['text'] .= '<a '.OIDplus::gui()->link($parts[0].'$'.$parts[1].'$'.($page+1)).'>Newer log entries</a> -- ';
+			$out['text'] .= '<a '.OIDplus::gui()->link($parts[0].'$'.$parts[1].'$'.($page-1)).'>Older log entries</a>';
+			$out['text'] .= '<p>';
+
 			if ($res->any()) {
-				$out['text'] = '<pre>';
+				$out['text'] .= '<pre>';
 				while ($row = $res->fetch_array()) {
 					$addr = empty($row['addr']) ? _L('no address') : $row['addr'];
 
@@ -70,11 +95,10 @@ class OIDplusPageRaLogEvents extends OIDplusPagePluginRa {
 				}
 				$out['text'] .= '</pre>';
 			} else {
-				$out['text'] .= '<p>'._L('Currently there are no log entries').'</p>';
+				$out['text'] .= '<p>'._L('There are no log entries on this page').'</p>';
 			}
 
 			// TODO: List logs in a table instead of a <pre> text
-			// TODO: Load only X events and then re-load new events via AJAX when the user scrolls down
 		}
 	}
 

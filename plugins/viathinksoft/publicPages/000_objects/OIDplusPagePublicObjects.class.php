@@ -99,6 +99,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 */
 	private function restApiCall_GET(string $endpoint, array $json_in): array {
 		$id = substr($endpoint, strlen('objects/'));
+
+		$id_original = $id;
+		$id = OIDplus::prefilterQuery($id, false);
+
 		$obj = OIDplusObject::findFitting($id);
 		if (!$obj) throw new OIDplusException(_L('The object %1 was not found in this database.', $id), null, 404);
 
@@ -128,6 +132,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			}
 		}
 
+		$output['created'] = date('Y-m-d H:i:s', strtotime($obj->getCreatedTime()));
+		$output['updated'] = date('Y-m-d H:i:s', strtotime($obj->getUpdatedTime()));
+
 		$output['children'] = array();
 		$children = $obj->getChildren();
 		foreach ($children as $child) {
@@ -146,10 +153,15 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 */
 	private function restApiCall_PUT(string $endpoint, array $json_in): array {
 		$id = substr($endpoint, strlen('objects/'));
+
+		$id_original = $id;
+		$id = OIDplus::prefilterQuery($id, false);
+
 		$obj = OIDplusObject::parse($id);
 		if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!', 'PUT', $id), null, 400);
 
-		// ATTENTION: Do *not* use $params=$json_in. We intentionally set $params to empty strings if the values do not exist in $json_in,
+		// ATTENTION: Do *not* use $params=$json_in. Unlike in POST and PATCH, here at PUT we
+		//            intentionally set $params to empty strings if the values do not exist in $json_in,
 		//            because PUT is for re-creating the whole object!
 		$params = array();
 		$params['id'] = $id;
@@ -160,6 +172,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		$params['description'] = $json_in['description'] ?? '';
 		$params['asn1ids'] = $json_in['asn1ids'] ?? array();
 		$params['iris'] = $json_in['iris'] ?? array();
+		// TODO: also allow params "created" and "updated"
 
 		if (OIDplusObject::exists($id)) {
 			// TODO: Problem: The superior RA cannot set title/description, so they cannot perform the PUT command!
@@ -188,12 +201,17 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 */
 	private function restApiCall_POST(string $endpoint, array $json_in): array {
 		$id = substr($endpoint, strlen('objects/'));
+
+		$id_original = $id;
+		$id = OIDplus::prefilterQuery($id, false);
+
 		$obj = OIDplusObject::parse($id);
 		if (!$obj) throw new OIDplusException(_L('%1 action failed because object "%2" cannot be parsed!', 'GET', $id), null, 400);
 		$params = $json_in;
 		$params['parent'] = $obj->getParent()->nodeId(true);
 		$params['id_fully_qualified'] = true;
 		$params['id'] = $id;
+		// TODO: also allow params "created" and "updated"
 		$output = self::action_Insert($params);
 
 		$output['status_bits'] = [];
@@ -214,8 +232,13 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 */
 	private function restApiCall_PATCH(string $endpoint, array $json_in): array {
 		$id = substr($endpoint, strlen('objects/'));
+
+		$id_original = $id;
+		$id = OIDplus::prefilterQuery($id, false);
+
 		$params = $json_in;
 		$params['id'] = $id;
+		// TODO: also allow params "created" and "updated"
 		$output = self::action_Update($params);
 
 		$output['status_bits'] = [];
@@ -236,6 +259,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 */
 	private function restApiCall_DELETE(string $endpoint, array $json_in): array {
 		$id = substr($endpoint, strlen('objects/'));
+
+		$id_original = $id;
+		$id = OIDplus::prefilterQuery($id, false);
+
 		$params = $json_in;
 		$params['id'] = $id;
 		$output = self::action_Delete($params);
@@ -302,7 +329,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 						'confidential',
 						'title',
 						'description',
-						'children'
+						'children',
+						'created',
+						'updated'
 					]
 				],
 				_L('Re-Create') => [
@@ -1216,7 +1245,15 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					$stufe = 0;
 					$menu_entries = array();
 					$stufen = array();
+					$max_ent = 0;
 					while ($row = $res->fetch_object()) {
+						$max_ent++;
+						if ($max_ent > 1000) { // TODO: we need to find a solution for this!!!
+							$menu_entry = array('id' => 'oidplus:system', 'icon' => '', 'text' => _L('There are too many child items to display'), 'indent' => 0);
+							$menu_entries[] = $menu_entry;
+							break;
+						}
+
 						$obj = OIDplusObject::parse($row->id);
 						if (!$obj) continue; // might happen if the objectType is not available/loaded
 						if (!$obj->userHasReadRights()) continue;
@@ -1388,7 +1425,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		$result->naturalSortByField('id');
 
 		$rows = array();
+		$max_ent = 0;
 		while ($row = $result->fetch_object()) {
+			$max_ent++;
+			if ($max_ent > 1000) return _L('There are too many child items to display'); // TODO: we need to find a solution for this!!!
 			$obj = OIDplusObject::parse($row->id);
 			if ($obj) $rows[] = array($obj,$row);
 		}
