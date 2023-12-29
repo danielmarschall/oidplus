@@ -292,6 +292,7 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 
 		// Check for a general database error like a locked file DBMS
 		// which would raise a false warning "Table oidplus_config missing"
+		// if we wouldn't do this fake query first.
 		$this->query("select 0");
 
 		$prefix = OIDplus::baseConfig()->getValue('TABLENAME_PREFIX', '');

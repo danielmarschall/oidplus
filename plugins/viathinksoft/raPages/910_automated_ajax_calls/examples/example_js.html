@@ -29,11 +29,16 @@ function testInsertOID() {
 			alert("Error: " + errorThrown);
 		},
 		success:function(data) {
-			if ("error" in data) {
+			if (typeof data === "object" && "error" in data) {
+                console.error(data);
 				alert("Error: " + data.error);
-			} else if (data.status >= 0/*OK*/) {
+			} else if (typeof data === "object" && "status" in data && data.status >= 0/*OK*/) {
 				alert("Insert OK");
+            } else if (typeof data === "object" && "status" in data && data.status < 0) {
+                console.error(data);
+                alert("Error: " + data.status);
 			} else {
+                console.error(data);
 				alert("Error: " + data);
 			}
 		}

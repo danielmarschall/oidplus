@@ -78,7 +78,7 @@ var OIDplusPageAdminOIDInfoExport = {
 				// TODO: Use oidplus_ajax_success(), since this checks the existance of "error" in data, and checks if status>=0
 				if (typeof data === "object" && "error" in data) {
 					if (typeof data === "object" && "count_imported_oids" in data) {
-						// TODO: Device if alertSuccess, alertWarning oder alertError is shown
+						// TODO: Decide if alertSuccess, alertWarning oder alertError is shown
 						alertSuccess(_L("Successfully imported OIDs: %1",data.count_imported_oids)+"\n"+
 							  _L("Ignored OIDs because they are already existing: %1",data.count_already_existing)+"\n"+
 							  _L("Not imported because of errors: %1",data.count_errors)+"\n"+
@@ -88,10 +88,11 @@ var OIDplusPageAdminOIDInfoExport = {
 							  "\n"+
 							  data.error);
 					} else {
+						console.error(data.error);
 						alertError(_L("Error: %1",data.error));
 					}
-				} else if (typeof data === "object" && data.status >= 0) {
-					// TODO: Device if alertSuccess, alertWarning oder alertError is shown
+				} else if (typeof data === "object" && "status" in data && data.status >= 0) {
+					// TODO: Decide if alertSuccess, alertWarning oder alertError is shown
 					alertSuccess(_L("Successfully imported OIDs: %1",data.count_imported_oids)+"\n"+
 						  _L("Ignored OIDs because they are already existing: %1",data.count_already_existing)+"\n"+
 						  _L("Not imported because of errors: %1",data.count_errors)+"\n"+
@@ -99,7 +100,7 @@ var OIDplusPageAdminOIDInfoExport = {
 					$('#userfile').val('');
 				} else {
 					if (typeof data === "object" && "count_imported_oids" in data) {
-						// TODO: Device if alertSuccess, alertWarning oder alertError is shown
+						// TODO: Decide if alertSuccess, alertWarning oder alertError is shown
 						alertSuccess(_L("Successfully imported OIDs: %1",data.count_imported_oids)+"\n"+
 							  _L("Ignored OIDs because they are already existing: %1",data.count_already_existing)+"\n"+
 							  _L("Not imported because of errors: %1",data.count_errors)+"\n"+
@@ -109,6 +110,7 @@ var OIDplusPageAdminOIDInfoExport = {
 							  "\n"+
 							  data/*sic*/);
 					} else {
+						console.error(data);
 						alertError(_L("Error: %1",data));
 					}
 				}

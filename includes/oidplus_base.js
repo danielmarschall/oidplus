@@ -164,7 +164,7 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 						console.error(_L("Error: %1",errorThrown));
 					},
 					success:function(data) {
-						if ("error" in data) {
+						if (typeof data === "object" && "error" in data) {
 							console.error("Tree search failed");
 							console.error(data);
 						} else if ((data instanceof Array) && (data.length > 0)) {
@@ -219,10 +219,10 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 		},
 		success:function(data) {
 			// TODO: Use oidplus_ajax_success(), since this checks the existance of "error" in data, and checks if status>=0
-			if ("error" in data) {
-				alertError(_L("Failed to load content: %1",data.error));
+			if (typeof data === "object" && "error" in data) {
 				console.error(data.error);
-			} else if (data.status >= 0) {
+				alertError(_L("Failed to load content: %1",data.error));
+			} else if (typeof data === "object" && "status" in data && data.status >= 0) {
 				if (!("id" in data)) data.id = id;
 
 				var state = {
@@ -254,9 +254,12 @@ function openOidInPanel(id, reselect/*=false*/, anchor/*=''*/, force/*=false*/) 
 				if (anchor != '') {
 					jumpToAnchor(anchor);
 				}
-			} else {
-				alertError(_L("Failed to load content: %1",data.status));
+			} else if (typeof data === "object" && "status" in data && data.status < 0) {
 				console.error(data);
+				alertError(_L("Failed to load content: %1",data.status));
+			} else {
+				console.error(data);
+				alertError(_L("Failed to load content: %1",data));
 			}
 		}
 	});
@@ -580,10 +583,15 @@ function oidplus_ajax_error(jqXHR, textStatus, errorThrown) {
 
 function oidplus_ajax_success(data, cb) {
 	if (typeof data === "object" && "error" in data) {
+		console.error(data);
 		alertError(_L("Error: %1", data.error));
-	} else if (typeof data === "object" && data.status >= 0) {
+	} else if (typeof data === "object" && "status" in data && data.status >= 0) {
 		cb(data);
+	} else if (typeof data === "object" && "status" in data && data.status < 0) {
+		console.error(data);
+		alertError(_L("Error: %1", data.status));
 	} else {
+		console.error(data);
 		alertError(_L("Error: %1", data));
 	}
 }
