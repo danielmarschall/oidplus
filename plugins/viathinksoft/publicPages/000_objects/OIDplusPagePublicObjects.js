@@ -109,6 +109,11 @@ var OIDplusPagePublicObjects = {
 			success: function (data) {
 				oidplus_ajax_success(data, function (data) {
 
+					if (typeof data !== "object" || !("status" in data) || data.status < 0) {
+						console.error(data);
+						alert("Error: " + data);
+					}
+
 					var message = _L("Insert OK.");
 					var isWarning = false;
 
@@ -159,6 +164,12 @@ var OIDplusPagePublicObjects = {
 			error: oidplus_ajax_error,
 			success: function (data) {
 				oidplus_ajax_success(data, function (data) {
+
+					if (typeof data !== "object" || !("status" in data) || data.status < 0) {
+						console.error(data);
+						alert("Error: " + data);
+					}
+
 					var message = _L("Update OK");
 					var isWarning = false;
 
@@ -211,6 +222,12 @@ var OIDplusPagePublicObjects = {
 			error: oidplus_ajax_error,
 			success: function (data) {
 				oidplus_ajax_success(data, function (data) {
+
+					if (typeof data !== "object" || !("status" in data) || data.status < 0) {
+						console.error(data);
+						alert("Error: " + data);
+					}
+
 					reloadContent();
 					// TODO: Don't use reloadContent(); instead delete node at the left tree and remove the row at the right table
 				});

@@ -72,7 +72,7 @@ var OIDplusPageAdminSoftwareUpdate = {
 						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_4"><strong>' + _L('FATAL ERROR') + ':</strong></span> ' + data.error + "\n\n");
 					}
 					$("#update_infobox").html($("#update_infobox").html() + '\n\n<input type="button" onclick="location.reload()" value="'+_L('Reload page')+'">');
-				} else if (typeof data === "object" && data.status >= 0) {
+				} else if (typeof data === "object" && "status" in data && data.status >= 0) {
 
 					if (!(typeof data === "object" && "update_files" in data)) {
 						// This code is usual for svn-wc and git-wc update
@@ -103,9 +103,10 @@ var OIDplusPageAdminSoftwareUpdate = {
 				} else {
 					$("#update_header").text(_L("Update failed"));
 					//alertError(_L("Error: %1",data));
-					if ("content" in data) {
+					if (typeof data === "object" && "content" in data) {
 						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + data.content + "\n\n" + '<span class="severity_4"><strong>' + _L('FATAL ERROR') + ':</strong></span> ' + data + "\n\n");
 					} else {
+						console.error(data);
 						$("#update_infobox").html($("#update_infobox").html() + "\n\n" + '<span class="severity_4"><strong>' + _L('FATAL ERROR') + ':</strong></span> ' + data + "\n\n");
 					}
 					$("#update_infobox").html($("#update_infobox").html() + '\n\n<input type="button" onclick="location.reload()" value="'+_L('Reload page')+'">');
