@@ -78,31 +78,47 @@ class OIDplusPageRaObjectLog extends OIDplusPagePluginRa
 		                            "where lu.object = ? " .
 		                            "order by lo.unix_ts desc", array($id));
 		$text .= '<h2>'._L('Log messages for object %1',htmlentities($id)).'</h2>';
-		$max_ent = 0;
+
+		$text .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
+		$text .= '<table class="table table-bordered table-striped">';
+		$text .= '<thead>';
+		$text .= '<tr><th>'._L('Time').'</th><th>'._L('Event').'</th><th>'._L('Affected users').'</th><!--<th>'._L('Affected objects').'</th>--><th>'._L('IP Address').'</th></tr>';
+		$text .= '</thead>';
+		$text .= '<tbody>';
+
 		if ($res->any()) {
-			$text .= '<pre>';
+			$count = 0;
 			while ($row = $res->fetch_array()) {
-				$max_ent++;
-				if ($max_ent > 100) break; // TODO: also allow to watch older entries
+				$count++;
+				if ($count > 100) break; // TODO: also allow to watch older entries
+
+				$addr = empty($row['addr']) ? _L('no address') : $row['addr'];
+
 				$users = array();
 				$res2 = OIDplus::db()->query("select username, severity from ###log_user ".
 				                             "where log_id = ?", array((int)$row['id']));
 				while ($row2 = $res2->fetch_array()) {
 					$users[] = $row2['username'];
 				}
-				$users = count($users) > 0 ? ", ".implode('/',$users) : '';
+				$users = implode("\n",$users);
 
-				$addr = empty($row['addr']) ? _L('no address') : $row['addr'];
-
-				$text .= '<span class="severity_'.$row['severity'].'">' . date('Y-m-d H:i:s', (int)$row['unix_ts']) . ': ' . htmlentities($row["event"]??'')." (" . htmlentities($addr.$users) . ")</span>\n";
+				$a = '<span class="severity_'.$row['severity'].'">';
+				$b = '</span>';
+				$text .= '<tr>';
+				$text .= '<td>'.$a.date('Y-m-d H:i:s', (int)$row['unix_ts']).$b.'</td>';
+				$text .= '<td>'.$a.htmlentities($row['event']).$b.'</td>';
+				$text .= '<td>'.$a.nl2br(htmlentities($users)).$b.'</td>';
+				#$text .= '<td>'.$a.nl2br(htmlentities($objects)).$b.'</td>';
+				$text .= '<td>'.$a.htmlentities($addr).$b.'</td>';
+				$text .= '<tr>';
 			}
-			$text .= '</pre>';
-
-			// TODO: List logs in a table instead of a <pre> text
 		} else {
-			$text .= '<p>'._L('Currently there are no log entries').'</p>';
+			$text .= '<tr><td colspan="4">'._L('There are no log entries on this page').'</td></tr>';
 		}
 
+		$text .= '</tbody>';
+		$text .= '</table>';
+		$text .= '</div></div>';
 	}
 
 	/**

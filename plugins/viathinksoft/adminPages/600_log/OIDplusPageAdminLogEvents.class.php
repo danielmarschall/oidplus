@@ -53,10 +53,10 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePluginAdmin {
 			$page = $parts[1] ?? null;
 			if ($page == null) {
 				$res = OIDplus::db()->query("select max(id) as cnt from ###log");
-				$page = floor($res->fetch_array()['cnt'] / 50) + 1;
+				$page = floor($res->fetch_array()['cnt'] / 500) + 1;
 			}
-			$min = ($page-1) * 50 + 1;
-			$max = ($page  ) * 50;
+			$min = ($page-1) * 500 + 1;
+			$max = ($page  ) * 500;
 
 			$res = OIDplus::db()->query("select id, unix_ts, addr, event from ###log ".
 			                            "where id >= ? and id <= ? ".
@@ -69,8 +69,14 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePluginAdmin {
 			$out['text'] .= '<a '.OIDplus::gui()->link($parts[0].'$'.($page-1)).'>Older log entries</a>';
 			$out['text'] .= '<p>';
 
+			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
+			$out['text'] .= '<table class="table table-bordered table-striped">';
+			$out['text'] .= '<thead>';
+			$out['text'] .= '<tr><th>'._L('Time').'</th><th>'._L('Event').'</th><th>'._L('Affected users').'</th><th>'._L('Affected objects').'</th><th>'._L('IP Address').'</th></tr>';
+			$out['text'] .= '</thead>';
+			$out['text'] .= '<tbody>';
+
 			if ($res->any()) {
-				$out['text'] .= '<pre>';
 				while ($row = $res->fetch_array()) {
 					$severity = 0;
 					$contains_messages_for_me = false;
@@ -85,7 +91,7 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePluginAdmin {
 							$contains_messages_for_me = true;
 						}
 					}
-					$users = count($users) > 0 ? '; '._L('affected users: %1',implode(', ',$users)) : '';
+					$users = implode("\n",$users);
 					// ---
 					$objects = array();
 					$res2 = OIDplus::db()->query("select object, severity from ###log_object ".
@@ -93,20 +99,32 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePluginAdmin {
 					while ($row2 = $res2->fetch_array()) {
 						$objects[] = $row2['object'];
 					}
-					$objects = count($objects) > 0 ? '; '._L('affected objects: %1',implode(', ',$objects)) : '';
+					$objects = implode("\n",$objects);
 					// ---
 					$addr = empty($row['addr']) ? _L('no address') : $row['addr'];
 					// ---
-					if ($contains_messages_for_me) $out['text'] .= '<b>';
-					$out['text'] .= '<span class="severity_'.$severity.'">' . date('Y-m-d H:i:s', (int)$row['unix_ts']) . ': ' . htmlentities($row["event"])." (" . htmlentities($addr.$users.$objects) . ")</span>\n";
-					if ($contains_messages_for_me) $out['text'] .= '</b>';
+
+					$a = '<span class="severity_'.$severity.'">';
+					$b = '</span>';
+					if ($contains_messages_for_me) $a = '<b>'.$a;
+					if ($contains_messages_for_me) $b = $b.'</b>';
+					$out['text'] .= '<tr>';
+					$out['text'] .= '<td>'.$a.date('Y-m-d H:i:s', (int)$row['unix_ts']).$b.'</td>';
+					$out['text'] .= '<td>'.$a.htmlentities($row['event']).$b.'</td>';
+					$out['text'] .= '<td>'.$a.nl2br(htmlentities($users)).$b.'</td>';
+					$out['text'] .= '<td>'.$a.nl2br(htmlentities($objects)).$b.'</td>';
+					$out['text'] .= '<td>'.$a.htmlentities($addr).$b.'</td>';
+					$out['text'] .= '<tr>';
+
 				}
-				$out['text'] .= '</pre>';
 			} else {
-				$out['text'] .= '<p>'._L('There are no log entries on this page').'</p>';
+				$out['text'] .= '<tr><td colspan="5">'._L('There are no log entries on this page').'</td></tr>';
 			}
 
-			// TODO: List logs in a table instead of a <pre> text
+			$out['text'] .= '</tbody>';
+			$out['text'] .= '</table>';
+			$out['text'] .= '</div></div>';
+
 		}
 	}
 

@@ -68,10 +68,10 @@ class OIDplusPageRaLogEvents extends OIDplusPagePluginRa {
 				                            "left join ###log_user lu on lu.log_id = lo.id ".
 				                            "where lu.username = ? " .
 				                            "order by lo.unix_ts desc", array($ra_email));
-				$page = floor($res->fetch_array()['cnt'] / 50) + 1;
+				$page = floor($res->fetch_array()['cnt'] / 500) + 1;
 			}
-			$min = ($page-1) * 50 + 1;
-			$max = ($page  ) * 50;
+			$min = ($page-1) * 500 + 1;
+			$max = ($page  ) * 500;
 
 			$res = OIDplus::db()->query("select lo.unix_ts, lo.addr, lo.event, lu.severity from ###log lo ".
 			                            "left join ###log_user lu on lu.log_id = lo.id ".
@@ -86,19 +86,36 @@ class OIDplusPageRaLogEvents extends OIDplusPagePluginRa {
 			$out['text'] .= '<a '.OIDplus::gui()->link($parts[0].'$'.$parts[1].'$'.($page-1)).'>Older log entries</a>';
 			$out['text'] .= '<p>';
 
+			$out['text'] .= '<div class="container box"><div id="suboid_table" class="table-responsive">';
+			$out['text'] .= '<table class="table table-bordered table-striped">';
+			$out['text'] .= '<thead>';
+			$out['text'] .= '<tr><th>'._L('Time').'</th><th>'._L('Event').'</th><!--<th>'._L('Affected users').'</th><th>'._L('Affected objects').'</th>--><th>'._L('IP Address').'</th></tr>';
+			$out['text'] .= '</thead>';
+			$out['text'] .= '<tbody>';
+
 			if ($res->any()) {
-				$out['text'] .= '<pre>';
+				$count = 0;
 				while ($row = $res->fetch_array()) {
 					$addr = empty($row['addr']) ? _L('no address') : $row['addr'];
 
-					$out['text'] .= '<span class="severity_'.$row['severity'].'">' . date('Y-m-d H:i:s', (int)$row['unix_ts']) . ': ' . htmlentities($row["event"])." (" . htmlentities($addr) . ")</span>\n";
+					$a = '<span class="severity_'.$row['severity'].'">';
+					$b = '</span>';
+					$out['text'] .= '<tr>';
+					$out['text'] .= '<td>'.$a.date('Y-m-d H:i:s', (int)$row['unix_ts']).$b.'</td>';
+					$out['text'] .= '<td>'.$a.htmlentities($row['event']).$b.'</td>';
+					#$out['text'] .= '<td>'.$a.nl2br(htmlentities($users)).$b.'</td>';
+					#$out['text'] .= '<td>'.$a.nl2br(htmlentities($objects)).$b.'</td>';
+					$out['text'] .= '<td>'.$a.htmlentities($addr).$b.'</td>';
+					$out['text'] .= '<tr>';
+
 				}
-				$out['text'] .= '</pre>';
 			} else {
-				$out['text'] .= '<p>'._L('There are no log entries on this page').'</p>';
+				$out['text'] .= '<tr><td colspan="3">'._L('There are no log entries on this page').'</td></tr>';
 			}
 
-			// TODO: List logs in a table instead of a <pre> text
+			$out['text'] .= '</tbody>';
+			$out['text'] .= '</table>';
+			$out['text'] .= '</div></div>';
 		}
 	}
 
