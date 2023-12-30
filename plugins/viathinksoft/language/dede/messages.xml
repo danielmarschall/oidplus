@@ -510,6 +510,22 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Affected objects
+		]]></source>
+		<target><![CDATA[
+		Betroffene Objekte
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Affected users
+		]]></source>
+		<target><![CDATA[
+		Betroffene Benutzer
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		After clicking "change", your OIDplus system will contact the ViaThinkSoft server to adjust (add or remove information) your privacy setting. This may take a few minutes.
 		]]></source>
 		<target><![CDATA[
@@ -2550,6 +2566,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Event
+		]]></source>
+		<target><![CDATA[
+		Ereignis
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Everything OK!
 		]]></source>
 		<target><![CDATA[
@@ -3234,6 +3258,14 @@
 		]]></source>
 		<target><![CDATA[
 		INFO
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		IP Address
+		]]></source>
+		<target><![CDATA[
+		IP-Adresse
 		]]></target>
 	</message>
 	<message>
@@ -8250,6 +8282,14 @@
 		]]></source>
 		<target><![CDATA[
 		TiB
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Time
+		]]></source>
+		<target><![CDATA[
+		Zeit
 		]]></target>
 	</message>
 	<message>

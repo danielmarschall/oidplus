@@ -3,6 +3,15 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.1.13",
+		"date": "2023-12-31 00:45:00 +0100",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"Log entries are now displayed in a table instead of a monospace text block.",
+			"JavaScript: JavaScript can now handle errors raised by PHP and show something instead of just silently failing."
+		]
+	},
+	{
 		"version": "2.0.1.12",
 		"date": "2023-12-26 23:55:00 +0100",
 		"author": "Daniel Marschall (ViaThinkSoft)",
