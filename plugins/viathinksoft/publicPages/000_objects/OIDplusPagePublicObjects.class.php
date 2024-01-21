@@ -1249,8 +1249,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					while ($row = $res->fetch_object()) {
 						$max_ent++;
 						if ($max_ent > 1000) { // TODO: we need to find a solution for this!!!
-							$menu_entry = array('id' => 'oidplus:system', 'icon' => '', 'text' => _L('There are too many child items to display'), 'indent' => 0);
+							$menu_entry = array('id' => '', 'icon' => '', 'text' => _L('There are too many child items to display'), 'indent' => 0);
 							$menu_entries[] = $menu_entry;
+							$stufen[] = $stufe;
 							break;
 						}
 
