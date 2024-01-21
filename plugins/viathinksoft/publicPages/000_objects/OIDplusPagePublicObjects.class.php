@@ -1249,7 +1249,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					while ($row = $res->fetch_object()) {
 						$max_ent++;
 						if ($max_ent > 1000) { // TODO: we need to find a solution for this!!!
-							$menu_entry = array('id' => '', 'icon' => '', 'text' => _L('There are too many child items to display'), 'indent' => 0);
+							$menu_entry = array('id' => '', 'icon' => '', 'text' => _L('List truncated due to too many subordinate elements'), 'indent' => 0);
 							$menu_entries[] = $menu_entry;
 							$stufen[] = $stufe;
 							break;
@@ -1597,7 +1597,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			$output .= '<p>'._L('%1 items are hidden. Please <a %2>log in</a> to see them.',$items_hidden,OIDplus::gui()->link('oidplus:login')).'</p>';
 		}
 
-		if ($max_ent > 1000) $output .= '<p>'._L('There are too many child items to display') . '</p>'; // TODO: we need to find a solution for this!!!
+		if ($max_ent > 1000) $output .= '<p><b>'._L('List truncated due to too many subordinate elements') . '</b></p>'; // TODO: we need to find a solution for this!!!
 
 		return $output;
 	}

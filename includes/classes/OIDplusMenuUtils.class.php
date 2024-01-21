@@ -131,7 +131,7 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 			$max_ent++;
 			if ($max_ent > 1000) { // TODO: we need to find a solution for this!!!
 				// Note: We cannot use id=oidplus:system, otherwise the lazy-load-tree breaks
-				$children[] = array('id' => '', 'icon' => '', 'text' => _L('There are too many child items to display'), 'indent' => 0);
+				$children[] = array('id' => '', 'icon' => '', 'text' => _L('List truncated due to too many subordinate elements'), 'indent' => 0);
 				break;
 			}
 

@@ -40,7 +40,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 	private $transactions_supported = false;
 
 	/**
-	 * @var
+	 * @var array
 	 */
 	private $prepare_cache = [];
 
