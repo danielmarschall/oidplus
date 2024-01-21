@@ -615,9 +615,9 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 							$row["title"]??null,
 							$row["description"]??null,
 							$row["ra_email"]??null,
-							$row["confidential"]??false,
-							$row["created"]??null,
-							$row["updated"]??null,
+							(bool)($row["confidential"]??false),
+							$row["created"]??'1900-01-01 00:00:00',
+							$row["updated"]??'1900-01-01 00:00:00',
 							$row["comment"]??null)
 					);
 
@@ -626,8 +626,8 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 						OIDplus::db()->query("insert into ###asn1id (oid, name, standardized, well_known) values (?, ?, ?, ?)",
 							array($row["id"]??null, // sic: $row, not $row2
 								$row2["name"]??null,
-								$row2["standardized"]??false,
-								$row2["well_known"]??false)
+								(bool)($row2["standardized"]??false),
+								(bool)($row2["well_known"]??false))
 						);
 					}
 
@@ -636,11 +636,13 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 						OIDplus::db()->query("insert into ###iri (oid, name, longarc, well_known) values (?, ?, ?, ?)",
 							array($row["id"]??null, // sic: $row, not $row2
 								$row2["name"]??null,
-								$row2["longarc"]??false,
-								$row2["well_known"]??false)
+								(bool)($row2["longarc"]??false),
+								(bool)($row2["well_known"]??false))
 						);
 					}
 				}
+				OIDplus::db()->query("update ###objects set created = null where created = '1900-01-01 00:00:00';");
+				OIDplus::db()->query("update ###objects set updated = null where updated = '1900-01-01 00:00:00';");
 			}
 
 			// Restore RAs (Table ra)
@@ -666,13 +668,16 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 							$row["phone"]??null,
 							$row["mobile"]??null,
 							$row["fax"]??null,
-							$row["privacy"]??false,
+							(bool)($row["privacy"]??false),
 							$row["authkey"]??null,
-							$row["registered"]??null,
-							$row["updated"]??null,
-							$row["last_login"]??null)
+							$row["registered"]??'1900-01-01 00:00:00',
+							$row["updated"]??'1900-01-01 00:00:00',
+							$row["last_login"]??'1900-01-01 00:00:00')
 					);
 				}
+				OIDplus::db()->query("update ###ra set registered = null where registered = '1900-01-01 00:00:00';");
+				OIDplus::db()->query("update ###ra set updated = null where updated = '1900-01-01 00:00:00';");
+				OIDplus::db()->query("update ###ra set last_login = null where last_login = '1900-01-01 00:00:00';");
 			}
 
 			// Restore configuration (Table config)
@@ -691,8 +696,8 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 						array($row["name"]??null,
 							$row["value"]??null,
 							$row["description"]??null,
-							$row["protected"]??false,
-							$row["visible"]??false)
+							(bool)($row["protected"]??false),
+							(bool)($row["visible"]??false))
 					);
 				}
 
