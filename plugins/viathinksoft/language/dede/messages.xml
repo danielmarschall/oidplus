@@ -8030,10 +8030,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		There are too many child items to display
+		List truncated due to too many subordinate elements
 		]]></source>
 		<target><![CDATA[
-		Auflistung nicht möglich, da es zu viele Unterobjekte gibt
+		Liste gekürzt, da es zu viele untergeordnete Objekte gibt
 		]]></target>
 	</message>
 	<message>
