@@ -189,7 +189,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => '4b1827beabce71953ca479485c0ae9c51287f2fe',
+            'reference' => '6b34da463cba176825c7d834bd013a7540bd703c',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),

@@ -4070,6 +4070,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		List truncated due to too many subordinate elements
+		]]></source>
+		<target><![CDATA[
+		Liste gekürzt, da es zu viele untergeordnete Objekte gibt
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Little Endian
 		]]></source>
 		<target><![CDATA[
@@ -8026,14 +8034,6 @@
 		]]></source>
 		<target><![CDATA[
 		Es gibt drei Möglichkeiten, um OIDplus auf dem aktuellsten Stand zu halten
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		List truncated due to too many subordinate elements
-		]]></source>
-		<target><![CDATA[
-		Liste gekürzt, da es zu viele untergeordnete Objekte gibt
 		]]></target>
 	</message>
 	<message>
