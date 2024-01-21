@@ -40,6 +40,11 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 	private $transactions_supported = false;
 
 	/**
+	 * @var
+	 */
+	private $prepare_cache = [];
+
+	/**
 	 * @param string $sql
 	 * @param array|null $prepared_args
 	 * @return OIDplusQueryResultPDO
@@ -73,7 +78,18 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 			}
 			unset($value);
 
-			$ps = $this->conn->prepare($sql);
+			if (isset($this->prepare_cache[$sql])) {
+				// Attention: Caching prepared statements in PDO and ODBC is risky,
+				// because it seems that existing pointers are destroyed
+				// when execeute() is called.
+				// However, since we always fetch all data (to allow MARS),
+				// the testcase "Simultanous prepared statements" works, so we should be fine...?
+				$ps = $this->prepare_cache[$sql];
+			} else {
+				$ps = $this->conn->prepare($sql);
+				if (!$ps) $ps = false; // because null will result in isset()=false
+				$this->prepare_cache[$sql] = $ps;
+			}
 			if (!$ps) {
 				$this->last_error = $this->conn->errorInfo()[2];
 				if (!$this->last_error) $this->last_error = _L("Error")." ".$this->conn->errorInfo()[0]; // if no message is available, only show the error-code

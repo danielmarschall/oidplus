@@ -42,6 +42,10 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 
 		if (!$this->no_resultset) {
 			$this->res = $res;
+
+			// Since caching prepared statements will cause the testcase "Simultanous prepared statements" to fail,
+			// this will fix it.
+			$this->prefetchAll();
 		}
 	}
 
@@ -99,10 +103,21 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 	}
 
 	/**
+	 * Goes to the last result set (in case a query returns multiple result sets)
+	 * @return void
+	 */
+	protected function gotoLastResultSet() {
+		while (@odbc_next_result($this->res)) {
+			// Do nothing
+		}
+	}
+
+	/**
 	 * @return array|null
 	 */
 	protected function do_fetch_array()/*: ?array*/ {
-		$ret = odbc_fetch_array($this->res);
+		//$this->gotoLastResultSet(); // TODO: This causes problems (read dbms_version on null)
+		$ret = @odbc_fetch_array($this->res);
 		if ($ret === false) $ret = null;
 		return $ret;
 	}
@@ -111,7 +126,8 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 	 * @return object|null
 	 */
 	protected function do_fetch_object()/*: ?object*/ {
-		$ret = odbc_fetch_object($this->res);
+		//$this->gotoLastResultSet(); // TODO: This causes problems (read dbms_version on null)
+		$ret = @odbc_fetch_object($this->res);
 		if ($ret === false) $ret = null;
 		return $ret;
 	}

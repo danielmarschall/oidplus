@@ -66,7 +66,7 @@ class OIDplusDatabaseConnectionOci extends OIDplusDatabaseConnection {
 				return ":param$i";
 			}, $sql, count($prepared_args), $count);
 
-			$res = @oci_parse($this->conn, $sql);
+			$res = @oci_parse($this->conn, $sql); // TODO: prepare_cache (is this safe?)
 			if ($res === false) {
 				$this->last_error = oci_error($this->conn);
 				throw new OIDplusSQLException($sql, _L('Cannot prepare statement').': '.$this->error());
