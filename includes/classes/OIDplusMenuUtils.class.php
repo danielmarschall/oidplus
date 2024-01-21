@@ -129,7 +129,12 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 		$max_ent = 0;
 		while ($row = $res->fetch_array()) {
 			$max_ent++;
-			if ($max_ent > 1000) break; // TODO: we need a solution for this!!!
+			if ($max_ent > 1000) { // TODO: we need to find a solution for this!!!
+				// Note: We cannot use id=oidplus:system, otherwise the lazy-load-tree breaks
+				$children[] = array('id' => '', 'icon' => '', 'text' => _L('There are too many child items to display'), 'indent' => 0);
+				break;
+			}
+
 			$obj = OIDplusObject::parse($row['id']);
 			if (!$obj) continue; // e.g. object-type plugin disabled
 
@@ -159,19 +164,34 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 				$child['children'] = $this->tree_populate($row['id'], $goto_path);
 				$child['state'] = array("opened" => true);
 			} else {
-				$obj_children = $obj->getChildren();
 
 				// Variant 1: Fast, but does not check for hidden OIDs
-				//$child_count = count($obj_children);
+				/*
+				$obj_children = $obj->getChildren();
+				$child['children'] = count($obj_children) > 0;
+				*/
 
 				// variant 2
-				$child_count = 0;
+				/*
+				$obj_children = $obj->getChildren();
+				$child['children'] = false;
 				foreach ($obj_children as $obj_test) {
 					if (!$obj_test->userHasReadRights()) continue;
-					$child_count++;
+					$child['children'] = true;
+					break;
+				}
+				*/
+
+				// variant 3: A bit faster than variant 2
+				$child['children'] = false;
+				$res2 = OIDplus::db()->query("select id from ###objects where parent = ?", array($obj->nodeId()));
+				while ($row2 = $res2->fetch_array()) {
+					$obj_test = OIDplusObject::parse($row2['id']);
+					if (!$obj_test->userHasReadRights()) continue;
+					$child['children'] = true;
+					break;
 				}
 
-				$child['children'] = $child_count > 0;
 			}
 
 			$children[] = $child;

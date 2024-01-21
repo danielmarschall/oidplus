@@ -269,7 +269,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			if (!$ra) {
 				$res = OIDplus::db()->query("select oChild.id as child_id, oChild.ra_email as child_mail, oParent.ra_email as parent_mail from ###objects as oChild ".
 				                            "left join ###objects as oParent on oChild.parent = oParent.id");
-				$res->naturalSortByField('oChild.id');
+				$res->naturalSortByField('child_id');
 				while ($row = $res->fetch_array()) {
 					if (!OIDplus::authUtils()->isRaLoggedIn($row['parent_mail']) && OIDplus::authUtils()->isRaLoggedIn($row['child_mail'])) {
 						$x = self::parse($row['child_id']); // can be NULL if namespace was disabled
@@ -283,7 +283,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 				                            OIDplus::db()->getSlang()->isNullFunction('oChild.ra_email',"''")." = ?) or ".
 				                            "      (oParent.ra_email is null and ".OIDplus::db()->getSlang()->isNullFunction('oChild.ra_email',"''")." = ?) ",
 				                            array($ra, $ra, $ra));
-				$res->naturalSortByField('oChild.id');
+				$res->naturalSortByField('child_id');
 				while ($row = $res->fetch_array()) {
 					$x = self::parse($row['child_id']); // can be NULL if namespace was disabled
 					if ($x) $out[] = $x;
