@@ -59,6 +59,11 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 	}
 
 	/**
+	 * @var array
+	 */
+	private $prepare_cache = [];
+
+	/**
 	 * @param string $sql
 	 * @param array|null $prepared_args
 	 * @return OIDplusQueryResultODBC
@@ -80,7 +85,13 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 		}
 		unset($value);
 
-		$ps = @odbc_prepare($this->conn, $sql);
+		if (isset($this->prepare_cache[$sql])) {
+			$ps = $this->prepare_cache[$sql];
+		} else {
+			$ps = @odbc_prepare($this->conn, $sql);
+			if (!$ps) $ps = false; // because null will result in isset()=false
+			$this->prepare_cache[$sql] = $ps;
+		}
 		if (!$ps) {
 			// If preparation fails, try the emulation
 			// For example, SQL Server ODBC Driver cannot have "?" in a subquery,
@@ -95,7 +106,7 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 
 		if (!@odbc_execute($ps, $prepared_args)) {
 			$this->last_error = odbc_errormsg($this->conn);
-			throw new OIDplusSQLException($sql, $this->error());
+			throw new OIDplusSQLException($sql.' mit Args '.print_r($prepared_args,true), $this->error());
 		}
 		return new OIDplusQueryResultODBC($ps);
 	}
