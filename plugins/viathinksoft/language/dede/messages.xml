@@ -721,7 +721,7 @@
 		Attention: In case you are cloning a system, e.g. in order to create a staging environment, please DO NOT copy the private key, as this would cause two systems to have the same System ID.
 		]]></source>
 		<target><![CDATA[
-		Achtung: Falls Sie ein System klonen möchten, z.B. um eine Test-Umgebung einzurichten, kopieren Sie bitte NICHT den Privaten Schlüssel, da dies dazu führen würde, dass zwei Systeme die gleiche System ID erhalten würden.
+		Achtung: Falls Sie ein System klonen möchten, z.B. um eine Test-Umgebung einzurichten, kopieren Sie bitte NICHT den privaten Schlüssel, da dies dazu führen würde, dass zwei Systeme die gleiche System ID erhalten würden.
 		]]></target>
 	</message>
 	<message>

@@ -1428,7 +1428,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		$max_ent = 0;
 		while ($row = $result->fetch_object()) {
 			$max_ent++;
-			if ($max_ent > 1000) return _L('There are too many child items to display'); // TODO: we need to find a solution for this!!!
+			if ($max_ent > 1000) break; // TODO: we need to find a solution for this!!!
 			$obj = OIDplusObject::parse($row->id);
 			if ($obj) $rows[] = array($obj,$row);
 		}
@@ -1595,6 +1595,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		} else if ($items_hidden > 1) {
 			$output .= '<p>'._L('%1 items are hidden. Please <a %2>log in</a> to see them.',$items_hidden,OIDplus::gui()->link('oidplus:login')).'</p>';
 		}
+
+		if ($max_ent > 1000) $output .= '<p>'._L('There are too many child items to display') . '</p>'; // TODO: we need to find a solution for this!!!
 
 		return $output;
 	}

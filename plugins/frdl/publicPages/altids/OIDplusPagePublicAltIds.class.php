@@ -139,6 +139,24 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 	}
 
 	/**
+	 * Acts like in_array(), but allows includes prefilterQuery, e.g. `mac:AA-BB-CC-DD-EE-FF` can be found in an array containing `mac:AABBCCDDEEFF`.
+	 * @param string $needle
+	 * @param array $haystack
+	 * @return bool
+	 */
+	private static function special_in_array(string $needle, array $haystack) {
+		$needle_prefiltered = OIDplus::prefilterQuery($needle,false);
+		foreach ($haystack as $straw) {
+			$straw_prefiltered = OIDplus::prefilterQuery($straw, false);
+			if ($needle == $straw) return true;
+			else if ($needle == $straw_prefiltered) return true;
+			else if ($needle_prefiltered == $straw) return true;
+			else if ($needle_prefiltered == $straw_prefiltered) return true;
+		}
+		return false;
+	}
+
+	/**
 	 * @param string $id
 	 * @return string[]
 	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
@@ -167,7 +185,14 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 			$res = array_merge($res, $rev_lookup[$id]);
 		}
 		foreach($alt_ids as $original => $altIds){
-			if($id === $original || in_array($id, $altIds) ){
+			// Why self::special_in_array() instead of in_array()? Consider the following testcase:
+			// "oid:1.3.6.1.4.1.37553.8.8.2" defines alt ID "mac:63-CF-E4-AE-C5-66" which is NOT canonized!
+			// You must be able to enter "mac:63-CF-E4-AE-C5-66" in the search box, which gets canonized
+			// to mac:63CFE4AEC566 and must be solved to "oid:1.3.6.1.4.1.37553.8.8.2" by this plugin.
+			// Therefore we use self::special_in_array().
+			// However, it is mandatory, that previously saveAltIdsForQuery("oid:1.3.6.1.4.1.37553.8.8.2") was called once!
+			// Please also note that the "weid:" to "oid:" converting is handled by prefilterQuery(), but only if the OID plugin is installed.
+			if($id === $original || self::special_in_array($id, $altIds) ){
 				 $res = array_merge($res, $altIds);
 				 $res = array_merge($res, [$original]);
 			}
