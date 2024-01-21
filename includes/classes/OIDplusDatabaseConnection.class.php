@@ -45,6 +45,11 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	protected /*bool*/ $slangDetectionDone = false;
 
 	/**
+	 * @var OIDplusSqlSlangPlugin
+	 */
+	private $slangCache = null;
+
+	/**
 	 * @param string $sql
 	 * @param array|null $prepared_args
 	 * @return OIDplusQueryResult
@@ -401,15 +406,13 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	public final function getSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
-		static /*?OIDplusSqlSlangPlugin*/ $slangCache = null;
-
 		if ($this->slangDetectionDone) {
-			return $slangCache;
+			return $this->slangCache;
 		}
 
-		$slangCache = $this->doGetSlang();
+		$this->slangCache = $this->doGetSlang();
 		$this->slangDetectionDone = true;
-		return $slangCache;
+		return $this->slangCache;
 	}
 
 	/**
