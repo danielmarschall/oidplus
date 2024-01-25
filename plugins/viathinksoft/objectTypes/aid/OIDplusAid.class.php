@@ -416,13 +416,29 @@ class OIDplusAid extends OIDplusObject {
 			}
 		}
 
-		// (VTS F3) USB-IF VendorID + PIX
+		// (VTS F3 01) USB-IF VendorID + ProductID + PIX
 		// Resolve only if there is no PIX
-		if (str_starts_with($aid,'D276000186F3')) {
-			$rest = substr($aid,strlen('D276000186F3'));
+		if (str_starts_with($aid,'D276000186F301')) {
+			$rest = substr($aid,strlen('D276000186F301'));
 			if (strlen($rest) == 4) {
 				$vid = $rest;
 				$ids[] = new OIDplusAltId('usb-vendor-id', $vid, _L('USB-IF (usb.org) VendorID'));
+			} else if (strlen($rest) == 8) {
+				$vid_pid = substr($rest, 0, 4) . ':' . substr($rest, 4);;
+				$ids[] = new OIDplusAltId('usb-vendor-product-id', $vid_pid, _L('USB-IF (usb.org) VendorID/ProductID'));
+			}
+		}
+
+		// (VTS F3 02) PCI-SIG VendorID + ProductID + PIX
+		// Resolve only if there is no PIX
+		if (str_starts_with($aid,'D276000186F302')) {
+			$rest = substr($aid,strlen('D276000186F302'));
+			if (strlen($rest) == 4) {
+				$vid = $rest;
+				$ids[] = new OIDplusAltId('pci-vendor-id', $vid, _L('PCI-SIG (pcisig.com) VendorID'));
+			} else if (strlen($rest) == 8) {
+				$vid_pid = substr($rest, 0, 4) . ':' . substr($rest, 4);;
+				$ids[] = new OIDplusAltId('pci-vendor-product-id', $vid_pid, _L('PCI-SIG (pcisig.com)VendorID/ProductID'));
 			}
 		}
 
