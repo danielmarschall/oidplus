@@ -837,12 +837,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "6b34da463cba176825c7d834bd013a7540bd703c"
+                "reference": "6a6c22234a5b1502b1c0bb90917d31478a2b7f3e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/6b34da463cba176825c7d834bd013a7540bd703c",
-                "reference": "6b34da463cba176825c7d834bd013a7540bd703c",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/6a6c22234a5b1502b1c0bb90917d31478a2b7f3e",
+                "reference": "6a6c22234a5b1502b1c0bb90917d31478a2b7f3e",
                 "shasum": ""
             },
             "require": {
@@ -860,7 +860,7 @@
                 "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
                 "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
             },
-            "time": "2024-01-12T21:44:58+00:00",
+            "time": "2024-01-24T13:42:28+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
