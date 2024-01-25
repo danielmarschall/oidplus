@@ -3,6 +3,14 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.1.15",
+		"date": "2024-01-25 22:15:00 +0100",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"New definition of VTS-F3 AID (Device Vendor/Product ID)"
+		]
+	},
+	{
 		"version": "2.0.1.14",
 		"date": "2024-01-21 23:55:00 +0100",
 		"author": "Daniel Marschall (ViaThinkSoft)",

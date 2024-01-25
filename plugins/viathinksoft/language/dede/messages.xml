@@ -5446,6 +5446,22 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		PCI-SIG (pcisig.com) VendorID
+		]]></source>
+		<target><![CDATA[
+		PCI-SIG (pcisig.com) Hersteller-Kennung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		PCI-SIG (pcisig.com)VendorID/ProductID
+		]]></source>
+		<target><![CDATA[
+		PCI-SIG (pcisig.com) Hersteller/Produkt-Kennung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		PDO Password
 		]]></source>
 		<target><![CDATA[
@@ -8401,7 +8417,15 @@
 		USB-IF (usb.org) VendorID
 		]]></source>
 		<target><![CDATA[
-		USB-IF (usb.org) VendorID
+		USB-IF (usb.org) Hersteller-Kennung
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		USB-IF (usb.org) VendorID/ProductID
+		]]></source>
+		<target><![CDATA[
+		USB-IF (usb.org) Hersteller/Produkt-Kennung
 		]]></target>
 	</message>
 	<message>
