@@ -136,7 +136,8 @@ abstract class OIDplusQueryResult extends OIDplusBaseClass {
 		if (!$this->containsResultSet()) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 		if (!is_null($this->prefetchedArray)) {
 			// Prefetched value exists. Use it.
-			$ary = array_shift($this->prefetchedArray);
+			//$ary = array_shift($this->prefetchedArray);
+			$ary = $this->prefetchedArray[$this->countAlreadyFetched] ?? null; // Performance is better this way
 		} else {
 			$reflector = new \ReflectionMethod($this, 'do_fetch_array');
 			$isImplemented = ($reflector->getDeclaringClass()->getName() !== self::class);
@@ -180,7 +181,8 @@ abstract class OIDplusQueryResult extends OIDplusBaseClass {
 		if (!$this->containsResultSet()) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 		if (!is_null($this->prefetchedArray)) {
 			// Prefetched value exists (as array). Convert and use it.
-			$ary = array_shift($this->prefetchedArray);
+			//$ary = array_shift($this->prefetchedArray);
+			$ary = $this->prefetchedArray[$this->countAlreadyFetched] ?? null; // Performance is better this way
 			$obj = is_null($ary) ? null : array_to_stdobj($ary);
 		} else {
 			$reflector = new \ReflectionMethod($this, 'do_fetch_object');

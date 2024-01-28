@@ -762,8 +762,13 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 */
 	public function equals($obj): bool {
 		if (!$obj) return false;
-		if (!is_object($obj)) $obj = OIDplusObject::parse($obj);
-		if (!$obj) return false;
+		if (!is_object($obj)) {
+			if ($this->nodeId(true) === $obj) return true; // simplest case
+			$obj = OIDplusObject::parse($obj);
+			if (!$obj) return false;
+		} else {
+			if ($this->nodeId(true) === $obj->nodeId(true)) return true; // simplest case
+		}
 		if (!($obj instanceof $this)) return false;
 
 		$distance = $this->distance($obj);
@@ -781,11 +786,13 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		$obj = OIDplusObject::parse($search_id);
 		if (!$obj) return false; // e.g. if ObjectType plugin is disabled
 
+		if ($obj->nodeId(false) == '') return false; // speed optimization. "oid:" is not equal to any object in the database
+
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select id from ###objects where id like ?", array($obj->ns().':%'));
 			while ($row = $res->fetch_object()) {
 				$test = OIDplusObject::parse($row->id);
-				if ($obj->equals($test)) return $test;
+				if ($test && $obj->equals($test)) return $test;
 			}
 			return false;
 		} else {
@@ -793,7 +800,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			foreach (self::$object_info_cache as $id => $cacheitem) {
 				if (strpos($id, $obj->ns().':') === 0) {
 					$test = OIDplusObject::parse($id);
-					if ($obj->equals($test)) return $test;
+					if ($test && $obj->equals($test)) return $test;
 				}
 			}
 			return false;

@@ -329,8 +329,12 @@ Note: Writing to "/tmp/..." might be redirected to "/tmp/systemd-private-*/tmp/.
 
     OIDplus::baseConfig()->setValue('OBJECT_CACHING',         true);
 
-Object caching reads all objects in the memory. This increases performance
-performance but also increases memory usage on large databases.
+Object caching reads all objects from the database in the memory at every request.
+This increases the speed on small databases (but also uses more memory),
+but makes OIDplus VERY slow if the database is big (> 10.000 OIDs).
+
+So, if you want (or must) use little RAM, or have a lot of objects in the
+database, please turn off `OBJECT_CACHING`.
 
 ### FORCE_DBMS_SLANG
 
