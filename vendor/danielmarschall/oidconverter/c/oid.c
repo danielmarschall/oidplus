@@ -37,9 +37,9 @@
 // MINOR THINGS
 // - All stderr: Output new line at stdOut and close stdOut
 // - Make as much GMP as possible (e.g. nBinary counter, nBinaryWork etc)
-// - überlegen, wie man die return-codes (errorcodes) besser verteilt/definiert
+// - Think aout how to better define the return codes (error codes)
 // - irgendwie in funktionen kapseln (z.b. class-tag-parser usw)
-// - "TODO"s beachten (unklare dinge)
+// - Look at all "TODO"s (especially things which are not clear)
 
 // MINOR PROBLEMS IN CLI-INTERPRETATION:
 // - A wrong error message is shown when trying to encode "-0.0" or "x"
@@ -242,7 +242,7 @@ int main(int argc, char **argv) {
 				}
 			}
 		} else {
-			if (fInName != NULL) { // TODO: (Unklar) Was bewirkt das? Auch für fOutName notwendig?
+			if (fInName != NULL) { // TODO: (Not clear): What does this? Is this also important for fOutName?
 				break;
 			}
 
@@ -258,7 +258,7 @@ int main(int argc, char **argv) {
 					return EXIT_FAILURE;
 				}
 			}
-			strcat(abCommandLine, argv[n]); // (fügt ein \0 automatisch an)
+			strcat(abCommandLine, argv[n]); // (automatically inserts an "\0")
 			if (n != argc - 1 && nMode != MODE_HEX_TO_DOT) {
 				strcat(abCommandLine, ".");
 			}

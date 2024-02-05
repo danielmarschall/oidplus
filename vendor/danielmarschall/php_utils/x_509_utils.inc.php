@@ -180,7 +180,7 @@ function x_509_ocsp_check_chain($infile, $CApath) {
 				$diag_revoked = true;
 			} else if (strpos($outc, "$y: good") === false) {
 #echo "C = $outc<br>\n";
-#Ã TODO:
+# TODO:
 # COMODO sagt
 # C = Responder Error: unauthorized
 # STARTCOM sagt

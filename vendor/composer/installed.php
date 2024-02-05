@@ -53,7 +53,7 @@
         'danielmarschall/oidconverter' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'd9eb98eb8aba3ca8c6a1003caaa9d6a4ed1a3153',
+            'reference' => 'cd036ff233ff368e619bf09e3045cb5180850eb7',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/oidconverter',
             'aliases' => array(
@@ -84,7 +84,7 @@
         'danielmarschall/php_utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '9bad54cf8b96975b6569cd0aea41d0b78f5e1602',
+            'reference' => '72ab7919215ff4d377c3b489f170d150c1a0a240',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/php_utils',
             'aliases' => array(
