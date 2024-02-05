@@ -10,12 +10,12 @@ danielmarschall/fileformats      9999999-dev 67fb751 Apache-2.0
 danielmarschall/fileformats      dev-master 67fb751  Apache-2.0            
 danielmarschall/glip             0.1.3.x-dev 681871b GPL-2.0-or-later      
 danielmarschall/glip             dev-master 681871b  GPL-2.0-or-later      
-danielmarschall/oidconverter     9999999-dev d9eb98e Apache-2.0            
-danielmarschall/oidconverter     dev-master d9eb98e  Apache-2.0            
+danielmarschall/oidconverter     9999999-dev cd036ff Apache-2.0            
+danielmarschall/oidconverter     dev-master cd036ff  Apache-2.0            
 danielmarschall/php-sha3         9999999-dev 5605bd5 MIT                   
 danielmarschall/php-sha3         dev-master 5605bd5  MIT                   
-danielmarschall/php_utils        9999999-dev 9bad54c Apache-2.0            
-danielmarschall/php_utils        dev-master 9bad54c  Apache-2.0            
+danielmarschall/php_utils        9999999-dev 72ab791 Apache-2.0            
+danielmarschall/php_utils        dev-master 72ab791  Apache-2.0            
 danielmarschall/uuid_mac_utils   9999999-dev e632024 Apache-2.0            
 danielmarschall/uuid_mac_utils   dev-master e632024  Apache-2.0            
 danielmarschall/vnag             9999999-dev ba9c0ed Apache-2.0            
