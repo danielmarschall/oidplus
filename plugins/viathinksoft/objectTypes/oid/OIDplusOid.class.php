@@ -177,7 +177,7 @@ class OIDplusOid extends OIDplusObject {
 
 		$tmp = _L('WEID notation');
 		$tmp = str_replace(explode(' ', $tmp, 2)[0], '<a href="https://weid.info/" target="_blank">'.explode(' ', $tmp, 2)[0].'</a>', $tmp);
-		$tech_info[$tmp] = $this->getWeidNotation();
+		$tech_info[$tmp] = $this->getWeidNotation(true);
 
 		$tmp = _L('DER encoding');
 		$tmp = str_replace(explode(' ', $tmp, 2)[0], '<a href="https://misc.daniel-marschall.de/asn.1/oid-converter/online.php" target="_blank">'.explode(' ', $tmp, 2)[0].'</a>', $tmp);
@@ -627,6 +627,8 @@ class OIDplusOid extends OIDplusObject {
 	public function getAltIds(): array {
 		if ($this->isRoot()) return array();
 		$ids = parent::getAltIds();
+
+		$ids[] = new OIDplusAltId('weid', explode(':',$this->getWeidNotation(false),2)[1], _L('WEID notation'), '', 'https://weid.info');
 
 		// R74n "Multiplane", see https://r74n.com/multiplane/
 		// Vendor space:

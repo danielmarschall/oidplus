@@ -558,6 +558,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Alt ID Plugin
+		]]></source>
+		<target><![CDATA[
+		Alt ID Plugin
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Alternative Identifiers
 		]]></source>
 		<target><![CDATA[
@@ -5074,6 +5082,14 @@
 		]]></source>
 		<target><![CDATA[
 		OIDplus-Plugin %1 ist aktiviert, aber OIDplus kann sich nicht mit dem Internet verbinden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OIDplus plugin "%1" is enabled, but it does not know how to create its database tables to this DBMS. Therefore the plugin does not work.
+		]]></source>
+		<target><![CDATA[
+		OIDplus-Plugin "%1" ist aktiviert, aber es weiß nicht, wie es seine Datenbank-Tabellen in diesem DBMS erzeugen soll. Das Plugin ist daher nicht funktionsfähig.
 		]]></target>
 	</message>
 	<message>
