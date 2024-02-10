@@ -1116,6 +1116,8 @@ class SSH2
      * Default Constructor.
      *
      * $host can either be a string, representing the host, or a stream resource.
+     * If $host is a stream resource then $port doesn't do anything, altho $timeout
+     * still will be used
      *
      * @param mixed $host
      * @param int $port
@@ -1214,6 +1216,8 @@ class SSH2
             ? \WeakReference::create($this)
             : $this;
 
+        $this->timeout = $timeout;
+
         if (is_resource($host)) {
             $this->fsock = $host;
             return;
@@ -1222,7 +1226,6 @@ class SSH2
         if (Strings::is_stringable($host)) {
             $this->host = $host;
             $this->port = $port;
-            $this->timeout = $timeout;
         }
     }
 
@@ -3531,6 +3534,9 @@ class SSH2
         }
 
         $start = microtime(true);
+        $sec = (int) floor($this->curTimeout);
+        $usec = (int) (1000000 * ($this->curTimeout - $sec));
+        stream_set_timeout($this->fsock, $sec, $usec);
         $raw = stream_get_contents($this->fsock, $this->decrypt_block_size);
 
         if (!strlen($raw)) {
@@ -4724,7 +4730,9 @@ class SSH2
     }
 
     /**
-     * Returns all errors
+     * Returns all errors / debug messages on the SSH layer
+     *
+     * If you are looking for messages from the SFTP layer, please see SFTP::getSFTPErrors()
      *
      * @return string[]
      */
@@ -4734,7 +4742,9 @@ class SSH2
     }
 
     /**
-     * Returns the last error
+     * Returns the last error received on the SSH layer
+     *
+     * If you are looking for messages from the SFTP layer, please see SFTP::getLastSFTPError()
      *
      * @return string
      */

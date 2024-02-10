@@ -3,6 +3,14 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.1.16",
+		"date": "2024-02-10 20:00:00 +0100",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"Release of Alt-Id-Plugin 1.0.8"
+		]
+	},
+	{
 		"version": "2.0.1.15",
 		"date": "2024-01-25 22:15:00 +0100",
 		"author": "Daniel Marschall (ViaThinkSoft)",
