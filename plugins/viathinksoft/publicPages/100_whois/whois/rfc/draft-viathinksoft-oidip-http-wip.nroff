@@ -250,12 +250,12 @@ XML         Extensible Markup Language, a markup language and file format for st
 .ti 0
 2  Request
 
-OID-IP is a text-based protocol transmitted either via the Hypertext Transfer Protocol [TODO: RFC Ref], or due to backwards compatibility via WHOIS protocol. (The concept of OID-IP was established in 2011 and is already implemented by several vendors).
+OID-IP is a text-based protocol transmitted either via the Hypertext Transfer Protocol [RFC7230], or due to backwards compatibility via WHOIS protocol. (The concept of OID-IP was established in 2011 and is already implemented by several vendors).
 
 .ti 0
 2.1 Request via HTTP Protocol (Recommended)
 
-OID-IP is a text-based protocol transmitted over the Hypertext Transfer Protocol [TODO: RFC Ref].
+OID-IP is a text-based protocol transmitted over the Hypertext Transfer Protocol [RFC7230].
 
 .ti
 2.1.1 Request Method and Path
@@ -270,7 +270,7 @@ whereas
 
 - <objectIdentifier> is the identifier to be requested.  For OIDs, it is the dot-notation without leading dot, e.g. "2.999".
 
-- <format> is either "text", "json", or "xml" (see section\0[TODO]).
+- <format> is either "text", "json", or "xml" (see section\03.1).
 
 Example of an URL that receives a GET request:
 https://example.com/oidip/oid/2.999/text
@@ -289,6 +289,8 @@ The following authentication methods are possible:
 1. Whitedlisted IP address
 
 2. POST parameter with the name "auth" containing authentication tokens.
+
+TODO: allow both GET auth parameter (can be entered by a human in a browser), and POST or Authentication Bearer (for automated requests)
 
 Other authentication methods like like HTTP authentication framework as defined in RFC\07235, or OAuth\02.0 MUST NOT be used.
 
@@ -327,6 +329,7 @@ Lang: Accept-Language HTTP Header
 
 (TODO)
 
+
 .ti 0
 2.1.6 Cookies
 
@@ -340,15 +343,15 @@ An OID-IP service usually responds to queries using the HTTP Response Code "200 
 
 There are the following requirements based on the result of the query (see section\02.3.1):
 
-- If the result is "Found", the HTTP Response Code MUST be "200 OK".
+- If the result is "Found", then then the HTTP Response Code MUST be "200 OK".
 
-- If the result is "Not found; superior object found", the HTTP Response Code MUST NOT be a 4xx client error; instead it MUST be "200 OK".
+- If the result is "Not found; superior object found", the HTTP Response Code MUST be "470 Not Found - Superior Object Found".
 
-- If the result is "Not found", the HTTP Response Code MUST be "404 Not Found".
+- If the result is "Not found", then the HTTP Response Code MUST be "404 Not Found".
 
-- If the response contains a referral server (field "oidip-service"), the HTTP Response Code MUST NOT be a 3xx redirection status code.
+- If the response contains a referral server (field "oidip-service"), then the HTTP Response Code MUST NOT be a 3xx redirection status code.
 
-While the 3xx redirection status code is not allowed to indicate an OID-IP referral (as specified by section\04), the 3xx redirection status codes may be used if the OID-IP service itself moves (e.g. to a different domain name).
+While the 3xx redirection status code is not allowed to indicate an OID-IP referral as specified by section\04, the 3xx redirection status codes may be used if the OID-IP service itself moves, e.g. to a different domain name.
 
 
 
@@ -357,6 +360,7 @@ While the 3xx redirection status code is not allowed to indicate an OID-IP refer
 HTTP Request Headers
 
 (TODO)
+
 
 .ti 0
 HTTP Response Headers
@@ -1143,17 +1147,23 @@ There are no IANA Considerations.
 .br
 <https://www.rfc-editor.org/info/rfc5234>.
 
-.\" https://www.rfc-editor.org/refs/ref7515.txt
-.ti 3
-[RFC7515]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web Signature (JWS)", RFC\07515, DOI\010.17487/RFC7515, May\02015,
-.br
-<https://www.rfc-editor.org/info/rfc7515>.
-
 .\" https://www.rfc-editor.org/refs/ref5646.txt
 .ti 3
 [RFC5646]  Phillips, A., Ed., and M. Davis, Ed., "Tags for Identifying Languages", BCP\047, RFC\05646, DOI\010.17487/RFC5646, September\02009,
 .br
 <https://www.rfc-editor.org/info/rfc5646>.
+
+.\" https://www.rfc-editor.org/refs/ref7230.txt
+.ti 3
+[RFC7230]  Fielding, R., Ed., and J. Reschke, Ed., "Hypertext Transfer Protocol (HTTP/1.1): Message Syntax and Routing", RFC 7230, DOI 10.17487/RFC7230, June 2014,
+.br
+<https://www.rfc-editor.org/info/rfc7230>.
+
+.\" https://www.rfc-editor.org/refs/ref7515.txt
+.ti 3
+[RFC7515]  Jones, M., Bradley, J., and N. Sakimura, "JSON Web Signature (JWS)", RFC\07515, DOI\010.17487/RFC7515, May\02015,
+.br
+<https://www.rfc-editor.org/info/rfc7515>.
 
 .\" https://www.rfc-editor.org/refs/ref8141.txt
 .ti 3

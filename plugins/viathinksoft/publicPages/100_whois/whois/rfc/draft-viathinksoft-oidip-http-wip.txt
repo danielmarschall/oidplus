@@ -1,4 +1,4 @@
- 
+
 
 
 
@@ -50,7 +50,7 @@ Copyright Notice
    extracted from this document must include Revised BSD License text as
    described in Section 4.e of the Trust Legal Provisions and are
    provided without warranty as described in the Revised BSD License.
- 
+
 
 
 Marschall                 Expires 26 July 2024                  [Page 1]
@@ -106,7 +106,7 @@ Table of Contents
    7  Internationalization Considerations . . . . . . . . . . . . . . 29
    8  Security Considerations . . . . . . . . . . . . . . . . . . . . 30
    9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 30
- 
+
 
 
 Marschall                 Expires 26 July 2024                  [Page 2]
@@ -162,7 +162,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
 
 
- 
+
 
 
 Marschall                 Expires 26 July 2024                  [Page 3]
@@ -177,7 +177,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
    of object with a globally unambiguous name.  OIDs provide a
    persistent identification of objects based on a hierarchical
    structure of Registration Authorities (RA), where each parent has an
-   Object Identifier and allocates Object Identifiers to child nodes. 
+   Object Identifier and allocates Object Identifiers to child nodes.
    More information about Object Identifiers can be found in
    Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-1:2012 [X660].
 
@@ -218,7 +218,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
    (3) In directory services like LDAP (Lightweight Directory Access
    Protocol) [RFC4511], applications could query the name of attributes
    that are described by an OID the application doesn't know.
- 
+
 
 
 Marschall                 Expires 26 July 2024                  [Page 4]
@@ -274,7 +274,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
 
 
- 
+
 
 
 Marschall                 Expires 26 July 2024                  [Page 5]
@@ -294,7 +294,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
    OID-IP is a text-based protocol transmitted over the Hypertext
    Transfer Protocol [TODO: RFC Ref].
 
-2.1.1 Request Method and Path
+   2.1.1 Request Method and Path
 
    All requests MUST be made using the request method "GET".
 
@@ -315,7 +315,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
    To query the root node of any object type, <objectIdentifier> MUST
    have the value "root", for example
-   "https://example.com/oidip/oid/root/text". Since the word "root" has
+   "https://example.com/oidip/oid/root/text".  Since the word "root" has
    a special meaning, identifiers that actually have the name "root"
    CANNOT be queried using OID-IP.
 
@@ -330,7 +330,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
    The following authentication methods are possible:
 
    1. Whitedlisted IP address
- 
+
 
 
 Marschall                 Expires 26 July 2024                  [Page 6]
@@ -375,7 +375,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
    "text/json" or "application/json".
 
    (3) "xml": Extensible Markup Language (XML, [XML]) representation as
-   defined in section 3.1.3 (MANDATORY for the HTTP request method). 
+   defined in section 3.1.3 (MANDATORY for the HTTP request method).
    The "Content-Type" response header MUST be either "text/xml" or
    "application/xml".
 
@@ -386,7 +386,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
 
    Lang: Accept-Language HTTP Header
- 
+
 
 
 Marschall                 Expires 26 July 2024                  [Page 7]
@@ -413,11 +413,11 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
    There are the following requirements based on the result of the query
    (see section 2.3.1):
 
-   - If the result is "Found", the HTTP Response Code MUST be "200 OK".
+   - If the result is "Found", then the HTTP Response Code MUST be "200
+   OK".
 
    - If the result is "Not found; superior object found", the HTTP
-   Response Code MUST NOT be a 4xx client error; instead it MUST be "200
-   OK".
+   Response Code MUST be "470 Not Found - Superior Object Found".
 
    - If the result is "Not found", the HTTP Response Code MUST be "404
    Not Found".
@@ -426,9 +426,9 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
    the HTTP Response Code MUST NOT be a 3xx redirection status code.
 
    While the 3xx redirection status code is not allowed to indicate an
-   OID-IP referral (as specified by section 4), the 3xx redirection
-   status codes may be used if the OID-IP service itself moves (e.g. to
-   a different domain name).
+   OID-IP referral as specified by section 4, the 3xx redirection status
+   codes may be used if the OID-IP service itself moves, e.g. to a
+   different domain name.
 
 
 
@@ -442,7 +442,7 @@ HTTP Response Headers
    (TODO)
 
 
- 
+
 
 
 Marschall                 Expires 26 July 2024                  [Page 8]
@@ -462,7 +462,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
    OID-IP server replies with text content.  All requests are terminated
    with ASCII CR followed by ASCII LF.  The response contains multiple
    lines of text, separated by ASCII CR followed by ASCII LF.  The OID-
-   IP server closes its connection as soon as the output is finished. 
+   IP server closes its connection as soon as the output is finished.
    The closed TCP connection indicates to the client that the response
    has been received.
 
@@ -498,7 +498,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
    A request can contain multiple input parameters which are each
    prepended by a dollar sign ("$").
 
- 
+
 
 
 Marschall                 Expires 26 July 2024                  [Page 9]
@@ -554,7 +554,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
    English language (e.g. "text") or be common abbreviations (e.g.
    "json").
 
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 10]
@@ -610,7 +610,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
    preference, and containing at least one element.
 
    The translation SHALL only affect the "message", "name",
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 11]
@@ -666,7 +666,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
                      ( str-auth       "=" tokens ) /
                      ( str-lang       "=" languages ) /
                      ( other-arg-name "=" other-arg-val )
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 12]
@@ -722,7 +722,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
 
 
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 13]
@@ -764,7 +764,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
    mentioned in section 3.3 "Digital Signature").
 
    (9) A response consists of sections, which MUST be separated by at
-   least one empty line and/or comment line. 
+   least one empty line and/or comment line.
 
    (10) Custom sections CAN be added after any section defined in this
    document.  The query section MUST be the first section in the
@@ -778,7 +778,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
    (2) A response consists of sections, which MUST be named
    "querySection", "objectSection", "raSection", "ra1Section", etc.
    which SHOULD stay in this order.
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 14]
@@ -834,7 +834,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
    Possible fields are:
 
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 15]
@@ -844,7 +844,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
    (1) "query" MUST be present and contains the request string the
    client has sent.  Canonization or sanitation (like removing a leading
-   dot in front of the OID) SHOULD NOT be applied at this step. 
+   dot in front of the OID) SHOULD NOT be applied at this step.
    Authentication tokens SHOULD be omitted, though.
 
    (2) "result" MUST be present and SHALL be one of the following
@@ -882,7 +882,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
    displaying an error message).  It MUST NOT be present if the result
    has a different value.
 
-   (5) "lang" (OPTIONAL) contains the language of the field "message". 
+   (5) "lang" (OPTIONAL) contains the language of the field "message".
    The language should be a language tag as defined in [RFC5646].
 
    The OID-IP service SHOULD NOT add additional fields to this section.
@@ -890,7 +890,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 3.2.2  Object-Section (Information about the OID)
 
    This section MUST be present if the result is "Found" or "Not found;
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 16]
@@ -935,7 +935,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
    short as possible.
 
    (5) "description" (OPTIONAL) contains a short description of the OID.
-    The description SHOULD only be a single sentence.
+   The description SHOULD only be a single sentence.
 
    (6) "information" (OPTIONAL) contains additional information, e.g.
    Management Information Base (MIB) definitions.
@@ -946,7 +946,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
    (8) "asn1-notation" (OPTIONAL, multiple values allowed) contains one
    or more possible notations in the ASN.1 syntax, as defined in
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 17]
@@ -958,7 +958,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
    [X680], e.g. {joint-iso-itu-t(2) example(999)}.
 
        Note: A line break, to break up lines that are too long, as
-       defined in section 3.1 ("Format and Encoding") SHOULD be used. 
+       defined in section 3.1 ("Format and Encoding") SHOULD be used.
        This is no problem because multiple ASN.1 notations can be
        distinguished by their opening curly bracket and their closing
        curly bracket.
@@ -980,7 +980,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
    (11) "standardized-id" (OPTIONAL, multiple values allowed) contains
    an alphanumeric identifier that has a standardized "NameForm", i.e.
-   in ASN.1 notation, it can be written without its associated number. 
+   in ASN.1 notation, it can be written without its associated number.
    See more information in Recommendation ITU-T X.680 (2015) | ISO/IEC
    8824-1:2015, clause 32.7 [X680].
 
@@ -990,7 +990,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
    (13) "long-arc" (OPTIONAL, multiple values allowed) contains a Non-
    integer Unicode label that can be used as the first identifier in an
-   OID Internationalized Resource Identifier (OID-IRI), shortening it. 
+   OID Internationalized Resource Identifier (OID-IRI), shortening it.
    More information can be found in Recommendation ITU-T X.660 (2011) |
    ISO/IEC 9834-1:2012, clause 3.5.8 [X660].
 
@@ -1002,7 +1002,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
    is only informational; its existence is most likely a hint that
    subordinate OIDs will be found at that OID-IP server.  If the result
    is "Not found; superior object found", then the client SHOULD query
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 18]
@@ -1011,7 +1011,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
 
    the referred OID-IP server to receive more information about the OID.
-    See more information in section 4 "Referral".
+   See more information in section 4 "Referral".
 
    (15) "oidip-pubkey" (OPTIONAL) contains the public key of the service
    that is identified with "oidip-service", in case it uses signatures
@@ -1033,7 +1033,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
        OID, e.g. because the RA has stopped operating, but the existing
        child OIDs stay valid.
 
-       "leaf" means that no child OIDs can be allocated under this OID. 
+       "leaf" means that no child OIDs can be allocated under this OID.
        The field "subordinate" SHALL therefore not be present.
 
        "no-identifiers" means that the RA is not allocating alphanumeric
@@ -1048,7 +1048,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
    (17) "parent" (OPTIONAL) contains the OID of the nearest known parent
    OID, prepended by namespace identifier and double colon, i.e. "oid:".
-    It MAY be followed by additional human-readable information, e.g. a
+   It MAY be followed by additional human-readable information, e.g. a
    description or a list of ASN.1 identifiers.  There SHALL be at least
    1 whitespace in between.
 
@@ -1058,7 +1058,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
    readable information, e.g. a description or a list of ASN.1
    identifiers.  There SHALL be at least 1 whitespace in between.
 
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 19]
@@ -1076,7 +1076,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
    Additional fields can be defined by the OID-IP service.  The field
    names SHALL only consist of the lower-case letters "a..z", hyphens
-   ("-"), and numbers, and SHOULD be written in the English language. 
+   ("-"), and numbers, and SHOULD be written in the English language.
    The field name MUST NOT begin or end with a hyphen and a hyphen MUST
    NOT be followed by another hyphen.
 
@@ -1114,7 +1114,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
    (4) "ra-contact-name" (OPTIONAL, multiple values allowed) contains
    the name of a person responsible for the allocation of subordinate
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 20]
@@ -1125,7 +1125,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
    OIDs, in case "ra" is a group or organization.
 
    (5) "ra-address" (OPTIONAL) contains the physical location of the RA.
-    While a fully qualified postal address is recommended, the field can
+   While a fully qualified postal address is recommended, the field can
    also just contain a rough location like city and country name, state
    and country name, or just the country name, etc.  The name of the
    country SHOULD always be present.
@@ -1170,7 +1170,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
    (13) "ra-updated" (OPTIONAL) contains the date and time (as specified
    in section 3.4 "Date/Time Format") when the RA information was last
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 21]
@@ -1226,7 +1226,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 3.3.2  "json" Format
 
    Steps for signing a message:
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 22]
@@ -1282,7 +1282,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
    be omitted until the date/time reference has the highest correctness.
 
    Examples of valid date/time references can be found in section 3.4.2.
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 23]
@@ -1338,7 +1338,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
 
 
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 24]
@@ -1394,7 +1394,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
        ra-status:      Information unavailable
 
 
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 25]
@@ -1450,7 +1450,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
    % -----BEGIN RSA SIGNATURE-----
    % DwnqRtx/ONtPh4onXnrZPl9jF+G50RMLZkSwuClaoH2t/yK8CnYJrmzkzA5+gkfWkoQ
    % cq+J8J9cvnwXvBfpVHg==
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 26]
@@ -1506,7 +1506,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
 
 
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 27]
@@ -1562,7 +1562,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
 
 
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 28]
@@ -1618,7 +1618,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
 
 
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 29]
@@ -1674,7 +1674,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
 
 
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 30]
@@ -1730,7 +1730,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
    [RFC8174]  Leiba, B., "Ambiguity of Uppercase vs Lowercase in RFC
               2119 Key Words", BCP 14, RFC 8174, DOI 10.17487/RFC8174,
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 31]
@@ -1786,7 +1786,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
 10.2  Informative References
 
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 32]
@@ -1842,7 +1842,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
 
 
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 33]
@@ -1898,7 +1898,7 @@ NOTE: '\' line wrapping per RFC 8792  [RFC8792]
             }
           },
           "required":[
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 34]
@@ -1954,7 +1954,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
               "oneOf":[
                 {
                   "type":"string"
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 35]
@@ -2010,7 +2010,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
                 }
               ]
             },
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 36]
@@ -2066,7 +2066,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
             },
             "parent":{
               "type":"string"
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 37]
@@ -2122,7 +2122,7 @@ Ra1SectionType et al.",
             },
             "address":{
               "type":"string"
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 38]
@@ -2178,7 +2178,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
         "ra1Section":{"$ref":"#/properties/oidip/properties/raSection"},
         "ra2Section":{"$ref":"#/properties/oidip/properties/raSection"},
         "ra3Section":{"$ref":"#/properties/oidip/properties/raSection"},
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 39]
@@ -2234,7 +2234,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
        "ra49Section":{"$ref":"#/properties/oidip/properties/raSection"},
        "ra50Section":{"$ref":"#/properties/oidip/properties/raSection"},
        "ra51Section":{"$ref":"#/properties/oidip/properties/raSection"},
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 40]
@@ -2290,7 +2290,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
        "ra97Section":{"$ref":"#/properties/oidip/properties/raSection"},
        "ra98Section":{"$ref":"#/properties/oidip/properties/raSection"},
        "ra99Section":{"$ref":"#/properties/oidip/properties/raSection"}
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 41]
@@ -2346,7 +2346,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
 
 
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 42]
@@ -2402,7 +2402,7 @@ purposes of documenting examples of Object Identifiers.",
             "(Russian characters are omitted in this example)"
       ],
       "parent": "oid:2 (joint-iso-ccitt, joint-iso-itu-t)",
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 43]
@@ -2458,7 +2458,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
 
 
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 44]
@@ -2514,7 +2514,7 @@ NOTE: '\' line wrapping per RFC 8792  [RFC8792]
                   type="ns1:RaSectionType"/>
       <xs:element name="ra1Section" minOccurs="0" maxOccurs="1"
                   type="ns1:RaSectionType"/>
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 45]
@@ -2570,7 +2570,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
                   type="ns1:RaSectionType"/>
       <xs:element name="ra25Section" minOccurs="0" maxOccurs="1"
                   type="ns1:RaSectionType"/>
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 46]
@@ -2626,7 +2626,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
                   type="ns1:RaSectionType"/>
       <xs:element name="ra49Section" minOccurs="0" maxOccurs="1"
                   type="ns1:RaSectionType"/>
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 47]
@@ -2682,7 +2682,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
                   type="ns1:RaSectionType"/>
       <xs:element name="ra73Section" minOccurs="0" maxOccurs="1"
                   type="ns1:RaSectionType"/>
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 48]
@@ -2738,7 +2738,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
                   type="ns1:RaSectionType"/>
       <xs:element name="ra97Section" minOccurs="0" maxOccurs="1"
                   type="ns1:RaSectionType"/>
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 49]
@@ -2794,7 +2794,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
       <xs:enumeration value="Service error"/>
     </xs:restriction>
   </xs:simpleType>
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 50]
@@ -2850,7 +2850,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
   </xs:complexType>
 
   <xs:simpleType name="ObjectIdType">
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 51]
@@ -2882,7 +2882,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
       <xs:enumeration value="no-unicode-labels"/>
       <xs:enumeration value="retired"/>
     </xs:restriction>
-  </xs:simpleType>  
+  </xs:simpleType>
 
   <xs:complexType name="RaSectionType">
     <xs:sequence>
@@ -2906,7 +2906,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
       <xs:element name="email" minOccurs="0" maxOccurs="unbounded"
                   type="xs:string"/>
       <xs:element name="url" minOccurs="0" maxOccurs="unbounded"
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 52]
@@ -2962,7 +2962,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
 
 
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 53]
@@ -3018,7 +3018,7 @@ purposes of documenting examples of Object Identifiers."</description>
      <long-arc>(Arabian characters are omitted)</long-arc>
      <long-arc>(Japanese characters are omitted)</long-arc>
      <long-arc>(Chinese characters are omitted)</long-arc>
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 54]
@@ -3074,7 +3074,7 @@ INTERNET DRAFT          OID Information Protocol         23 January 2024
 
 
 
- 
+
 
 
 Marschall                 Expires 26 July 2024                 [Page 55]
