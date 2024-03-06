@@ -3638,6 +3638,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		International Standard Name Identifier (ISNI)
+		]]></source>
+		<target><![CDATA[
+		International Standard Name Identifier (ISNI)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Invalid
 		]]></source>
 		<target><![CDATA[

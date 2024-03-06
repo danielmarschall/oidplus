@@ -442,10 +442,10 @@ class OIDplusAid extends OIDplusObject {
 			}
 		}
 
-		// (VTS F4) D-U-N-S number + PIX
+		// (VTS F4 01) D-U-N-S number + PIX
 		// Resolve only if there is no PIX
-		if (str_starts_with($aid,'D276000186F4')) {
-			$rest = substr($aid,strlen('D276000186F4'));
+		if (str_starts_with($aid,'D276000186F401')) {
+			$rest = substr($aid,strlen('D276000186F401'));
 			$p = strpos($rest,'F');
 			if ($p !== false) {
 				$duns = substr($rest,0,$p);
@@ -493,10 +493,71 @@ class OIDplusAid extends OIDplusObject {
 			}
 		}
 
+		// (VTS F7 01) ISNI + PIX
+		// Resolve only if there is no PIX
+		if (str_starts_with($aid,'D276000186F701')) {
+			$rest = substr($aid,strlen('D276000186F701'));
+			if (strlen($rest) >= 14) {
+				$isni_bin = substr($rest,0,14);
+				$pix = substr($rest,15);
+				if (($pix === '') && preg_match('/^[A-F0-9]+$/',$isni_bin,$m)) {
+					// Example: "2386F26FC0FFFF" => "9999-9999-9999-9999"
+					$isni = rtrim(chunk_split(str_pad(self::base_convert_bigint($isni_bin,16,10),16,'0',STR_PAD_LEFT),4,'-'),'-');
+					$ids[] = new OIDplusAltId('isni', $isni, _L('International Standard Name Identifier (ISNI)'));
+				}
+			}
+		}
+
+
 		// The case E8... (Standard OID 1.0) doesn't need to be addressed here, because it is already shown in the AID decoder (and it is ambiguous since DER and PIX are mixed)
 		// TODO: If it has no pix, then resolve it !!! but how do we know if there is a PIX or a part ID ?
 
 		return $ids;
+	}
+
+	/**
+	 * @param string $numstring
+	 * @param int $frombase
+	 * @param int $tobase
+	 * @return string
+	 */
+	protected static function base_convert_bigint(string $numstring, int $frombase, int $tobase): string {
+		// TODO: put this (used here and in OID WeidConverter) to functions.inc.php ?
+
+		$frombase_str = '';
+		for ($i=0; $i<$frombase; $i++) {
+			$frombase_str .= strtoupper(base_convert((string)$i, 10, 36));
+		}
+
+		$tobase_str = '';
+		for ($i=0; $i<$tobase; $i++) {
+			$tobase_str .= strtoupper(base_convert((string)$i, 10, 36));
+		}
+
+		$length = strlen($numstring);
+		$result = '';
+		$number = array();
+		for ($i = 0; $i < $length; $i++) {
+			$number[$i] = stripos($frombase_str, $numstring[$i]);
+		}
+		do { // Loop until whole number is converted
+			$divide = 0;
+			$newlen = 0;
+			for ($i = 0; $i < $length; $i++) { // Perform division manually (which is why this works with big numbers)
+				$divide = $divide * $frombase + $number[$i];
+				if ($divide >= $tobase) {
+					$number[$newlen++] = (int)($divide / $tobase);
+					$divide = $divide % $tobase;
+				} else if ($newlen > 0) {
+					$number[$newlen++] = 0;
+				}
+			}
+			$length = $newlen;
+			$result = $tobase_str[$divide] . $result; // Divide is basically $numstring % $tobase (i.e. the new character)
+		}
+		while ($newlen != 0);
+
+		return $result;
 	}
 
 	/**
