@@ -3,6 +3,15 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.1.17",
+		"date": "2024-03-06 02:05:00 +0100",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"Application Identifier (AID): VTS F4 changed to VTS F4 01 (D-U-N-S)",
+			"Application Identifier (AID): VTS F7 01 (ISNI) introduced"
+		]
+	},
+	{
 		"version": "2.0.1.16",
 		"date": "2024-02-10 20:00:00 +0100",
 		"author": "Daniel Marschall (ViaThinkSoft)",

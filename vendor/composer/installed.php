@@ -3,7 +3,7 @@
         'name' => 'danielmarschall/oidplus',
         'pretty_version' => '2.0',
         'version' => '2.0.0.0',
-        'reference' => NULL,
+        'reference' => null,
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -64,7 +64,7 @@
         'danielmarschall/oidplus' => array(
             'pretty_version' => '2.0',
             'version' => '2.0.0.0',
-            'reference' => NULL,
+            'reference' => null,
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -189,7 +189,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => '8f3a66547a020c799cd4d2a5ea1933f055eb3b90',
+            'reference' => 'cfa2013d0f68c062055180dd4328cc8b9d1f30b8',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),
@@ -243,9 +243,9 @@
             'dev_requirement' => false,
         ),
         'twbs/bootstrap' => array(
-            'pretty_version' => 'v5.3.2',
-            'version' => '5.3.2.0',
-            'reference' => '344e912d04b5b6a04482113eff20ab416ff01048',
+            'pretty_version' => 'v5.3.3',
+            'version' => '5.3.3.0',
+            'reference' => '6e1f75f420f68e1d52733b8e407fc7c3766c9dba',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twbs/bootstrap',
             'aliases' => array(),
@@ -263,7 +263,7 @@
         'twitter/bootstrap' => array(
             'dev_requirement' => false,
             'replaced' => array(
-                0 => 'v5.3.2',
+                0 => 'v5.3.3',
             ),
         ),
         'vakata/jstree' => array(
