@@ -25,16 +25,18 @@ var OIDplusObjectTypePluginAid = {
 		var counter     = 0;
 
 		if (current_aid.length >= aid_max_len) {
-				alertWarning(_L("The AID has reached its maximum size."));
-				return;
+			alertWarning(_L("The AID has reached its maximum size."));
+			return;
 		}
 
 
 		do {
 			var candidate = current_aid == "" ? "F" : current_aid; // category "F" = Unregistered Proprietary AID
+			var newStuff = "";
 			for ( var i = 0 ; i < aid_max_len - candidate.length ; i++ ) {
-				candidate += characters.charAt(Math.floor(Math.random() * characters.length));
+				newStuff += characters.charAt(Math.floor(Math.random() * characters.length));
 			}
+			candidate += newStuff;
 
 			var isPrefixOfExistingAIDs = false;
 			var currentExistingAIDs = [];
@@ -60,12 +62,15 @@ var OIDplusObjectTypePluginAid = {
 		} while (isPrefixOfExistingAIDs || ((candidate.endsWith('FF') && (candidate.length==aid_max_len))));
 
 		// Note that 16 byte AIDs ending with 0xFF *were* reserved by ISO in ISO 7816-4:1994,
-		// but modern versions of ISO 7816-4 and ISO 7816-4 do not mention this case anymore.
+		// but modern versions of ISO 7816-4 and ISO 7816-5 do not mention this case anymore.
 		// It can be assumed that the usage is safe, but just to be sure, we exclude 16-byte
 		// AIDs ending with 0xFF, in case there are some software implementations which
 		// deny such AIDs.
 
-		$("#id").val(candidate);
+		// Absolute:
+		//$("#id").val(candidate);
+		// Relative:
+		$("#id").val(candidate.substring(current_aid.length));
 	}
 
 };
