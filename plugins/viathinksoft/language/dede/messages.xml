@@ -5350,6 +5350,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Open Researcher and Contributor ID (ORCID)
+		]]></source>
+		<target><![CDATA[
+		Open Researcher and Contributor ID (ORCID)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Open in new window
 		]]></source>
 		<target><![CDATA[
@@ -6794,6 +6802,14 @@
 		]]></source>
 		<target><![CDATA[
 		Ergebnis
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Ringgold ID
+		]]></source>
+		<target><![CDATA[
+		Ringgold ID
 		]]></target>
 	</message>
 	<message>
@@ -8514,6 +8530,14 @@
 		]]></source>
 		<target><![CDATA[
 		Unicode-Label "%1" ist zu lang (Maximale Länge: %2)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Unknown ISNI compatible identifier
+		]]></source>
+		<target><![CDATA[
+		Unbekannter ISNI Kompatibler Bezeichner
 		]]></target>
 	</message>
 	<message>

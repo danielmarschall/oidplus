@@ -455,7 +455,43 @@ class OIDplusAid extends OIDplusObject {
 				$pix = '';
 			}
 			if (($pix === '') && preg_match('/^[0-9]+$/',$duns,$m)) {
+				$duns = substr($duns,0,2).'-'.substr($duns,2,3).'-'.substr($duns,5);
 				$ids[] = new OIDplusAltId('duns', $duns, _L('Data Universal Numbering System (D-U-N-S)'));
+			}
+		}
+
+		// (VTS F4 02) Ringgold ID + PIX
+		// Resolve only if there is no PIX
+		if (str_starts_with($aid,'D276000186F402')) {
+			$rest = substr($aid,strlen('D276000186F402'));
+			$p = strpos($rest,'F');
+			if ($p !== false) {
+				$number = substr($rest,0,$p);
+				$pix = substr($rest,$p+1);
+			} else {
+				$number = $rest;
+				$pix = '';
+			}
+			if (($pix === '') && preg_match('/^[0-9]+$/',$number,$m)) {
+				$ids[] = new OIDplusAltId('rin', $number, _L('Ringgold ID'));
+			}
+		}
+
+		// (VTS F4 03) DOI + PIX
+		// Resolve only if there is no PIX
+		if (str_starts_with($aid,'D276000186F403')) {
+			$rest = substr($aid,strlen('D276000186F403'));
+			$p = strpos($rest,'F');
+			if ($p !== false) {
+				$number = substr($rest,0,$p);
+				$pix = substr($rest,$p+1);
+			} else {
+				$number = $rest;
+				$pix = '';
+			}
+			if (($pix === '') && preg_match('/^[0-9]+$/',$number,$m)) {
+				$doi = "10.$number";
+				$ids[] = new OIDplusAltId('doi', $doi, _L('Digital Object Identifier (DOI)'));
 			}
 		}
 
@@ -493,17 +529,27 @@ class OIDplusAid extends OIDplusObject {
 			}
 		}
 
-		// (VTS F7 01) ISNI + PIX
+		// (VTS F7 01 X) ISNI compatible + PIX
 		// Resolve only if there is no PIX
 		if (str_starts_with($aid,'D276000186F701')) {
-			$rest = substr($aid,strlen('D276000186F701'));
-			if (strlen($rest) >= 14) {
-				$isni_bin = substr($rest,0,14);
-				$pix = substr($rest,15);
+			$isni_subtype = substr($aid,strlen('D276000186F701'),1);
+			$rest = substr($aid,strlen('D276000186F701')+1);
+			if (strlen($rest) >= 13) {
+				$isni_bin = substr($rest,0,13);
+				$pix = substr($rest,14);
 				if (($pix === '') && preg_match('/^[A-F0-9]+$/',$isni_bin,$m)) {
-					// Example: "2386F26FC0FFFF" => "9999-9999-9999-9999"
-					$isni = rtrim(chunk_split(str_pad(self::base_convert_bigint($isni_bin,16,10),16,'0',STR_PAD_LEFT),4,'-'),'-');
-					$ids[] = new OIDplusAltId('isni', $isni, _L('International Standard Name Identifier (ISNI)'));
+					// Example: "38D7EA4C67FFF" => "999999999999999"
+					$isni_no_checksum = self::base_convert_bigint($isni_bin,16,10);
+					$isni_dec = $isni_no_checksum . self::generateIsniCheckdigit($isni_no_checksum);
+					// Now format to "9999-9999-9999-9999"
+					$isni = rtrim(chunk_split(str_pad($isni_dec,16,'0',STR_PAD_LEFT),4,'-'),'-');
+					if ($isni_subtype == '1') {
+						$ids[] = new OIDplusAltId('isni', $isni, _L('International Standard Name Identifier (ISNI)'));
+					} else if ($isni_subtype == '2') {
+						$ids[] = new OIDplusAltId('orcid', $isni, _L('Open Researcher and Contributor ID (ORCID)'));
+					} else {
+						$ids[] = new OIDplusAltId('???', $isni, _L('Unknown ISNI compatible identifier'));
+					}
 				}
 			}
 		}
@@ -514,6 +560,23 @@ class OIDplusAid extends OIDplusObject {
 
 		return $ids;
 	}
+
+	/**
+	  * Generates check digit as per ISO 7064 11,2.
+	  *
+	  */
+	private static function generateIsniCheckdigit(string $baseDigits) {
+	    $total = 0;
+	    for ($i = 0; $i < strlen($baseDigits); $i++) {
+	        $digit = (int)$baseDigits[$i];
+	        $total = ($total + $digit) * 2;
+	    }
+	    $remainder = $total % 11;
+	    $result = (12 - $remainder) % 11;
+	    return $result == 10 ? "X" : $result;
+	}
+	//assert(generateIsniCheckdigit('000000010929605') == '3');
+	//asserr(generateIsniCheckdigit('000000012281955') == 'X');
 
 	/**
 	 * @param string $numstring
