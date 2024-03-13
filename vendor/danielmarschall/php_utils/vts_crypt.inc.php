@@ -228,10 +228,10 @@ function vts_crypt_verify($password, $hash): bool {
 		// Create a VTS MCF 1.0 hash based on the parameters of $hash and the password $password
 		$calc_authkey_1 = vts_crypt_hash($algo, $password, $bin_salt, $ver, $mode, $iterations);
 
-		// We rewrite the MCF to make sure that they match (if params have the wrong order)
+		// We re-encode the MCF to make sure that it can be compared with the VTS MCF 1.0 (correct sorting of params etc.)
 		$calc_authkey_2 = crypt_modular_format_encode($id, $bin_salt, $bin_hash, $params);
 
-		return hash_equals($calc_authkey_1, $calc_authkey_2);
+		return hash_equals($calc_authkey_2, $calc_authkey_1);
 	} else {
 		throw new Exception("Invalid VTS crypt version, expect 1.");
 	}

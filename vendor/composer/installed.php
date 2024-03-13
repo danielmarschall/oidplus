@@ -84,7 +84,7 @@
         'danielmarschall/php_utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '72ab7919215ff4d377c3b489f170d150c1a0a240',
+            'reference' => '3f42fc2c9ad7fef67dad4917c454e6799d0fd274',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/php_utils',
             'aliases' => array(
@@ -95,7 +95,7 @@
         'danielmarschall/uuid_mac_utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'e632024d5a60b0b038c321f23569607ea0897908',
+            'reference' => '4936898473ce09a5fd06e47d33c582365d0c3b38',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/uuid_mac_utils',
             'aliases' => array(
@@ -151,9 +151,9 @@
             'dev_requirement' => false,
         ),
         'matthiasmullie/minify' => array(
-            'pretty_version' => '1.3.71',
-            'version' => '1.3.71.0',
-            'reference' => 'ae42a47d7fecc1fbb7277b2f2d84c37a33edc3b1',
+            'pretty_version' => '1.3.72',
+            'version' => '1.3.72.0',
+            'reference' => '531fdeef1911ffe27a53f8a19c297648c78f757e',
             'type' => 'library',
             'install_path' => __DIR__ . '/../matthiasmullie/minify',
             'aliases' => array(),
