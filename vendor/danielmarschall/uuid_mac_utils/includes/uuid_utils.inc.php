@@ -2,8 +2,8 @@
 
 /*
  * UUID utils for PHP
- * Copyright 2011 - 2023 Daniel Marschall, ViaThinkSoft
- * Version 2023-11-18
+ * Copyright 2011 - 2024 Daniel Marschall, ViaThinkSoft
+ * Version 2024-03-09
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -833,6 +833,102 @@ function uuid_info($uuid, $echo=true) {
 			break;
 	}
 
+	// START: HickelSOFT UUID
+
+	// Block 5
+	$signature = substr($uuid,20,12);
+	if (strtolower($signature) == '5ce32bd83b96') {
+		// HickelSOFT "SQL Server sortable UUID in C#"
+		// Version 2: Resolution of 1 milliseconds, random part of 18 bits, UTC time, UUIDv8 conform.
+		// Example: 2088dc33-000d-8045-87e8-5ce32bd83b96
+		// Block 4
+		$unused2bits = hexdec(substr($uuid,16,1)) & 0x3;
+		$year = hexdec(substr($uuid,17,3));
+		// Block 3
+		$dayOfYear = hexdec(substr($uuid,13,3)); // 1..366
+		$day = (($dayOfYear < 1) || ($dayOfYear > 366)) ? "XX" : intval(getDateFromDay($year, $dayOfYear)->format('d'));
+		$month = (($dayOfYear < 1) || ($dayOfYear > 366)) ? "XX" : intval(getDateFromDay($year, $dayOfYear)->format('m'));
+		// Block 2
+		$minuteOfDay = hexdec(substr($uuid,8,4)); // 1..1440
+		$minutes = (($minuteOfDay < 1) || ($minuteOfDay > 1440)) ? "XX" : ($minuteOfDay-1) % 60;
+		$hours = (($minuteOfDay < 1) || ($minuteOfDay > 1440)) ? "XX" : (int)floor(($minuteOfDay-1) / 60);
+		// Block 1
+		$rnd16bits = substr($uuid,0,4);
+		$millisecond8bits = hexdec(substr($uuid,4,2));
+		$milliseconds = round($millisecond8bits / 255 * 999);
+		$seconds = hexdec(substr($uuid,6,2));
+		// Verbose info
+		$utc_time =
+			str_pad("$year",4,'0',STR_PAD_LEFT).'-'.
+			str_pad("$month",2,'0',STR_PAD_LEFT).'-'.
+			str_pad("$day",2,'0',STR_PAD_LEFT).' '.
+			str_pad("$hours",2,'0',STR_PAD_LEFT).':'.
+			str_pad("$minutes",2,'0',STR_PAD_LEFT).':'.
+			str_pad("$seconds",2,'0',STR_PAD_LEFT)."'".
+			str_pad("$milliseconds",2,'0',STR_PAD_LEFT);
+		if (strpos($utc_time,'X') === false) {
+			$deviation = "(deviation -2ms..2ms)";
+			echo "\n<u>Interpretation of <a href=\"https://gist.github.com/danielmarschall/7fafd270a3bc107d38e8449ce7420c25\">HickelSOFT \"SQL Server Sortable Custom UUID\", Version 2</a></u>\n\n";
+			echo sprintf("%-32s %s\n", "Random 16 bits:", "[0x$rnd16bits] 0b".str_pad("".base_convert($rnd16bits, 16, 2), 16, '0', STR_PAD_LEFT));
+			echo sprintf("%-32s %s\n", "Milliseconds:", "[0x".substr($uuid,4,2)."] $milliseconds $deviation");
+			echo sprintf("%-32s %s\n", "Seconds:", "[0x".substr($uuid,6,2)."] $seconds");
+			echo sprintf("%-32s %s\n", "Minute of day:", "[0x".substr($uuid,8,4)."] $minuteOfDay (".str_pad("$hours",2,'0',STR_PAD_LEFT).":".str_pad("$minutes",2,'0',STR_PAD_LEFT).")");
+			echo sprintf("%-32s %s\n", "Day of year:", "[0x".substr($uuid,13,3)."] $dayOfYear (Day=$day, Month=$month)");
+			echo sprintf("%-32s %s\n", "Unused 2 bits:", "[$unused2bits] 0b".str_pad("".base_convert("$unused2bits", 16, 2), 2, '0', STR_PAD_LEFT));
+			echo sprintf("%-32s %s\n", "Year:", "[0x".substr($uuid,17,3)."] $year");
+			echo sprintf("%-32s %s\n", "Signature:", "[0x".substr($uuid,20,12)."] HickelSOFT \"SQL Server Sortable Custom UUID\", Version 2 (very likely)");
+			echo sprintf("%-32s %s\n", "UTC Date Time:", "$utc_time $deviation");
+		}
+	} else if (strtolower($signature) == '000000000000') {
+		// HickelSOFT "SQL Server sortable UUID in C#"
+		// Version 1: Resolution of 1 milliseconds, random part of 16 bits, local timezone, NOT UUIDv8 conform.
+		// Example: ff38da51-1301-0903-2420-000000000000
+		// Block 4
+		$year = substr($uuid,18,2) . substr($uuid,16,2);
+		$year = (!is_numeric($year) || ($year < 2000) || ($year > 2999)) ? "XXXX" : $year = intval($year);
+		// Block 3
+		$day = substr($uuid,12,2);
+		$day = (!is_numeric($day) || ($day < 0) || ($day >= 60)) ? "XX" : intval($day);
+		$month = substr($uuid,14,2);
+		$month = (!is_numeric($month) || ($month < 0) || ($month >= 60)) ? "XX" : intval($month);
+		// Block 2
+		$minutes = substr($uuid,8,2);
+		$minutes = (!is_numeric($minutes) || ($minutes < 0) || ($minutes >= 60)) ? "XX" : intval($minutes);
+		$hours = substr($uuid,10,2);
+		$hours = (!is_numeric($hours) || ($hours < 0) || ($hours >= 60)) ? "XX" : intval($hours);
+		// Block 1
+		$rnd16bits = substr($uuid,0,4);
+		$millisecond8bits = hexdec(substr($uuid,4,2));
+		$milliseconds = round($millisecond8bits / 255 * 999);
+		$seconds = substr($uuid,6,2);
+		$seconds = (!is_numeric($seconds) || ($seconds < 0) || ($seconds >= 60)) ? "XX" : intval($seconds);
+		// Verbose info
+		$local_time =
+			str_pad("$year",4,'0',STR_PAD_LEFT).'-'.
+			str_pad("$month",2,'0',STR_PAD_LEFT).'-'.
+			str_pad("$day",2,'0',STR_PAD_LEFT).' '.
+			str_pad("$hours",2,'0',STR_PAD_LEFT).':'.
+			str_pad("$minutes",2,'0',STR_PAD_LEFT).':'.
+			str_pad("$seconds",2,'0',STR_PAD_LEFT)."'".
+			str_pad("$milliseconds",2,'0',STR_PAD_LEFT);
+		if (strpos($local_time,'X') === false) {
+			$deviation = "(deviation -4ms..0ms)";
+			echo "\n<u>Interpretation of <a href=\"https://gist.github.com/danielmarschall/7fafd270a3bc107d38e8449ce7420c25\">HickelSOFT \"SQL Server Sortable Custom UUID\", Version 1</a></u>\n\n";
+			echo sprintf("%-32s %s\n", "Random 16 bits:", "[0x$rnd16bits] 0b".str_pad(base_convert($rnd16bits, 16, 2), 16, '0', STR_PAD_LEFT));
+			echo sprintf("%-32s %s\n", "Milliseconds:", "[0x".substr($uuid,4,2)."] $milliseconds $deviation");
+			echo sprintf("%-32s %s\n", "Seconds:", "[0x".substr($uuid,6,2)."] $seconds");
+			echo sprintf("%-32s %s\n", "Minutes:", "[0x".substr($uuid,8,2)."] $minutes");
+			echo sprintf("%-32s %s\n", "Hours:", "[0x".substr($uuid,10,2)."] $hours");
+			echo sprintf("%-32s %s\n", "Day:", "[0x".substr($uuid,12,2)."] $day");
+			echo sprintf("%-32s %s\n", "Month:", "[0x".substr($uuid,14,2)."] $month");
+			echo sprintf("%-32s %s\n", "Year:", "[0x".substr($uuid,16,4)."] $year");
+			echo sprintf("%-32s %s\n", "Signature:", "[0x".substr($uuid,20,12)."] HickelSOFT \"SQL Server Sortable Custom UUID\", Version 1 (maybe)");
+			echo sprintf("%-32s %s\n", "Generator's Local Date Time:", "$local_time $deviation");
+		}
+	}
+
+	// END: HickelSOFT UUID
+
 	if (!$echo) {
 		$out = ob_get_contents();
 		ob_end_clean();
@@ -871,13 +967,13 @@ function oid_to_uuid($oid) {
 	} else if ((count($ary) == 14) && (strpos($oid, '1.2.840.113556.1.8000.2554.') === 0)) {
 		// Microsoft UUID-to-OID
 		// Example: {53c08bb6-b2eb-5038-bf28-ad41a08c50ef} = 1.2.840.113556.1.8000.2554.21440.35766.45803.20536.48936.11354528.9195759
-		$a = $ary[7];
-		$b = $ary[8];
-		$c = $ary[9];
-		$d = $ary[10];
-		$e = $ary[11];
-		$f = $ary[12];
-		$g = $ary[13];
+		$a = intval($ary[7]);
+		$b = intval($ary[8]);
+		$c = intval($ary[9]);
+		$d = intval($ary[10]);
+		$e = intval($ary[11]);
+		$f = intval($ary[12]);
+		$g = intval($ary[13]);
 		return dechex($a).dechex($b).'-'.dechex($c).'-'.dechex($d).'-'.dechex($e).'-'.dechex($f).dechex($g);
 	} else if ((count($ary) == 10) && (strpos($oid, '1.3.6.1.4.1.54392.1.') === 0)) {
 		// Waterjuice UUID-to-OID 2x64 Bits
@@ -1454,6 +1550,77 @@ function gen_uuid_v8_namebased($hash_algo, $namespace_uuid, $name) {
 	       substr($hash, 20, 12);
 }
 
+/**
+ * The sorting of SQL Server is rather confusing and incompatible with UUIDv6 and UUIDv7.
+ * Therefore this method generates UUID which are sortable by SQL Server.
+ * Version 1: Resolution of 1 milliseconds, random part of 16 bits, local timezone, 48 zero bits "signature", NOT UUIDv8 conform.
+ * Version 2: Resolution of 1 milliseconds, random part of 16 bits, UTC time, 48 bit random "signature", UUIDv8 conform.
+ * C# implementation: https://gist.github.com/danielmarschall/7fafd270a3bc107d38e8449ce7420c25
+ * PHP implementation: https://github.com/danielmarschall/uuid_mac_utils/blob/master/includes/uuid_utils.inc.php
+ *
+ * @param int      $hickelUuidVersion (optional)
+ * @param DateTime $dt                (optional)
+ * @return string The UUID
+ */
+function gen_uuid_v8_sqlserver_sortable(int $hickelUuidVersion = 2, DateTime $dt = null): string {
+	// The sorting in SQL Server is like this:
+
+	if ($dt == null) $dt = new DateTime();
+
+	// First Sort block 5, nibbles from left to right (i.e. 000000000001 < 000000000010 < ... < 010000000000 < 100000000000)
+	if ($hickelUuidVersion == 1) {
+		$block5 = "000000000000";
+	} else if ($hickelUuidVersion == 2) {
+		$block5 = "5ce32bd83b96";
+	} else {
+		throw new Exception("Invalid version");
+	}
+
+	// Then: Sort block 4, nibbles from left to right
+	if ($hickelUuidVersion == 1) {
+		$year = $dt->format('Y');
+		$block4 = substr($year, 2, 2).substr($year, 0, 2); // Example: 0x2420 = 2024
+	} else {
+		$variant = 0x8; // First nibble needs to be 0b10_ (0x8-0xB) for "RFC 4122bis". We use it to store 2 more random bits.
+		$unused2bits = 0; // Cannot be used for random, because it would affect the sorting
+		$year = $dt->format('Y');
+		$block4 = sprintf('%01x%03x', $variant + ($unused2bits & 0x3), $year);
+	}
+
+	// Then: Sort block 3, bytes from right to left (i.e. 0100 < 1000 < 0001 < 0010)
+	if ($hickelUuidVersion == 1) {
+		$block3 = $dt->format('dm');
+	} else {
+		$uuidVersion = 8; // First nibble needs to be "8" for "UUIDv8 = Custom UUID"
+		$dayOfYear = intval($dt->format('z')) + 1; /* 1..366 */
+		$block3 = sprintf('%01x%03x', $uuidVersion, $dayOfYear);
+	}
+
+	// Then: Sort block 2, bytes from right to left
+	if ($hickelUuidVersion == 1) {
+		$block2 = $dt->format('ih');
+	} else {
+		$minuteOfDay = (intval($dt->format('i')) + intval($dt->format('h')) * 60) + 1; // 1..1440
+		$block2 = sprintf('%04x', $minuteOfDay);
+	}
+
+	// Then: Sort block 1, bytes from right to left
+	if ($hickelUuidVersion == 1) {
+		$millisecond8bits = ceil(($dt->format('v') / 999) * 255); // deviation -4ms..0ms
+		$rnd16bits = _random_int(0x0000, 0xFFFF-1);
+		$block1 = sprintf('%04x%02x', $rnd16bits, $millisecond8bits).$dt->format('s');
+	} else {
+		$millisecond8bits = round(($dt->format('v') / 999) * 255); // deviation -2ms..2ms
+		$rnd16bits = _random_int(0x0000, 0xFFFF);
+		$block1 = sprintf('%04x%02x%02x', $rnd16bits, $millisecond8bits, $dt->format('s'));
+	}
+
+	$sleep_ms = (int)ceil(999 / 255); // Make sure that "millisecond" is not repeated on this system
+	if (time_nanosleep(0,$sleep_ms*1000*1000) !== true) usleep($sleep_ms*1000);
+
+	return strtolower("$block1-$block2-$block3-$block4-$block5");
+}
+
 # --------------------------------------
 
 // http://php.net/manual/de/function.hex2bin.php#113057
@@ -1496,3 +1663,16 @@ function shake256(string $msg, int $outputLength=512, bool $binary=false): strin
 	$bin = $sponge->squeeze($outputLength);
 	return $binary ? $bin : bin2hex($bin);
 }
+
+/**
+ * Converts the day of year of a year into a DateTime object
+ * @param int $year The year
+ * @param int $dayOfYear The day of year (value 1 till 365 or 1 till 366 for leap years)
+ * @return \DateTime The resulting date
+ */
+function getDateFromDay(int $year, int $dayOfYear): \DateTime {
+	// Note: "Y z" and "z Y" make a difference for leap years (last tested with PHP 8.0.3)
+	$date = \DateTime::createFromFormat('Y z', strval($year) . ' ' . strval($dayOfYear-1));
+	return $date;
+}
+

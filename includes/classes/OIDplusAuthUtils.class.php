@@ -276,10 +276,10 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 			} else if (strpos($passwordData, '$') !== false) {
 				// Version 2: SHA3-512 with salt
 				list($salt, $hash) = explode('$', $passwordData, 2);
-				$ok = hash_equals(sha3_512($salt.$password, true), base64_decode($hash));
+				$ok = hash_equals(base64_decode($hash), sha3_512($salt.$password, true));
 			} else {
 				// Version 1: SHA3-512 without salt
-				$ok = hash_equals(sha3_512($password, true), base64_decode($passwordData));
+				$ok = hash_equals(base64_decode($passwordData), sha3_512($password, true));
 			}
 			if ($ok) return true;
 		}

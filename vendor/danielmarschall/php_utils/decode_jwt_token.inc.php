@@ -58,7 +58,7 @@ function decode_idtoken($id_token, $verification_certs=null, $allowed_algorithms
 				case 'HS':
 					$hash = @hash_hmac($php_algo, $msg, $key, true);
 					if (!$hash) break; // if the hash algo is not available, we just accept the JWT
-					if (!hash_equals($signature, $hash)) return false;
+					if (!hash_equals($hash, $signature)) return false;
 					break;
 				case 'PS':
 					// This feature is new and not yet available in php-jwt
