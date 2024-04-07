@@ -95,7 +95,7 @@
         'danielmarschall/uuid_mac_utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '4936898473ce09a5fd06e47d33c582365d0c3b38',
+            'reference' => 'ad30e67d0092009d14b50d23f3d4e33bbec4ff52',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/uuid_mac_utils',
             'aliases' => array(
@@ -151,9 +151,9 @@
             'dev_requirement' => false,
         ),
         'matthiasmullie/minify' => array(
-            'pretty_version' => '1.3.72',
-            'version' => '1.3.72.0',
-            'reference' => '531fdeef1911ffe27a53f8a19c297648c78f757e',
+            'pretty_version' => '1.3.73',
+            'version' => '1.3.73.0',
+            'reference' => 'cb7a9297b4ab070909cefade30ee95054d4ae87a',
             'type' => 'library',
             'install_path' => __DIR__ . '/../matthiasmullie/minify',
             'aliases' => array(),

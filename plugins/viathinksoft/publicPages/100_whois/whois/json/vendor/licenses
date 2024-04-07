@@ -5,5 +5,5 @@ Dependencies:
 
 Name                            Version             Licenses   
 aywan/php-json-canonicalization master main         Apache-2.0 
-sergeybrook/php-jws             9999999-dev e1efec3 MIT        
-sergeybrook/php-jws             dev-master e1efec3  MIT        
+sergeybrook/php-jws             9999999-dev 3e594ba MIT        
+sergeybrook/php-jws             dev-master 3e594ba  MIT        
