@@ -3,7 +3,7 @@
 /*
  * UUID utils for PHP
  * Copyright 2011 - 2024 Daniel Marschall, ViaThinkSoft
- * Version 2024-03-09
+ * Version 2024-04-05
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -815,6 +815,62 @@ function uuid_info($uuid, $echo=true) {
 
 					// END: OIDplus 2.0 Custom UUID Interpretation
 
+					// START: hayageek UUIDv8 Interpretation
+					// https://github.com/hayageek/uuid-v8
+					// Example: 07e80404-1736-8934-8374-e63eb25babd2
+
+					$year    = hexdec(substr($uuid,0,4));
+					$month   = hexdec(substr($uuid,4,2));
+					$day     = hexdec(substr($uuid,6,2));
+					$hours   = hexdec(substr($uuid,8,2));
+					$minutes = hexdec(substr($uuid,10,2));
+					$ver     = hexdec(substr($uuid,12,1));
+					$rnd1    = substr($uuid,13,1);
+					$seconds = hexdec(substr($uuid,14,2));
+
+					// Diagram (WRONG):  <2 variant 0b10> <8 msec> <6 random>
+					// Actual Code:      <2 variant 0b10> <2 zero> <12 msec 0..0x3E7>
+					$tmp   = hexdec(substr($uuid,16,4));
+
+					$var = ($tmp >> 14) & 0b11;
+					$zero = ($tmp >> 12) & 0b11;
+					$milliseconds = $tmp & 0xFFF;
+
+					$rnd2  = substr($uuid,20,12);
+
+					$utc_time =
+						str_pad("$year",4,'0',STR_PAD_LEFT).'-'.
+						str_pad("$month",2,'0',STR_PAD_LEFT).'-'.
+						str_pad("$day",2,'0',STR_PAD_LEFT).' '.
+						str_pad("$hours",2,'0',STR_PAD_LEFT).':'.
+						str_pad("$minutes",2,'0',STR_PAD_LEFT).':'.
+						str_pad("$seconds",2,'0',STR_PAD_LEFT)."'".
+						str_pad("$milliseconds",3/*ms*/,'0',STR_PAD_LEFT);
+
+					$date_valid = checkdate($month, $day, $year);
+					$time_valid = ($hours   >= 0) && ($hours <= 23) &&
+					              ($minutes >= 0) && ($minutes <= 59) &&
+					              ($seconds >= 0) && ($seconds <= 59) &&
+					              ($milliseconds >= 0) && ($milliseconds <= 999); /**@phpstan-ignore-line*/
+
+					if (($ver == 8) && ($var == 2) && ($zero == 0) && $date_valid && $time_valid) {
+						echo "\n<u>Interpretation of <a href=\"https://github.com/hayageek/uuid-v8\">hayageek UUIDv8</a></u>\n\n";
+
+						echo sprintf("%-32s %s\n", "Date/Time:", "$utc_time UTC");
+						echo sprintf("%-32s %s\n", "Random Data:", "0x$rnd1$rnd2");
+						echo sprintf("%-32s %s\n", "Year:", sprintf("[0x%04x] %d", $year, $year));
+						echo sprintf("%-32s %s\n", "Month:", sprintf("[0x%02x] %d", $month, $month));
+						echo sprintf("%-32s %s\n", "Day:", sprintf("[0x%02x] %d", $day, $day));
+						echo sprintf("%-32s %s\n", "Hours:", sprintf("[0x%02x] %d", $hours, $hours));
+						echo sprintf("%-32s %s\n", "Minutes:", sprintf("[0x%02x] %d", $minutes, $minutes));
+						echo sprintf("%-32s %s\n", "Random 1:", sprintf("[0x%s]", $rnd1));
+						echo sprintf("%-32s %s\n", "Seconds:", sprintf("[0x%02x] %d", $seconds, $seconds));
+						echo sprintf("%-32s %s\n", "Milliseconds:", sprintf("[0x%03x] %d", $milliseconds, $milliseconds));
+						echo sprintf("%-32s %s\n", "Random 2:", sprintf("[0x%s]", $rnd2));
+					}
+
+					// END: hayageek UUIDv8 Interpretation
+
 					break;
 				default:
 					echo sprintf("%-32s %s\n", "Version:", "[0x".dechex($version)."] Unknown");
@@ -865,8 +921,8 @@ function uuid_info($uuid, $echo=true) {
 			str_pad("$hours",2,'0',STR_PAD_LEFT).':'.
 			str_pad("$minutes",2,'0',STR_PAD_LEFT).':'.
 			str_pad("$seconds",2,'0',STR_PAD_LEFT)."'".
-			str_pad("$milliseconds",2,'0',STR_PAD_LEFT);
-		if (strpos($utc_time,'X') === false) {
+			str_pad("$milliseconds",3/*ms*/,'0',STR_PAD_LEFT);
+		if (checkdate($month, $day, $year) && (strpos($utc_time,'X') === false)) {
 			$deviation = "(deviation -2ms..2ms)";
 			echo "\n<u>Interpretation of <a href=\"https://gist.github.com/danielmarschall/7fafd270a3bc107d38e8449ce7420c25\">HickelSOFT \"SQL Server Sortable Custom UUID\", Version 2</a></u>\n\n";
 			echo sprintf("%-32s %s\n", "Random 16 bits:", "[0x$rnd16bits] 0b".str_pad("".base_convert($rnd16bits, 16, 2), 16, '0', STR_PAD_LEFT));
@@ -910,8 +966,8 @@ function uuid_info($uuid, $echo=true) {
 			str_pad("$hours",2,'0',STR_PAD_LEFT).':'.
 			str_pad("$minutes",2,'0',STR_PAD_LEFT).':'.
 			str_pad("$seconds",2,'0',STR_PAD_LEFT)."'".
-			str_pad("$milliseconds",2,'0',STR_PAD_LEFT);
-		if (strpos($local_time,'X') === false) {
+			str_pad("$milliseconds",3/*ms*/,'0',STR_PAD_LEFT);
+		if (checkdate($month, $day, $year) && (strpos($local_time,'X') === false)) {
 			$deviation = "(deviation -4ms..0ms)";
 			echo "\n<u>Interpretation of <a href=\"https://gist.github.com/danielmarschall/7fafd270a3bc107d38e8449ce7420c25\">HickelSOFT \"SQL Server Sortable Custom UUID\", Version 1</a></u>\n\n";
 			echo sprintf("%-32s %s\n", "Random 16 bits:", "[0x$rnd16bits] 0b".str_pad(base_convert($rnd16bits, 16, 2), 16, '0', STR_PAD_LEFT));
@@ -1566,6 +1622,7 @@ function gen_uuid_v8_sqlserver_sortable(int $hickelUuidVersion = 2, DateTime $dt
 	// The sorting in SQL Server is like this:
 
 	if ($dt == null) $dt = new DateTime();
+	if ($hickelUuidVersion >= 2) $dt->setTimeZone(new DateTimeZone("UTC"));
 
 	// First Sort block 5, nibbles from left to right (i.e. 000000000001 < 000000000010 < ... < 010000000000 < 100000000000)
 	if ($hickelUuidVersion == 1) {
@@ -1598,9 +1655,9 @@ function gen_uuid_v8_sqlserver_sortable(int $hickelUuidVersion = 2, DateTime $dt
 
 	// Then: Sort block 2, bytes from right to left
 	if ($hickelUuidVersion == 1) {
-		$block2 = $dt->format('ih');
+		$block2 = $dt->format('iH');
 	} else {
-		$minuteOfDay = (intval($dt->format('i')) + intval($dt->format('h')) * 60) + 1; // 1..1440
+		$minuteOfDay = (intval($dt->format('i')) + intval($dt->format('H')) * 60) + 1; // 1..1440
 		$block2 = sprintf('%04x', $minuteOfDay);
 	}
 

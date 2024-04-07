@@ -3,6 +3,14 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.1.20",
+		"date": "2024-04-07 20:30:00 +0200",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"Fix invitation emails don't contain a link"
+		]
+	},
+	{
 		"version": "2.0.1.19",
 		"date": "2024-03-07 01:05:00 +0100",
 		"author": "Daniel Marschall (ViaThinkSoft)",

@@ -100,7 +100,7 @@ class JwsMac extends Jws implements Symmetric {
 	 */
 	public function verify($jws) {
 		$d = $this->prepareVerify($jws);
-		return hash_equals($d["sig"], hash_hmac($this->algos[$d["alg"]], $d["h"] . "." . $d["p"], $this->secretKey, true));
+		return hash_equals(hash_hmac($this->algos[$d["alg"]], $d["h"] . "." . $d["p"], $this->secretKey, true), $d["sig"]);
 	}
 
 	/**

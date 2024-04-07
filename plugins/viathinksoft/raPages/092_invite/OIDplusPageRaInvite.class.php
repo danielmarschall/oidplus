@@ -152,9 +152,10 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 
 			try {
 				$this->inviteSecurityCheck($email);
-				$cont = $this->getInvitationText($email);
+				$message = $this->getInvitationText($email);
+				$message = str_replace('{{ACTIVATE_URL}}', '[...]', $message); // secret. Will only be shown in the email to the invited person
 
-				$out['text'] .= '<p>'._L('You have chosen to invite %1 as a Registration Authority. If you click "Send invitation", the following email will be sent to %2:','<b>'.$email.'</b>',$email).'</p><p><i>'.nl2br(htmlentities($cont)).'</i></p>
+				$out['text'] .= '<p>'._L('You have chosen to invite %1 as a Registration Authority. If you click "Send invitation", the following email will be sent to %2:','<b>'.$email.'</b>',$email).'</p><p><i>'.nl2br(htmlentities($message)).'</i></p>
 				  <form id="inviteForm" action="javascript:void(0);" onsubmit="return OIDplusPageRaInvite.inviteFormOnSubmit();">
 				    <input type="hidden" id="email" value="'.htmlentities($email).'"/>
 				    <input type="hidden" id="origin" value="'.htmlentities($origin).'"/>
@@ -271,12 +272,10 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 		$message = file_get_contents(__DIR__ . '/invite_msg.tpl');
 
 		// Resolve stuff
-		
-
 		$message = str_replace('{{SYSTEM_URL}}', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL), $message);
 		$message = str_replace('{{OID_LIST}}', implode("\n", $list_of_oids), $message);
 		$message = str_replace('{{ADMIN_EMAIL}}', OIDplus::config()->getValue('admin_email'), $message);
-		$message = str_replace('{{ACTIVATE_URL}}', '[...]', $message); // Note: {{ACTIVATE_URL}} will be resolved in ajax.php, not here!
+		// Note: {{ACTIVATE_URL}} will be resolved by the caller, not here!
 
 		return str_replace('{{PARTY}}', OIDplus::authUtils()->isAdminLoggedIn() ? 'the system administrator' : 'a superior Registration Authority', $message);
 	}
