@@ -3,7 +3,7 @@
 /*
  * UUID utils for PHP
  * Copyright 2011 - 2024 Daniel Marschall, ViaThinkSoft
- * Version 2024-04-05
+ * Version 2024-04-16
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -333,7 +333,7 @@ function uuid_info($uuid, $echo=true) {
 			} else if (($version >= 3) && ($version <= 5)) {
 				echo sprintf("%-32s %s\n", "Variant:", "[0b10_] RFC 4122 (Leach-Mealling-Salz)");
 			} else if (($version >= 6) && ($version <= 8)) {
-				echo sprintf("%-32s %s\n", "Variant:", "[0b10_] RFC draft-ietf-uuidrev-rfc4122bis (Davis-Peabody-Leach)"); // TODO: When new RFC is published, replace the RFC number
+				echo sprintf("%-32s %s\n", "Variant:", "[0b10_] RFC 9562 (Davis-Peabody-Leach)");
 			} else {
 				echo sprintf("%-32s %s\n", "Variant:", "[0b10_] Unknown RFC");
 			}
@@ -922,7 +922,7 @@ function uuid_info($uuid, $echo=true) {
 			str_pad("$minutes",2,'0',STR_PAD_LEFT).':'.
 			str_pad("$seconds",2,'0',STR_PAD_LEFT)."'".
 			str_pad("$milliseconds",3/*ms*/,'0',STR_PAD_LEFT);
-		if (checkdate($month, $day, $year) && (strpos($utc_time,'X') === false)) {
+		if ((strpos($utc_time,'X') === false) && checkdate($month, $day, $year)) {
 			$deviation = "(deviation -2ms..2ms)";
 			echo "\n<u>Interpretation of <a href=\"https://gist.github.com/danielmarschall/7fafd270a3bc107d38e8449ce7420c25\">HickelSOFT \"SQL Server Sortable Custom UUID\", Version 2</a></u>\n\n";
 			echo sprintf("%-32s %s\n", "Random 16 bits:", "[0x$rnd16bits] 0b".str_pad("".base_convert($rnd16bits, 16, 2), 16, '0', STR_PAD_LEFT));
@@ -967,7 +967,7 @@ function uuid_info($uuid, $echo=true) {
 			str_pad("$minutes",2,'0',STR_PAD_LEFT).':'.
 			str_pad("$seconds",2,'0',STR_PAD_LEFT)."'".
 			str_pad("$milliseconds",3/*ms*/,'0',STR_PAD_LEFT);
-		if (checkdate($month, $day, $year) && (strpos($local_time,'X') === false)) {
+		if ((strpos($local_time,'X') === false) && checkdate($month, $day, $year)) {
 			$deviation = "(deviation -4ms..0ms)";
 			echo "\n<u>Interpretation of <a href=\"https://gist.github.com/danielmarschall/7fafd270a3bc107d38e8449ce7420c25\">HickelSOFT \"SQL Server Sortable Custom UUID\", Version 1</a></u>\n\n";
 			echo sprintf("%-32s %s\n", "Random 16 bits:", "[0x$rnd16bits] 0b".str_pad(base_convert($rnd16bits, 16, 2), 16, '0', STR_PAD_LEFT));
@@ -1638,7 +1638,7 @@ function gen_uuid_v8_sqlserver_sortable(int $hickelUuidVersion = 2, DateTime $dt
 		$year = $dt->format('Y');
 		$block4 = substr($year, 2, 2).substr($year, 0, 2); // Example: 0x2420 = 2024
 	} else {
-		$variant = 0x8; // First nibble needs to be 0b10_ (0x8-0xB) for "RFC 4122bis". We use it to store 2 more random bits.
+		$variant = 0x8; // First nibble needs to be 0b10_ (0x8-0xB) for RFC 9562. We use it to store 2 more random bits.
 		$unused2bits = 0; // Cannot be used for random, because it would affect the sorting
 		$year = $dt->format('Y');
 		$block4 = sprintf('%01x%03x', $variant + ($unused2bits & 0x3), $year);

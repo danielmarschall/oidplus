@@ -87,7 +87,7 @@ class OIDplusQueryResultOci extends OIDplusQueryResult {
 			$this->prefetchAll();
 		}
 
-		return count($this->prefetchedArray) + $this->countAlreadyFetched;
+		return count($this->prefetchedArray);
 	}
 
 	/**

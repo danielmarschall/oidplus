@@ -16,8 +16,8 @@ danielmarschall/php-sha3         9999999-dev 5605bd5 MIT
 danielmarschall/php-sha3         dev-master 5605bd5  MIT                   
 danielmarschall/php_utils        9999999-dev 3f42fc2 Apache-2.0            
 danielmarschall/php_utils        dev-master 3f42fc2  Apache-2.0            
-danielmarschall/uuid_mac_utils   9999999-dev ad30e67 Apache-2.0            
-danielmarschall/uuid_mac_utils   dev-master ad30e67  Apache-2.0            
+danielmarschall/uuid_mac_utils   9999999-dev de10e9b Apache-2.0            
+danielmarschall/uuid_mac_utils   dev-master de10e9b  Apache-2.0            
 danielmarschall/vnag             9999999-dev ba9c0ed Apache-2.0            
 danielmarschall/vnag             dev-master ba9c0ed  Apache-2.0            
 dcodeio/bcrypt.js                master master       BSD-3-Clause, MIT     
@@ -28,7 +28,7 @@ matthiasmullie/minify            1.3.73              MIT
 matthiasmullie/path-converter    1.1.3               MIT                   
 paragonie/constant_time_encoding v2.6.3              MIT                   
 paragonie/random_compat          v9.99.100           MIT                   
-phpseclib/phpseclib              3.0.x-dev cfa2013   MIT                   
+phpseclib/phpseclib              3.0.x-dev f7f9831   MIT                   
 script47/bs5-utils               master master       MIT                   
 spamspan/spamspan                master              GPL-2.0-only          
 spomky-labs/php-punycode         9999999-dev d12fe5c MIT                   
