@@ -86,7 +86,7 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 		// -1 can happen when PDO is connected via ODBC that is running a driver that does not support num_rows (e.g. Microsoft Access)
 		if ($ret === -1) {
 			$this->prefetchAll();
-			return count($this->prefetchedArray) + $this->countAlreadyFetched;
+			return count($this->prefetchedArray);
 		}
 
 		return $ret;

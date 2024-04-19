@@ -95,7 +95,7 @@
         'danielmarschall/uuid_mac_utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'ad30e67d0092009d14b50d23f3d4e33bbec4ff52',
+            'reference' => 'de10e9b484a3eca02db1d0ea69d68561a52ad895',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/uuid_mac_utils',
             'aliases' => array(
@@ -189,7 +189,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => 'cfa2013d0f68c062055180dd4328cc8b9d1f30b8',
+            'reference' => 'f7f9831bec65fdcfe4f3332cffe454da0e3f22f7',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),
