@@ -239,6 +239,22 @@ INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.
 -- 1.3.6.1.4.1.61117.9000
 INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.61117.9000', 'x-requested', false, true);
 
+-- 1.3.12
+INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.3.12', 'icd-ecma', false, true);
+INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.3.12', 'ecma', false, true);
+
+-- 1.3.12.2
+INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.3.12.2', 'member-company', false, true);
+
+-- 1.3.60
+INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.3.60', 'duns', false, true);
+
+-- 1.3.88
+INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.3.88', 'ean', false, true);
+
+-- 1.3.148
+INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.3.148', 'dnic', false, true);
+
 -- 2
 INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:2', 'joint-iso-itu-t', true, true);
 INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:2', 'joint-iso-ccitt', true, true);
@@ -346,4 +362,4 @@ INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:2.999', convert_
 INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:2.999', convert_from(decode('5L6L', 'base64'), 'utf-8'), true, true);
 INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:2.999', 'Beispiel', true, true);
 
--- Generator "generate_wellknown_other_pgsql" checksum 6994c75b
+-- Generator "generate_wellknown_other_pgsql" checksum 89073e54

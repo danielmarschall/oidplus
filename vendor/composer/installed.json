@@ -151,18 +151,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/fileformats.git",
-                "reference": "67fb75197baf894d2ce25e559c1aea2d4ccf4ab4"
+                "reference": "8d08352cae97f4c701b39482584b746e839c8d76"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/fileformats/zipball/67fb75197baf894d2ce25e559c1aea2d4ccf4ab4",
-                "reference": "67fb75197baf894d2ce25e559c1aea2d4ccf4ab4",
+                "url": "https://api.github.com/repos/danielmarschall/fileformats/zipball/8d08352cae97f4c701b39482584b746e839c8d76",
+                "reference": "8d08352cae97f4c701b39482584b746e839c8d76",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2023-08-31T14:39:26+00:00",
+            "time": "2024-04-21T16:41:43+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -350,19 +350,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/php_utils.git",
-                "reference": "3f42fc2c9ad7fef67dad4917c454e6799d0fd274"
+                "reference": "32d3ea80c33d14a57b676b519a948cc564f22b86"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/3f42fc2c9ad7fef67dad4917c454e6799d0fd274",
-                "reference": "3f42fc2c9ad7fef67dad4917c454e6799d0fd274",
+                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/32d3ea80c33d14a57b676b519a948cc564f22b86",
+                "reference": "32d3ea80c33d14a57b676b519a948cc564f22b86",
                 "shasum": ""
             },
             "require": {
                 "ext-zlib": "*",
                 "php": ">=7.0"
             },
-            "time": "2024-03-13T17:00:11+00:00",
+            "time": "2024-05-26T21:26:51+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -433,18 +433,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/vnag.git",
-                "reference": "ba9c0ed48696e0e1534241598a352bc4059119a4"
+                "reference": "55902e8f4f98db2c32f802556b6081f39cf65b6b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/vnag/zipball/ba9c0ed48696e0e1534241598a352bc4059119a4",
-                "reference": "ba9c0ed48696e0e1534241598a352bc4059119a4",
+                "url": "https://api.github.com/repos/danielmarschall/vnag/zipball/55902e8f4f98db2c32f802556b6081f39cf65b6b",
+                "reference": "55902e8f4f98db2c32f802556b6081f39cf65b6b",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2023-12-17T21:10:26+00:00",
+            "time": "2024-04-29T11:03:21+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -709,27 +709,27 @@
         },
         {
             "name": "paragonie/constant_time_encoding",
-            "version": "v2.6.3",
-            "version_normalized": "2.6.3.0",
+            "version": "v3.0.0",
+            "version_normalized": "3.0.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/paragonie/constant_time_encoding.git",
-                "reference": "58c3f47f650c94ec05a151692652a868995d2938"
+                "reference": "df1e7fde177501eee2037dd159cf04f5f301a512"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/constant_time_encoding/zipball/58c3f47f650c94ec05a151692652a868995d2938",
-                "reference": "58c3f47f650c94ec05a151692652a868995d2938",
+                "url": "https://api.github.com/repos/paragonie/constant_time_encoding/zipball/df1e7fde177501eee2037dd159cf04f5f301a512",
+                "reference": "df1e7fde177501eee2037dd159cf04f5f301a512",
                 "shasum": ""
             },
             "require": {
-                "php": "^7|^8"
+                "php": "^8"
             },
             "require-dev": {
-                "phpunit/phpunit": "^6|^7|^8|^9",
-                "vimeo/psalm": "^1|^2|^3|^4"
+                "phpunit/phpunit": "^9",
+                "vimeo/psalm": "^4|^5"
             },
-            "time": "2022-06-14T06:56:20+00:00",
+            "time": "2024-05-08T12:36:18+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -837,16 +837,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "f7f9831bec65fdcfe4f3332cffe454da0e3f22f7"
+                "reference": "b718a63aae519f630589769b31f4b9e164e72613"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/f7f9831bec65fdcfe4f3332cffe454da0e3f22f7",
-                "reference": "f7f9831bec65fdcfe4f3332cffe454da0e3f22f7",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/b718a63aae519f630589769b31f4b9e164e72613",
+                "reference": "b718a63aae519f630589769b31f4b9e164e72613",
                 "shasum": ""
             },
             "require": {
-                "paragonie/constant_time_encoding": "^1|^2",
+                "paragonie/constant_time_encoding": "^1|^2|^3",
                 "paragonie/random_compat": "^1.4|^2.0|^9.99.99",
                 "php": ">=5.6.1"
             },
@@ -860,7 +860,7 @@
                 "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
                 "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
             },
-            "time": "2024-04-13T22:51:45+00:00",
+            "time": "2024-05-25T19:43:40+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
