@@ -180,6 +180,11 @@ $interesting_oids[] = '1'; // iso
 #									$interesting_oids[] = '1.3.6.1.4.1.54392.5'; // Waterjuice FreeOID "new"
 								$interesting_oids[] = '1.3.6.1.4.1.61117'; // R74n
 									$interesting_oids[] = '1.3.6.1.4.1.61117.9000'; // R74n FreeOID
+		$interesting_oids[] = '1.3.12'; // icd-ecma
+			$interesting_oids[] = '1.3.12.2'; // member-company
+		$interesting_oids[] = '1.3.60'; // duns
+		$interesting_oids[] = '1.3.88'; // ean (actually has GLNs)
+		$interesting_oids[] = '1.3.148'; // dnic
 $interesting_oids[] = '2'; // joint-iso-itu-t
 	$interesting_oids[] = '2.16'; // country
 		// country_getter defines the country OIDs

@@ -1000,7 +1000,7 @@ class SSH2
      *
      * @var bool
      */
-    private $retry_connect = false;
+    private $login_credentials_finalized = false;
 
     /**
      * Binary Packet Buffer
@@ -2216,7 +2216,7 @@ class SSH2
      */
     public function login($username, ...$args)
     {
-        if (!$this->retry_connect) {
+        if (!$this->login_credentials_finalized) {
             $this->auth[] = func_get_args();
         }
 
@@ -2319,6 +2319,7 @@ class SSH2
 
             foreach ($newargs as $arg) {
                 if ($this->login_helper($username, $arg)) {
+                    $this->login_credentials_finalized = true;
                     return true;
                 }
             }
@@ -2349,10 +2350,14 @@ class SSH2
             $this->send_binary_packet($packet);
 
             try {
+                $bad_key_size_fix = $this->bad_key_size_fix;
                 $response = $this->get_binary_packet();
             } catch (\Exception $e) {
-                if ($this->retry_connect) {
-                    $this->retry_connect = false;
+                // bad_key_size_fix is only ever re-assigned to true
+                // under certain conditions. when it's newly set we'll
+                // retry the connection with that new setting but we'll
+                // only try it once.
+                if ($bad_key_size_fix != $this->bad_key_size_fix) {
                     $this->connect();
                     return $this->login_helper($username, $password);
                 }
@@ -2361,20 +2366,6 @@ class SSH2
             }
 
             list($type) = Strings::unpackSSH2('C', $response);
-
-            if ($type == NET_SSH2_MSG_EXT_INFO) {
-                list($nr_extensions) = Strings::unpackSSH2('N', $response);
-                for ($i = 0; $i < $nr_extensions; $i++) {
-                    list($extension_name, $extension_value) = Strings::unpackSSH2('ss', $response);
-                    if ($extension_name == 'server-sig-algs') {
-                        $this->supported_private_key_algorithms = explode(',', $extension_value);
-                    }
-                }
-
-                $response = $this->get_binary_packet();
-                list($type) = Strings::unpackSSH2('C', $response);
-            }
-
             list($service) = Strings::unpackSSH2('s', $response);
 
             if ($type != NET_SSH2_MSG_SERVICE_ACCEPT || $service != 'ssh-userauth') {
@@ -2624,10 +2615,12 @@ class SSH2
     {
         $this->agent = $agent;
         $keys = $agent->requestIdentities();
+        $orig_algorithms = $this->supported_private_key_algorithms;
         foreach ($keys as $key) {
             if ($this->privatekey_login($username, $key)) {
                 return true;
             }
+            $this->supported_private_key_algorithms = $orig_algorithms;
         }
 
         return false;
@@ -3465,7 +3458,6 @@ class SSH2
     private function reconnect()
     {
         $this->reset_connection(NET_SSH2_DISCONNECT_CONNECTION_LOST);
-        $this->retry_connect = true;
         $this->connect();
         foreach ($this->auth as $auth) {
             $result = $this->login(...$auth);
@@ -3486,7 +3478,6 @@ class SSH2
         $this->hmac_check = $this->hmac_create = false;
         $this->hmac_size = false;
         $this->session_id = false;
-        $this->retry_connect = true;
         $this->get_seq_no = $this->send_seq_no = 0;
         $this->channel_status = [];
         $this->channel_id_last_interactive = 0;
@@ -3845,6 +3836,17 @@ class SSH2
                     }
                     $payload = $this->get_binary_packet($skip_channel_filter);
                 }
+                break;
+            case NET_SSH2_MSG_EXT_INFO:
+                Strings::shift($payload, 1);
+                list($nr_extensions) = Strings::unpackSSH2('N', $payload);
+                for ($i = 0; $i < $nr_extensions; $i++) {
+                    list($extension_name, $extension_value) = Strings::unpackSSH2('ss', $payload);
+                    if ($extension_name == 'server-sig-algs') {
+                        $this->supported_private_key_algorithms = explode(',', $extension_value);
+                    }
+                }
+                $payload = $this->get_binary_packet($skip_channel_filter);
         }
 
         // see http://tools.ietf.org/html/rfc4252#section-5.4; only called when the encryption has been activated and when we haven't already logged in
@@ -4960,10 +4962,30 @@ class SSH2
                     $obj->setKeyLength(preg_replace('#[^\d]#', '', $algo));
                 }
                 switch ($algo) {
+                    // Eval engines do not exist for ChaCha20 or RC4 because they would not benefit from one.
+                    // to benefit from an Eval engine they'd need to loop a variable amount of times, they'd
+                    // need to do table lookups (eg. sbox subsitutions). ChaCha20 doesn't do either because
+                    // it's a so-called ARX cipher, meaning that the only operations it does are add (A), rotate (R)
+                    // and XOR (X). RC4 does do table lookups but being a stream cipher it works differently than
+                    // block ciphers. with RC4 you XOR the plaintext against a keystream and the keystream changes
+                    // as you encrypt stuff. the only table lookups are made against this keystream and thus table
+                    // lookups are kinda unavoidable. with AES and DES, however, the table lookups that are done
+                    // are done against substitution boxes (sboxes), which are invariant.
+
+                    // OpenSSL can't be used as an engine, either, because OpenSSL doesn't support continuous buffers
+                    // as SSH2 uses and altho you can emulate a continuous buffer with block ciphers you can't do so
+                    // with stream ciphers. As for ChaCha20...  for the ChaCha20 part OpenSSL could prob be used but
+                    // the big slow down isn't with ChaCha20 - it's with Poly1305. SSH constructs the key for that
+                    // differently than how OpenSSL does it (OpenSSL does it as the RFC describes, SSH doesn't).
+
+                    // libsodium can't be used because it doesn't support RC4 and it doesn't construct the Poly1305
+                    // keys in the same way that SSH does
+
+                    // mcrypt could prob be used for RC4 but mcrypt hasn't been included in PHP core for yearss
                     case 'chacha20-poly1305@openssh.com':
                     case 'arcfour128':
                     case 'arcfour256':
-                        if ($engine != 'Eval') {
+                        if ($engine != 'PHP') {
                             continue 2;
                         }
                         break;

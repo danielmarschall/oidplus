@@ -35,6 +35,8 @@ INSERT INTO "ASN1ID" (oid, name, standardized, well_known) VALUES ('oid:1.2.410'
 INSERT INTO "IRI" (oid, name, longarc, well_known) VALUES ('oid:1.2.410', 'KR', '0', '1');
 INSERT INTO "ASN1ID" (oid, name, standardized, well_known) VALUES ('oid:1.2.498', 'md', '0', '1');
 INSERT INTO "IRI" (oid, name, longarc, well_known) VALUES ('oid:1.2.498', 'MD', '0', '1');
+INSERT INTO "ASN1ID" (oid, name, standardized, well_known) VALUES ('oid:1.2.504', 'ma', '0', '1');
+INSERT INTO "IRI" (oid, name, longarc, well_known) VALUES ('oid:1.2.504', 'MA', '0', '1');
 INSERT INTO "ASN1ID" (oid, name, standardized, well_known) VALUES ('oid:1.2.528', 'nl', '0', '1');
 INSERT INTO "IRI" (oid, name, longarc, well_known) VALUES ('oid:1.2.528', 'NL', '0', '1');
 INSERT INTO "ASN1ID" (oid, name, standardized, well_known) VALUES ('oid:1.2.566', 'ng', '0', '1');
@@ -856,4 +858,4 @@ INSERT INTO "ASN1ID" (oid, name, standardized, well_known) VALUES ('oid:2.49.0.1
 INSERT INTO "ASN1ID" (oid, name, standardized, well_known) VALUES ('oid:2.49.0.0.894', 'zm', '0', '1');
 INSERT INTO "ASN1ID" (oid, name, standardized, well_known) VALUES ('oid:2.49.0.1.894', 'zm', '0', '1');
 
--- Generator "generate_wellknown_country_firebird" checksum 38e2d80a
+-- Generator "generate_wellknown_country_firebird" checksum a6773051

@@ -31,7 +31,7 @@
         'danielmarschall/fileformats' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '67fb75197baf894d2ce25e559c1aea2d4ccf4ab4',
+            'reference' => '8d08352cae97f4c701b39482584b746e839c8d76',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/fileformats',
             'aliases' => array(
@@ -84,7 +84,7 @@
         'danielmarschall/php_utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '3f42fc2c9ad7fef67dad4917c454e6799d0fd274',
+            'reference' => '32d3ea80c33d14a57b676b519a948cc564f22b86',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/php_utils',
             'aliases' => array(
@@ -106,7 +106,7 @@
         'danielmarschall/vnag' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'ba9c0ed48696e0e1534241598a352bc4059119a4',
+            'reference' => '55902e8f4f98db2c32f802556b6081f39cf65b6b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/vnag',
             'aliases' => array(
@@ -169,9 +169,9 @@
             'dev_requirement' => false,
         ),
         'paragonie/constant_time_encoding' => array(
-            'pretty_version' => 'v2.6.3',
-            'version' => '2.6.3.0',
-            'reference' => '58c3f47f650c94ec05a151692652a868995d2938',
+            'pretty_version' => 'v3.0.0',
+            'version' => '3.0.0.0',
+            'reference' => 'df1e7fde177501eee2037dd159cf04f5f301a512',
             'type' => 'library',
             'install_path' => __DIR__ . '/../paragonie/constant_time_encoding',
             'aliases' => array(),
@@ -189,7 +189,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => 'f7f9831bec65fdcfe4f3332cffe454da0e3f22f7',
+            'reference' => 'b718a63aae519f630589769b31f4b9e164e72613',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),

@@ -242,6 +242,22 @@ INSERT INTO [asn1id] (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.
 -- 1.3.6.1.4.1.61117.9000
 INSERT INTO [asn1id] (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.61117.9000', 'x-requested', '0', '1');
 
+-- 1.3.12
+INSERT INTO [asn1id] (oid, name, standardized, well_known) VALUES ('oid:1.3.12', 'icd-ecma', '0', '1');
+INSERT INTO [asn1id] (oid, name, standardized, well_known) VALUES ('oid:1.3.12', 'ecma', '0', '1');
+
+-- 1.3.12.2
+INSERT INTO [asn1id] (oid, name, standardized, well_known) VALUES ('oid:1.3.12.2', 'member-company', '0', '1');
+
+-- 1.3.60
+INSERT INTO [asn1id] (oid, name, standardized, well_known) VALUES ('oid:1.3.60', 'duns', '0', '1');
+
+-- 1.3.88
+INSERT INTO [asn1id] (oid, name, standardized, well_known) VALUES ('oid:1.3.88', 'ean', '0', '1');
+
+-- 1.3.148
+INSERT INTO [asn1id] (oid, name, standardized, well_known) VALUES ('oid:1.3.148', 'dnic', '0', '1');
+
 -- 2
 INSERT INTO [asn1id] (oid, name, standardized, well_known) VALUES ('oid:2', 'joint-iso-itu-t', '1', '1');
 INSERT INTO [asn1id] (oid, name, standardized, well_known) VALUES ('oid:2', 'joint-iso-ccitt', '1', '1');
@@ -349,4 +365,4 @@ INSERT INTO [iri] (oid, name, longarc, well_known) VALUES ('oid:2.999', CAST(CAS
 INSERT INTO [iri] (oid, name, longarc, well_known) VALUES ('oid:2.999', CAST(CAST(N'' AS XML).value('xs:base64Binary("5L6L")', 'varbinary(MAX)') AS varchar(255)), '1', '1');
 INSERT INTO [iri] (oid, name, longarc, well_known) VALUES ('oid:2.999', 'Beispiel', '1', '1');
 
--- Generator "generate_wellknown_other_mssql" checksum 6994c75b
+-- Generator "generate_wellknown_other_mssql" checksum 89073e54

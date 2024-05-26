@@ -2,8 +2,8 @@
 
 /*
  * XML Encoding Utilities
- * Copyright 2011-2021 Daniel Marschall, ViaThinkSoft
- * Version 1.8 (2021-11-24)
+ * Copyright 2011 - 2024 Daniel Marschall, ViaThinkSoft
+ * Version 2024-05-26
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -185,7 +185,7 @@ if (!function_exists('mb_htmlentities')) {
 	// modified
 	function mb_htmlentities($string, $hex = true, $encoding = 'UTF-8') {
 		return preg_replace_callback('/[\x{80}-\x{10FFFF}]/u', function ($match) use ($hex, $encoding) {
-			$ord = (strtoupper($encoding) == 'UTF-8') ? ordUTF8($match[0]) : mb_ord($match[0]);
+			$ord = (strtoupper($encoding) == 'UTF-8') ? ordUTF8($match[0]) : mb_ord($match[0], 'UTF-8');
 			return sprintf($hex ? '&#x%X;' : '&#%d;', $ord);
 		}, $string);
 	}

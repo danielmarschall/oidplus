@@ -35,6 +35,8 @@ INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.2.410'
 INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:1.2.410', 'KR', false, true);
 INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.2.498', 'md', false, true);
 INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:1.2.498', 'MD', false, true);
+INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.2.504', 'ma', false, true);
+INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:1.2.504', 'MA', false, true);
 INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.2.528', 'nl', false, true);
 INSERT INTO "iri" (oid, name, longarc, well_known) VALUES ('oid:1.2.528', 'NL', false, true);
 INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:1.2.566', 'ng', false, true);
@@ -856,4 +858,4 @@ INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:2.49.0.1
 INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:2.49.0.0.894', 'zm', false, true);
 INSERT INTO "asn1id" (oid, name, standardized, well_known) VALUES ('oid:2.49.0.1.894', 'zm', false, true);
 
--- Generator "generate_wellknown_country_pgsql" checksum 38e2d80a
+-- Generator "generate_wellknown_country_pgsql" checksum a6773051

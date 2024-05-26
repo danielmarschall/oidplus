@@ -2,8 +2,8 @@
 
 /*
  * OID-Utilities for PHP
- * Copyright 2011 - 2023 Daniel Marschall, ViaThinkSoft
- * Version 2023-08-25
+ * Copyright 2011 - 2024 Daniel Marschall, ViaThinkSoft
+ * Version 2024-05-26
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -552,7 +552,7 @@ function iri_char_valid($c, $firstchar, $lastchar) {
 	if (($c >= 'A') && ($c <= 'Z')) return true;
 	if (($c >= 'a') && ($c <= 'z')) return true;
 
-	$v = mb_ord($c);
+	$v = mb_ord($c, 'UTF-8');
 
 	if (($v >= 0x000000A0) && ($v <= 0x0000DFFE)) return true;
 	if (($v >= 0x0000F900) && ($v <= 0x0000FDCF)) return true;
