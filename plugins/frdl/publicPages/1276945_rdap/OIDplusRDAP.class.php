@@ -288,7 +288,7 @@ class OIDplusRDAP extends OIDplusBaseClass {
 	 * @return array
 	 */
 	protected function rdap_out(array $out): array {
-		$out_content = json_encode($out);
+		$out_content = json_encode($out, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
 		$out_type = 'application/rdap+json';
 		return array($out_content, $out_type);
 	}

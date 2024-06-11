@@ -30,7 +30,7 @@ try {
 	$out = array(
 		"error" => $e->getMessage()
 	);
-	echo json_encode($out);
+	echo json_encode($out, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
 	die();
 }
 
@@ -82,4 +82,5 @@ $out['AdminEMail'] = $admin_email;
 
 OIDplus::invoke_shutdown();
 
-echo json_encode($out);
+echo json_encode($out, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
+

@@ -81,7 +81,7 @@ class OIDplusPagePublicRestApi extends OIDplusPagePluginPublic {
 
 			OIDplus::invoke_shutdown();
 			@header('Content-Type:application/json; charset=utf-8');
-			echo json_encode($json_out);
+			echo json_encode($json_out, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
 			die(); // return true;
 		}
 
