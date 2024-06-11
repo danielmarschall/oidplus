@@ -260,7 +260,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	public function adminCheckPassword(string $password): bool {
 		$cfgData = OIDplus::baseConfig()->getValue('ADMIN_PASSWORD', '');
 		if (empty($cfgData)) {
-			throw new OIDplusException(_L('No admin password set in %1','userdata/baseconfig/config.inc.php'));
+			throw new OIDplusException(_L('No admin password set in %1',OIDplus::getUserDataDir("baseconfig").'config.inc.php'));
 		}
 
 		if (!is_array($cfgData)) {

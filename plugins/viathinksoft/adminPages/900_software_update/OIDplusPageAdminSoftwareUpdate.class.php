@@ -420,7 +420,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 		static $cache = null;
 		if (!is_null($cache)) return $cache;
 
-		$cache_file = OIDplus::localpath() . 'userdata/cache/master_changelog.json';
+		$cache_file = OIDplus::getUserDataDir("cache").'master_changelog.json';
 		if ((file_exists($cache_file)) && (time()-filemtime($cache_file) <= 10*60/*10 Minutes*/)) {
 			$changelog = file_get_contents($cache_file);
 		} else {

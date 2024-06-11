@@ -23,7 +23,7 @@ namespace ViaThinkSoft\OIDplus;
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-// OIDplusBaseConfig is the basic ("static") configuration stored in userdata/baseconfig/config.inc.php,
+// OIDplusBaseConfig is the basic ("static") configuration stored in userdata/baseconfig/config.inc.php (or userdata/tenant/.../baseconfig/config.inc.php),
 // e.g. database access credentials.
 // Not to be confused with OIDplusConfig which are settings that are stored in the database.
 class OIDplusBaseConfig extends OIDplusBaseClass implements OIDplusGetterSetterInterface {

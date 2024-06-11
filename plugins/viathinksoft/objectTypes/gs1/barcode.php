@@ -40,7 +40,7 @@ $number = $_GET['number'];
 $number = preg_replace("/[^0-9]/", "", $number);
 $number = substr($number, 0, 20);
 
-$cache_file = OIDplus::localpath() . 'userdata/cache/barcode_'.$number.'.png';
+$cache_file = OIDplus::getUserDataDir("cache") . 'barcode_'.$number.'.png';
 
 if ((file_exists($cache_file)) && (time()-filemtime($cache_file) <= OIDPLUS_BARCODE_MAX_CACHE_AGE)) {
 

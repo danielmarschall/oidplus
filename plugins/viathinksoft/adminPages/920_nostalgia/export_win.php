@@ -104,7 +104,7 @@ while ($row = $res->fetch_object()) {
 	}
 }
 
-$tmp_file = OIDplus::localpath().'userdata/windows_export.zip';
+$tmp_file = OIDplus::getUserDataDir("cache").'windows_export.zip';
 
 $zip = new ZipArchive();
 if ($zip->open($tmp_file, ZipArchive::CREATE)!== true) {

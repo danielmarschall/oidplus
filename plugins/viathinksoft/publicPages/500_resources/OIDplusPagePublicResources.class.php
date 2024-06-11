@@ -110,7 +110,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 		if (OIDplus::authUtils()->isAdminLoggedIn()) return true;
 
 		$candidates = array(
-			OIDplus::localpath().'userdata/resources/security.ini',
+			OIDplus::getUserDataDir("resources").'security.ini',
 			OIDplus::localpath().'res/security.ini'
 		);
 		foreach ($candidates as $ini_file) {
@@ -144,7 +144,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	private static function myglob(string $reldir, bool $onlydir=false): array {
 		$out = array();
 
-		$root = OIDplus::localpath().'userdata/resources/';
+		$root = OIDplus::getUserDataDir("resources");
 		$res = $onlydir ? @glob($root.ltrim($reldir,'/'), GLOB_ONLYDIR) : @glob($root.ltrim($reldir,'/'));
 		if ($res) foreach ($res as $x) {
 			$x = substr($x, strlen($root));
@@ -172,7 +172,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	 * @return string|null
 	 */
 	private static function realname(string $rel) {
-		$candidate1 = OIDplus::localpath().'userdata/resources/'.$rel;
+		$candidate1 = OIDplus::getUserDataDir("resources").$rel;
 		$candidate2 = OIDplus::localpath().'res/'.$rel;
 		if (file_exists($candidate1) || is_dir($candidate1)) return $candidate1;
 		if (file_exists($candidate2) || is_dir($candidate2)) return $candidate2;
@@ -186,7 +186,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	 */
 	protected static function checkRedirect(string $source, string &$target): bool {
 		$candidates = array(
-			OIDplus::localpath().'userdata/resources/redirect.ini',
+			OIDplus::getUserDataDir("resources").'redirect.ini',
 			OIDplus::localpath().'res/redirect.ini'
 		);
 		foreach ($candidates as $ini_file) {

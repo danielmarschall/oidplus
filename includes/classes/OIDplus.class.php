@@ -159,7 +159,7 @@ class OIDplus extends OIDplusBaseClass {
 
 			// Include config file
 
-			$config_file = OIDplus::localpath() . 'userdata/baseconfig/config.inc.php';
+			$config_file = OIDplus::getUserDataDir("baseconfig") . 'config.inc.php';
 			$config_file_old = OIDplus::localpath() . 'includes/config.inc.php'; // backwards compatibility
 
 			if (!file_exists($config_file) && file_exists($config_file_old)) {
@@ -1745,7 +1745,12 @@ class OIDplus extends OIDplusBaseClass {
 	 * @return string
 	 */
 	private static function getPrivKeyPassphraseFilename(): string {
-		return OIDplus::localpath() . 'userdata/privkey_secret.php';
+		$oldfile = OIDplus::localpath() . 'userdata/privkey_secret.php'; // backwards compatibility
+		$newfile = OIDplus::getUserDataDir("secret") . 'privkey_secret.php';
+		if (file_exists($oldfile) && !file_exists($newfile)) {
+			rename($oldfile, $newfile);
+		}
+		return file_exists($oldfile) ? $oldfile : $newfile;
 	}
 
 	/**
@@ -2094,6 +2099,35 @@ class OIDplus extends OIDplusBaseClass {
 		}
 	}
 
+	private static function tenantSubDirName(): string {
+		// TODO: Should we also include subdirs? e.g. hosted.oidplus.com/viathinksoft, hosted.oidplus.com/r74n, etc.
+		return $_SERVER['HTTP_HOST'];
+	}
+
+	public static function getUserDataDir(string $subdir, bool $public=false): string {
+		$localdir = OIDplus::localpath(); // contains trailing dir separator
+		$priv_or_pub = $public ? "userdata_pub".DIRECTORY_SEPARATOR : "userdata".DIRECTORY_SEPARATOR;
+		$tenant_dir = "tenant".DIRECTORY_SEPARATOR.self::tenantSubDirName().DIRECTORY_SEPARATOR;
+
+		// Tenancy dependant dir `userdata/tenant/<tenantSubDirName>/$subdir` existing? Then use this.
+		$candidate1 = $localdir.$priv_or_pub.$tenant_dir.$subdir.DIRECTORY_SEPARATOR;
+		if (is_dir($candidate1)) return $candidate1;
+
+		// General dir `userdata/$subdir` existing? Then use this.
+		$candidate2 = $localdir.$priv_or_pub.$subdir.DIRECTORY_SEPARATOR;
+		if (is_dir($candidate2)) return $candidate2;
+
+		if (is_dir($localdir.$priv_or_pub.$tenant_dir)) {
+			// This is a tenancy-enabled system. Therefore, create tenancy-dependant dir by default
+			mkdir($candidate1);
+			return $candidate1;
+		} else {
+			// This is a non-tenancy-enabled system. Therefore, create a general dir by default
+			mkdir($candidate2);
+			return $candidate2;
+		}
+	}
+
 	/**
 	 * Gets a local path pointing to a resource
 	 * @param string|null $target Target resource (file or directory must exist), or null to get the OIDplus base directory
@@ -2317,7 +2351,7 @@ class OIDplus extends OIDplusBaseClass {
 	 */
 	protected static function getTranslationFileContents(string $translation_file): array {
 		// First, try the cache
-		$cache_file = __DIR__ . '/../../userdata/cache/translation_'.md5($translation_file).'.ser';
+		$cache_file = OIDplus::getUserDataDir("cache").'translation_'.md5($translation_file).'.ser';
 		if (file_exists($cache_file) && (filemtime($cache_file) == filemtime($translation_file))) {
 			$cac = @unserialize(file_get_contents($cache_file));
 			if ($cac) return $cac;

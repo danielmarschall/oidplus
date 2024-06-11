@@ -51,7 +51,7 @@ if (!isset($_REQUEST['lang'])) {
 	$lang = $_REQUEST['lang'];
 }
 
-$candidate1 = __DIR__ . '/../../../../userdata/resources/' . $file;
+$candidate1 = OIDplus::getUserDataDir("resources") . $file;
 $candidate2 = __DIR__ . '/../../../../res/' . $file;
 
 if (file_exists($candidate1) || is_dir($candidate1)) {

@@ -215,7 +215,7 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin
 			}
 
 			// Check if cache directory is writeable
-			$cache_dir = OIDplus::localpath(null).'userdata/cache/';
+			$cache_dir = OIDplus::getUserDataDir("cache");
 			if (!is_dir($cache_dir)) {
 				$notifications[] = new OIDplusNotification('ERR', _L('Directory %1 does not exist', $cache_dir));
 			} else if (!isFileOrPathWritable($cache_dir)) {

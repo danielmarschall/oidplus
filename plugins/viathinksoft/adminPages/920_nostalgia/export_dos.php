@@ -96,7 +96,7 @@ while ($row = $res->fetch_object()) {
 	}
 }
 
-$tmp_file = OIDplus::localpath().'userdata/dos_export.zip';
+$tmp_file = OIDplus::getUserDataDir("cache").'dos_export.zip';
 
 $zip = new ZipArchive();
 if ($zip->open($tmp_file, ZipArchive::CREATE)!== true) {

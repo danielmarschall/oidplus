@@ -17,12 +17,14 @@
  * limitations under the License.
  */
 
+use ViaThinkSoft\OIDplus\OIDplus;
+
 require_once __DIR__ . '/includes/oidplus.inc.php';
 
 error_reporting(0);
 
-if (file_exists(__DIR__.'/userdata/favicon.png')) {
-	$out = file_get_contents(__DIR__.'/userdata/favicon.png');
+if (file_exists($fil = OIDplus::getUserDataDir("favicon").'favicon.png')) {
+	$out = file_get_contents($fil);
 } else {
 	$out = file_get_contents(__DIR__.'/img/default_favicon.png');
 }

@@ -41,3 +41,16 @@ Possible use cases:
   and want to include individual graphics, then you can place the graphics in this directory.
 - You can place documents in this directory, and link to them in OID descriptions
   (the "file attachments" or "documents and resources" plugins are recommended, though).
+
+
+Tenants
+-------
+
+Multiple domains can use the same OIDplus installation but have different
+`userdata/` and `userdata_pub/` directories. Therefore, simply create
+a directory named `userdata/tenant/www.example.com` where `www.example.com` is
+your host name.
+Then, if the user visits this domain name, then the data inside
+`userdata/tenant/www.example.com` will be chosen rather than `userdata/`.
+Each domain can therefore have different database connections (or simply different
+table prefixes), different resources (welcome page), etc.
