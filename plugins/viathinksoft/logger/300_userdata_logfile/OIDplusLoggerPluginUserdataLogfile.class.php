@@ -31,11 +31,13 @@ class OIDplusLoggerPluginUserdataLogfile extends OIDplusLoggerPlugin {
 	 */
 	public function available(string &$reason): bool {
 		if (!is_dir($dir = OIDplus::getUserDataDir("logs"))) {
+			$dir = substr($dir, strlen(OIDplus::localpath(NULL))); // "censor" the system local path
 			$reason = _L('Directory %1 not existing', $dir);
 			return false;
 		}
 
 		if (@file_put_contents($dir.'oidplus.log', '', FILE_APPEND) === false) {
+			$dir = substr($dir, strlen(OIDplus::localpath(NULL))); // "censor" the system local path
 			$reason = _L('File %1 not writeable', $dir.'oidplus.log');
 			return false;
 		}
