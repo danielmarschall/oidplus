@@ -100,10 +100,10 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 	 * @throws OIDplusException
 	 */
 	private static function getOpenTransFileName(string $ip_target, $random): string {
-		$dir = OIDplus::localpath().'/userdata/cache';
+		$dir = OIDplus::getUserDataDir("cache");
 
 		// First, delete challenges which were never completed
-		$files = glob($dir.'/vts_client_challenge_*.tmp');
+		$files = glob($dir.'vts_client_challenge_*.tmp');
 		$expire = strtotime('-3 DAYS');
 		foreach ($files as $file) {
 			if (!is_file($file)) continue;

@@ -945,10 +945,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			$out['title'] = OIDplus::config()->getValue('system_title');
 			$out['icon'] = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png';
 
-			if (file_exists(OIDplus::localpath() . 'userdata/welcome/welcome$'.OIDplus::getCurrentLang().'.html')) {
-				$cont = file_get_contents(OIDplus::localpath() . 'userdata/welcome/welcome$'.OIDplus::getCurrentLang().'.html');
-			} else if (file_exists(OIDplus::localpath() . 'userdata/welcome/welcome.html')) {
-				$cont = file_get_contents(OIDplus::localpath() . 'userdata/welcome/welcome.html');
+			if (file_exists(OIDplus::getUserDataDir("welcome").'welcome$'.OIDplus::getCurrentLang().'.html')) {
+				$cont = file_get_contents(OIDplus::getUserDataDir("welcome").'welcome$'.OIDplus::getCurrentLang().'.html');
+			} else if (file_exists(OIDplus::getUserDataDir("welcome").'welcome.html')) {
+				$cont = file_get_contents(OIDplus::getUserDataDir("welcome").'welcome.html');
 			} else if (file_exists(__DIR__ . '/welcome$'.OIDplus::getCurrentLang().'.html')) {
 				$cont = file_get_contents(__DIR__ . '/welcome$'.OIDplus::getCurrentLang().'.html');
 			} else if (file_exists(__DIR__ . '/welcome.html')) {

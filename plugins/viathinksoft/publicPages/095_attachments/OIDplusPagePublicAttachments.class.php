@@ -457,8 +457,8 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 				$output .= '<td>'.htmlentities(basename($file)).'</td>';
 				$output .= '<td>'.htmlentities(self::convert_filesize(filesize($file), 0)).'</td>';
 				$lookup_files = array(
-					OIDplus::localpath().'userdata/attachments/filetypes$'.OIDplus::getCurrentLang().'.conf',
-					OIDplus::localpath().'userdata/attachments/filetypes.conf',
+					OIDplus::getUserDataDir("attachments").'filetypes$'.OIDplus::getCurrentLang().'.conf',
+					OIDplus::getUserDataDir("attachments").'filetypes.conf',
 					OIDplus::localpath().'vendor/danielmarschall/fileformats/filetypes$'.OIDplus::getCurrentLang().'.local', // not recommended
 					OIDplus::localpath().'vendor/danielmarschall/fileformats/filetypes.local', // not recommended
 					OIDplus::localpath().'vendor/danielmarschall/fileformats/filetypes$'.OIDplus::getCurrentLang().'.conf',

@@ -48,4 +48,7 @@ userdata/logs/*.log*
 userdata/resources/*
 !userdata/resources/info.txt
 
+userdata/secret/*
+!userdata/secret/info.txt
+
 userdata/welcome/welcome.html

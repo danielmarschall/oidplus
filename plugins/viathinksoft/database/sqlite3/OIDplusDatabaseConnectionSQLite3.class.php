@@ -137,7 +137,7 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 
 		// Try connecting to the database
 		try {
-			$filename   = OIDplus::baseConfig()->getValue('SQLITE3_FILE', 'userdata/database/oidplus.db');
+			$filename   = OIDplus::baseConfig()->getValue('SQLITE3_FILE', OIDplus::getUserDataDir("database").'oidplus.db');
 			$flags      = SQLITE3_OPEN_READWRITE/* | SQLITE3_OPEN_CREATE*/;
 			$encryption = OIDplus::baseConfig()->getValue('SQLITE3_ENCRYPTION', '');
 
@@ -238,7 +238,7 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 	 * @return array
 	 */
 	public function getExtendedInfo(): array {
-		$filename  = OIDplus::baseConfig()->getValue('SQLITE3_FILE', 'userdata/database/oidplus.db');
+		$filename  = OIDplus::baseConfig()->getValue('SQLITE3_FILE', OIDplus::getUserDataDir("database").'oidplus.db');
 		return array(
 			_L('Filename') => $filename
 		);

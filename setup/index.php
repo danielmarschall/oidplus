@@ -26,12 +26,14 @@ require_once __DIR__ . '/../includes/oidplus.inc.php';
 
 originHeaders(); // This is important so that http://.../setup/ can query https://.../setup/ in order to do an SSL availability check
 
-const BASECONFIG_FILE_OLD = 'includes/config.inc.php';
-const BASECONFIG_FILE_NEW = 'userdata/baseconfig/config.inc.php';
+$BASECONFIG_FILE_OLD = OIDplus::localpath(null).'includes/config.inc.php'; // backwards compatibility
+$BASECONFIG_FILE_NEW = OIDplus::getUserDataDir("baseconfig").'config.inc.php';
 $existing_config = '';
-if (file_exists(__DIR__.'/../'.BASECONFIG_FILE_OLD)) $existing_config = BASECONFIG_FILE_OLD;
-if (file_exists(__DIR__.'/../'.BASECONFIG_FILE_NEW)) $existing_config = BASECONFIG_FILE_NEW;
+if (file_exists($BASECONFIG_FILE_OLD)) $existing_config = $BASECONFIG_FILE_OLD;
+if (file_exists($BASECONFIG_FILE_NEW)) $existing_config = $BASECONFIG_FILE_NEW;
 $already_setup = $existing_config != '';
+if ($existing_config == '') $existing_config = $BASECONFIG_FILE_NEW;
+$existing_config = substr($existing_config, strlen(OIDplus::localpath(NULL))); // "censor" the system local path
 
 OIDplus::handleLangArgument();
 

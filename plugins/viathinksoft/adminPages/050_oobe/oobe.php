@@ -61,7 +61,7 @@ if (isset($_POST['sent'])) {
 		$edits_possible = false;
 	}
 }
-echo OIDplus::getActiveCaptchaPlugin()->captchaGenerate(_L('Before logging in, please solve the following CAPTCHA'), _L('If the CAPTCHA does not work (e.g. because of wrong keys, please run <a href="%1">setup part 1</a> again or edit %2 manually).',OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/','userdata/baseconfig/config.inc.php'));
+echo OIDplus::getActiveCaptchaPlugin()->captchaGenerate(_L('Before logging in, please solve the following CAPTCHA'), _L('If the CAPTCHA does not work (e.g. because of wrong keys, please run <a href="%1">setup part 1</a> again or edit %2 manually).',OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/',OIDplus::getUserDataDir("baseconfig").'config.inc.php'));
 
 echo '<h2>'._L('Step %1: Authenticate',$step++).'</h2>';
 

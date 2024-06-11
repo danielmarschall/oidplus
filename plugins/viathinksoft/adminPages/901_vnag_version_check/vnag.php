@@ -53,7 +53,7 @@ class VNagMonitorDummy extends VNag {
 	}
 }
 
-$cache_file = OIDplus::localpath() . 'userdata/cache/vnag_version_check.ser';
+$cache_file = OIDplus::getUserDataDir("cache").'vnag_version_check.ser';
 
 if ((file_exists($cache_file)) && (time()-filemtime($cache_file) <= OIDPLUS_VNAG_MAX_CACHE_AGE)) {
 	// Anti DoS

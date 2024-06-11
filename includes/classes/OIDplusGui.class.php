@@ -179,7 +179,7 @@ class OIDplusGui extends OIDplusBaseClass {
 			$stacktrace = str_replace($syspath, '...'.DIRECTORY_SEPARATOR, $stacktrace); // for security
 			$sourceFile = str_replace($syspath, '...'.DIRECTORY_SEPARATOR, $sourceFile); // for security
 		} catch (\Throwable $e) {
-			// Catch Exception and Error, because this step (censoring) is purely optional and shoult not prevent the stacktrace of being shown
+			// Catch Exception and Error, because this step (censoring) is purely optional and should not prevent the stacktrace of being shown
 		}
 
 		$out .= _L('at file %1 (line %2)',$sourceFile,"".$exception->getLine())."\n\n";

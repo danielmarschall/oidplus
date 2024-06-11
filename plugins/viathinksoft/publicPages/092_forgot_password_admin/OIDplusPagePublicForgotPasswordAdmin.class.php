@@ -50,7 +50,9 @@ class OIDplusPagePublicForgotPasswordAdmin extends OIDplusPagePluginPublic {
 			}
 			$out['icon']  = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png';
 
-			$out['text']  = '<p>'._L('To reset the password of the administrator, create a hash below and then replace the entry in the file %1.','<b>userdata/baseconfig/config.inc.php</b>').'</p>';
+			$baseconfigfile = OIDplus::getUserDataDir("baseconfig").'config.inc.php';
+			$baseconfigfile = substr($baseconfigfile, strlen(OIDplus::localpath(NULL))); // "censor" the system local path
+			$out['text']  = '<p>'._L('To reset the password of the administrator, create a hash below and then replace the entry in the file %1.','<b>'.$baseconfigfile.'</b>').'</p>';
 			$out['text'] .= '<div><label class="padding_label">'._L('New password').':</label><input type="password" id="admin_password" onkeypress="OIDplusPagePublicForgotPasswordAdmin.rehash_admin_pwd()" onkeyup="OIDplusPagePublicForgotPasswordAdmin.rehash_admin_pwd()"></div>';
 			$out['text'] .= '<div><label class="padding_label">'._L('Repeat').':</label><input type="password" id="admin_password2" onkeypress="OIDplusPagePublicForgotPasswordAdmin.rehash_admin_pwd()" onkeyup="OIDplusPagePublicForgotPasswordAdmin.rehash_admin_pwd()"></div>';
 			$out['text'] .= '<p><pre id="config"></pre></p>';

@@ -30,13 +30,13 @@ class OIDplusLoggerPluginUserdataLogfile extends OIDplusLoggerPlugin {
 	 * @return bool
 	 */
 	public function available(string &$reason): bool {
-		if (!is_dir(OIDplus::localpath().'userdata/logs/')) {
-			$reason = _L('Directory userdata/logs/ not existing');
+		if (!is_dir($dir = OIDplus::getUserDataDir("logs"))) {
+			$reason = _L('Directory %1 not existing', $dir);
 			return false;
 		}
 
-		if (@file_put_contents(OIDplus::localpath().'userdata/logs/oidplus.log', '', FILE_APPEND) === false) {
-			$reason = _L('File userdata/logs/oidplus.log not writeable');
+		if (@file_put_contents($dir.'oidplus.log', '', FILE_APPEND) === false) {
+			$reason = _L('File %1 not writeable', $dir.'oidplus.log');
 			return false;
 		}
 
@@ -49,7 +49,7 @@ class OIDplusLoggerPluginUserdataLogfile extends OIDplusLoggerPlugin {
 	 * @return bool
 	 */
 	public function log(OIDplusLogEvent $event): bool {
-		if (!is_dir(OIDplus::localpath().'userdata/logs/')) return false;
+		if (!is_dir(OIDplus::getUserDataDir("logs"))) return false;
 
 		$users_names = array();
 		$objects_names = array();
@@ -72,6 +72,6 @@ class OIDplusLoggerPluginUserdataLogfile extends OIDplusLoggerPlugin {
 		// "WARNING Found a match for '020-05-11 22:50:58 [192.168.69.89] Failed login ..."
 		$line = "[$ts] [$addr] ".$event->getMessage().$users_info.$objects_info;
 
-		return @file_put_contents(OIDplus::localpath().'userdata/logs/oidplus.log', "$line\n", FILE_APPEND) !== false;
+		return @file_put_contents(OIDplus::getUserDataDir("logs").'oidplus.log', "$line\n", FILE_APPEND) !== false;
 	}
 }

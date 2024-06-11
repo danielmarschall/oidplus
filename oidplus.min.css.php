@@ -102,9 +102,9 @@ if (isset($_GET['theme'])) {
 	$theme = 'default';
 }
 
-if (file_exists(__DIR__ . '/userdata/styles/oidplus_base.css')) {
+if (file_exists($fil = OIDplus::getUserDataDir("styles").'oidplus_base.css')) {
 	// There is a user defined CSS (not recommended, use design plugins instead!)
-	$out .= process_file(__DIR__ . '/userdata/styles/oidplus_base.css');
+	$out .= process_file($fil);
 } else {
 	// Use CSS of the design plugin
 	OIDplus::registerAllPlugins('design', OIDplusDesignPlugin::class, array(OIDplus::class,'registerDesignPlugin'));
@@ -128,8 +128,8 @@ foreach ($manifests as $manifest) {
 }
 
 // Now user-defined (additional) definitions
-if (file_exists(__DIR__ . '/userdata/styles/oidplus_add.css')) {
-	$out .= process_file(__DIR__ . '/userdata/styles/oidplus_add.css');
+if (file_exists($fil = OIDplus::getUserDataDir("styles").'oidplus_add.css')) {
+	$out .= process_file($fil);
 }
 
 # ---

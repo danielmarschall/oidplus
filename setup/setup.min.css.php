@@ -67,8 +67,8 @@ function process_file(string $filename): string {
 // (None)
 
 // OIDplus basic definitions
-if (file_exists(__DIR__ . '/../userdata/styles/setup_base.css')) {
-	$out .= process_file(__DIR__ . '/../userdata/styles/setup_base.css');
+if (file_exists($fil = OIDplus::getUserDataDir("styles").'setup_base.css')) {
+	$out .= process_file($fil);
 } else {
 	$out .= process_file(__DIR__ . '/includes/setup_base.css');
 }
@@ -82,8 +82,8 @@ foreach ($manifests as $manifest) {
 }
 
 // Now user-defined definitions
-if (file_exists(__DIR__ . '/userdata/styles/setup_add.css')) {
-	$out .= process_file(__DIR__ . '/userdata/styles/setup_add.css');
+if (file_exists($fil = OIDplus::getUserDataDir("styles").'setup_add.css')) {
+	$out .= process_file($fil);
 }
 
 # ---
