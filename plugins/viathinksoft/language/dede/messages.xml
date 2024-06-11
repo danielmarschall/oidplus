@@ -2174,10 +2174,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Directory userdata/logs/ not existing
+		Directory %1 not existing
 		]]></source>
 		<target><![CDATA[
-		Verzeichnis userdata/logs/ existiert nicht
+		Verzeichnis %1 existiert nicht
 		]]></target>
 	</message>
 	<message>
@@ -2790,6 +2790,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		File %1 not writeable
+		]]></source>
+		<target><![CDATA[
+		Datei %1 nicht schreibbar
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		File %1 was defined in manifest, but it is not existing
 		]]></source>
 		<target><![CDATA[
@@ -2826,14 +2834,6 @@
 		]]></source>
 		<target><![CDATA[
 		Dateityp
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		File userdata/logs/oidplus.log not writeable
-		]]></source>
-		<target><![CDATA[
-		Datei userdata/logs/oidplus.log ist nicht beschreibbar
 		]]></target>
 	</message>
 	<message>

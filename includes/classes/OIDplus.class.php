@@ -200,7 +200,7 @@ class OIDplus extends OIDplusBaseClass {
 							'DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplus', $tmp);
 
 						if (@file_put_contents($config_file, $tmp) === false) {
-							eval('?>'.$tmp);
+							eval('?'.'>'.$tmp);
 						} else {
 							include $config_file;
 						}
@@ -234,6 +234,7 @@ class OIDplus extends OIDplusBaseClass {
 				}
 			} else {
 				if (!is_dir(OIDplus::localpath().'setup')) {
+					$config_file = substr($config_file, strlen(OIDplus::localpath(NULL))); // "censor" the system local path
 					throw new OIDplusConfigInitializationException(_L('File %1 is missing, but setup can\'t be started because its directory missing.',$config_file));
 				} else {
 					if (self::$html) {
@@ -245,6 +246,7 @@ class OIDplus extends OIDplusBaseClass {
 						}
 					} else {
 						// This can be displayed in e.g. ajax.php
+						$config_file = substr($config_file, strlen(OIDplus::localpath(NULL))); // "censor" the system local path
 						throw new OIDplusConfigInitializationException(_L('File %1 is missing. Please run setup again.',$config_file));
 					}
 				}
@@ -254,13 +256,15 @@ class OIDplus extends OIDplusBaseClass {
 
 			if (self::$baseConfig->getValue('CONFIG_VERSION') != 2.1) {
 				if (strpos($_SERVER['REQUEST_URI'], OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/') !== 0) {
-					throw new OIDplusConfigInitializationException(_L("The information located in %1 is outdated.",realpath($config_file)));
+					$config_file = substr($config_file, strlen(OIDplus::localpath(NULL))); // "censor" the system local path
+					throw new OIDplusConfigInitializationException(_L("The information located in %1 is outdated.",$config_file));
 				}
 			}
 
 			if (self::$baseConfig->getValue('SERVER_SECRET', '') === '') {
 				if (strpos($_SERVER['REQUEST_URI'], OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/') !== 0) {
-					throw new OIDplusConfigInitializationException(_L("You must set a value for SERVER_SECRET in %1 for the system to operate secure.",realpath($config_file)));
+					$config_file = substr($config_file, strlen(OIDplus::localpath(NULL))); // "censor" the system local path
+					throw new OIDplusConfigInitializationException(_L("You must set a value for SERVER_SECRET in %1 for the system to operate secure.",$config_file));
 				}
 			}
 		}
@@ -2101,7 +2105,8 @@ class OIDplus extends OIDplusBaseClass {
 
 	private static function tenantSubDirName(): string {
 		// TODO: Should we also include subdirs? e.g. hosted.oidplus.com/viathinksoft, hosted.oidplus.com/r74n, etc.
-		return $_SERVER['HTTP_HOST'];
+		// TODO: Undefined for CLI!!!
+		return $_SERVER['HTTP_HOST'] ?? 'NOT_AVAILABLE';
 	}
 
 	public static function getUserDataDir(string $subdir, bool $public=false): string {

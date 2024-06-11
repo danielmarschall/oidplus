@@ -32,6 +32,15 @@ try {
 	OIDplus::invoke_shutdown();
 	ob_end_clean();
 
+	$tenants = glob(__DIR__.'/userdata/tenant/*');
+	foreach ($tenants as $tenant) {
+		$_SERVER['HTTP_HOST'] = basename($tenant); // TODO: this is very dirty. we rather need something like OIDplus::setTenantId()
+		ob_start();
+		OIDplus::init(false);
+		OIDplus::invoke_shutdown();
+		ob_end_clean();
+	}
+
 	exit(0);
 } catch (Exception $e) {
 	fwrite(STDERR, $e->getMessage());
