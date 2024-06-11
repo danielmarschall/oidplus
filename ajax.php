@@ -139,7 +139,7 @@ try {
 	OIDplus::invoke_shutdown();
 
 	@header('Content-Type:application/json; charset=utf-8');
-	echo json_encode($json_out);
+	echo json_encode($json_out, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
 
 } catch (\Exception $e) {
 
@@ -155,12 +155,12 @@ try {
 	$json_out = array();
 	$json_out['status'] = -2;
 	$json_out['error'] = strip_tags($errmsg);
-	$out = json_encode($json_out);
+	$out = json_encode($json_out, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
 
 	if ($out === false) {
 		// Some modules (like ODBC) might output non-UTF8 data
 		$json_out['error'] = vts_utf8_encode(strip_tags($errmsg));
-		$out = json_encode($json_out);
+		$out = json_encode($json_out, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
 	}
 
 	@header('Content-Type:application/json; charset=utf-8');

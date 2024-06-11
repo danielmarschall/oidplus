@@ -100,7 +100,7 @@ function oidplus_json_sign(string $json_content, string $privkey, string $pubkey
 	$output->signature = $signature;
 
 	// Self-test and output
-	$json_signed = json_encode($output);
+	$json_signed = json_encode($output, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
 	if (!$json_signed) throw new Exception("JSON Encoding failed");
 	oidplus_json_verify($json_signed, $pubkey);
 	return $json_signed;

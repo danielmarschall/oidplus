@@ -552,7 +552,7 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 				'oidip' => $bry
 			);
 
-			$json = json_encode($ary);
+			$json = json_encode($ary, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
 
 			if (OIDplus::getPkiStatus()) {
 				try {

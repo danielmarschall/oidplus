@@ -351,7 +351,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 */
 	public function makeSecret($data): string {
 		if (!is_array($data)) $data = [$data];
-		$data = json_encode($data);
+		$data = json_encode($data); // due to backwards-compatibility, do not use JSON_UNESCAPED_SLASHES
 		return sha3_512_hmac($data, 'OIDplus:'.OIDplus::baseConfig()->getValue('SERVER_SECRET'), false);
 	}
 
