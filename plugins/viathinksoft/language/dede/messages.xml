@@ -4454,6 +4454,22 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Multi-Tenancy base system
+		]]></source>
+		<target><![CDATA[
+		Multi-Mandanten-System, Basis
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Multi-Tenancy tenant system
+		]]></source>
+		<target><![CDATA[
+		Multi-Mandanten-System, Mieter
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Multiple %1 plugins use the ID %2
 		]]></source>
 		<target><![CDATA[
@@ -5386,6 +5402,14 @@
 		]]></source>
 		<target><![CDATA[
 		Betriebssystem
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Operating mode
+		]]></source>
+		<target><![CDATA[
+		Betriebsmodus
 		]]></target>
 	</message>
 	<message>
@@ -7258,6 +7282,14 @@
 		]]></source>
 		<target><![CDATA[
 		Aufrufstapel
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Standalone system (no tenants)
+		]]></source>
+		<target><![CDATA[
+		Standalone-System (kein Multi-Mandanten-System)
 		]]></target>
 	</message>
 	<message>
