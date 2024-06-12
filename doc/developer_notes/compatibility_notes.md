@@ -50,6 +50,8 @@ Therefore, we commented out following features which would require PHP >=7.1:
   therefore we stay with 3.0 LTS:
   "phpseclib/phpseclib": "~3.0"
   Once PHP 7.1 is OK, we can go with the latest versions again.
+- Furthermore, "phpseclib/phpseclib" is <= 3.0.37, because the newer 3.0.x requires
+  a dependency paragonie/constant_time_encoding which requires PHP 8.0
 - In dev/vendor_update.sh we patch composer packages pulled from GitHub
   to achieve PHP 7.0 compat
 
