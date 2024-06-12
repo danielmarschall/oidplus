@@ -1750,15 +1750,18 @@ class OIDplus extends OIDplusBaseClass {
 	 */
 	private static function getPrivKeyPassphraseFilename(): string {
 		$oldfile1 = OIDplus::localpath() . 'userdata/privkey_secret.php'; // backwards compatibility
-		$oldfile2 = OIDplus::getUserDataDir("secret") . '../privkey_secret.php'; // when userdata is copied to a new tenant
+		$oldfile2 = realpath(OIDplus::getUserDataDir("secret").'../').'/privkey_secret.php'; // when userdata is copied to a new tenant
 		$newfile = OIDplus::getUserDataDir("secret") . 'privkey_secret.php';
+		$file_to_choose = $newfile;
 		if (file_exists($oldfile2) && !file_exists($newfile)) {
-			rename($oldfile2, $newfile);
+			@rename($oldfile2, $newfile);
+			if (!file_exists($newfile)) $file_to_choose = $oldfile2;
 		}
-		if (file_exists($oldfile1) && !file_exists($newfile)) {
-			rename($oldfile1, $newfile);
+		else if (file_exists($oldfile1) && !file_exists($newfile)) {
+			@rename($oldfile1, $newfile);
+			if (!file_exists($newfile)) $file_to_choose = $oldfile1;
 		}
-		return $newfile;
+		return $file_to_choose;
 	}
 
 	/**
@@ -2168,14 +2171,14 @@ class OIDplus extends OIDplusBaseClass {
 		if (is_dir($localdir.$priv_or_pub.$tenant_dir)) {
 			// This is a tenancy-enabled system. Therefore, create tenancy-dependant dir by default
 			// Tenancy dependant dir `userdata/tenant/<tenantSubDirName>/$subdir` existing? Then use this.
-			$candidate1 = $localdir.$priv_or_pub.$tenant_dir.$subdir.DIRECTORY_SEPARATOR;
+			$candidate1 = $localdir.$priv_or_pub.$tenant_dir.$subdir;
 			if (is_dir($candidate1)) return $candidate1.DIRECTORY_SEPARATOR;
 			@mkdir($candidate1);
 			return $candidate1.DIRECTORY_SEPARATOR;
 		} else {
 			// This is a non-tenancy-enabled system. Therefore, create a general dir by default
 			// General dir `userdata/$subdir` existing? Then use this.
-			$candidate2 = $localdir.$priv_or_pub.$subdir.DIRECTORY_SEPARATOR;
+			$candidate2 = $localdir.$priv_or_pub.$subdir;
 			if (is_dir($candidate2)) return $candidate2.DIRECTORY_SEPARATOR;
 			@mkdir($candidate2);
 			return $candidate2.DIRECTORY_SEPARATOR;
@@ -2238,30 +2241,30 @@ class OIDplus extends OIDplusBaseClass {
 			if ($tmp === false) return false;
 			if (!isset($tmp['path'])) return false;
 			return $tmp['path'];
-		}
-
-		if ($mode == OIDplus::PATH_RELATIVE_TO_ROOT_CANONICAL) {
+		} else if ($mode == OIDplus::PATH_RELATIVE_TO_ROOT_CANONICAL) {
 			$tmp = OIDplus::webpath($target,OIDplus::PATH_ABSOLUTE_CANONICAL);
 			if ($tmp === false) return false;
 			$tmp = parse_url($tmp);
 			if ($tmp === false) return false;
 			if (!isset($tmp['path'])) return false;
 			return $tmp['path'];
+		} else {
+			$res = self::getSystemUrl($mode); // Note: already contains a trailing path delimiter
+			if ($res === false) return false;
+			if (!is_null($target)) {
+				$basedir = realpath(__DIR__.'/../../');
+				$target = realpath($target);
+
+				// $target must be inside $basedir, otherwise it does not work!
+				if (!str_starts_with($target.'/', $basedir.'/')) return false;
+
+				if ($target === false) return false;
+				$tmp = substr($target, strlen($basedir)+1);
+				$res .= str_replace(DIRECTORY_SEPARATOR,'/',$tmp); // replace OS specific path delimiters introduced by realpath()
+				if (is_dir($target)) $res .= '/';
+			}
+			return $res;
 		}
-
-		$res = self::getSystemUrl($mode); // Note: already contains a trailing path delimiter
-		if ($res === false) return false;
-
-		if (!is_null($target)) {
-			$basedir = realpath(__DIR__.'/../../');
-			$target = realpath($target);
-			if ($target === false) return false;
-			$tmp = substr($target, strlen($basedir)+1);
-			$res .= str_replace(DIRECTORY_SEPARATOR,'/',$tmp); // replace OS specific path delimiters introduced by realpath()
-			if (is_dir($target)) $res .= '/';
-		}
-
-		return $res;
 	}
 
 	/**
