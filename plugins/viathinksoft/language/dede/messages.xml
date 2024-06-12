@@ -5334,6 +5334,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Only the base system can do a software update. This is a tenant. Please ask your administrator.
+		]]></source>
+		<target><![CDATA[
+		Auf diesem gemieteten System kann nur der System-Eigentümer (über die Basissystem-URL) ein Software-Update durchführen.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Only verification, no hashing
 		]]></source>
 		<target><![CDATA[

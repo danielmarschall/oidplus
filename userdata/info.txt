@@ -48,9 +48,17 @@ Tenants
 
 Multiple domains can use the same OIDplus installation but have different
 `userdata/` and `userdata_pub/` directories. Therefore, simply create
-a directory named `userdata/tenant/www.example.com` where `www.example.com` is
-your host name.
-Then, if the user visits this domain name, then the data inside
+a directory named `userdata/tenant/example.com__oidplus` where `example.com__oidplus` is
+your host name and directory, e.g. `www.example.com/oidplus/` becomes `example.com__oidplus`
+(the `www.` is removed; other subdomains stay).
+If you want to continue using the same system/data, then make sure to copy all contents
+of `userdata` into the new tenancy subdirectory.
+
+If the user visits this domain name, then the data inside
 `userdata/tenant/www.example.com` will be chosen rather than `userdata/`.
 Each domain can therefore have different database connections (or simply different
 table prefixes), different resources (welcome page), etc.
+
+Please note that only the "base system" (this means, a domain/subdir that does not
+match a tenant) can do program updates via the admin GUI.
+

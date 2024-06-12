@@ -24,25 +24,43 @@
 
 use ViaThinkSoft\OIDplus\OIDplus;
 
+$errors = 0;
+
 try {
 	require_once __DIR__ . '/includes/oidplus.inc.php';
-
-	ob_start();
-	OIDplus::init(false);
-	OIDplus::invoke_shutdown();
-	ob_end_clean();
-
-	$tenants = glob(__DIR__.'/userdata/tenant/*');
-	foreach ($tenants as $tenant) {
-		$_SERVER['HTTP_HOST'] = basename($tenant); // TODO: this is very dirty. we rather need something like OIDplus::setTenantId()
-		ob_start();
-		OIDplus::init(false);
-		OIDplus::invoke_shutdown();
-		ob_end_clean();
-	}
-
-	exit(0);
 } catch (Exception $e) {
-	fwrite(STDERR, $e->getMessage());
+	fwrite(STDERR, "Core init: ".$e->getMessage());
 	exit(1);
 }
+
+try {
+	// echo "\n\n******************** Base ...\n";
+	ob_start();
+	OIDplus::init(false, false);
+	OIDplus::invoke_shutdown();
+	assert(!OIDplus::isTenant());
+	ob_end_clean();
+} catch (Exception $e) {
+	fwrite(STDERR, "Base system: ".$e->getMessage()."\n");
+	$errors++;
+}
+
+$tenants = glob(__DIR__.'/userdata/tenant/*');
+foreach ($tenants as $tenant) {
+	$tenant = basename($tenant);
+	try {
+		// echo "\n\n******************** Tenant $tenant ...\n";
+		OIDplus::forceTenantSubDirName($tenant);
+		ob_start();
+		OIDplus::init(false, false);
+		OIDplus::invoke_shutdown();
+		assert(OIDplus::isTenant());
+		ob_end_clean();
+	} catch (Exception $e) {
+		fwrite(STDERR, "Tenant $tenant: ".$e->getMessage()."\n");
+		$errors++;
+	}
+}
+
+exit($errors>0 ? 2 : 0);
+

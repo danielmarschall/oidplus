@@ -60,6 +60,10 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 			throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), null, 401);
 		}
 
+		if (OIDplus::isTenant()) {
+			throw new OIDplusException(_L('Only the base system can do a software update. This is a tenant. Please ask your administrator.'));
+		}
+
 		if (OIDplus::getInstallType() === 'git-wc') {
 			$cmd = $this->getGitCommand().' 2>&1';
 
@@ -240,6 +244,10 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 				throw new OIDplusHtmlException(_L('You need to <a %1>log in</a> as administrator.',OIDplus::gui()->link('oidplus:login$admin')), $out['title'], 401);
+			}
+
+			if (OIDplus::isTenant()) {
+				throw new OIDplusException(_L('Only the base system can do a software update. This is a tenant. Please ask your administrator.'));
 			}
 
 			$out['text'] .= '<div id="update_versioninfo">';
