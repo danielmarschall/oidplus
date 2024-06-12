@@ -1749,12 +1749,16 @@ class OIDplus extends OIDplusBaseClass {
 	 * @return string
 	 */
 	private static function getPrivKeyPassphraseFilename(): string {
-		$oldfile = OIDplus::localpath() . 'userdata/privkey_secret.php'; // backwards compatibility
+		$oldfile1 = OIDplus::localpath() . 'userdata/privkey_secret.php'; // backwards compatibility
+		$oldfile2 = OIDplus::getUserDataDir("secret") . '../privkey_secret.php'; // when userdata is copied to a new tenant
 		$newfile = OIDplus::getUserDataDir("secret") . 'privkey_secret.php';
-		if (file_exists($oldfile) && !file_exists($newfile)) {
-			rename($oldfile, $newfile);
+		if (file_exists($oldfile2) && !file_exists($newfile)) {
+			rename($oldfile2, $newfile);
 		}
-		return file_exists($oldfile) ? $oldfile : $newfile;
+		if (file_exists($oldfile1) && !file_exists($newfile)) {
+			rename($oldfile1, $newfile);
+		}
+		return $newfile;
 	}
 
 	/**
@@ -1845,6 +1849,9 @@ class OIDplus extends OIDplusBaseClass {
 			$privKey = OIDplus::getSystemPrivateKey();
 			$pubKey = OIDplus::getSystemPublicKey();
 			if (!verify_private_public_key($privKey, $pubKey)) {
+
+				// throw new OIDplusException("Private/Public key-pair is broken!");
+
 				if ($pubKey) {
 					OIDplus::logger()->log("V2:[CRIT]A", "The private/public key-pair is broken. A new key-pair will now be generated for your system. Your System-ID will change.");
 				}
@@ -2103,33 +2110,75 @@ class OIDplus extends OIDplusBaseClass {
 		}
 	}
 
-	private static function tenantSubDirName(): string {
-		// TODO: Should we also include subdirs? e.g. hosted.oidplus.com/viathinksoft, hosted.oidplus.com/r74n, etc.
-		// TODO: Undefined for CLI!!!
-		return $_SERVER['HTTP_HOST'] ?? 'NOT_AVAILABLE';
+	/**
+	* Returns true if this is a tenant (data in userdata/tenant/.../),
+	* and false if it is the base system (data in userdata)
+	* @return bool true for tenants
+	*/
+	public static function isTenant(): bool {
+		$localdir = OIDplus::localpath(); // contains trailing dir separator
+		$priv_or_pub = "userdata".DIRECTORY_SEPARATOR;
+		$tenant_dir = "tenant".DIRECTORY_SEPARATOR.self::tenantSubDirName().DIRECTORY_SEPARATOR;
+		return is_dir($localdir.$priv_or_pub.$tenant_dir);
 	}
 
+	private static $forcedTenantSubDirName = null;
+
+	/**
+	* Overrides the tenant subdir detection. Only used for cron.sh and should not be used otherwise,
+	* since the detection of the tenant subdir is made out of the hostname and directory.
+	* @param string $name The name of the subdirectory inside userdata/tenant/ )
+	*/
+	public static function forceTenantSubDirName(string $name) {
+		self::$forcedTenantSubDirName = $name;
+	}
+
+	/**
+	* @return string The default tenant subdir name, determined by hostname and directory.
+	*/
+	private static function tenantSubDirName(): string {
+		// Important for cron.sh
+		if (!is_null(self::$forcedTenantSubDirName)) return self::$forcedTenantSubDirName;
+
+		// CLI cannot use tenants
+		if (!isset($_SERVER['HTTP_HOST'])) return 'NOT_AVAILABLE';
+
+		// Example: https://hosted.oidplus.com/r74n_tenant/
+		// becomes: hosted.oidplus.com__r74n_tenant
+		// If you want to work with directories (instead of domain names), you
+		// can symlink the directories towards one OIDplus base installation.
+		$test = OIDplus::webpath(null, self::PATH_ABSOLUTE); // NOT canonical, otherwise it will be different before and after loading baseconfig
+		if (!$test) return 'NOT_AVAILABLE';
+		$test = explode('://', $test, 2)[1];
+		$test = rtrim($test, '/');
+		$test = preg_replace('@^www\\.@ismU', '', $test);
+		$test = str_replace('/', '__', $test);
+		return $test;
+	}
+
+	/**
+	* @param string $subdir The desired subdir inside userdata, userdata_pub, userdata/tenant/..., userdata_pub/tenant/...
+	* @param bool $public Use userdata_pub if true, otherwise userdata
+	* @return string the local path
+	*/
 	public static function getUserDataDir(string $subdir, bool $public=false): string {
 		$localdir = OIDplus::localpath(); // contains trailing dir separator
 		$priv_or_pub = $public ? "userdata_pub".DIRECTORY_SEPARATOR : "userdata".DIRECTORY_SEPARATOR;
 		$tenant_dir = "tenant".DIRECTORY_SEPARATOR.self::tenantSubDirName().DIRECTORY_SEPARATOR;
-
-		// Tenancy dependant dir `userdata/tenant/<tenantSubDirName>/$subdir` existing? Then use this.
-		$candidate1 = $localdir.$priv_or_pub.$tenant_dir.$subdir.DIRECTORY_SEPARATOR;
-		if (is_dir($candidate1)) return $candidate1;
-
-		// General dir `userdata/$subdir` existing? Then use this.
-		$candidate2 = $localdir.$priv_or_pub.$subdir.DIRECTORY_SEPARATOR;
-		if (is_dir($candidate2)) return $candidate2;
-
 		if (is_dir($localdir.$priv_or_pub.$tenant_dir)) {
 			// This is a tenancy-enabled system. Therefore, create tenancy-dependant dir by default
-			mkdir($candidate1);
-			return $candidate1;
+			// Tenancy dependant dir `userdata/tenant/<tenantSubDirName>/$subdir` existing? Then use this.
+			$candidate1 = $localdir.$priv_or_pub.$tenant_dir.$subdir.DIRECTORY_SEPARATOR;
+			if (is_dir($candidate1)) return $candidate1.DIRECTORY_SEPARATOR;
+			@mkdir($candidate1);
+			return $candidate1.DIRECTORY_SEPARATOR;
 		} else {
 			// This is a non-tenancy-enabled system. Therefore, create a general dir by default
-			mkdir($candidate2);
-			return $candidate2;
+			// General dir `userdata/$subdir` existing? Then use this.
+			$candidate2 = $localdir.$priv_or_pub.$subdir.DIRECTORY_SEPARATOR;
+			if (is_dir($candidate2)) return $candidate2.DIRECTORY_SEPARATOR;
+			@mkdir($candidate2);
+			return $candidate2.DIRECTORY_SEPARATOR;
 		}
 	}
 
