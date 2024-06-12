@@ -151,9 +151,13 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '		<td>'.htmlentities($sys_title).'</td>';
 			$out['text'] .= '	</tr>';
 
+			// This shows the real path:
+			//$sys_dir = OIDplus::localpath();
+			// This also works with symlinks:
+			$sys_dir = isset($_SERVER['SCRIPT_FILENAME']) ? dirname($_SERVER['SCRIPT_FILENAME']).'/' : null;
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('System directory').'</td>';
-			$out['text'] .= '		<td>'.(isset($_SERVER['SCRIPT_FILENAME']) ? htmlentities(dirname($_SERVER['SCRIPT_FILENAME'])) : '<i>'._L('unknown').'</i>').'</td>';
+			$out['text'] .= '		<td>'.($sys_dir ? htmlentities($sys_dir) : '<i>'._L('unknown').'</i>').'</td>';
 			$out['text'] .= '	</tr>';
 
 			$sys_url = OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL);
@@ -196,6 +200,18 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('Installation type').'</td>';
 			$out['text'] .= '		<td>'.htmlentities($sys_install_type).'</td>';
+			$out['text'] .= '	</tr>';
+
+			if (count(glob(OIDplus::localpath().'userdata/tenant/'.'*')) == 0) {
+				$op_mode = _L('Standalone system (no tenants)');
+			} else if (OIDplus::isTenant()) {
+				$op_mode = _L('Multi-Tenancy tenant system');
+			} else {
+				$op_mode = _L('Multi-Tenancy base system');
+			}
+			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>'._L('Operating mode').'</td>';
+			$out['text'] .= '		<td>'.htmlentities($op_mode).'</td>';
 			$out['text'] .= '	</tr>';
 
 			$out['text'] .= '</tbody>';
