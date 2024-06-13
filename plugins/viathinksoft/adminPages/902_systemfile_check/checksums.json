@@ -227,7 +227,7 @@
     "includes/classes/OIDplusBaseConfig.class.php": "b825bc7ced256ef2b67efd5979694de98780579dc8413c51c87110098175a603",
     "includes/classes/OIDplusCaptchaPlugin.class.php": "1d80ee7077d1347ab113aa853e11e1d2082153eb678ad95a9982dd664473b6f3",
     "includes/classes/OIDplusConfig.class.php": "affe572dc4530a9d3d32399eda9127b8257fa710fe0bdbf0569e1a826637c33d",
-    "includes/classes/OIDplusConfigInitializationException.class.php": "3ac30bc21621fc514405c7ecb282b991b3c89fa924220a4bf51f5b20356750bb",
+    "includes/classes/OIDplusConfigInitializationException.class.php": "374c0e19350737d54f9ce47c25fba0927a08d75ccd375c351cd574efc34b46bf",
     "includes/classes/OIDplusCookieUtils.class.php": "ace656d0382c9e832d32ff6252ac05a880a5ad18b1ac8ad11b9137f4d11ed391",
     "includes/classes/OIDplusDatabaseConnection.class.php": "a3fe14edaa485bcefa2c1c3d3b664778a10ced37c1f2e142d96f7b61c3025d91",
     "includes/classes/OIDplusDatabasePlugin.class.php": "0417c79b76b37d5b899b8d49251055f9fd2e1a9a527b64d3b2b0b083fa31e11c",
