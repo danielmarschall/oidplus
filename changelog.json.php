@@ -3,6 +3,14 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.1.23",
+		"date": "2024-06-14 16:12:00 +0200",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"Object pages now have a Delete button (only visible if the parent has write rights)"
+		]
+	},
+	{
 		"version": "2.0.1.22",
 		"date": "2024-06-13 00:35:00 +0200",
 		"author": "Daniel Marschall (ViaThinkSoft)",

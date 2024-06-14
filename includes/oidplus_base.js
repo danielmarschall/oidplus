@@ -77,15 +77,18 @@ function getTreeLoadURL() {
 	                      : "ajax.php?csrf_token="+encodeURIComponent(csrf_token)+"&action=tree_load&anticache="+Date.now();
 }
 
+function reloadMenu() {
+	if(!$('#oidtree').jstree(true).get_node(current_node)) {
+		// Avoid that a language change at "oidplus:srvreg_status" won't redirect the user to "oidplus:srv_registration" because of the reselection during refresh
+		$('#oidtree').jstree("deselect_all");
+	}
+	$('#oidtree').jstree("refresh");
+}
+
 function reloadContent() {
 	// window.location.href = "?goto="+encodeURIComponent(current_node);
 	if (openOidInPanel(current_node, false)) {
-		if(!$('#oidtree').jstree(true).get_node(current_node)) {
-			// Avoid that a language change at "oidplus:srvreg_status" won't redirect the user to "oidplus:srv_registration" because of the reselection during refresh
-			$('#oidtree').jstree("deselect_all");
-		}
-
-		$('#oidtree').jstree("refresh");
+		reloadMenu();
 	}
 }
 
