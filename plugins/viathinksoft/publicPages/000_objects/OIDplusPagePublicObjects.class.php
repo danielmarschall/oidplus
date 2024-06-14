@@ -1036,6 +1036,13 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			$out['text'] = '<!-- MARKER 1 -->' . $out['text']; // use this to better control modifyContent!
 
 			if ($objParent) {
+				if ($objParent->userHasWriteRights()) {
+					$out['text'] = '<p style="float:right"><button type="button" class="btn btn-danger btn-xs delete" onclick="OIDplusPagePublicObjects.crudActionDelete('.js_escape($obj->nodeId(true)).', '.js_escape($objParent->nodeId(true)).')">'._L('Delete').'</button></p>' . $out['text'];
+				}
+			}
+
+
+			if ($objParent) {
 				if ($objParent->isRoot()) {
 					$parent_link_text = $objParent->objectTypeTitle();
 					$out['text'] = '<p><a '.OIDplus::gui()->link($objParent->root()).'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Parent node: %1',htmlentities($parent_link_text)).'</a></p>' . $out['text'];

@@ -228,8 +228,16 @@ var OIDplusPagePublicObjects = {
 						alert("Error: " + data);
 					}
 
-					reloadContent();
-					// TODO: Don't use reloadContent(); instead delete node at the left tree and remove the row at the right table
+					if (current_node != parent) {
+						// current_node!=parent is the Delete button is pressed in the child OID
+						if (openOidInPanel(parent, true)) {
+							reloadMenu();
+						}
+					} else {
+						// current_node==parent if the Delete button in the parent CRUD grid was clicked
+						reloadContent();
+						// TODO: Don't use reloadContent(); instead delete node at the left tree and remove the row at the right table
+					}
 				});
 			}
 		});
