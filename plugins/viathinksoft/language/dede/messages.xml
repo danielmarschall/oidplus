@@ -1270,6 +1270,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Cannot read file %1
+		]]></source>
+		<target><![CDATA[
+		Datei %1 kann nicht gelesen werden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Cannot verify that %1 has parent %2
 		]]></source>
 		<target><![CDATA[
@@ -4966,10 +4974,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		OIDplus Information Object Custom UUID (RFC4122bis)
+		OIDplus Information Object Custom UUID (RFC 9562)
 		]]></source>
 		<target><![CDATA[
-		OIDplus Information Object Individuelle UUID (RFC4122bis)
+		OIDplus Information Object Custom UUID (RFC 9562)
 		]]></target>
 	</message>
 	<message>

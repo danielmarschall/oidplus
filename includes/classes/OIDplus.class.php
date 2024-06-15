@@ -1072,7 +1072,7 @@ class OIDplus extends OIDplusBaseClass {
 		//       So you just need to use a numeric plugin directory prefix (padded).
 		$ary = array();
 		foreach (explode(',',$pluginFolderMasks) as $pluginFolderMask) {
-			$ary = array_merge($ary,glob(OIDplus::localpath().'plugins/'.'*'.'/'.$pluginFolderMask.'/'.'*'.'/manifest.xml'));
+			$ary = array_merge($ary,glob(OIDplus::localpath().'plugins/'.'*'.'/'.$pluginFolderMask.'/'.'*'.'/manifest.json'));
 		}
 
 		// Sort the plugins by their type and name, as if they would be in a single vendor-folder!
@@ -1110,7 +1110,7 @@ class OIDplus extends OIDplusBaseClass {
 			$manifest->loadManifest($ini);
 
 			$class_name = $manifest->getPhpMainClass();
-			if ($class_name) if (!self::pluginCheckDisabled($class_name)) continue;
+			if ($class_name && !self::pluginCheckDisabled($class_name)) continue;
 
 			if ($flat) {
 				$out[] = $manifest;

@@ -3,6 +3,14 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.1.24",
+		"date": "2024-06-15 22:40:00 +0200",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"Internal change: Plugins now have a manifest.json rather than a manifest.xml"
+		]
+	},
+	{
 		"version": "2.0.1.23",
 		"date": "2024-06-14 16:12:00 +0200",
 		"author": "Daniel Marschall (ViaThinkSoft)",
