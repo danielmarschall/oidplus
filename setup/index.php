@@ -82,7 +82,7 @@ echo '<p>'._L('Please repeat the password input:').'<br><input id="admin_passwor
 echo '<h3>'._L('Database connectivity').'</h3>';
 
 if (file_exists(__DIR__ . '/../doc/database_connectivity_diagram.png')) {
-	echo '<p><a href="../doc/database_connectivity_diagram.png" target="_blank"><img src="../doc/database_connectivity_diagram.png" width="20%" alt="'._L('Database connectivity diagram').'" title="'._L('Database connectivity diagram').'"></a></p>';
+	echo '<p><a href="../doc/database_connectivity_diagram.png" target="_blank"><img src="../doc/database_connectivity_diagram.png" width="20%" alt="'._L('Database connectivity diagram').'" title="'._L('Database connectivity diagram').'" id="db_diagram_img"></a></p>';
 }
 
 echo _L('Database plugin').': <select name="db_plugin" onChange="dbplugin_changed()" id="db_plugin">';
@@ -169,7 +169,7 @@ echo '</select></p>';
 
 echo '<h3>'._L('Public URL of this system (Canonical URL)').'</h3>';
 
-echo '<p><input id="canonical_url" type="text" value="'.htmlentities(OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL)).'" onkeypress="rebuild()" onkeyup="rebuild()" style="width:550px"></p>';
+echo '<p><input id="canonical_url" type="text" value="'.htmlentities(OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL)).'" onkeypress="rebuild()" onkeyup="rebuild()"></p>';
 
 // ----------------------------------------
 
