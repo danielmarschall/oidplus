@@ -34,13 +34,14 @@ abstract class OIDplusPlugin extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @return OIDplusPluginManifest|null
+	 * @return OIDplusPluginManifest
 	 */
-	public function getManifest()/*: ?OIDplusPluginManifest*/ {
+	public function getManifest(): OIDplusPluginManifest {
 		$dir = $this->getPluginDirectory();
-		$ini = $dir.DIRECTORY_SEPARATOR.'manifest.xml';
+		$ini = $dir.DIRECTORY_SEPARATOR.'manifest.json';
 		$manifest = new OIDplusPluginManifest();
-		return $manifest->loadManifest($ini) ? $manifest : null;
+		$manifest->loadManifest($ini);
+		return $manifest;
 	}
 
 	/**

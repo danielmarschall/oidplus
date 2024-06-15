@@ -1,0 +1,19 @@
+{
+	"$schema": "urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2.1",
+	"manifest": {
+		"type": "ViaThinkSoft\\OIDplus\\OIDplusPagePluginPublic",
+		"info": {
+			"name": "RDAP",
+			"author": "Frdlweb",
+			"license": "MIT",
+			"version": "0.3.2+viathinksoft20240615",
+			"descriptionHTML": "<a href=\"https://github.com/frdl/oidplus-frdlweb-rdap\" target=\"_blank\">RDAP plugin for OIDplus 2.0</a>",
+			"oid": "1.3.6.1.4.1.37476.9000.108.1276945"
+		},
+		"php": {
+			"mainclass": "Frdlweb\\OIDplus\\OIDplusPagePublicRdap"
+		},
+		"css": [],
+		"js": []
+	}
+}

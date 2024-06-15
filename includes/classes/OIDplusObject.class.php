@@ -100,7 +100,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 						sha1($ns_oid), // Note: No 14bit collission between 1.3.6.1.4.1.37476.2.5.2.4.8.[0-185]
 						sha1($obj_name)
 					),
-					_L('OIDplus Information Object Custom UUID (RFC4122bis)'),
+					_L('OIDplus Information Object Custom UUID (RFC 9562)'),
 					'',
 					'https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md'
 					);

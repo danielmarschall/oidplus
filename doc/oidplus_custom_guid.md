@@ -2,7 +2,7 @@
 
 ## General OIDplus UUID format
 
-OIDplus generates UUIDs for various object types using UUIDs in the "Custom / Version 8" format as defined in the new version of RFC 4122.
+OIDplus generates UUIDs for various object types using UUIDs in the "Custom / Version 8" format as defined in RFC 9562.
 
 The general structure of these UUIDs is:
 

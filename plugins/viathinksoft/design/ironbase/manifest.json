@@ -1,0 +1,20 @@
+{
+	"$schema": "urn:oid:1.3.6.1.4.1.37476.2.5.2.5.7.1",
+	"manifest": {
+		"type": "ViaThinkSoft\\OIDplus\\OIDplusDesignPlugin",
+		"info": {
+			"name": "IronBASE-Like Design",
+			"author": "ViaThinkSoft",
+			"license": "Apache 2.0",
+			"version": "",
+			"descriptionHTML": "",
+			"oid": "1.3.6.1.4.1.37476.2.5.2.4.10.2"
+		},
+		"php": {
+			"mainclass": "ViaThinkSoft\\OIDplus\\OIDplusDesignPluginIronBase"
+		},
+		"css": [
+			"oidplus_base.css"
+		]
+	}
+}

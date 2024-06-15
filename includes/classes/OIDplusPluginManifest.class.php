@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2024 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,11 +29,6 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 	 * @var string
 	 */
 	private $manifestFile = null;
-
-	/**
-	 * @var \SimpleXMLElement|null
-	 */
-	private $rawXML = null;
 
 	// --- All plugins ---
 
@@ -226,13 +221,6 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @return \SimpleXMLElement
-	 */
-	public function getRawXml(): \SimpleXMLElement {
-		return $this->rawXML;
-	}
-
-	/**
 	 * @return string
 	 */
 	public function getLanguageCode(): string {
@@ -274,70 +262,78 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 
 	/**
 	 * @param string $filename
-	 * @return bool
+	 * @return void
 	 */
-	public function loadManifest(string $filename): bool {
-		if (!file_exists($filename)) return false;
-		$xmldata = @simplexml_load_file($filename);
-		if ($xmldata === false) return false; // TODO: rather throw an Exception and let the method return void only
+	public function loadManifest(string $filename)/*: void*/ {
+		if (!file_exists($filename)) throw new OIDplusException(_L("File %1 does not exist", $filename));;
+		$cont = @file_get_contents($filename);
+		if ($cont === false) throw new OIDplusException(_L("Cannot read file %1", $filename));
+		$data = @json_decode($cont, false, 5, JSON_THROW_ON_ERROR);
 
 		$this->manifestFile = $filename;
-		$this->rawXML = $xmldata;
 
 		// The following attributes are available for every plugin
-		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2.1 (page)
-		//            urn:oid:1.3.6.1.4.1.37476.2.5.2.5.3.1 (language)
-		//            urn:oid:1.3.6.1.4.1.37476.2.5.2.5.5.1 (general)
-		$this->type = (string)$xmldata->type;
+		// JSON Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2.1 (page)
+		//             urn:oid:1.3.6.1.4.1.37476.2.5.2.5.3.1 (language)
+		//             urn:oid:1.3.6.1.4.1.37476.2.5.2.5.5.1 (general)
+		$this->type = (string)$data->manifest->type;
 
-		$this->name = (string)$xmldata->info->name;
-		$this->author = (string)$xmldata->info->author;
-		$this->license = (string)$xmldata->info->license;
-		$this->version = (string)$xmldata->info->version;
-		$this->htmlDescription = (string)$xmldata->info->descriptionHTML;
-		$this->oid = (string)$xmldata->info->oid;
+		$this->name = (string)$data->manifest->info->name;
+		$this->author = (string)$data->manifest->info->author;
+		$this->license = (string)$data->manifest->info->license;
+		$this->version = (string)$data->manifest->info->version;
+		$this->htmlDescription = (string)$data->manifest->info->descriptionHTML;
+		$this->oid = (string)$data->manifest->info->oid;
 
-		$this->phpMainClass = (string)$xmldata->php->mainclass;
+		$this->phpMainClass = $data->manifest->php->mainclass ?? "";
 
 		// The following functionalities are only available for page or design plugins
-		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2.1
-		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.7.1
-		foreach ((array)$xmldata->css->file as $css_file) {
+		// JSON Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2.1
+		// JSON Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.7.1
+		if (!isset($data->manifest->css)) $data->manifest->css = [];
+		foreach ((array)$data->manifest->css as $css_file) {
 			$file = dirname($filename).DIRECTORY_SEPARATOR.$css_file;
 			//if (!file_exists($file)) continue;
 			$this->cssFiles[] = $file;
 		}
 
 		// The following functionalities are only available for page plugins, captcha plugins, and object type plugins
-		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2.1
-		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.10.1
-		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.12.1
-		foreach ((array)$xmldata->js->file as $js_file) {
+		// JSON Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2.1
+		// JSON Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.10.1
+		// JSON Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.12.1
+		if (!isset($data->manifest->js)) $data->manifest->js = [];
+		foreach ((array)$data->manifest->js as $js_file) {
 			$file = dirname($filename).DIRECTORY_SEPARATOR.$js_file;
 			//if (!file_exists($file)) continue;
 			$this->jsFiles[] = $file;
 		}
 
 		// The following functionalities are only available for database plugins
-		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2.6
-		foreach ((array)$xmldata->cssSetup->file as $css_file) {
+		// JSON Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2.6
+		if (!isset($data->manifest->cssSetup)) $data->manifest->cssSetup = [];
+		foreach ((array)$data->manifest->cssSetup as $css_file) {
 			$file = dirname($filename).DIRECTORY_SEPARATOR.$css_file;
 			//if (!file_exists($file)) continue;
 			$this->cssFilesSetup[] = $file;
 		}
-		foreach ((array)$xmldata->jsSetup->file as $js_file) {
+		if (!isset($data->manifest->jsSetup)) $data->manifest->jsSetup = [];
+		foreach ((array)$data->manifest->jsSetup as $js_file) {
 			$file = dirname($filename).DIRECTORY_SEPARATOR.$js_file;
 			//if (!file_exists($file)) continue;
 			$this->jsFilesSetup[] = $file;
 		}
 
 		// The following functionalities are only available for language plugins
-		// XML Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.3.1
-		$this->languageCode = (string)$xmldata->language->code;
-		$this->languageFlag = (string)$xmldata->language->flag;
-		$this->languageMessages = (string)$xmldata->language->messages;
-
-		return true;
+		// JSON Schema urn:oid:1.3.6.1.4.1.37476.2.5.2.5.3.1
+		if (!isset($data->manifest->language)) {
+			$data->manifest->language = new \stdClass();
+			$data->manifest->language->code = "";
+			$data->manifest->language->flag = "";
+			$data->manifest->language->messages = "";
+		}
+		$this->languageCode = (string)$data->manifest->language->code;
+		$this->languageFlag = (string)$data->manifest->language->flag;
+		$this->languageMessages = (string)$data->manifest->language->messages;
 	}
 
 }
