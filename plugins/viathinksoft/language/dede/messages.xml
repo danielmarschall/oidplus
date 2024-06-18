@@ -1518,6 +1518,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Confidential
+		]]></source>
+		<target><![CDATA[
+		Vertraulich
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Config key name "%1" is too long (max %2).
 		]]></source>
 		<target><![CDATA[
@@ -7454,6 +7462,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Superior RA Allocation Info
+		]]></source>
+		<target><![CDATA[
+		Registratur-Information (Höhere Hierarchie)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Syntax
 		]]></source>
 		<target><![CDATA[
@@ -8078,10 +8094,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		The superior RA did not define a RA for this OID.
+		The superior RA did not define a RA for this %1.
 		]]></source>
 		<target><![CDATA[
-		Die übergeordnete Registrierungsstelle hat keine Registrierungsstelle für diese OID ernannt.
+		The übergeordnete Zertifizierungsstelle hat keine Zertifizierungsstelle für diesen %1 festgelegt.
 		]]></target>
 	</message>
 	<message>

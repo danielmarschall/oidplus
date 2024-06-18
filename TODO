@@ -90,7 +90,6 @@ Recently added TODO entries:
 - "Decoding" section (tech info) at OID nodes, e.g. the AID decoder, should this be a scrolling <pre> block instead of a <code> block? (For mobile devices)
 - problem: if an identical class file (with same namespace) is placed in two plugin folders, then the oidplus autoloader will include both, which will cause a fatal error
 - oidplus docker image?
-- In the object pages, there is now an delete button (requires parent write rights), but it would be also nice to edit ASN1/IRI/Comment there.
 
 Databases:
 - Let plugins create tables for all DBMS by including a "create table" function with abstract types in the SQL slang plugins (similar to Medoo)

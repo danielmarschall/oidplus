@@ -184,7 +184,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 		$out = '';
 
 		if (empty($email)) {
-			return '<p>'._L('The superior RA did not define a RA for this OID.').'</p>';
+			return '<p>'._L('The superior RA did not define a RA for this %1.',$oid->objectTypeTitle()).'</p>';
 		}
 
 		$res = OIDplus::db()->query("select * from ###ra where email = ?", array($email));

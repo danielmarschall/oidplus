@@ -1035,12 +1035,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 			$out['text'] = '<!-- MARKER 1 -->' . $out['text']; // use this to better control modifyContent!
 
-			if ($objParent) {
-				if ($objParent->userHasWriteRights()) {
-					$out['text'] = '<p style="float:right"><button type="button" class="btn btn-danger btn-xs delete" onclick="OIDplusPagePublicObjects.crudActionDelete('.js_escape($obj->nodeId(true)).', '.js_escape($objParent->nodeId(true)).')">'._L('Delete').'</button></p>' . $out['text'];
-				}
+			if ($objParent && $objParent->userHasWriteRights()) {
+				$out['text'] = '<p style="float:right"><button type="button" class="btn btn-danger btn-xs delete" onclick="OIDplusPagePublicObjects.crudActionDelete('.js_escape($obj->nodeId(true)).', '.js_escape($objParent->nodeId(true)).')">'._L('Delete').'</button></p>' . $out['text'];
 			}
-
 
 			if ($objParent) {
 				if ($objParent->isRoot()) {
@@ -1105,8 +1102,47 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 			// ---
 
+			if (!$obj->isRoot() && $obj->userHasParentalWriteRights()) {
+				$supra  = '<noscript><p><font color="red">'._L('You need to enable JavaScript to edit title or description of this object.').'</font></p></noscript>';
+				$supra .= '<div class="container box" style="display:none" id="suprabox">';
+				$supra .= '<table class="table table-bordered table-striped">';
+				$supra .= '<thead>';
+				$supra .= '<tr><th>'._L('Identifier').'</th><th>'._L('Description').'</th></tr>';
+				$supra .= '</thead>';
+				$supra .= '<tbody>';
+				$ra = $obj->getRa();
+				$ra_email = $ra ? $ra->raEMail() : '';
+				$supra .= '<tr><td width="50%">'._L('Registration Authority').'</td><td><input type="text" name="ra_email" id="suprabox_ra" value="'.htmlentities($ra_email).'" style="width:100%"></td></tr>';
+				$asn1ids = array();
+				$res2 = OIDplus::db()->query("select name from ###asn1id where oid = ? order by lfd", array($obj->nodeId(true)));
+				while ($row2 = $res2->fetch_array()) {
+					$asn1ids[] = $row2['name'];
+				}
+					$supra .= '<tr><td width="50%">'._L('ASN.1 IDs (comma sep.)').'</td><td><input type="text" name="asn1ids" id="suprabox_asn1" value="'.htmlentities(implode(', ',$asn1ids)).'" style="width:100%"></td></tr>';
+				$iris = array();
+				$res2 = OIDplus::db()->query("select name from ###iri where oid = ? order by lfd", array($obj->nodeId(true)));
+				while ($row2 = $res2->fetch_array()) {
+					$iris[] = $row2['name'];
+				}
+				$supra .= '<tr><td width="50%">'._L('IRI IDs (comma sep.)').'</td><td><input type="text" name="iris" id="suprabox_iri" value="'.htmlentities(implode(', ', $iris)).'" style="width:100%"></td></tr>';
+				$supra .= '<tr><td width="50%">'._L('Comment').'</td><td><input type="text" name="comment" id="suprabox_comment" value="'.htmlentities($obj->getComment()).'" style="width:100%"></td></tr>';
+				$supra .= '<tr><td width="50%">'._L('Confidential').'</td><td><input type="checkbox" name="confidential" id="suprabox_hide" value="1"'.htmlentities($obj->isConfidential()?' checked':'').'> <label for="suprabox_hide">Hide</label></td></tr>';
+				$supra .= '</tbody>';
+				$supra .= '</table>';
+				$supra .= '<button type="button" name="update_desc2" id="update_desc2" class="btn btn-success btn-xs update" onclick="OIDplusPagePublicObjects.updateDesc2('.js_escape($obj->nodeId()).')">'._L('Update').'</button>';
+				$supra .= '</div></div>';
+				$supra .= '<script>$("#suprabox")[0].style.display = "block";</script>';
+			} else {
+				$supra = '';
+			}
+
+			// ---
+
 			if (strpos($out['text'], '%%DESC%%') !== false) {
 				$out['text'] = str_replace('%%DESC%%', $desc, $out['text']);
+			}
+			if (strpos($out['text'], '%%SUPRA%%') !== false) {
+				$out['text'] = str_replace('%%SUPRA%%', $supra, $out['text']);
 			}
 			if (strpos($out['text'], '%%CRUD%%') !== false) {
 				$out['text'] = str_replace('%%CRUD%%', self::showCrud($obj->nodeId()), $out['text']);

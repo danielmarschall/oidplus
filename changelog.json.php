@@ -3,6 +3,15 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.1.25",
+		"date": "2024-06-19 00:20:00 +0200",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"Show \"RA Info\" also for Non-OID object types ( https://github.com/danielmarschall/oidplus/issues/45 )",
+			"Allow to edit the Parent RA delegation info in the object page ( https://github.com/danielmarschall/oidplus/issues/52 )"
+		]
+	},
+	{
 		"version": "2.0.1.24",
 		"date": "2024-06-15 22:40:00 +0200",
 		"author": "Daniel Marschall (ViaThinkSoft)",

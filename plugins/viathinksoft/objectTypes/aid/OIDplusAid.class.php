@@ -220,7 +220,12 @@ class OIDplusAid extends OIDplusObject {
 			$content .= '<div style="overflow:auto;white-space:nowrap"><code>'.$tmp.'</code></div>';
 			$content .= '</table>';
 
+			if ($this->userHasParentalWriteRights()) {
+				$content .= '<h2>'._L('Superior RA Allocation Info').'</h2>%%SUPRA%%';
+			}
+
 			$content .= '<h2>'._L('Description').'</h2>%%DESC%%';
+			$content .= '<h2>'._L('Registration Authority').'</h2>%%RA_INFO%%';
 			if ($this->userHasWriteRights()) {
 				$content .= '<h2>'._L('Create or change subordinate objects').'</h2>';
 			} else {
