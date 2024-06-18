@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2024 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -112,7 +112,7 @@ function getDirContents_diff(string &$outscript, string $dir_old, string $dir_ne
 				global $func_idx;
 				$func_idx++;
 				$outscript .= "function writefile_".$func_idx."() {\n";
-				special_save_file($xpath_old, $path_new, $outscript, "\t@");
+				special_save_file($xpath_old, $path_new, $outscript, "\t");
 				// Commented out because both SVN and GIT choose the current timestamp and not the original file timestamp
 				//$outscript .= "\t@touch('$xpath_old',".filemtime($path_new).");\n";
 				$outscript .= "}\n";
@@ -238,7 +238,7 @@ function getDirContents_add(string &$outscript, string $dir_old, string $dir_new
 			global $func_idx;
 			$func_idx++;
 			$outscript .= "function writefile_".$func_idx."() {\n";
-			special_save_file($xpath_new, $path_new, $outscript, "\t@");
+			special_save_file($xpath_new, $path_new, $outscript, "\t");
 			// Commented out because both SVN and GIT choose the current timestamp and not the original file timestamp
 			//$outscript .= "\t@touch('$xpath_new',".filemtime($path_new).");\n";
 			$outscript .= "}\n";
@@ -389,16 +389,20 @@ function special_save_file(string $out_file, string $in_file, string &$res, stri
 	if (!$handle) {
 		throw new Exception("Cannot open file $in_file");
 	}
-	$res .= $line_prefix."\$fp = fopen('$out_file', 'w');\n";
+	$res .= $line_prefix."\$fp = @fopen('$out_file', 'w');\n";
+	$res .= $line_prefix."if (\$fp === false) {\n"; // can happen if dir does not exist (e.g. plugin deleted), or missing write permissions
+	$res .= $line_prefix."\twarn('File $out_file cannot be written');\n";
+	$res .= $line_prefix."\treturn;\n";
+	$res .= $line_prefix."}\n";
 
 	while (!feof($handle)) {
 		// important: must be a multiple of 3, otherwise we have base64 paddings!
 		$buffer = fread($handle, $width*3);
 		$base64 = base64_encode($buffer);
-		$res .= $line_prefix."fwrite(\$fp, base64_decode('".$base64."'));\n";
+		$res .= $line_prefix."@fwrite(\$fp, base64_decode('".$base64."'));\n";
 	}
 
-	$res .= $line_prefix."fclose(\$fp);\n";
+	$res .= $line_prefix."@fclose(\$fp);\n";
 	fclose($handle);
 }
 
