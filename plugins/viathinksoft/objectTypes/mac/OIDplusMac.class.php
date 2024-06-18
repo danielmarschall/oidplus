@@ -268,10 +268,16 @@ class OIDplusMac extends OIDplusObject {
 			$content  = '<h2>'.$type.' <strong>'.$chunked.'</strong></h2>';
 			$content .= $tech_info_html;
 
+			if ($this->userHasParentalWriteRights()) {
+				$content .= '<h2>'._L('Superior RA Allocation Info').'</h2>%%SUPRA%%';
+			}
+
 			if ($this->isLeafNode()) {
 				$content .= '<h2>'._L('Description').'</h2>%%DESC%%';
+				$content .= '<h2>'._L('Registration Authority').'</h2>%%RA_INFO%%';
 			} else {
 				$content .= '<h2>'._L('Description').'</h2>%%DESC%%';
+				$content .= '<h2>'._L('Registration Authority').'</h2>%%RA_INFO%%';
 				if ($this->userHasWriteRights()) {
 					$content .= '<h2>'._L('Create or change subordinate objects').'</h2>';
 				} else {

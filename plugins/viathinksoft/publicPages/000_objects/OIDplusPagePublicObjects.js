@@ -283,6 +283,50 @@ var OIDplusPagePublicObjects = {
 		});
 	},
 
+	updateDesc2: function(id) {
+		$.ajax({
+			url:"ajax.php",
+			method:"POST",
+			beforeSend: function(jqXHR, settings) {
+				$.xhrPool.abortAll();
+				$.xhrPool.add(jqXHR);
+			},
+			complete: function(jqXHR, text) {
+				$.xhrPool.remove(jqXHR);
+			},
+			data: {
+				csrf_token:csrf_token,
+				plugin:OIDplusPagePublicObjects.oid,
+				action:"Update",
+				id:id,
+				ra_email:($("#suprabox_ra")[0] ? $("#suprabox_ra")[0].value : null),
+				asn1ids:($("#suprabox_asn1")[0] ? $("#suprabox_asn1")[0].value : null),
+				iris:($("#suprabox_iri")[0] ? $("#suprabox_iri")[0].value : null),
+				comment:($("#suprabox_comment")[0] ? $("#suprabox_comment")[0].value : null),
+				confidential:($("#suprabox_hide")[0] ? $("#suprabox_hide")[0].checked : null)
+			},
+			error: oidplus_ajax_error,
+			success: function (data) {
+				oidplus_ajax_success(data, function (data) {
+					alertSuccess(_L("Update OK"));
+					reloadContent();
+					/*
+					$('#oidtree').jstree("refresh");
+					var h1s = $("h1");
+					for (var i = 0; i < h1s.length; i++) {
+						var h1 = h1s[i];
+						h1.innerHTML = $("#titleedit")[0].value.htmlentities();
+					}
+					document.title = combine_systemtitle_and_pagetitle(getOidPlusSystemTitle(), $("#titleedit")[0].value);
+
+					var mce = tinymce.get('description');
+					if (mce != null) mce.setDirty(false);
+					*/
+				});
+			}
+		});
+	},
+
 	frdl_weid_change: function() {
 		var from_base = 36;
 		var from_control = "#weid";

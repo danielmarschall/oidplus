@@ -251,7 +251,12 @@ class OIDplusFourCC extends OIDplusObject {
 				$content = '';
 			}
 
+			if ($this->userHasParentalWriteRights()) {
+				$content .= '<h2>'._L('Superior RA Allocation Info').'</h2>%%SUPRA%%';
+			}
+
 			$content .= '<h2>'._L('Description').'</h2>%%DESC%%';
+			$content .= '<h2>'._L('Registration Authority').'</h2>%%RA_INFO%%';
 
 			if (!$this->isLeafNode()) {
 				if ($this->userHasWriteRights()) {

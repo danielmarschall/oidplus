@@ -207,12 +207,20 @@ class OIDplusGs1 extends OIDplusObject {
 					$content .= '<p><img alt="'._L('Barcode').'" src="' . OIDplus::webpath(__DIR__, OIDplus::PATH_RELATIVE) . 'barcode.php?number=' . urlencode($this->fullNumber()) . '"></p>';
 				}
 				$content .= $tech_info_html;
+				if ($this->userHasParentalWriteRights()) {
+					$content .= '<h2>'._L('Superior RA Allocation Info').'</h2>%%SUPRA%%';
+				}
 				$content .= '<h2>'._L('Description').'</h2>%%DESC%%'; // TODO: add more meta information about the object type
+				$content .= '<h2>'._L('Registration Authority').'</h2>%%RA_INFO%%';
 			} else {
 				$chunked = $this->chunkedNotation(true);
 				$content  = '<h2>'._L('Barcode').' '.$chunked.'</h2>';
 				$content .= $tech_info_html;
+				if ($this->userHasParentalWriteRights()) {
+					$content .= '<h2>'._L('Superior RA Allocation Info').'</h2>%%SUPRA%%';
+				}
 				$content .= '<h2>'._L('Description').'</h2>%%DESC%%'; // TODO: add more meta information about the object type
+				$content .= '<h2>'._L('Registration Authority').'</h2>%%RA_INFO%%';
 				if ($this->userHasWriteRights()) {
 					$content .= '<h2>'._L('Create or change subordinate objects').'</h2>';
 				} else {

@@ -181,7 +181,12 @@ class OIDplusPhp extends OIDplusObject {
 
 			$content = '<h3>'.explode(':',$this->nodeId())[1].'</h3>';
 
+			if ($this->userHasParentalWriteRights()) {
+				$content .= '<h2>'._L('Superior RA Allocation Info').'</h2>%%SUPRA%%';
+			}
+
 			$content .= '<h2>'._L('Description').'</h2>%%DESC%%'; // TODO: add more meta information about the object type
+			$content .= '<h2>'._L('Registration Authority').'</h2>%%RA_INFO%%';
 
 			if (OIDplus::baseConfig()->getValue('PLUGIN_PHP_TYPE_LINK_TO_WEBFAN', false)) {
 				$content .= '<p><strong><a webfan-php-class-link="'.$this->nodeId(false).'" href="https://webfan.de/install/?source='.urlencode($this->nodeId(false)).'" target="_blank">Source code</a></strong></p>';

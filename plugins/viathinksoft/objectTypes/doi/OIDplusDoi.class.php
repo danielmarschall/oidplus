@@ -188,7 +188,12 @@ class OIDplusDoi extends OIDplusObject {
 			$pure = explode(':',$this->nodeId())[1];
 			$content = '<h3><a target="_blank" href="https://dx.doi.org/'.htmlentities($pure).'">'._L('Resolve %1',htmlentities($pure)).' </a></h3>';
 
+			if ($this->userHasParentalWriteRights()) {
+				$content .= '<h2>'._L('Superior RA Allocation Info').'</h2>%%SUPRA%%';
+			}
+
 			$content .= '<h2>'._L('Description').'</h2>%%DESC%%'; // TODO: add more meta information about the object type
+			$content .= '<h2>'._L('Registration Authority').'</h2>%%RA_INFO%%';
 
 			if (!$this->isLeafNode()) {
 				if ($this->userHasWriteRights()) {

@@ -180,7 +180,12 @@ class OIDplusJava extends OIDplusObject {
 
 			$content = '<h3>'.explode(':',$this->nodeId())[1].'</h3>';
 
+			if ($this->userHasParentalWriteRights()) {
+				$content .= '<h2>'._L('Superior RA Allocation Info').'</h2>%%SUPRA%%';
+			}
+
 			$content .= '<h2>'._L('Description').'</h2>%%DESC%%'; // TODO: add more meta information about the object type
+			$content .= '<h2>'._L('Registration Authority').'</h2>%%RA_INFO%%';
 
 			if (!$this->isLeafNode()) {
 				if ($this->userHasWriteRights()) {
