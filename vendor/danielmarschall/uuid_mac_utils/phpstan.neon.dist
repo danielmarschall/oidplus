@@ -6,3 +6,4 @@ parameters:
 		analyseAndScan:
 			- .phpstan.tmp
 	tmpDir: .phpstan.tmp
+

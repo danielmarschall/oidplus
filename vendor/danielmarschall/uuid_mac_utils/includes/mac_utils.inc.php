@@ -2,8 +2,8 @@
 
 /*
  * MAC (EUI-48 and EUI-64) utils for PHP
- * Copyright 2017 - 2023 Daniel Marschall, ViaThinkSoft
- * Version 2023-07-13
+ * Copyright 2017 - 2024 Daniel Marschall, ViaThinkSoft
+ * Version 2024-06-30
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,6 +22,8 @@
 // - https://mac-address.alldatafeeds.com/faq#how-to-recognise-mac-address-application
 // - https://standards.ieee.org/wp-content/uploads/import/documents/tutorials/eui.pdf
 // - https://en.m.wikipedia.org/wiki/Organizationally_unique_identifier
+
+// Note about terminology: A NUI is an EUI, ELI, AAI, or SAI
 
 const IEEE_MAC_REGISTRY = __DIR__ . '/../web-data';
 
@@ -440,14 +442,66 @@ function decode_mac(string $mac) {
 
 	echo "\n";
 
-	$is_eli_unicast = (hexdec($mac[1]) & 0xF) == 0xA;  // ELI = 1010 (unicast)
-	$is_eli         = (hexdec($mac[1]) & 0xE) == 0xA;  // ELI = 101x (unicast and multicast)
+	$is_eli_unicast = (hexdec($mac[1]) & 0b1111) == 0b1010;  // ELI = 1010 (unicast)
+	$is_eli         = (hexdec($mac[1]) & 0b1110) == 0b1010;  // ELI = 101x (unicast and multicast)
 
-	$is_eui_unicast = (hexdec($mac[1]) & 0x3) == 0x0;  // EUI = xx00 (unicast)
-	$is_eui         = (hexdec($mac[1]) & 0x2) == 0x0;  // EUI = xx0x (unicast and multicast)
+	$is_eui_unicast = (hexdec($mac[1]) & 0b0011) == 0b0000;  // EUI = xx00 (unicast)
+	$is_eui         = (hexdec($mac[1]) & 0b0010) == 0b0000;  // EUI = xx0x (unicast and multicast)
+
+	$is_sai         = (hexdec($mac[1]) & 0b1110) == 0b1110;  // SAI = 111x (unicast and multicast)
 
 	// Show various representations
-	if ($is_eli) {
+	if ($is_sai) {
+		// Information taken from this paper:
+		// https://www.techrxiv.org/users/684395/articles/678862-link-layer-software-defined-addressing-using-block-address-registration-and-claiming-barc
+		// DOI: 10.36227/techrxiv.19105118.v1
+		// and
+		// https://datatracker.ietf.org/meeting/112/materials/slides-112-intarea-p8021cq-00
+
+		$n0 = substr($mac,0,1);
+		$n1 = substr($mac,1,1);
+		$n2 = substr($mac,2,1);
+		$r = (hexdec($n0)&0b1000) ? 1 : 0;
+		$i = (hexdec($n0)&0b0100) ? 1 : 0;
+		$jk = hexdec($n0)&0b0011;
+		$m = ($n1=='F') ? 1 : 0;
+
+		if (($n2=="0") && ($r==0) && ($i==1)) {
+			$barc_type = 'CA';
+		} else if (($n2=="0"/*Only CA or also CABA?*/) && ($r==0) && ($i==0) && ($m==1)) {
+			$barc_type = 'CABA';
+		} else if (($n2=="0") && ($r==0) && ($i==0) && ($jk==0) && ($m==0)) {
+			$barc_type = 'TUA';
+		} else if ($r==1) {
+			$barc_type = 'RA';
+		} else {
+			$barc_type = '';
+		}
+
+		if ($barc_type == '') {
+			echo sprintf("%-32s %s\n", "SAI Standard:", "Unknown IEEE 802 Standard");
+		} else {
+			echo sprintf("%-32s %s\n", "SAI Standard:", "BARC (IEEE 802.1CQ)"); // Block Address Registration and Claiming (BARC)
+			if ($barc_type == 'CA') {
+				echo sprintf("%-32s %s\n", "BARC Address Type:", "Claimable Address (CA)");
+				echo sprintf("%-32s %s\n", "BARC CAB Size:", $jk);
+			} else if ($barc_type == 'CABA') {
+				echo sprintf("%-32s %s\n", "BARC Address Type:", "Claimable Address Block Address (CABA)");
+				echo sprintf("%-32s %s\n", "BARC CAB Size:", $jk);
+			} else if ($barc_type == 'TUA') {
+				echo sprintf("%-32s %s\n", "BARC Address Type:", "Temporary Unicast Address (TUA)");
+			} else if ($barc_type == 'RA') { /** @phpstan-ignore-line */
+				echo sprintf("%-32s %s\n", "BARC Address Type:", "Registrable Address (RA)");
+				echo sprintf("%-32s %s\n", "BARC RABI Option:", $i);
+				echo sprintf("%-32s %s\n", "BARC RABI Size:", $jk);
+			} else {
+				assert(false); /** @phpstan-ignore-line */
+			}
+			echo sprintf("%-32s %s\n", "BARC Semantic Prefix:", "0x".strtoupper(substr($mac,0,5)));
+			echo sprintf("%-32s %s\n", "BARC Data:", "0x".strtoupper(substr($mac,5)));
+		}
+		echo "\n";
+	} else if ($is_eli) {
 		// Note: There does not seem to exist an algorithm for encapsulating/converting ELI-48 <=> ELI-64
 		echo sprintf("%-32s %s\n", "ELI-".eui_bits($mac).":", mac_canonize($mac));
 		$mac48 = eui64_to_eui48($mac);

@@ -3,6 +3,17 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.1.26",
+		"date": "2024-07-01 21:55:00 +0200",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"Replaced polyfill.io with Cloudflare replacement ( https://github.com/danielmarschall/oidplus/issues/54 )",
+			"Fixed OIDplus::webpath() not working on Windows servers",
+			"Fixed severe graphic bug on OID pages (superior RA box)",
+			"Outsourced polyfill from Core to Plugin, and let other plugins request polyfills using a feature interface"
+		]
+	},
+	{
 		"version": "2.0.1.25",
 		"date": "2024-06-19 00:20:00 +0200",
 		"author": "Daniel Marschall (ViaThinkSoft)",
