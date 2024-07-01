@@ -267,7 +267,8 @@ class OIDplusGui extends OIDplusBaseClass {
 		$head_elems[] = '<meta http-equiv="Content-Type" content="text/html; charset=utf-8">';
 		$head_elems[] = '<meta charset="UTF-8">';
 		if (OIDplus::baseConfig()->getValue('DATABASE_PLUGIN','') !== '') {
-			$head_elems[] = '<meta name="OIDplus-SystemTitle" content="'.htmlentities(OIDplus::config()->getValue('system_title')).'">'; // Do not remove. This meta tag is acessed by oidplus_base.js
+			// Do not remove. This meta tag is acessed by oidplus_base.js
+			$head_elems[] = '<meta name="OIDplus-SystemTitle" content="'.htmlentities(OIDplus::config()->getValue('system_title')).'">';
 		}
 		if ($theme_color != '') {
 			$head_elems[] = '<meta name="theme-color" content="'.htmlentities($theme_color).'">';
@@ -275,8 +276,7 @@ class OIDplusGui extends OIDplusBaseClass {
 		$head_elems[] = '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
 		$head_elems[] = '<title>'.htmlentities($title).'</title>';
 		$tmp = (OIDplus::insideSetup()) ? '?noBaseConfig=1' : '';
-		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'polyfill.min.js.php'.$tmp.'"></script>';
-		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.js.php'.$tmp.'" type="text/javascript"></script>';
+		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.js.php'.$tmp.'"></script>';
 		$head_elems[] = '<link rel="stylesheet" href="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.css.php'.$tmp.'">';
 		$head_elems[] = '<link rel="icon" type="image/png" href="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'favicon.png.php">';
 		if (OIDplus::baseConfig()->exists('CANONICAL_SYSTEM_URL')) {

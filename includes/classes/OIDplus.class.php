@@ -996,6 +996,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @return OIDplusPlugin[]
 	 */
 	public static function getAllPlugins(): array {
+		// TODO: such methods must throw an exception if OIDplus::init() was not called previously!
 		$res = array();
 		$res = array_merge($res, self::$pagePlugins);
 		$res = array_merge($res, self::$authPlugins);
@@ -1277,6 +1278,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @throws OIDplusConfigInitializationException|OIDplusException|\ReflectionException
 	 */
 	public static function init(bool $html=true, bool $keepBaseConfig=true) {
+		// TODO: instead of having parameter $html=true|false, wouldn't it be better to have $type=html|css|js ?
 		self::$html = $html;
 
 		// Reset internal state, so we can re-init verything if required
@@ -2254,11 +2256,11 @@ class OIDplus extends OIDplusBaseClass {
 			if (!is_null($target)) {
 				$basedir = realpath(__DIR__.'/../../');
 				$target = realpath($target);
-
-				// $target must be inside $basedir, otherwise it does not work!
-				if (!str_starts_with($target.'/', $basedir.'/')) return false;
-
 				if ($target === false) return false;
+				if (!str_starts_with(str_replace(DIRECTORY_SEPARATOR,'/',$target).'/', str_replace(DIRECTORY_SEPARATOR,'/',$basedir).'/')) {
+					// $target must be inside $basedir, otherwise it does not work!
+					return false;
+				}
 				$tmp = substr($target, strlen($basedir)+1);
 				$res .= str_replace(DIRECTORY_SEPARATOR,'/',$tmp); // replace OS specific path delimiters introduced by realpath()
 				if (is_dir($target)) $res .= '/';
