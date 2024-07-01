@@ -116,3 +116,6 @@ Currently, there are the following features defined in the standard plugins of O
 - plugins/viathinksoft/publicPages/002_rest_api/INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9.class.php containing the functions:
     - restApiCall
     - restApiInfo
+
+- plugins/viathinksoft/publicPages/998_polyfill/INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_10.class.php containing the functions:
+    - requestPolyfills

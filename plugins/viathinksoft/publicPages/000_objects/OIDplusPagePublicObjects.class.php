@@ -1130,7 +1130,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				$supra .= '</tbody>';
 				$supra .= '</table>';
 				$supra .= '<button type="button" name="update_desc2" id="update_desc2" class="btn btn-success btn-xs update" onclick="OIDplusPagePublicObjects.updateDesc2('.js_escape($obj->nodeId()).')">'._L('Update').'</button>';
-				$supra .= '</div></div>';
+				$supra .= '</div>';
 				$supra .= '<script>$("#suprabox")[0].style.display = "block";</script>';
 			} else {
 				$supra = '';
