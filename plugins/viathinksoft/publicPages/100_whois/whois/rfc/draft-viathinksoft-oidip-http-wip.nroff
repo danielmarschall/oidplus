@@ -318,7 +318,9 @@ Some organizations might not want to present their OID information (or part of i
 2. Supply of authentication tokens by the sender
 
 .in 7
-Authentication tokens can be sent as "auth" GET parameter (can be entered by a human in a browser), "auth" POST parameter, or "Authentication Bearer" request header (for automated requests). To make authentication as easy as possible, it is RECOMMENDED to allow all three methods, and it is RECOMMENDED that authentication frameworks as defined in RFC\09110, or OAuth\02.0 are not used.
+Authentication tokens can be sent as "auth" GET parameter (can be entered by a human in a browser), as "auth" POST parameter, or as "Authentication Bearer" request header (for automated requests). To make authentication as easy as possible, it is RECOMMENDED to allow all three methods, and it is RECOMMENDED that authentication frameworks as defined in RFC\09110, or OAuth\02.0 are not used.
+
+The GET parameter has priority over the POST parameter, which has priority over the HTTP request header.
 
 Authentication tokens MUST be case-sensitive and non-empty, and MUST NOT contain a dollar sign ("$"), an equal sign ("="), or a comma sign (",").
 
@@ -331,17 +333,19 @@ Example of an URL that receives a GET request:
 Please note that authentication tokens should only be used if the connection is secure.  For more information, see section\08 "Security Considerations".
 .in 3
 
-The usage of IP whitelisting and authentication is OPTIONAL.
+The usage of authentication is OPTIONAL.
 
 
 .ti 0
 2.1.4 Preferred Language
 
-The client can request the preferred language of human-readable descriptions, names, comments, and error messages using the Accept-Language request header. If a GET or POST parameter "lang" is sent, then this parameter has priority.
+The client can request the preferred language of human-readable descriptions, names, comments, and error messages using the Accept-Language request header, or using a GET or POST parameter.
+
+The GET parameter has priority over the POST parameter, which has priority over the HTTP request header.
 
 If the server has data in different languages, it should try to find the best-fitting language according to the client's request.
 
-The value of the "lang" argument MUST be a list of language tags as defined by [RFC5646], separated by a comma sign, sorted by preference, and containing at least one element.
+The value of the language argument MUST be a list of language tags as defined by [RFC5646], separated by a comma sign, sorted by preference, and containing at least one element.
 
 The translation SHALL only affect the "message", "name", "description", and "information" fields, as well as additional fields and comments if their translation makes sense.  Field names MUST NOT be translated.  For example, the field name "description" will always be in the English language, even if the client requests a response in a different language.
 
@@ -737,7 +741,7 @@ Note: A line break, to break up lines that are too long, as defined in section\0
 
 (13) "long-arc" (OPTIONAL, multiple values allowed) contains a Non-integer Unicode label that can be used as the first identifier in an OID Internationalized Resource Identifier (OID-IRI), shortening it.  More information can be found in Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-1:2012, clause 3.5.8 [X660].
 
-(14) "oidip-service" (OPTIONAL) contains an IP address or hostname of a system that offers an OID-IP service that can supply information about the OID and/or its subordinate OIDs, followed by a double-colon (:) and a port number.  If the result is "Found" (i.e. the OID is existing in the local database), then the information "oidip-service" is only informational; its existence is most likely a hint that subordinate OIDs will be found at that OID-IP server.  If the result is "Not found; superior object found", then the client SHOULD query the referred OID-IP server to receive more information about the OID.  See more information in section\04 "Referral".
+(14) "oidip-service" (OPTIONAL) contains the address of a system that offers an OID-IP service that can supply information about the OID and/or its subordinate OIDs.  The address can be a HTTP(S) URI with trailing path delimiter (e.g. https://example.com/oidip/), or it can be an IP address or hostname, followed by a double-colon (:) and a port number (e.g. oidip.example.com:43).  If the result is "Found" (i.e. the OID is existing in the local database), then the information "oidip-service" is only informational; its existence is most likely a hint that subordinate OIDs will be found at that OID-IP server.  If the result is "Not found; superior object found", then the client SHOULD query the referred OID-IP server to receive more information about the OID.  See more information in section\04 "Referral".
 
 (15) "oidip-pubkey" (OPTIONAL) contains the public key of the service that is identified with "oidip-service", in case it uses signatures (see section\03.3 "Digital Signature") and the referring service knows about it.
 
@@ -958,7 +962,7 @@ distance:       1
 object:         oid:2.999.1000
 status:         Information available
 name:           Company "B"
-oidip-service:  b.example.com:XXX
+oidip-service:  b.example.com:43
 
 ra:             "B"
 ra-status:      Information unavailable
@@ -988,8 +992,8 @@ ra-status:      Information unavailable
 5.1  Request
 
 .nf
-HTTPS:   GET http://oidip.example.com/oid/2.999/text
-WHOIS:   oid:2.999
+HTTP(S):   https://oidip.example.com/oid/2.999/text
+WHOIS:     oid:2.999
 .fi
 
 .ti 0
