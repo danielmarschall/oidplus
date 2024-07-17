@@ -126,27 +126,28 @@ Table of Contents
    1  Introduction  . . . . . . . . . . . . . . . . . . . . . . . . .  4
      1.1  Terminology . . . . . . . . . . . . . . . . . . . . . . . .  5
    2  Request . . . . . . . . . . . . . . . . . . . . . . . . . . . .  6
-     2.1 Request via HTTP(S) Protocol (Recommended) . . . . . . . . .  6
+     2.1  Request via HTTP(S) Protocol (Recommended)  . . . . . . . .  6
        2.1.1 Request Method and Path  . . . . . . . . . . . . . . . .  6
-       2.1.2 Formats and Content-Types  . . . . . . . . . . . . . . .  7
-       2.1.3 Authentication . . . . . . . . . . . . . . . . . . . . .  7
-       2.1.4 Preferred Language . . . . . . . . . . . . . . . . . . .  8
-       2.1.5 Custom Input Parameters  . . . . . . . . . . . . . . . .  9
-       2.1.6 Cookies  . . . . . . . . . . . . . . . . . . . . . . . .  9
-       2.1.7 HTTP(S) Response Status Codes  . . . . . . . . . . . . .  9
-     2.2 Request via WHOIS Protocol (Backwards Compatibility) . . . . 10
-       2.2.1 Request Method . . . . . . . . . . . . . . . . . . . . . 10
-         2.2.1.1  Input Parameters  . . . . . . . . . . . . . . . . . 11
-         2.2.1.2  Request ABNF Notation . . . . . . . . . . . . . . . 12
+       2.1.2  Formats and Content-Types . . . . . . . . . . . . . . .  7
+       2.1.3  Authentication  . . . . . . . . . . . . . . . . . . . .  7
+       2.1.4  Preferred Language  . . . . . . . . . . . . . . . . . .  8
+       2.1.5  Custom Input Parameters . . . . . . . . . . . . . . . .  9
+       2.1.6  Cookies . . . . . . . . . . . . . . . . . . . . . . . .  9
+       2.1.7  HTTP(S) Response Status Codes . . . . . . . . . . . . .  9
+     2.2  Request via WHOIS Protocol (Backwards Compatibility)  . . . 10
+       2.2.1  Request Method  . . . . . . . . . . . . . . . . . . . . 10
+         2.2.1.1  Basic Query String  . . . . . . . . . . . . . . . . 10
+         2.2.1.2  Input Parameters  . . . . . . . . . . . . . . . . . 11
+         2.2.1.3  Request ABNF Notation . . . . . . . . . . . . . . . 12
        2.2.2  Format ("format" Argument)  . . . . . . . . . . . . . . 13
        2.2.3  Authentication Tokens ("auth" Argument) . . . . . . . . 14
        2.2.4  Preferred Language ("lang" Argument)  . . . . . . . . . 14
        2.2.5  Custom Input Parameters . . . . . . . . . . . . . . . . 15
    3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
      3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . . 16
-       3.1.1 "text" Format  . . . . . . . . . . . . . . . . . . . . . 16
-       3.1.2 "json" Format  . . . . . . . . . . . . . . . . . . . . . 16
-       3.1.3 "xml" Format . . . . . . . . . . . . . . . . . . . . . . 17
+       3.1.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 16
+       3.1.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 16
+       3.1.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 17
      3.2  Sections  . . . . . . . . . . . . . . . . . . . . . . . . . 17
        3.2.1  Query-Section (Information about Query and Result)  . . 17
        3.2.2  Object-Section (Information about the OID)  . . . . . . 18
@@ -251,10 +252,10 @@ XML         Extensible Markup Language, a markup language and file format for st
 .ti 0
 2  Request
 
-OID-IP is a text-based protocol transmitted either via the Hypertext Transfer Protocol [RFC9112], or due to backwards compatibility via WHOIS protocol. (The concept of OID-IP was established in 2011 and is already implemented by several vendors).
+OID-IP is a text-based protocol transmitted either via the Hypertext Transfer Protocol [RFC9112], and/or due to backwards compatibility via WHOIS protocol. (The concept of OID-IP was established in 2011 and is already implemented by several vendors).
 
 .ti 0
-2.1 Request via HTTP(S) Protocol (Recommended)
+2.1  Request via HTTP(S) Protocol (Recommended)
 
 OID-IP is a text-based protocol primarily transmitted over the Hypertext Transfer Protocol [RFC9112].
 
@@ -270,7 +271,7 @@ whereas
 
 - <objectType> is a namespace identifier which MUST be written in lower-case.  It is usually "oid" (but can also be something else, see an example in section\06).
 
-- <objectIdentifier> is the identifier to be requested.  For OIDs, it MUST be an absolute OID and MUST be written in dot-notation without leading dot, e.g. "2.999".
+- <objectIdentifier> is the identifier to be requested.  For OIDs, it MUST be an absolute OID and MUST be written in dot-notation without leading dot as defined in RFC\03061, section\02 [RFC3061], e.g. "2.999".
 
 - <format> is the desired output format. This document defines "text", "json", and "xml" which are described in section\02.1.2.
 
@@ -294,7 +295,7 @@ Constraints for custom input parameters are described in section\02.1.5.
 
 
 .ti 0
-2.1.2 Formats and Content-Types
+2.1.2  Formats and Content-Types
 
 This document defines 3 formats:
 
@@ -312,7 +313,7 @@ If the client requests a format that is not implemented, then the server MUST re
 
 
 .ti 0
-2.1.3 Authentication
+2.1.3  Authentication
 
 Some organizations might not want to present their OID information (or part of it) to the public, e.g. for reasons like privacy or confidentiality.  Therefore, the following authentication methods are possible to control the display of confidential information returned by the OID-IP service:
 
@@ -340,7 +341,7 @@ The usage of authentication is OPTIONAL.
 
 
 .ti 0
-2.1.4 Preferred Language
+2.1.4  Preferred Language
 
 The client can request the preferred language of human-readable descriptions, names, comments, and error messages using the Accept-Language request header, or using a GET or POST parameter.
 
@@ -364,7 +365,7 @@ The usage of the "Accept-Language" request header or "lang" GET/POST parameter i
 
 
 .ti 0
-2.1.5 Custom Input Parameters
+2.1.5  Custom Input Parameters
 
 The usage of input parameters not described in this document is individual for each implementation.
 
@@ -376,13 +377,13 @@ The usage of the custom input parameters MUST be OPTIONAL.
 
 
 .ti 0
-2.1.6 Cookies
+2.1.6  Cookies
 
 The presence (or absence) of cookies MUST NOT make any difference to the OID-IP output.
 
 
 .ti 0
-2.1.7 HTTP(S) Response Status Codes
+2.1.7  HTTP(S) Response Status Codes
 
 An OID-IP service usually responds to queries using the HTTP(S) Response Code "200 OK".  Other HTTP(S) Response Codes such as "500 Internal Server Error" or "400 Bad Request" are possible if required.
 
@@ -401,16 +402,23 @@ While the 3xx redirection status code is not allowed to indicate an OID-IP refer
 
 
 .ti 0
-2.2 Request via WHOIS Protocol (Backwards Compatibility)
+2.2  Request via WHOIS Protocol (Backwards Compatibility)
 
 .ti 0
-2.2.1 Request Method
+2.2.1  Request Method
 
 With the WHOIS protocol request method, an OID-IP server listens by default on TCP port 43 (WHOIS) for requests from OID-IP clients.  Due to the compatibility between OID-IP and WHOIS, existing WHOIS clients can be re-used and existing WHOIS servers can add the functionalities described in this document in addition to their usual operation.
 
 The OID-IP client makes a text request to the OID-IP server, then the OID-IP server replies with text content.  All requests are terminated with ASCII CR followed by ASCII LF.  The response contains multiple lines of text, separated by ASCII CR followed by ASCII LF.  The OID-IP server closes its connection as soon as the output is finished.  The closed TCP connection indicates to the client that the response has been received.
 
-During the request, the client sends a query beginning with "oid:", followed by an OID in dot-notation, as defined in RFC\03061, section\02 [RFC3061], but with the following differences:
+.ti 0
+2.2.1.1  Basic Query String
+
+During the request, the client sends a query beginning with the namespace identifier (usually "oid", but it can also be something else, see an example in section\06), followed by a colon ":" and the requested identifier.
+
+The namespace identifier MUST be written in lower-case.
+
+If the namespace identifier is "oid", then the identifier must be an absolute OID in dot-notation, as defined in RFC\03061, section\02 [RFC3061], but with the following differences:
 
 (1) The OID MAY contain a leading dot.
 
@@ -429,10 +437,8 @@ oid:.2.999
 
 All OIDs MUST be interpreted as absolute OIDs.  Relative OIDs (e.g. relative to the OID of the Registration Authority operating the OID-IP service) are not allowed.
 
-The namespace identifier (i.e. "oid") MUST be written in lower-case.
-
 .ti 0
-2.2.1.1  Input Parameters
+2.2.1.2  Input Parameters
 
 The client can send additional information to the server using "input parameters".
 
@@ -463,7 +469,7 @@ oid:2.999$format=json
 .in 3
 
 .ti 0
-2.2.1.2  Request ABNF Notation
+2.2.1.3  Request ABNF Notation
 
 To define the query string, the following Augmented BNF definitions will be used.  They are based on the ABNF styles of RFC\05234 [RFC5234].
 
@@ -612,7 +618,7 @@ The usage of the custom input parameters MUST be OPTIONAL.
 3.1  Format and Encoding
 
 .ti 0
-3.1.1 "text" Format
+3.1.1  "text" Format
 
 (1) The response MUST be UTF-8 encoded (as defined in RFC\03629 [RFC3629]), without Byte-Order-Mark (BOM).
 
@@ -635,7 +641,7 @@ The usage of the custom input parameters MUST be OPTIONAL.
 (10) Custom sections CAN be added after any section defined in this document.  The query section MUST be the first section in the response.
 
 .ti 0
-3.1.2 "json" Format
+3.1.2  "json" Format
 
 (1) The response MUST be UTF-8 encoded (as defined in RFC\03629 [RFC3629]), without Byte-Order-Mark (BOM).
 
@@ -646,7 +652,7 @@ The usage of the custom input parameters MUST be OPTIONAL.
 (4) The JavaScript Object Notation (JSON, [RFC8259]) output MUST match the schema defined in Appendix\0A.1 of this document.
 
 .ti 0
-3.1.3 "xml" Format
+3.1.3  "xml" Format
 
 (1) The response MUST be UTF-8 encoded (as defined in RFC\03629 [RFC3629]), without Byte-Order-Mark (BOM).
 

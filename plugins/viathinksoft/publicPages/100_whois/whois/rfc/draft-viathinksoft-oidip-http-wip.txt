@@ -63,27 +63,28 @@ Table of Contents
    1  Introduction  . . . . . . . . . . . . . . . . . . . . . . . . .  4
      1.1  Terminology . . . . . . . . . . . . . . . . . . . . . . . .  5
    2  Request . . . . . . . . . . . . . . . . . . . . . . . . . . . .  6
-     2.1 Request via HTTP(S) Protocol (Recommended) . . . . . . . . .  6
+     2.1  Request via HTTP(S) Protocol (Recommended)  . . . . . . . .  6
        2.1.1 Request Method and Path  . . . . . . . . . . . . . . . .  6
-       2.1.2 Formats and Content-Types  . . . . . . . . . . . . . . .  7
-       2.1.3 Authentication . . . . . . . . . . . . . . . . . . . . .  7
-       2.1.4 Preferred Language . . . . . . . . . . . . . . . . . . .  8
-       2.1.5 Custom Input Parameters  . . . . . . . . . . . . . . . .  9
-       2.1.6 Cookies  . . . . . . . . . . . . . . . . . . . . . . . .  9
-       2.1.7 HTTP(S) Response Status Codes  . . . . . . . . . . . . .  9
-     2.2 Request via WHOIS Protocol (Backwards Compatibility) . . . . 10
-       2.2.1 Request Method . . . . . . . . . . . . . . . . . . . . . 10
-         2.2.1.1  Input Parameters  . . . . . . . . . . . . . . . . . 11
-         2.2.1.2  Request ABNF Notation . . . . . . . . . . . . . . . 12
+       2.1.2  Formats and Content-Types . . . . . . . . . . . . . . .  7
+       2.1.3  Authentication  . . . . . . . . . . . . . . . . . . . .  7
+       2.1.4  Preferred Language  . . . . . . . . . . . . . . . . . .  8
+       2.1.5  Custom Input Parameters . . . . . . . . . . . . . . . .  9
+       2.1.6  Cookies . . . . . . . . . . . . . . . . . . . . . . . .  9
+       2.1.7  HTTP(S) Response Status Codes . . . . . . . . . . . . .  9
+     2.2  Request via WHOIS Protocol (Backwards Compatibility)  . . . 10
+       2.2.1  Request Method  . . . . . . . . . . . . . . . . . . . . 10
+         2.2.1.1  Basic Query String  . . . . . . . . . . . . . . . . 10
+         2.2.1.2  Input Parameters  . . . . . . . . . . . . . . . . . 11
+         2.2.1.3  Request ABNF Notation . . . . . . . . . . . . . . . 12
        2.2.2  Format ("format" Argument)  . . . . . . . . . . . . . . 13
        2.2.3  Authentication Tokens ("auth" Argument) . . . . . . . . 14
        2.2.4  Preferred Language ("lang" Argument)  . . . . . . . . . 14
        2.2.5  Custom Input Parameters . . . . . . . . . . . . . . . . 15
    3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
      3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . . 16
-       3.1.1 "text" Format  . . . . . . . . . . . . . . . . . . . . . 16
-       3.1.2 "json" Format  . . . . . . . . . . . . . . . . . . . . . 16
-       3.1.3 "xml" Format . . . . . . . . . . . . . . . . . . . . . . 17
+       3.1.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 16
+       3.1.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 16
+       3.1.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 17
      3.2  Sections  . . . . . . . . . . . . . . . . . . . . . . . . . 17
        3.2.1  Query-Section (Information about Query and Result)  . . 17
        3.2.2  Object-Section (Information about the OID)  . . . . . . 18
@@ -105,7 +106,6 @@ Table of Contents
        6.1.1  Request . . . . . . . . . . . . . . . . . . . . . . . . 30
        6.1.2  Response  . . . . . . . . . . . . . . . . . . . . . . . 30
    7  Internationalization Considerations . . . . . . . . . . . . . . 30
-   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 31
  
 
 
@@ -114,6 +114,7 @@ Marschall               Expires 20 January 2025                 [Page 2]
 INTERNET DRAFT          OID Information Protocol            19 July 2024
 
 
+   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 31
    9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 31
    10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 32
      10.1  Normative References . . . . . . . . . . . . . . . . . . . 32
@@ -126,7 +127,6 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    Appendix B.2.  XML Format Example of Output  . . . . . . . . . . . 55
    Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 57
    Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 57
-
 
 
 
@@ -285,11 +285,11 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
 2  Request
 
    OID-IP is a text-based protocol transmitted either via the Hypertext
-   Transfer Protocol [RFC9112], or due to backwards compatibility via
-   WHOIS protocol. (The concept of OID-IP was established in 2011 and is
-   already implemented by several vendors).
+   Transfer Protocol [RFC9112], and/or due to backwards compatibility
+   via WHOIS protocol. (The concept of OID-IP was established in 2011
+   and is already implemented by several vendors).
 
-2.1 Request via HTTP(S) Protocol (Recommended)
+2.1  Request via HTTP(S) Protocol (Recommended)
 
    OID-IP is a text-based protocol primarily transmitted over the
    Hypertext Transfer Protocol [RFC9112].
@@ -310,7 +310,8 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
 
    - <objectIdentifier> is the identifier to be requested.  For OIDs, it
    MUST be an absolute OID and MUST be written in dot-notation without
-   leading dot, e.g. "2.999".
+   leading dot as defined in RFC 3061, section 2 [RFC3061], e.g.
+   "2.999".
 
    - <format> is the desired output format. This document defines
    "text", "json", and "xml" which are described in section 2.1.2.
@@ -329,7 +330,6 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
 
    This document describes the following additional GET/POST parameters:
 
-   (1) Authentication tokens ("auth" parameter), which is described in
  
 
 
@@ -338,6 +338,7 @@ Marschall               Expires 20 January 2025                 [Page 6]
 INTERNET DRAFT          OID Information Protocol            19 July 2024
 
 
+   (1) Authentication tokens ("auth" parameter), which is described in
    section 2.1.3.
 
    (2) Preferred language ("lang" parameter), which is described in
@@ -347,7 +348,7 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    section 2.1.5.
 
 
-2.1.2 Formats and Content-Types
+2.1.2  Formats and Content-Types
 
    This document defines 3 formats:
 
@@ -380,12 +381,11 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    "message" field (as described in section 3.2.1).
 
 
-2.1.3 Authentication
+2.1.3  Authentication
 
    Some organizations might not want to present their OID information
    (or part of it) to the public, e.g. for reasons like privacy or
    confidentiality.  Therefore, the following authentication methods are
-   possible to control the display of confidential information returned
  
 
 
@@ -394,6 +394,7 @@ Marschall               Expires 20 January 2025                 [Page 7]
 INTERNET DRAFT          OID Information Protocol            19 July 2024
 
 
+   possible to control the display of confidential information returned
    by the OID-IP service:
 
    1. Whitelisting the requester's IP address
@@ -431,7 +432,7 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    The usage of authentication is OPTIONAL.
 
 
-2.1.4 Preferred Language
+2.1.4  Preferred Language
 
    The client can request the preferred language of human-readable
    descriptions, names, comments, and error messages using the Accept-
@@ -441,7 +442,6 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    priority over the HTTP(S) request header.
 
    If the server has data in different languages, it should try to find
-   the best-fitting language according to the client's request.
  
 
 
@@ -449,6 +449,8 @@ Marschall               Expires 20 January 2025                 [Page 8]
 
 INTERNET DRAFT          OID Information Protocol            19 July 2024
 
+
+   the best-fitting language according to the client's request.
 
    The value of the language argument MUST be a list of language tags as
    defined by [RFC5646], separated by a comma sign, sorted by
@@ -471,7 +473,7 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    parameter is OPTIONAL.
 
 
-2.1.5 Custom Input Parameters
+2.1.5  Custom Input Parameters
 
    The usage of input parameters not described in this document is
    individual for each implementation.
@@ -486,18 +488,16 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    The usage of the custom input parameters MUST be OPTIONAL.
 
 
-2.1.6 Cookies
+2.1.6  Cookies
 
    The presence (or absence) of cookies MUST NOT make any difference to
    the OID-IP output.
 
 
-2.1.7 HTTP(S) Response Status Codes
+2.1.7  HTTP(S) Response Status Codes
 
    An OID-IP service usually responds to queries using the HTTP(S)
    Response Code "200 OK".  Other HTTP(S) Response Codes such as "500
-   Internal Server Error" or "400 Bad Request" are possible if required.
-
  
 
 
@@ -505,6 +505,8 @@ Marschall               Expires 20 January 2025                 [Page 9]
 
 INTERNET DRAFT          OID Information Protocol            19 July 2024
 
+
+   Internal Server Error" or "400 Bad Request" are possible if required.
 
    There are the following requirements based on the result of the query
    (see section 2.3.1):
@@ -529,9 +531,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
 
 
 
-2.2 Request via WHOIS Protocol (Backwards Compatibility)
+2.2  Request via WHOIS Protocol (Backwards Compatibility)
 
-2.2.1 Request Method
+2.2.1  Request Method
 
    With the WHOIS protocol request method, an OID-IP server listens by
    default on TCP port 43 (WHOIS) for requests from OID-IP clients.  Due
@@ -547,13 +549,11 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    The closed TCP connection indicates to the client that the response
    has been received.
 
-   During the request, the client sends a query beginning with "oid:",
-   followed by an OID in dot-notation, as defined in RFC 3061, section 2
-   [RFC3061], but with the following differences:
+2.2.1.1  Basic Query String
 
-   (1) The OID MAY contain a leading dot.
-
-   (2) To query the root of the OID tree, the OID MUST be either missing
+   During the request, the client sends a query beginning with the
+   namespace identifier (usually "oid", but it can also be something
+   else, see an example in section 6), followed by a colon ":" and the
  
 
 
@@ -562,6 +562,17 @@ Marschall               Expires 20 January 2025                [Page 10]
 INTERNET DRAFT          OID Information Protocol            19 July 2024
 
 
+   requested identifier.
+
+   The namespace identifier MUST be written in lower-case.
+
+   If the namespace identifier is "oid", then the identifier must be an
+   absolute OID in dot-notation, as defined in RFC 3061, section 2
+   [RFC3061], but with the following differences:
+
+   (1) The OID MAY contain a leading dot.
+
+   (2) To query the root of the OID tree, the OID MUST be either missing
    or consisting only of a single dot.
 
    Examples of valid queries are:
@@ -575,9 +586,7 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    relative to the OID of the Registration Authority operating the OID-
    IP service) are not allowed.
 
-   The namespace identifier (i.e. "oid") MUST be written in lower-case.
-
-2.2.1.1  Input Parameters
+2.2.1.2  Input Parameters
 
    The client can send additional information to the server using "input
    parameters".
@@ -601,6 +610,13 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
 
    (3) Preferred language ("lang" argument), which is described in
    section 2.2.4.
+ 
+
+
+Marschall               Expires 20 January 2025                [Page 11]
+
+INTERNET DRAFT          OID Information Protocol            19 July 2024
+
 
    Constraints for custom input parameters are described in
    section 2.2.5.
@@ -610,15 +626,7 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
 
        oid:2.999$format=json
 
- 
-
-
-Marschall               Expires 20 January 2025                [Page 11]
-
-INTERNET DRAFT          OID Information Protocol            19 July 2024
-
-
-2.2.1.2  Request ABNF Notation
+2.2.1.3  Request ABNF Notation
 
    To define the query string, the following Augmented BNF definitions
    will be used.  They are based on the ABNF styles of RFC 5234
@@ -658,14 +666,6 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    languages       = Language-Tag *( "," Language-Tag )
 
    ; Additional constraint: Tokens MUST NOT be used more than one time
-   ;                        in the same query.
-   tokens          = token *( "," token )
-
-   ; Printable characters (%x21-7E), excluding dollar sign (%x24 "$"),
-   ; equal sign (%x3D "="), and comma sign (%x2C ",").
-   token           = 1*( %x21-23 / %x25-2B / %x2D-3C / %x3E-7E )
-
-   ; Additional constraint: MUST NOT be <str-format> or <str-auth>.
  
 
 
@@ -674,6 +674,14 @@ Marschall               Expires 20 January 2025                [Page 12]
 INTERNET DRAFT          OID Information Protocol            19 July 2024
 
 
+   ;                        in the same query.
+   tokens          = token *( "," token )
+
+   ; Printable characters (%x21-7E), excluding dollar sign (%x24 "$"),
+   ; equal sign (%x3D "="), and comma sign (%x2C ",").
+   token           = 1*( %x21-23 / %x25-2B / %x2D-3C / %x3E-7E )
+
+   ; Additional constraint: MUST NOT be <str-format> or <str-auth>.
    other-arg-name  = 1*( lowercase-char / digit )
 
    ; Printable characters (%x21-7E), excluding dollar sign (%x24 "$")
@@ -714,6 +722,14 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    defined in this document.  The name of the formats MUST be
    alphanumeric, lower-case, and non-empty, and SHOULD be written in the
    English language (e.g. "text") or be common abbreviations (e.g.
+ 
+
+
+Marschall               Expires 20 January 2025                [Page 13]
+
+INTERNET DRAFT          OID Information Protocol            19 July 2024
+
+
    "json").
 
    If the client requests a format that is not implemented, then the
@@ -722,13 +738,6 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    "message" field (as described in section 3.2.1).
 
    The usage of the argument "format" is OPTIONAL.
- 
-
-
-Marschall               Expires 20 January 2025                [Page 13]
-
-INTERNET DRAFT          OID Information Protocol            19 July 2024
-
 
 2.2.3  Authentication Tokens ("auth" Argument)
 
@@ -769,6 +778,13 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    The value of the "lang" argument MUST be a list of language tags as
    defined by [RFC5646], separated by a comma sign, sorted by
    preference, and containing at least one element.
+ 
+
+
+Marschall               Expires 20 January 2025                [Page 14]
+
+INTERNET DRAFT          OID Information Protocol            19 July 2024
+
 
    The translation SHALL only affect the "message", "name",
    "description", and "information" fields, as well as additional fields
@@ -778,14 +794,6 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    a different language.
 
    The following request is an example of a valid query where the client
- 
-
-
-Marschall               Expires 20 January 2025                [Page 14]
-
-INTERNET DRAFT          OID Information Protocol            19 July 2024
-
-
    asks for information written in the English language, preferring US
    American English:
 
@@ -826,14 +834,6 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
 
 
 
-
-
-
-
-
-
-
-
  
 
 
@@ -846,7 +846,7 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
 
 3.1  Format and Encoding
 
-3.1.1 "text" Format
+3.1.1  "text" Format
 
    (1) The response MUST be UTF-8 encoded (as defined in RFC 3629
    [RFC3629]), without Byte-Order-Mark (BOM).
@@ -882,7 +882,7 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    document.  The query section MUST be the first section in the
    response.
 
-3.1.2 "json" Format
+3.1.2  "json" Format
 
    (1) The response MUST be UTF-8 encoded (as defined in RFC 3629
    [RFC3629]), without Byte-Order-Mark (BOM).
@@ -905,7 +905,7 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    (4) The JavaScript Object Notation (JSON, [RFC8259]) output MUST
    match the schema defined in Appendix A.1 of this document.
 
-3.1.3 "xml" Format
+3.1.3  "xml" Format
 
    (1) The response MUST be UTF-8 encoded (as defined in RFC 3629
    [RFC3629]), without Byte-Order-Mark (BOM).
