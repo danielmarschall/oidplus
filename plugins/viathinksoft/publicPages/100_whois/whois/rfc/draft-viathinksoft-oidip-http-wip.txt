@@ -70,14 +70,15 @@ Table of Contents
        2.1.4 Preferred Language . . . . . . . . . . . . . . . . . . .  8
        2.1.5 Custom Input Parameters  . . . . . . . . . . . . . . . .  9
        2.1.6 Cookies  . . . . . . . . . . . . . . . . . . . . . . . .  9
-       2.1.6 HTTP(S) Response Status Codes  . . . . . . . . . . . . .  9
+       2.1.7 HTTP(S) Response Status Codes  . . . . . . . . . . . . .  9
      2.2 Request via WHOIS Protocol (Backwards Compatibility) . . . . 10
-       2.2.1  Input Parameters  . . . . . . . . . . . . . . . . . . . 11
-         2.2.1.1  Format ("format" Argument)  . . . . . . . . . . . . 11
-         2.2.1.2  Authentication Tokens ("auth" Argument) . . . . . . 12
-         2.2.1.3  Preferred Language ("lang" Argument)  . . . . . . . 13
-         2.2.1.4  Custom Input Parameters . . . . . . . . . . . . . . 13
-       2.2.2  Request ABNF Notation . . . . . . . . . . . . . . . . . 14
+       2.2.1 Request Method . . . . . . . . . . . . . . . . . . . . . 10
+         2.2.1.1  Input Parameters  . . . . . . . . . . . . . . . . . 11
+         2.2.1.2  Request ABNF Notation . . . . . . . . . . . . . . . 12
+       2.2.2  Format ("format" Argument)  . . . . . . . . . . . . . . 13
+       2.2.3  Authentication Tokens ("auth" Argument) . . . . . . . . 14
+       2.2.4  Preferred Language ("lang" Argument)  . . . . . . . . . 14
+       2.2.5  Custom Input Parameters . . . . . . . . . . . . . . . . 15
    3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
      3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . . 16
        3.1.1 "text" Format  . . . . . . . . . . . . . . . . . . . . . 16
@@ -105,7 +106,6 @@ Table of Contents
        6.1.2  Response  . . . . . . . . . . . . . . . . . . . . . . . 30
    7  Internationalization Considerations . . . . . . . . . . . . . . 30
    8  Security Considerations . . . . . . . . . . . . . . . . . . . . 31
-   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 31
  
 
 
@@ -114,6 +114,7 @@ Marschall               Expires 20 January 2025                 [Page 2]
 INTERNET DRAFT          OID Information Protocol            19 July 2024
 
 
+   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 31
    10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 32
      10.1  Normative References . . . . . . . . . . . . . . . . . . . 32
      10.2  Informative References . . . . . . . . . . . . . . . . . . 34
@@ -125,7 +126,6 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    Appendix B.2.  XML Format Example of Output  . . . . . . . . . . . 55
    Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 57
    Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 57
-
 
 
 
@@ -492,7 +492,7 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    the OID-IP output.
 
 
-2.1.6 HTTP(S) Response Status Codes
+2.1.7 HTTP(S) Response Status Codes
 
    An OID-IP service usually responds to queries using the HTTP(S)
    Response Code "200 OK".  Other HTTP(S) Response Codes such as "500
@@ -531,6 +531,8 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
 
 2.2 Request via WHOIS Protocol (Backwards Compatibility)
 
+2.2.1 Request Method
+
    With the WHOIS protocol request method, an OID-IP server listens by
    default on TCP port 43 (WHOIS) for requests from OID-IP clients.  Due
    to the compatibility between OID-IP and WHOIS, existing WHOIS clients
@@ -552,8 +554,6 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    (1) The OID MAY contain a leading dot.
 
    (2) To query the root of the OID tree, the OID MUST be either missing
-   or consisting only of a single dot.
-
  
 
 
@@ -561,6 +561,8 @@ Marschall               Expires 20 January 2025                [Page 10]
 
 INTERNET DRAFT          OID Information Protocol            19 July 2024
 
+
+   or consisting only of a single dot.
 
    Examples of valid queries are:
 
@@ -575,7 +577,7 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
 
    The namespace identifier (i.e. "oid") MUST be written in lower-case.
 
-2.2.1  Input Parameters
+2.2.1.1  Input Parameters
 
    The client can send additional information to the server using "input
    parameters".
@@ -592,24 +594,22 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
 
    This document describes the following input parameters:
 
-   (1) Format ("format" argument), which is described in
-   section 2.2.1.1.
+   (1) Format ("format" argument), which is described in section 2.2.2.
 
    (2) Authentication tokens ("auth" argument), which is described in
-   section 2.2.1.2.
+   section 2.2.3.
 
    (3) Preferred language ("lang" argument), which is described in
-   section 2.2.1.3.
+   section 2.2.4.
 
    Constraints for custom input parameters are described in
-   section 2.2.1.4.
+   section 2.2.5.
 
    The following request is an example of a valid query where the client
    sends a "format" argument with the value "json":
 
        oid:2.999$format=json
 
-2.2.1.1  Format ("format" Argument)
  
 
 
@@ -618,121 +618,7 @@ Marschall               Expires 20 January 2025                [Page 11]
 INTERNET DRAFT          OID Information Protocol            19 July 2024
 
 
-   The "format" argument defines the desired output format.
-
-   This document defines 3 formats:
-
-   (1) "text": A text representation as defined in section 3.1.1
-   (MANDATORY).
-
-   (2) "json": The JavaScript Object Notation (JSON, [RFC8259])
-   representation as defined in section 3.1.2 (RECOMMENDED).
-
-   (3) "xml": Extensible Markup Language (XML, [XML]) representation as
-   defined in section 3.1.3 (RECOMMENDED).
-
-   The default format is "text", which is assumed if the "format"
-   argument is omitted.
-
-   Besides these 3 formats, the server can accept other formats not
-   defined in this document.  The name of the formats MUST be
-   alphanumeric, lower-case, and non-empty, and SHOULD be written in the
-   English language (e.g. "text") or be common abbreviations (e.g.
-   "json").
-
-   If the client requests a format that is not implemented, then the
-   server MUST respond with the "text" format, and the output MUST
-   consist of the "query" field, "result: Service error", and a fitting
-   "message" field (as described in section 3.2.1).
-
-   The usage of the argument "format" is OPTIONAL.
-
-2.2.1.2  Authentication Tokens ("auth" Argument)
-
-   Some organizations might not want to present their OID information
-   (or part of it) to the public, e.g. for reasons like privacy or
-   confidentiality.  Therefore, one or more "authentication tokens" can
-   be sent to control the display of confidential information returned
-   by the OID-IP service.
-
-   Authentication tokens MUST be case-sensitive and non-empty, and MUST
-   NOT contain a dollar sign ("$"), an equal sign ("="), or a comma sign
-   (",").
-
-   If multiple authentication tokens need to be submitted, then the
-   "auth" argument MUST NOT be repeated.  Instead, the tokens are
-   separated using a comma sign (",").  A token MUST NOT be used
-   multiple times in the same query.
-
-   Examples of valid queries are:
-
- 
-
-
-Marschall               Expires 20 January 2025                [Page 12]
-
-INTERNET DRAFT          OID Information Protocol            19 July 2024
-
-
-       oid:2.999$auth=firstToken
-       oid:2.999$auth=firstToken,secondToken
-
-   Please note that authentication tokens are only weak protection.  For
-   more information, see section 8 "Security Considerations".
-
-   The usage of the argument "auth" is OPTIONAL.
-
-2.2.1.3  Preferred Language ("lang" Argument)
-
-   The client can request the preferred language of human-readable
-   descriptions, names, comments, and error messages using the "lang"
-   argument.
-
-   If the server has data in different languages, it should try to find
-   the best-fitting language according to the client's request.
-
-   The value of the "lang" argument MUST be a list of language tags as
-   defined by [RFC5646], separated by a comma sign, sorted by
-   preference, and containing at least one element.
-
-   The translation SHALL only affect the "message", "name",
-   "description", and "information" fields, as well as additional fields
-   and comments if their translation makes sense.  Field names MUST NOT
-   be translated.  For example, the field name "description" will always
-   be in the English language, even if the client requests a response in
-   a different language.
-
-   The following request is an example of a valid query where the client
-   asks for information written in the English language, preferring US
-   American English:
-
-       oid:2.999$lang=en-US,en
-
-   The usage of the argument "lang" is OPTIONAL.
-
-2.2.1.4  Custom Input Parameters
-
-   The usage of input parameters not described in this document is
-   individual for each implementation.
-
-   Names MUST be alphanumeric, lower-case, and non-empty, and SHOULD be
-   written in the English language (e.g. "database") or be common
-   abbreviations (e.g. "db").
-
-   Values MUST be case-sensitive and non-empty, and MUST NOT contain a
-   dollar sign ("$") or an equal sign ("=").
-
- 
-
-
-Marschall               Expires 20 January 2025                [Page 13]
-
-INTERNET DRAFT          OID Information Protocol            19 July 2024
-
-
-   The usage of the custom input parameters MUST be OPTIONAL.
-
-2.2.2  Request ABNF Notation
+2.2.1.2  Request ABNF Notation
 
    To define the query string, the following Augmented BNF definitions
    will be used.  They are based on the ABNF styles of RFC 5234
@@ -778,15 +664,16 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    ; Printable characters (%x21-7E), excluding dollar sign (%x24 "$"),
    ; equal sign (%x3D "="), and comma sign (%x2C ",").
    token           = 1*( %x21-23 / %x25-2B / %x2D-3C / %x3E-7E )
+
+   ; Additional constraint: MUST NOT be <str-format> or <str-auth>.
  
 
 
-Marschall               Expires 20 January 2025                [Page 14]
+Marschall               Expires 20 January 2025                [Page 12]
 
 INTERNET DRAFT          OID Information Protocol            19 July 2024
 
 
-   ; Additional constraint: MUST NOT be <str-format> or <str-auth>.
    other-arg-name  = 1*( lowercase-char / digit )
 
    ; Printable characters (%x21-7E), excluding dollar sign (%x24 "$")
@@ -805,7 +692,120 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    nonzero-digit   = %x31-39  ; 1-9
    lowercase-char  = %x61-7A  ; a-z
 
+2.2.2  Format ("format" Argument)
 
+   The "format" argument defines the desired output format.
+
+   This document defines 3 formats:
+
+   (1) "text": A text representation as defined in section 3.1.1
+   (MANDATORY).
+
+   (2) "json": The JavaScript Object Notation (JSON, [RFC8259])
+   representation as defined in section 3.1.2 (RECOMMENDED).
+
+   (3) "xml": Extensible Markup Language (XML, [XML]) representation as
+   defined in section 3.1.3 (RECOMMENDED).
+
+   The default format is "text", which is assumed if the "format"
+   argument is omitted.
+
+   Besides these 3 formats, the server can accept other formats not
+   defined in this document.  The name of the formats MUST be
+   alphanumeric, lower-case, and non-empty, and SHOULD be written in the
+   English language (e.g. "text") or be common abbreviations (e.g.
+   "json").
+
+   If the client requests a format that is not implemented, then the
+   server MUST respond with the "text" format, and the output MUST
+   consist of the "query" field, "result: Service error", and a fitting
+   "message" field (as described in section 3.2.1).
+
+   The usage of the argument "format" is OPTIONAL.
+ 
+
+
+Marschall               Expires 20 January 2025                [Page 13]
+
+INTERNET DRAFT          OID Information Protocol            19 July 2024
+
+
+2.2.3  Authentication Tokens ("auth" Argument)
+
+   Some organizations might not want to present their OID information
+   (or part of it) to the public, e.g. for reasons like privacy or
+   confidentiality.  Therefore, one or more "authentication tokens" can
+   be sent to control the display of confidential information returned
+   by the OID-IP service.
+
+   Authentication tokens MUST be case-sensitive and non-empty, and MUST
+   NOT contain a dollar sign ("$"), an equal sign ("="), or a comma sign
+   (",").
+
+   If multiple authentication tokens need to be submitted, then the
+   "auth" argument MUST NOT be repeated.  Instead, the tokens are
+   separated using a comma sign (",").  A token MUST NOT be used
+   multiple times in the same query.
+
+   Examples of valid queries are:
+
+       oid:2.999$auth=firstToken
+       oid:2.999$auth=firstToken,secondToken
+
+   Please note that authentication tokens are only weak protection.  For
+   more information, see section 8 "Security Considerations".
+
+   The usage of the argument "auth" is OPTIONAL.
+
+2.2.4  Preferred Language ("lang" Argument)
+
+   The client can request the preferred language of human-readable
+   descriptions, names, comments, and error messages using the "lang"
+   argument.
+
+   If the server has data in different languages, it should try to find
+   the best-fitting language according to the client's request.
+
+   The value of the "lang" argument MUST be a list of language tags as
+   defined by [RFC5646], separated by a comma sign, sorted by
+   preference, and containing at least one element.
+
+   The translation SHALL only affect the "message", "name",
+   "description", and "information" fields, as well as additional fields
+   and comments if their translation makes sense.  Field names MUST NOT
+   be translated.  For example, the field name "description" will always
+   be in the English language, even if the client requests a response in
+   a different language.
+
+   The following request is an example of a valid query where the client
+ 
+
+
+Marschall               Expires 20 January 2025                [Page 14]
+
+INTERNET DRAFT          OID Information Protocol            19 July 2024
+
+
+   asks for information written in the English language, preferring US
+   American English:
+
+       oid:2.999$lang=en-US,en
+
+   The usage of the argument "lang" is OPTIONAL.
+
+2.2.5  Custom Input Parameters
+
+   The usage of input parameters not described in this document is
+   individual for each implementation.
+
+   Names MUST be alphanumeric, lower-case, and non-empty, and SHOULD be
+   written in the English language (e.g. "database") or be common
+   abbreviations (e.g. "db").
+
+   Values MUST be case-sensitive and non-empty, and MUST NOT contain a
+   dollar sign ("$") or an equal sign ("=").
+
+   The usage of the custom input parameters MUST be OPTIONAL.
 
 
 
@@ -1600,10 +1600,10 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    terminology of the namespace.
 
    (6) For WHOIS requests, the namespace-specific identifier MUST NOT
-   contain dollar signs ("$"), because section 2.2.1 "Input Parameters"
-   defines them as a separator for input parameters.  For HTTP(S)
-   requests, the namespace-specific identifier MUST NOT contain a slash
-   ("/") and MUST NOT be called "root".
+   contain dollar signs ("$"), because section 2.2.1.1 "Input
+   Parameters" defines them as a separator for input parameters.  For
+   HTTP(S) requests, the namespace-specific identifier MUST NOT contain
+   a slash ("/") and MUST NOT be called "root".
 
    (7) The namespace-specific identifier MUST be treated as case-
    sensitive if the namespace distinguishes between lower-case and
@@ -1700,7 +1700,7 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    or shown, based on authentication mechanisms like white-listing
    client IP addresses or by using authentication tokens supplied by the
    client during the request, as defined in section 2.1.3
-   "Authentication" and section 2.2.1.2 "Authentication Tokens".
+   "Authentication" and section 2.2.3 "Authentication Tokens".
 
    (4) Unless HTTPS is used, the usage of authentication tokens or
    transmitting confidential information is not recommended if the
