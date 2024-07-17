@@ -299,8 +299,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    All requests MUST be made using the HTTP(S) request methods "GET" or
    "POST" in the following structure:
 
-       GET /.../<objectType>/<objectIdentifier>/<format>    POST
-   /.../<objectType>/<objectIdentifier>/<format>
+       GET /.../<objectType>/<objectIdentifier>/<format>
+
+       POST /.../<objectType>/<objectIdentifier>/<format>
 
    whereas
 
@@ -329,7 +330,6 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    actually have the name "root" CANNOT be queried using OID-IP.
 
    This document describes the following additional GET/POST parameters:
-
  
 
 

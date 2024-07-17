@@ -265,6 +265,7 @@ OID-IP is a text-based protocol primarily transmitted over the Hypertext Transfe
 All requests MUST be made using the HTTP(S) request methods "GET" or "POST" in the following structure:
 
     GET /.../<objectType>/<objectIdentifier>/<format>
+
     POST /.../<objectType>/<objectIdentifier>/<format>
 
 whereas
