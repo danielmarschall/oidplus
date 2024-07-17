@@ -133,14 +133,15 @@ Table of Contents
        2.1.4 Preferred Language . . . . . . . . . . . . . . . . . . .  8
        2.1.5 Custom Input Parameters  . . . . . . . . . . . . . . . .  9
        2.1.6 Cookies  . . . . . . . . . . . . . . . . . . . . . . . .  9
-       2.1.6 HTTP(S) Response Status Codes  . . . . . . . . . . . . .  9
+       2.1.7 HTTP(S) Response Status Codes  . . . . . . . . . . . . .  9
      2.2 Request via WHOIS Protocol (Backwards Compatibility) . . . . 10
-       2.2.1  Input Parameters  . . . . . . . . . . . . . . . . . . . 11
-         2.2.1.1  Format ("format" Argument)  . . . . . . . . . . . . 11
-         2.2.1.2  Authentication Tokens ("auth" Argument) . . . . . . 12
-         2.2.1.3  Preferred Language ("lang" Argument)  . . . . . . . 13
-         2.2.1.4  Custom Input Parameters . . . . . . . . . . . . . . 13
-       2.2.2  Request ABNF Notation . . . . . . . . . . . . . . . . . 14
+       2.2.1 Request Method . . . . . . . . . . . . . . . . . . . . . 10
+         2.2.1.1  Input Parameters  . . . . . . . . . . . . . . . . . 11
+         2.2.1.2  Request ABNF Notation . . . . . . . . . . . . . . . 12
+       2.2.2  Format ("format" Argument)  . . . . . . . . . . . . . . 13
+       2.2.3  Authentication Tokens ("auth" Argument) . . . . . . . . 14
+       2.2.4  Preferred Language ("lang" Argument)  . . . . . . . . . 14
+       2.2.5  Custom Input Parameters . . . . . . . . . . . . . . . . 15
    3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
      3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . . 16
        3.1.1 "text" Format  . . . . . . . . . . . . . . . . . . . . . 16
@@ -381,7 +382,7 @@ The presence (or absence) of cookies MUST NOT make any difference to the OID-IP 
 
 
 .ti 0
-2.1.6 HTTP(S) Response Status Codes
+2.1.7 HTTP(S) Response Status Codes
 
 An OID-IP service usually responds to queries using the HTTP(S) Response Code "200 OK".  Other HTTP(S) Response Codes such as "500 Internal Server Error" or "400 Bad Request" are possible if required.
 
@@ -401,6 +402,9 @@ While the 3xx redirection status code is not allowed to indicate an OID-IP refer
 
 .ti 0
 2.2 Request via WHOIS Protocol (Backwards Compatibility)
+
+.ti 0
+2.2.1 Request Method
 
 With the WHOIS protocol request method, an OID-IP server listens by default on TCP port 43 (WHOIS) for requests from OID-IP clients.  Due to the compatibility between OID-IP and WHOIS, existing WHOIS clients can be re-used and existing WHOIS servers can add the functionalities described in this document in addition to their usual operation.
 
@@ -428,7 +432,7 @@ All OIDs MUST be interpreted as absolute OIDs.  Relative OIDs (e.g. relative to 
 The namespace identifier (i.e. "oid") MUST be written in lower-case.
 
 .ti 0
-2.2.1  Input Parameters
+2.2.1.1  Input Parameters
 
 The client can send additional information to the server using "input parameters".
 
@@ -442,13 +446,13 @@ Each name MUST only appear a single time in the list of input parameters.
 
 This document describes the following input parameters:
 
-(1) Format ("format" argument), which is described in section\02.2.1.1.
+(1) Format ("format" argument), which is described in section\02.2.2.
 
-(2) Authentication tokens ("auth" argument), which is described in section\02.2.1.2.
+(2) Authentication tokens ("auth" argument), which is described in section\02.2.3.
 
-(3) Preferred language ("lang" argument), which is described in section\02.2.1.3.
+(3) Preferred language ("lang" argument), which is described in section\02.2.4.
 
-Constraints for custom input parameters are described in section\02.2.1.4.
+Constraints for custom input parameters are described in section\02.2.5.
 
 The following request is an example of a valid query where the client sends a "format" argument with the value "json":
 
@@ -459,82 +463,7 @@ oid:2.999$format=json
 .in 3
 
 .ti 0
-2.2.1.1  Format ("format" Argument)
-
-The "format" argument defines the desired output format.
-
-This document defines 3 formats:
-
-(1) "text": A text representation as defined in section\03.1.1 (MANDATORY).
-
-(2) "json": The JavaScript Object Notation (JSON, [RFC8259]) representation as defined in section\03.1.2 (RECOMMENDED).
-
-(3) "xml": Extensible Markup Language (XML, [XML]) representation as defined in section\03.1.3 (RECOMMENDED).
-
-The default format is "text", which is assumed if the "format" argument is omitted.
-
-Besides these 3 formats, the server can accept other formats not defined in this document.  The name of the formats MUST be alphanumeric, lower-case, and non-empty, and SHOULD be written in the English language (e.g. "text") or be common abbreviations (e.g. "json").
-
-If the client requests a format that is not implemented, then the server MUST respond with the "text" format, and the output MUST consist of the "query" field, "result: Service error", and a fitting "message" field (as described in section\03.2.1).
-
-The usage of the argument "format" is OPTIONAL.
-
-.ti 0
-2.2.1.2  Authentication Tokens ("auth" Argument)
-
-Some organizations might not want to present their OID information (or part of it) to the public, e.g. for reasons like privacy or confidentiality.  Therefore, one or more "authentication tokens" can be sent to control the display of confidential information returned by the OID-IP service.
-
-Authentication tokens MUST be case-sensitive and non-empty, and MUST NOT contain a dollar sign ("$"), an equal sign ("="), or a comma sign (",").
-
-If multiple authentication tokens need to be submitted, then the "auth" argument MUST NOT be repeated.  Instead, the tokens are separated using a comma sign (",").  A token MUST NOT be used multiple times in the same query.
-
-Examples of valid queries are:
-
-.in 7
-.nf
-oid:2.999$auth=firstToken
-oid:2.999$auth=firstToken,secondToken
-.fi
-.in 3
-
-Please note that authentication tokens are only weak protection.  For more information, see section\08 "Security Considerations".
-
-The usage of the argument "auth" is OPTIONAL.
-
-.ti 0
-2.2.1.3  Preferred Language ("lang" Argument)
-
-The client can request the preferred language of human-readable descriptions, names, comments, and error messages using the "lang" argument.
-
-If the server has data in different languages, it should try to find the best-fitting language according to the client's request.
-
-The value of the "lang" argument MUST be a list of language tags as defined by [RFC5646], separated by a comma sign, sorted by preference, and containing at least one element.
-
-The translation SHALL only affect the "message", "name", "description", and "information" fields, as well as additional fields and comments if their translation makes sense.  Field names MUST NOT be translated.  For example, the field name "description" will always be in the English language, even if the client requests a response in a different language.
-
-The following request is an example of a valid query where the client asks for information written in the English language, preferring US American English:
-
-.in 7
-.nf
-oid:2.999$lang=en-US,en
-.fi
-.in 3
-
-The usage of the argument "lang" is OPTIONAL.
-
-.ti 0
-2.2.1.4  Custom Input Parameters
-
-The usage of input parameters not described in this document is individual for each implementation.
-
-Names MUST be alphanumeric, lower-case, and non-empty, and SHOULD be written in the English language (e.g. "database") or be common abbreviations (e.g. "db").
-
-Values MUST be case-sensitive and non-empty, and MUST NOT contain a dollar sign ("$") or an equal sign ("=").
-
-The usage of the custom input parameters MUST be OPTIONAL.
-
-.ti 0
-2.2.2  Request ABNF Notation
+2.2.1.2  Request ABNF Notation
 
 To define the query string, the following Augmented BNF definitions will be used.  They are based on the ABNF styles of RFC\05234 [RFC5234].
 
@@ -600,6 +529,81 @@ digit           = %x30-39  ; 0-9
 nonzero-digit   = %x31-39  ; 1-9
 lowercase-char  = %x61-7A  ; a-z
 .fi
+
+.ti 0
+2.2.2  Format ("format" Argument)
+
+The "format" argument defines the desired output format.
+
+This document defines 3 formats:
+
+(1) "text": A text representation as defined in section\03.1.1 (MANDATORY).
+
+(2) "json": The JavaScript Object Notation (JSON, [RFC8259]) representation as defined in section\03.1.2 (RECOMMENDED).
+
+(3) "xml": Extensible Markup Language (XML, [XML]) representation as defined in section\03.1.3 (RECOMMENDED).
+
+The default format is "text", which is assumed if the "format" argument is omitted.
+
+Besides these 3 formats, the server can accept other formats not defined in this document.  The name of the formats MUST be alphanumeric, lower-case, and non-empty, and SHOULD be written in the English language (e.g. "text") or be common abbreviations (e.g. "json").
+
+If the client requests a format that is not implemented, then the server MUST respond with the "text" format, and the output MUST consist of the "query" field, "result: Service error", and a fitting "message" field (as described in section\03.2.1).
+
+The usage of the argument "format" is OPTIONAL.
+
+.ti 0
+2.2.3  Authentication Tokens ("auth" Argument)
+
+Some organizations might not want to present their OID information (or part of it) to the public, e.g. for reasons like privacy or confidentiality.  Therefore, one or more "authentication tokens" can be sent to control the display of confidential information returned by the OID-IP service.
+
+Authentication tokens MUST be case-sensitive and non-empty, and MUST NOT contain a dollar sign ("$"), an equal sign ("="), or a comma sign (",").
+
+If multiple authentication tokens need to be submitted, then the "auth" argument MUST NOT be repeated.  Instead, the tokens are separated using a comma sign (",").  A token MUST NOT be used multiple times in the same query.
+
+Examples of valid queries are:
+
+.in 7
+.nf
+oid:2.999$auth=firstToken
+oid:2.999$auth=firstToken,secondToken
+.fi
+.in 3
+
+Please note that authentication tokens are only weak protection.  For more information, see section\08 "Security Considerations".
+
+The usage of the argument "auth" is OPTIONAL.
+
+.ti 0
+2.2.4  Preferred Language ("lang" Argument)
+
+The client can request the preferred language of human-readable descriptions, names, comments, and error messages using the "lang" argument.
+
+If the server has data in different languages, it should try to find the best-fitting language according to the client's request.
+
+The value of the "lang" argument MUST be a list of language tags as defined by [RFC5646], separated by a comma sign, sorted by preference, and containing at least one element.
+
+The translation SHALL only affect the "message", "name", "description", and "information" fields, as well as additional fields and comments if their translation makes sense.  Field names MUST NOT be translated.  For example, the field name "description" will always be in the English language, even if the client requests a response in a different language.
+
+The following request is an example of a valid query where the client asks for information written in the English language, preferring US American English:
+
+.in 7
+.nf
+oid:2.999$lang=en-US,en
+.fi
+.in 3
+
+The usage of the argument "lang" is OPTIONAL.
+
+.ti 0
+2.2.5  Custom Input Parameters
+
+The usage of input parameters not described in this document is individual for each implementation.
+
+Names MUST be alphanumeric, lower-case, and non-empty, and SHOULD be written in the English language (e.g. "database") or be common abbreviations (e.g. "db").
+
+Values MUST be case-sensitive and non-empty, and MUST NOT contain a dollar sign ("$") or an equal sign ("=").
+
+The usage of the custom input parameters MUST be OPTIONAL.
 .bp
 .ti 0
 3  Response
@@ -1062,7 +1066,7 @@ The following things need to be considered if alternative namespaces are impleme
 
 (5) If things like "Owner", "Creator", "Manager", "Administrator", etc., are relevant to the identifiers in the namespace, then the RA-section as described in section\03.2.3 SHALL be used, even though the word "Registration Authority" might not be appropriate in the terminology of the namespace.
 
-(6) For WHOIS requests, the namespace-specific identifier MUST NOT contain dollar signs ("$"), because section\02.2.1 "Input Parameters" defines them as a separator for input parameters.  For HTTP(S) requests, the namespace-specific identifier MUST NOT contain a slash ("/") and MUST NOT be called "root".
+(6) For WHOIS requests, the namespace-specific identifier MUST NOT contain dollar signs ("$"), because section\02.2.1.1 "Input Parameters" defines them as a separator for input parameters.  For HTTP(S) requests, the namespace-specific identifier MUST NOT contain a slash ("/") and MUST NOT be called "root".
 
 (7) The namespace-specific identifier MUST be treated as case-sensitive if the namespace distinguishes between lower-case and upper-case.
 
@@ -1117,7 +1121,7 @@ The OID-IP service can define additional field names, but they SHOULD be written
 
 (2) Registration Authorities might demand that their data be kept confidential, or at least be partially redacted to increase privacy or as a measurement against spam.  In this case, the OID-IP service can redact information in the RA-Section, as defined in section\03.2.3 "RA-Section".
 
-(3) The OID-IP service can decide if confidential material is omitted or shown, based on authentication mechanisms like white-listing client IP addresses or by using authentication tokens supplied by the client during the request, as defined in section\02.1.3 "Authentication" and section\02.2.1.2 "Authentication Tokens".
+(3) The OID-IP service can decide if confidential material is omitted or shown, based on authentication mechanisms like white-listing client IP addresses or by using authentication tokens supplied by the client during the request, as defined in section\02.1.3 "Authentication" and section\02.2.3 "Authentication Tokens".
 
 (4) Unless HTTPS is used, the usage of authentication tokens or transmitting confidential information is not recommended if the traffic between client and server is transmitted through an untrusted network.
 
