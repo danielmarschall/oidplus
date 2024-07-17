@@ -153,31 +153,33 @@ Table of Contents
        3.2.4  Sections for Previous Registration Authorities  . . . . 24
      3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 24
        3.3.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 24
-       3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 24
+       3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 25
        3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 25
      3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 25
-       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 27
-       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 27
-   4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
-   5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 29
-     5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 29
-     5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 29
-   6  Alternative Namespaces  . . . . . . . . . . . . . . . . . . . . 31
-     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 32
-   7  Internationalization Considerations . . . . . . . . . . . . . . 32
-   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 33
-   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 33
-   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 34
-     10.1  Normative References . . . . . . . . . . . . . . . . . . . 34
-     10.2  Informative References . . . . . . . . . . . . . . . . . . 36
-   Appendix A.  JSON Format Schema and Example  . . . . . . . . . . . 37
-   Appendix A.1.  JSON Format Schema  . . . . . . . . . . . . . . . . 37
-   Appendix A.2.  JSON Format Example of Output . . . . . . . . . . . 46
-   Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 48
-   Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 48
-   Appendix B.2.  XML Format Example of Output  . . . . . . . . . . . 57
-   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 59
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 59
+       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 26
+       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 26
+   4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 27
+   5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 28
+     5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+     5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 28
+   6  Alternative Namespaces  . . . . . . . . . . . . . . . . . . . . 29
+     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 30
+       6.1.1  Request . . . . . . . . . . . . . . . . . . . . . . . . 30
+       6.1.2  Response  . . . . . . . . . . . . . . . . . . . . . . . 30
+   7  Internationalization Considerations . . . . . . . . . . . . . . 30
+   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 31
+   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 31
+   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 32
+     10.1  Normative References . . . . . . . . . . . . . . . . . . . 32
+     10.2  Informative References . . . . . . . . . . . . . . . . . . 34
+   Appendix A.  JSON Format Schema and Example  . . . . . . . . . . . 35
+   Appendix A.1.  JSON Format Schema  . . . . . . . . . . . . . . . . 35
+   Appendix A.2.  JSON Format Example of Output . . . . . . . . . . . 44
+   Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 46
+   Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 46
+   Appendix B.2.  XML Format Example of Output  . . . . . . . . . . . 55
+   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 57
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 57
 .fi
 .in 3
 
@@ -848,6 +850,7 @@ The history does not need to be complete, e.g. it is no problem to only serve in
 
 If integrity/authenticity is required, the whole response can be signed, e.g. by using PGP, RSA, ECDSA, etc.  Depending on the signature method being used, various things need to be appended and/or prepended to the response (e.g. "-----BEGIN PGP MESSAGE-----" and "-----END PGP MESSAGE-----").  These additional lines MUST be prepended by a percent sign ("%") to avoid an application confusing these additional lines (e.g. lines belonging to a PGP header, as defined in RFC\04880 [RFC4880]) with parts of the actual OID-IP response.
 
+
 .ti 0
 3.3.2  "json" Format
 
@@ -890,7 +893,7 @@ Date/Time references SHALL be formatted as described in section\03.4.1.
 If parts of the date/time reference are uncertain, then they SHOULD be omitted until the date/time reference has the highest correctness.
 
 Examples of valid date/time references can be found in section\03.4.2.
-.bp
+
 .ti 0
 3.4.1  Date/Time Format ABNF Notation
 
@@ -987,7 +990,7 @@ ra-status:      Information unavailable
 .bp
 .ti 0
 5  Full Example ("text" Format)
-
+.\" No new line, because I want that the full example fits on one page!
 .ti 0
 5.1  Request
 
@@ -1070,17 +1073,22 @@ The following things need to be considered if alternative namespaces are impleme
 
 The following example shows the retrieval of information about Universally Unique Identifiers (e.g. UUIDs used by the Microsoft Common Object Model, also known as GUIDs).  The UUID namespace has no hierarchical structure, which means that the OID-IP service can only respond with the result "Found", "Not found" or "Service error" and the fields "parent" and "subordinate" cannot be used.
 
-Request:
+More information about UUIDs can be found in Recommendation ITU-T X.667 (2012) | ISO/IEC 9834-8:2014 [X667].
 
-.in 7
+More information about the Microsoft Common Object Model (COM) can be found at Microsoft Docs <https://learn.microsoft.com/en-us/windows/win32/com/component-object-model--com--portal>.
+
+.ti 0
+6.1.1  Request
+
 .nf
-uuid:b4bfcc3a-db2c-424c-b029-7fe99a87c641
+HTTP(S):   https://oidip.example.com/uuid/\\
+b4bfcc3a-db2c-424c-b029-7fe99a87c641/text
+WHOIS:     uuid:b4bfcc3a-db2c-424c-b029-7fe99a87c641
 .fi
-.in 3
 
-Response:
+.ti 0
+6.1.2  Response
 
-.in 7
 .nf
 query:        uuid:b4bfcc3a-db2c-424c-b029-7fe99a87c641
 result:       Found
@@ -1094,11 +1102,6 @@ information:  GUID can be used in file dialogs as "Custom Place".
 ra:           Microsoft Corp.
 ra-status:    Information unavailable
 .fi
-.in 3
-
-More information about UUIDs can be found in Recommendation ITU-T X.667 (2012) | ISO/IEC 9834-8:2014 [X667].
-
-More information about the Microsoft Common Object Model (COM) can be found at Microsoft Docs <https://docs.microsoft.com/en-us/windows/win32/com/component-object-model--com--portal>.
 
 .ti 0
 7  Internationalization Considerations
