@@ -3,7 +3,7 @@
 .\" https://misc.daniel-marschall.de/patches/nroffedit/
 .\"
 .\" Alternative, you can compile this document on Linux, using the following command:
-.\"        nroff -T ascii -ms draft-viathinksoft-oidip-07.nroff | ./fix_formfeed.pl > draft-viathinksoft-oidip-07.txt
+.\"        nroff -T ascii -ms draft-viathinksoft-oidip-08.nroff | ./fix_formfeed.pl > draft-viathinksoft-oidip-08.txt
 .\" Note that "-ms" only works if the package "groff" is installed.
 .\" fix.pl needs to be executed to replace FORMFEED.
 .\" Note that the Linux command does not auto-generate the Table of Contents, since this is a NroffEdit feature!
@@ -34,11 +34,11 @@
 .\" Left header text
 .ds LH INTERNET DRAFT
 .\" Right header text
-.ds RH 23 January 2024
+.ds RH 19 July 2024
 .\" Center header text
 .ds CH OID Information Protocol
 .\" Center footer text
-.ds CF Expires 26 July 2024
+.ds CF Expires 20 January 2025
 .\" Hyphenation mode set to 0
 .hy 0
 .\" Disable hyphenation
@@ -51,7 +51,7 @@
 .nf
 .tl 'INTERNET-DRAFT''D. Marschall'
 .tl 'Intended Status: Informational''ViaThinkSoft'
-.tl 'Expires: 26 July 2024''15 July 2024'
+.tl 'Expires: 20 January 2025''19 July 2024'
 .fi
 
 .\" Note. The ".tl" directive is used to generate the leading header 
@@ -67,7 +67,7 @@
 .ce 3
 Retrieving information about Object Identifiers
 using a text-based protocol
-draft-viathinksoft-oidip-07
+draft-viathinksoft-oidip-08
 .fi
 .in 3
 
@@ -94,7 +94,7 @@ and may be updated, replaced, or obsoleted by other documents at any
 time.  It is inappropriate to use Internet-Drafts as reference
 material or to cite them other than as "work in progress."
 
-This Internet-Draft will expire on 26 July 2024.
+This Internet-Draft will expire on 20 January 2025.
 
 .ti 0
 Copyright Notice
@@ -126,21 +126,21 @@ Table of Contents
    1  Introduction  . . . . . . . . . . . . . . . . . . . . . . . . .  4
      1.1  Terminology . . . . . . . . . . . . . . . . . . . . . . . .  5
    2  Request . . . . . . . . . . . . . . . . . . . . . . . . . . . .  6
-     2.1 Request via HTTP Protocol (Recommended)  . . . . . . . . . .  6
+     2.1 Request via HTTP(S) Protocol (Recommended) . . . . . . . . .  6
        2.1.1 Request Method and Path  . . . . . . . . . . . . . . . .  6
        2.1.2 Formats and Content-Types  . . . . . . . . . . . . . . .  7
        2.1.3 Authentication . . . . . . . . . . . . . . . . . . . . .  7
        2.1.4 Preferred Language . . . . . . . . . . . . . . . . . . .  8
        2.1.5 Custom Input Parameters  . . . . . . . . . . . . . . . .  9
        2.1.6 Cookies  . . . . . . . . . . . . . . . . . . . . . . . .  9
-       2.1.6 HTTP Response Status Codes . . . . . . . . . . . . . . .  9
+       2.1.6 HTTP(S) Response Status Codes  . . . . . . . . . . . . .  9
      2.2 Request via WHOIS Protocol (Backwards Compatibility) . . . . 10
        2.2.1  Input Parameters  . . . . . . . . . . . . . . . . . . . 11
          2.2.1.1  Format ("format" Argument)  . . . . . . . . . . . . 11
          2.2.1.2  Authentication Tokens ("auth" Argument) . . . . . . 12
          2.2.1.3  Preferred Language ("lang" Argument)  . . . . . . . 13
          2.2.1.4  Custom Input Parameters . . . . . . . . . . . . . . 13
-       2.2.2  Request ABNF Notation . . . . . . . . . . . . . . . . . 13
+       2.2.2  Request ABNF Notation . . . . . . . . . . . . . . . . . 14
    3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
      3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . . 16
        3.1.1 "text" Format  . . . . . . . . . . . . . . . . . . . . . 16
@@ -156,28 +156,28 @@ Table of Contents
        3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 24
        3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 25
      3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 25
-       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 26
-       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 26
-   4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 27
-   5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 28
-     5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 28
-     5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 28
-   6  Alternative Namespaces  . . . . . . . . . . . . . . . . . . . . 30
-     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 31
-   7  Internationalization Considerations . . . . . . . . . . . . . . 31
-   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 32
-   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 32
-   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 33
-     10.1  Normative References . . . . . . . . . . . . . . . . . . . 33
-     10.2  Informative References . . . . . . . . . . . . . . . . . . 35
-   Appendix A.  JSON Format Schema and Example  . . . . . . . . . . . 36
-   Appendix A.1.  JSON Format Schema  . . . . . . . . . . . . . . . . 36
-   Appendix A.2.  JSON Format Example of Output . . . . . . . . . . . 45
-   Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 47
-   Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 47
-   Appendix B.2.  XML Format Example of Output  . . . . . . . . . . . 56
-   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 58
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 58
+       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 27
+       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 27
+   4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+   5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 29
+     5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 29
+     5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 29
+   6  Alternative Namespaces  . . . . . . . . . . . . . . . . . . . . 31
+     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 32
+   7  Internationalization Considerations . . . . . . . . . . . . . . 32
+   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 33
+   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 33
+   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 34
+     10.1  Normative References . . . . . . . . . . . . . . . . . . . 34
+     10.2  Informative References . . . . . . . . . . . . . . . . . . 36
+   Appendix A.  JSON Format Schema and Example  . . . . . . . . . . . 37
+   Appendix A.1.  JSON Format Schema  . . . . . . . . . . . . . . . . 37
+   Appendix A.2.  JSON Format Example of Output . . . . . . . . . . . 46
+   Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 48
+   Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 48
+   Appendix B.2.  XML Format Example of Output  . . . . . . . . . . . 57
+   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 59
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 59
 .fi
 .in 3
 
@@ -251,14 +251,14 @@ XML         Extensible Markup Language, a markup language and file format for st
 OID-IP is a text-based protocol transmitted either via the Hypertext Transfer Protocol [RFC9112], or due to backwards compatibility via WHOIS protocol. (The concept of OID-IP was established in 2011 and is already implemented by several vendors).
 
 .ti 0
-2.1 Request via HTTP Protocol (Recommended)
+2.1 Request via HTTP(S) Protocol (Recommended)
 
 OID-IP is a text-based protocol primarily transmitted over the Hypertext Transfer Protocol [RFC9112].
 
 .ti
 2.1.1 Request Method and Path
 
-All requests MUST be made using the HTTP request methods "GET" or "POST" in the following structure:
+All requests MUST be made using the HTTP(S) request methods "GET" or "POST" in the following structure:
 
     GET /.../<objectType>/<objectIdentifier>/<format>
     POST /.../<objectType>/<objectIdentifier>/<format>
@@ -297,9 +297,9 @@ This document defines 3 formats:
 
 (1) "text": A text representation as defined in section\03.1.1 (MANDATORY).  The "Content-Type" response header MUST be "text/plain".
 
-(2) "json": The JavaScript Object Notation (JSON, [RFC8259]) representation as defined in section\03.1.2 (MANDATORY for the HTTP request method).  The "Content-Type" response header MUST be either "text/json" or "application/json".
+(2) "json": The JavaScript Object Notation (JSON, [RFC8259]) representation as defined in section\03.1.2 (MANDATORY for the HTTP(S) request method).  The "Content-Type" response header MUST be either "text/json" or "application/json".
 
-(3) "xml": Extensible Markup Language (XML, [XML]) representation as defined in section\03.1.3 (MANDATORY for the HTTP request method).  The "Content-Type" response header MUST be either "text/xml" or "application/xml".
+(3) "xml": Extensible Markup Language (XML, [XML]) representation as defined in section\03.1.3 (MANDATORY for the HTTP(S) request method).  The "Content-Type" response header MUST be either "text/xml" or "application/xml".
 
 The default format is "text", which is assumed if the "format" argument is omitted.
 
@@ -320,7 +320,7 @@ Some organizations might not want to present their OID information (or part of i
 .in 7
 Authentication tokens can be sent as "auth" GET parameter (can be entered by a human in a browser), as "auth" POST parameter, or as "Authentication Bearer" request header (for automated requests). To make authentication as easy as possible, it is RECOMMENDED to allow all three methods, and it is RECOMMENDED that authentication frameworks as defined in RFC\09110, or OAuth\02.0 are not used.
 
-The GET parameter has priority over the POST parameter, which has priority over the HTTP request header.
+The GET parameter has priority over the POST parameter, which has priority over the HTTP(S) request header.
 
 Authentication tokens MUST be case-sensitive and non-empty, and MUST NOT contain a dollar sign ("$"), an equal sign ("="), or a comma sign (",").
 
@@ -341,7 +341,7 @@ The usage of authentication is OPTIONAL.
 
 The client can request the preferred language of human-readable descriptions, names, comments, and error messages using the Accept-Language request header, or using a GET or POST parameter.
 
-The GET parameter has priority over the POST parameter, which has priority over the HTTP request header.
+The GET parameter has priority over the POST parameter, which has priority over the HTTP(S) request header.
 
 If the server has data in different languages, it should try to find the best-fitting language according to the client's request.
 
@@ -379,19 +379,19 @@ The presence (or absence) of cookies MUST NOT make any difference to the OID-IP 
 
 
 .ti 0
-2.1.6 HTTP Response Status Codes
+2.1.6 HTTP(S) Response Status Codes
 
-An OID-IP service usually responds to queries using the HTTP Response Code "200 OK".  Other HTTP Response Codes such as "500 Internal Server Error" or "400 Bad Request" are possible if required.
+An OID-IP service usually responds to queries using the HTTP(S) Response Code "200 OK".  Other HTTP(S) Response Codes such as "500 Internal Server Error" or "400 Bad Request" are possible if required.
 
 There are the following requirements based on the result of the query (see section\02.3.1):
 
-- If the result is "Found", then then the HTTP Response Code MUST be "200 OK".
+- If the result is "Found", then then the HTTP(S) Response Code MUST be "200 OK".
 
-- If the result is "Not found; superior object found", the HTTP Response Code MUST be "470 Not Found - Superior Object Found".
+- If the result is "Not found; superior object found", the HTTP(S) Response Code MUST be "470 Not Found - Superior Object Found".
 
-- If the result is "Not found", then the HTTP Response Code MUST be "404 Not Found".
+- If the result is "Not found", then the HTTP(S) Response Code MUST be "404 Not Found".
 
-- If the response contains a referral server (field "oidip-service"), then the HTTP Response Code MUST NOT be a 3xx redirection status code.
+- If the response contains a referral server (field "oidip-service"), then the HTTP(S) Response Code MUST NOT be a 3xx redirection status code.
 
 While the 3xx redirection status code is not allowed to indicate an OID-IP referral as specified by section\04, the 3xx redirection status codes may be used if the OID-IP service itself moves, e.g. to a different domain name.
 
@@ -930,13 +930,13 @@ Examples of valid date/time references are:
 
 .in 7
 .nf
-2024-01-23 18:32:00 +0200
-2024-01-23 18:32:00
-2024-01-23 18:32 +0200
-2024-01-23 18:32
-2024-01-23
-2024-01
-2024
+2025-01-23 18:32:00 +0200
+2025-01-23 18:32:00
+2025-01-23 18:32 +0200
+2025-01-23 18:32
+2025-01-23
+2025-01
+2025
 .fi
 .in 3
 .bp
@@ -1059,7 +1059,7 @@ The following things need to be considered if alternative namespaces are impleme
 
 (5) If things like "Owner", "Creator", "Manager", "Administrator", etc., are relevant to the identifiers in the namespace, then the RA-section as described in section\03.2.3 SHALL be used, even though the word "Registration Authority" might not be appropriate in the terminology of the namespace.
 
-(6) For WHOIS requests, the namespace-specific identifier MUST NOT contain dollar signs ("$"), because section\02.2.1 "Input Parameters" defines them as a separator for input parameters.  For HTTP requests, the namespace-specific identifier MUST NOT contain a slash ("/") and MUST NOT be called "root".
+(6) For WHOIS requests, the namespace-specific identifier MUST NOT contain dollar signs ("$"), because section\02.2.1 "Input Parameters" defines them as a separator for input parameters.  For HTTP(S) requests, the namespace-specific identifier MUST NOT contain a slash ("/") and MUST NOT be called "root".
 
 (7) The namespace-specific identifier MUST be treated as case-sensitive if the namespace distinguishes between lower-case and upper-case.
 
@@ -1122,7 +1122,7 @@ The OID-IP service can define additional field names, but they SHOULD be written
 
 (6) Like for passwords, the authentication token should be unique and not be used for any other purpose, e.g. as online account password.
 
-(7) Based on the client software, authentication tokens might be saved in the history, which might be a security risk.  For example, the browser history (if authentication tokens are sent as HTTP GET parameter, or in the command-line history if the authentication token has been sent via command-line).
+(7) Based on the client software, authentication tokens might be saved in the history, which might be a security risk.  For example, the browser history (if authentication tokens are sent as HTTP(S) GET parameter, or in the command-line history if the authentication token has been sent via command-line).
 
 (8) If integrity/authenticity is required, the OID-IP response can be signed, as described in section\03.3 "Digital Signature".
 
@@ -1313,18 +1313,18 @@ Appendix A.1.  JSON Format Schema
 
 The following JSON Schema ([JSONSch]) defines the expected output the server sends if the argument "format" is set to "json".
 
-[To RFC Editor: Please change "draft-viathinksoft-oidip-07.json" before publication.]
+[To RFC Editor: Please change "draft-viathinksoft-oidip-08.json" before publication.]
 
-[To RFC Editor: Please change "urn:ietf:id:draft-viathinksoft-oidip-07" to "urn:ietf:rfc:yyyy" before publication.]
+[To RFC Editor: Please change "urn:ietf:id:draft-viathinksoft-oidip-08" to "urn:ietf:rfc:yyyy" before publication.]
 
 .\" Attention: NROFF changes \\ to \ . Therefore '\\' is correct and means '\'!
 NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
 
 .\" .in 3
 .nf
-<CODE BEGINS> file "draft-viathinksoft-oidip-07.json"
+<CODE BEGINS> file "draft-viathinksoft-oidip-08.json"
 {
-  "$id":"urn:ietf:id:draft-viathinksoft-oidip-07",
+  "$id":"urn:ietf:id:draft-viathinksoft-oidip-08",
   "$schema":"https://json-schema.org/draft/2020-12/schema",
   "type":"object",
   "properties":{
@@ -1724,7 +1724,7 @@ Ra1SectionType et al.",
 .ti 0
 Appendix A.2.  JSON Format Example of Output
 
-[To RFC Editor: Please change "urn:ietf:id:draft-viathinksoft-oidip-07" to "urn:ietf:rfc:yyyy" before publication.]
+[To RFC Editor: Please change "urn:ietf:id:draft-viathinksoft-oidip-08" to "urn:ietf:rfc:yyyy" before publication.]
 
 .\" Attention: NROFF changes \\ to \ . Therefore '\\' is correct and means '\'!
 NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
@@ -1733,7 +1733,7 @@ NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
 .nf
 <CODE BEGINS> file "oidip_example.json"
 {
-  "$schema":"urn:ietf:id:draft-viathinksoft-oidip-07",
+  "$schema":"urn:ietf:id:draft-viathinksoft-oidip-08",
   "oidip": {
     "querySection": {
       "query": "oid:2.999",
@@ -1793,9 +1793,9 @@ Appendix B.  XML Format Schema and Example
 .ti 0
 Appendix B.1.  XML Format Schema
 
-[To RFC Editor: Please change "urn:ietf:id:draft-viathinksoft-oidip-07" to "urn:ietf:rfc:yyyy" before publication.]
+[To RFC Editor: Please change "urn:ietf:id:draft-viathinksoft-oidip-08" to "urn:ietf:rfc:yyyy" before publication.]
 
-[To RFC Editor: Please change "draft-viathinksoft-oidip-07.xsd" before publication.]
+[To RFC Editor: Please change "draft-viathinksoft-oidip-08.xsd" before publication.]
 
 The following XML Schema Definition ([XSD]) defines the expected output the server sends if the argument "format" is set to "xml".
 
@@ -1804,12 +1804,12 @@ NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
 
 .\" .in 3
 .nf
-<CODE BEGINS> file "draft-viathinksoft-oidip-07.xsd"
+<CODE BEGINS> file "draft-viathinksoft-oidip-08.xsd"
 <?xml version="1.0"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            xmlns:ds="http://www.w3.org/2000/09/xmldsig#"
-           xmlns:ns1="urn:ietf:id:draft-viathinksoft-oidip-07"
-           targetNamespace="urn:ietf:id:draft-viathinksoft-oidip-07"
+           xmlns:ns1="urn:ietf:id:draft-viathinksoft-oidip-08"
+           targetNamespace="urn:ietf:id:draft-viathinksoft-oidip-08"
            elementFormDefault="qualified"
            attributeFormDefault="unqualified">
 <xs:import namespace="http://www.w3.org/2000/09/xmldsig#"
@@ -2209,9 +2209,9 @@ NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
 .ti 0
 Appendix B.2.  XML Format Example of Output
 
-[To RFC Editor: Please change "urn:ietf:id:draft-viathinksoft-oidip-07" to "urn:ietf:rfc:yyyy" before publication.]
+[To RFC Editor: Please change "urn:ietf:id:draft-viathinksoft-oidip-08" to "urn:ietf:rfc:yyyy" before publication.]
 
-[To RFC Editor: Please change "draft-viathinksoft-oidip-07.xsd" before publication.]
+[To RFC Editor: Please change "draft-viathinksoft-oidip-08.xsd" before publication.]
 
 .\" Attention: NROFF changes \\ to \ . Therefore '\\' is correct and means '\'!
 NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
@@ -2220,10 +2220,10 @@ NOTE: '\\' line wrapping per RFC\08792  [RFC8792]
 .nf
 <CODE BEGINS> file "oidip_example.xml"
 <?xml version="1.0"?>
-<root xmlns="urn:ietf:id:draft-viathinksoft-oidip-07"
+<root xmlns="urn:ietf:id:draft-viathinksoft-oidip-08"
       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-      xsi:schemaLocation="urn:ietf:id:draft-viathinksoft-oidip-07 \\
-http://.../draft-viathinksoft-oidip-07.xsd">
+      xsi:schemaLocation="urn:ietf:id:draft-viathinksoft-oidip-08 \\
+http://.../draft-viathinksoft-oidip-08.xsd">
 <oidip>
   <querySection>
      <query>oid:2.999</query>
@@ -2340,7 +2340,7 @@ This document was written in Nroff Internet Draft Editor by 3xA Security.
 .br
 https://aaa-sec.com/nroffedit/
 .br
-https://misc.daniel-marschall.de/patches/nroffedit/ (year 2020 fix)
+https://misc.daniel-marschall.de/patches/nroffedit/ ("year 2020" patch)
 
 .ti 0
 Authors' Addresses
