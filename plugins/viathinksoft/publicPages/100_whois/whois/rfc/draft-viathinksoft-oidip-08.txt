@@ -377,9 +377,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
 
    If the client requests a format that is not implemented, then the
    server MUST respond with the "text" format, and the output MUST
-   consist of the "query" field, "result: Service error", and a fitting
-   "message" field (as described in section 3.2.1).
-
+   consist of the "query" field, "result: Service error", a fitting
+   "message" field (as described in section 3.2.1), and MUST be sending
+   the HTTP response code "400 Bad Request".
 
 
 
@@ -518,7 +518,7 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    Internal Server Error" or "400 Bad Request" are possible if required.
 
    There are the following requirements based on the result of the query
-   (see section 2.3.1):
+   (see section 3.2.1):
 
    - If the result is "Found", then then the HTTP(S) Response Code MUST
    be "200 OK".
