@@ -3,6 +3,15 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.1.27",
+		"date": "2024-07-19 13:00:00 +0200",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"In case the private/public key pair is broken or cannot be decrypted, it will not be regenerated automatically.",
+			"The privkey secret file filename now contains the system ID, so it is easier to recognize"
+		]
+	},
+	{
 		"version": "2.0.1.26",
 		"date": "2024-07-01 21:55:00 +0200",
 		"author": "Daniel Marschall (ViaThinkSoft)",

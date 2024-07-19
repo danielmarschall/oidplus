@@ -846,6 +846,7 @@ class OIDInfoAPI {
 			}
 
 			if ($rulefit && ($vararcs == $varsfit)) {
+				// echo "$oid is illegal because of rule $rule\n";
 				$illegal_root = implode('.', $illrootary);
 				return true; // is illegal
 			}
