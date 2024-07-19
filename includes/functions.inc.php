@@ -620,23 +620,25 @@ function html_to_text(string $html): string {
 }
 
 /**
- * Get header Authorization
+ * Get HTTP request header, e.g. 'Authorization'
+ * @param string $name e.g. 'Authorization'
+ * @return string|null
  * @see https://stackoverflow.com/questions/40582161/how-to-properly-use-bearer-tokens
  **/
-function getAuthorizationHeader(){
+function getHttpRequestHeader(string $name) {
     $headers = null;
-    if (isset($_SERVER['Authorization'])) {
-        $headers = trim($_SERVER["Authorization"]);
+    if (isset($_SERVER[$name])) {
+        $headers = trim($_SERVER[$name]);
     }
-    else if (isset($_SERVER['HTTP_AUTHORIZATION'])) { //Nginx or fast CGI
-        $headers = trim($_SERVER["HTTP_AUTHORIZATION"]);
+    else if (isset($_SERVER['HTTP_'.str_replace('-','_',strtoupper($name))])) { //Nginx or fast CGI
+        $headers = trim($_SERVER["HTTP_".str_replace('-','_',strtoupper($name))]);
     } elseif (function_exists('apache_request_headers')) {
         $requestHeaders = apache_request_headers();
         // Server-side fix for bug in old Android versions (a nice side-effect of this fix means we don't care about capitalization for Authorization)
         $requestHeaders = array_combine(array_map('ucwords', array_keys($requestHeaders)), array_values($requestHeaders));
         //print_r($requestHeaders);
-        if (isset($requestHeaders['Authorization'])) {
-            $headers = trim($requestHeaders['Authorization']);
+        if (isset($requestHeaders[$name])) {
+            $headers = trim($requestHeaders[$name]);
         }
     }
     return $headers;
@@ -647,7 +649,7 @@ function getAuthorizationHeader(){
  * @see https://stackoverflow.com/questions/40582161/how-to-properly-use-bearer-tokens
  **/
 function getBearerToken() {
-    $headers = getAuthorizationHeader();
+    $headers = getHttpRequestHeader('Authorization');
     // HEADER: Get the access token from the header
     if (!empty($headers)) {
         if (preg_match('/Bearer\s(\S+)/', $headers, $matches)) {

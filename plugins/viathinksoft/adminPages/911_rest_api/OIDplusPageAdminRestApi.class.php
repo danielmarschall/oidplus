@@ -128,7 +128,7 @@ class OIDplusPageAdminRestApi extends OIDplusPagePluginAdmin {
 				$out['text'] .= '<h2>'._L('Authentication').'</h2>';
 				$out['text'] .= '<p>'._L('The authentication is done via the following HTTP header:').'</p>';
 				$out['text'] .= '<p><pre id="oidplus_auth_jwt">';
-				$out['text'] .= 'Authentication: Bearer '.htmlentities($token)."\n";
+				$out['text'] .= 'Authorization: Bearer '.htmlentities($token)."\n";
 				$out['text'] .= '</pre></p>';
 				$out['text'] .= '<p><input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(oidplus_auth_jwt)"></p>';
 				$out['text'] .= '<p>'._L('Please keep this information confidential!').'</p>';

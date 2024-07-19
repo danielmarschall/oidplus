@@ -24,7 +24,7 @@ namespace ViaThinkSoft\OIDplus;
 // phpcs:enable PSR1.Files.SideEffects
 
 /**
- * Auth content store for JWT tokens (web browser login cookies, Automated AJAX argument, or REST Bearer)
+ * Auth content store for JWT tokens (web browser login cookies, Automated AJAX argument, or REST Authorization Bearer)
  */
 class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 
@@ -520,7 +520,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 
 				if ($only_use_bearer) {
 
-					// REST may only use Bearer Authentication
+					// REST may only use Bearer Authorization
 					$bearer = getBearerToken();
 					if (!is_null($bearer)) {
 						$silent_error = false;
