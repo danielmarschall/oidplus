@@ -1751,11 +1751,20 @@ class OIDplus extends OIDplusBaseClass {
 	 * @return string
 	 */
 	private static function getPrivKeyPassphraseFilename(): string {
+		$pubKey = OIDplus::getSystemPublicKey();
+		$systemid = self::getSystemIdFromPubKey($pubKey);
+
 		$oldfile1 = OIDplus::localpath() . 'userdata/privkey_secret.php'; // backwards compatibility
 		$oldfile2 = realpath(OIDplus::getUserDataDir("secret").'../').'/privkey_secret.php'; // when userdata is copied to a new tenant
-		$newfile = OIDplus::getUserDataDir("secret") . 'privkey_secret.php';
+		$oldfile3 = OIDplus::getUserDataDir("secret") . 'privkey_secret.php';
+		$newfile = OIDplus::getUserDataDir("secret") . 'privkey_secret_'.$systemid.'.php';
+
 		$file_to_choose = $newfile;
-		if (file_exists($oldfile2) && !file_exists($newfile)) {
+		if (file_exists($oldfile3) && !file_exists($newfile)) {
+			@rename($oldfile3, $newfile);
+			if (!file_exists($newfile)) $file_to_choose = $oldfile3;
+		}
+		else if (file_exists($oldfile2) && !file_exists($newfile)) {
 			@rename($oldfile2, $newfile);
 			if (!file_exists($newfile)) $file_to_choose = $oldfile2;
 		}
@@ -1855,10 +1864,9 @@ class OIDplus extends OIDplusBaseClass {
 			$pubKey = OIDplus::getSystemPublicKey();
 			if (!verify_private_public_key($privKey, $pubKey)) {
 
-				// throw new OIDplusException("Private/Public key-pair is broken!");
-
 				if ($pubKey) {
-					OIDplus::logger()->log("V2:[CRIT]A", "The private/public key-pair is broken. A new key-pair will now be generated for your system. Your System-ID will change.");
+					throw new OIDplusException(_L("The Private/Public key-pair is broken or cannot be decrypted! Please check if the file %1 is existing and OK! In case this file is missing or corrupted and cannot be recovered, you need to reset your private/public key-pair. Do so by removing the settings %2 and %3 in the OIDplus configuration table in the database. This will invoke a regeneration of the private/public key-pair (you will receive a new system ID).", self::getPrivKeyPassphraseFilename(), 'oidplus_public_key', 'oidplus_private_key'));
+					//OIDplus::logger()->log("V2:[CRIT]A", "The private/public key-pair is broken. A new key-pair will now be generated for your system. Your System-ID will change.");
 				}
 
 				$pkey_config = array(

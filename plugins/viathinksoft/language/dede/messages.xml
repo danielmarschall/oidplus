@@ -7734,6 +7734,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The Private/Public key-pair is broken or cannot be decrypted! Please check if the file %1 is existing and OK! In case this file is missing or corrupted and cannot be recovered, you need to reset your private/public key-pair. Do so by removing the settings %2 and %3 in the OIDplus configuration table in the database. This will invoke a regeneration of the private/public key-pair (you will receive a new system ID).
+		]]></source>
+		<target><![CDATA[
+		Das Schlüsselpaar ist beschädigt oder kann nicht entschlüsselt werden! Bitte prüfen Sie, ob die Datei %1 in Ordnung ist. Falls die Datei fehlt oder beschädigt ist und nicht mehr wiederhergestellt werden kann, dann gehen Sie in die OIDplus Konfigurationstabelle in der Datenbank und löschen Sie dort die Einträge %2 und %3. Dies wird ein neues Schlüsselpaar erzeugen (Ihre SystemID ändert sich dann).
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The RA %1 is not registered in the database.
 		]]></source>
 		<target><![CDATA[
