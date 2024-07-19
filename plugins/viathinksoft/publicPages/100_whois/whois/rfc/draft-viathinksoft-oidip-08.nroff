@@ -65,8 +65,8 @@
 .\" This and other comments in this template can safely be deleted.
 
 .ce 3
-Retrieving information about Object Identifiers
-using a text-based protocol
+Retrieving information about Object Identifiers in a consistent
+way that is both human-readable and machine-readable.
 draft-viathinksoft-oidip-08
 .fi
 .in 3
@@ -75,7 +75,7 @@ draft-viathinksoft-oidip-08
 .ti 0
 Abstract
 
-This document defines a method for retrieving information about Object Identifiers (OIDs) and their associated Registration Authorities (RAs) through a text-based protocol, in a way that is both human-readable and machine-readable.  Besides a text output format, OID-IP also supports sending information in JSON and XML.
+This document defines a method for retrieving information about Object Identifiers (OIDs) and their associated Registration Authorities (RAs) through the HTTP or WHOIS protocol, in a way that is both human-readable and machine-readable.  Besides a text output format, OID-IP also supports sending information in JSON and XML.
 
 .ti 0
 Status of This Memo
@@ -129,59 +129,59 @@ Table of Contents
      2.1  Request via HTTP(S) Protocol (Recommended)  . . . . . . . .  6
        2.1.1 Request Method and Path  . . . . . . . . . . . . . . . .  6
        2.1.2  Formats and Content-Types . . . . . . . . . . . . . . .  7
-       2.1.3  Authentication  . . . . . . . . . . . . . . . . . . . .  7
-       2.1.4  Preferred Language  . . . . . . . . . . . . . . . . . .  8
+       2.1.3  Authentication  . . . . . . . . . . . . . . . . . . . .  8
+       2.1.4  Preferred Language  . . . . . . . . . . . . . . . . . .  9
        2.1.5  Custom Input Parameters . . . . . . . . . . . . . . . .  9
-       2.1.6  Cookies . . . . . . . . . . . . . . . . . . . . . . . .  9
+       2.1.6  Cookies . . . . . . . . . . . . . . . . . . . . . . . . 10
        2.1.7  HTTP(S) Response Status Codes . . . . . . . . . . . . . 10
-     2.2  Request via WHOIS Protocol (Backwards Compatibility)  . . . 10
-       2.2.1  Request Method  . . . . . . . . . . . . . . . . . . . . 10
-         2.2.1.1  Basic Query String  . . . . . . . . . . . . . . . . 10
-         2.2.1.2  Input Parameters  . . . . . . . . . . . . . . . . . 11
+     2.2  Request via WHOIS Protocol (Backwards Compatibility)  . . . 11
+       2.2.1  Request Method  . . . . . . . . . . . . . . . . . . . . 11
+         2.2.1.1  Basic Query String  . . . . . . . . . . . . . . . . 11
+         2.2.1.2  Input Parameters  . . . . . . . . . . . . . . . . . 12
          2.2.1.3  Request ABNF Notation . . . . . . . . . . . . . . . 12
-       2.2.2  Format ("format" Argument)  . . . . . . . . . . . . . . 13
+       2.2.2  Format ("format" Argument)  . . . . . . . . . . . . . . 14
        2.2.3  Authentication Tokens ("auth" Argument) . . . . . . . . 14
-       2.2.4  Preferred Language ("lang" Argument)  . . . . . . . . . 14
-       2.2.5  Custom Input Parameters . . . . . . . . . . . . . . . . 15
-   3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
-     3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . . 16
-       3.1.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 16
-       3.1.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 16
-       3.1.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 17
-     3.2  Sections  . . . . . . . . . . . . . . . . . . . . . . . . . 17
-       3.2.1  Query-Section (Information about Query and Result)  . . 17
-       3.2.2  Object-Section (Information about the OID)  . . . . . . 18
-       3.2.3  RA-Section (Information about the Current RA) . . . . . 22
-       3.2.4  Sections for Previous Registration Authorities  . . . . 24
-     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 24
-       3.3.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 24
-       3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 25
-       3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 25
-     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 25
-       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 26
-       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 26
-   4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 27
-   5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 28
-     5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 28
-     5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 28
-   6  Alternative Namespaces  . . . . . . . . . . . . . . . . . . . . 29
-     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 30
-       6.1.1  Request . . . . . . . . . . . . . . . . . . . . . . . . 30
-       6.1.2  Response  . . . . . . . . . . . . . . . . . . . . . . . 30
-   7  Internationalization Considerations . . . . . . . . . . . . . . 30
-   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 31
-   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 31
-   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 32
-     10.1  Normative References . . . . . . . . . . . . . . . . . . . 32
-     10.2  Informative References . . . . . . . . . . . . . . . . . . 34
-   Appendix A.  JSON Format Schema and Example  . . . . . . . . . . . 35
-   Appendix A.1.  JSON Format Schema  . . . . . . . . . . . . . . . . 35
-   Appendix A.2.  JSON Format Example of Output . . . . . . . . . . . 44
-   Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 46
-   Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 46
-   Appendix B.2.  XML Format Example of Output  . . . . . . . . . . . 55
-   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 57
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 57
+       2.2.4  Preferred Language ("lang" Argument)  . . . . . . . . . 15
+       2.2.5  Custom Input Parameters . . . . . . . . . . . . . . . . 16
+   3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+     3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . . 17
+       3.1.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 17
+       3.1.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 17
+       3.1.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 18
+     3.2  Sections  . . . . . . . . . . . . . . . . . . . . . . . . . 18
+       3.2.1  Query-Section (Information about Query and Result)  . . 18
+       3.2.2  Object-Section (Information about the OID)  . . . . . . 19
+       3.2.3  RA-Section (Information about the Current RA) . . . . . 23
+       3.2.4  Sections for Previous Registration Authorities  . . . . 25
+     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 25
+       3.3.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 25
+       3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 26
+       3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 26
+     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 26
+       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 27
+       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 27
+   4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
+   5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 29
+     5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 29
+     5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 29
+   6  Alternative Namespaces  . . . . . . . . . . . . . . . . . . . . 30
+     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 31
+       6.1.1  Request . . . . . . . . . . . . . . . . . . . . . . . . 31
+       6.1.2  Response  . . . . . . . . . . . . . . . . . . . . . . . 31
+   7  Internationalization Considerations . . . . . . . . . . . . . . 31
+   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 32
+   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 32
+   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 33
+     10.1  Normative References . . . . . . . . . . . . . . . . . . . 33
+     10.2  Informative References . . . . . . . . . . . . . . . . . . 35
+   Appendix A.  JSON Format Schema and Example  . . . . . . . . . . . 36
+   Appendix A.1.  JSON Format Schema  . . . . . . . . . . . . . . . . 36
+   Appendix A.2.  JSON Format Example of Output . . . . . . . . . . . 45
+   Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 47
+   Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 47
+   Appendix B.2.  XML Format Example of Output  . . . . . . . . . . . 56
+   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 58
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 58
 .fi
 .in 3
 
@@ -228,6 +228,9 @@ arc         Synonymous for "node" in the terminology of Object Identifiers.
 ASCII       American Standard Code for Information Interchange
 
 .ti 6
+HTTP(S)     Hypertext Transfer Protocol (Secure), as defined in [RFC9112].
+
+.ti 6
 JSON        JavaScript Object Notation, an open standard file format and data interchange format, as defined in [RFC8259].
 
 .ti 6
@@ -252,12 +255,12 @@ XML         Extensible Markup Language, a markup language and file format for st
 .ti 0
 2  Request
 
-OID-IP is a text-based protocol transmitted either via the Hypertext Transfer Protocol [RFC9112], and/or due to backwards compatibility via WHOIS protocol. (The concept of OID-IP was established in 2011 and is already implemented by several vendors).
+OID Information Protocol (OID-IP) is a text-based protocol that is built on top of the Hypertext Transfer Protocol [RFC9112] as defined in section\02.1
+and/or the WHOIS protocol [RFC3912] as defined in section\02.2.  (The concept of OID-IP was established in 2011 and is already implemented by several vendors,
+hence WHOIS is part of this specification.)
 
 .ti 0
 2.1  Request via HTTP(S) Protocol (Recommended)
-
-OID-IP is a text-based protocol primarily transmitted over the Hypertext Transfer Protocol [RFC9112].
 
 .ti
 2.1.1 Request Method and Path
@@ -274,7 +277,7 @@ whereas
 
 - <objectIdentifier> is the identifier to be requested.  For OIDs, it MUST be an absolute OID and MUST be written in dot-notation without leading dot as defined in RFC\03061, section\02 [RFC3061], e.g. "2.999".
 
-- <format> is the desired output format. This document defines "text", "json", and "xml" which are described in section\02.1.2.
+- <format> is the desired output format.  This document defines "text", "json", and "xml" which are described in section\02.1.2.
 
 Example of an URL that receives a GET request:
 
@@ -311,19 +314,18 @@ The default format is "text", which is assumed if the "format" argument is omitt
 Besides these 3 formats, the server can accept other formats not defined in this document.  The name of the formats MUST be alphanumeric, lower-case, and non-empty, and SHOULD be written in the English language (e.g. "text") or be common abbreviations (e.g. "json").
 
 If the client requests a format that is not implemented, then the server MUST respond with the "text" format, and the output MUST consist of the "query" field, "result: Service error", and a fitting "message" field (as described in section\03.2.1).
-
-
+.bp
 .ti 0
 2.1.3  Authentication
 
 Some organizations might not want to present their OID information (or part of it) to the public, e.g. for reasons like privacy or confidentiality.  Therefore, the following authentication methods are possible to control the display of confidential information returned by the OID-IP service:
 
-1. Whitelisting the requester's IP address
+1. Whitelisting the client's IP address
 
 2. Supply of authentication tokens by the sender
 
 .in 7
-Authentication tokens can be sent as "auth" GET parameter (can be entered by a human in a browser), as "auth" POST parameter, or as "Authentication Bearer" request header (for automated requests).  To make authentication as easy as possible, it is RECOMMENDED to allow all three methods if authentication is implemented.
+Authentication tokens can be sent as "auth" GET parameter (can be entered by a human in a browser), as "auth" POST parameter, or as "Authorization: Bearer ..." request header (for automated requests).  To make authentication as easy as possible, it is RECOMMENDED to allow all three methods if authentication is implemented.
 
 The origin of the authentication token (whether it is hardcoded or previously generated by an external authentication frameworks such as OAuth\02.0)
 as well as its verification is not part of this specification and hence implementation specific.
@@ -355,7 +357,7 @@ The GET parameter has priority over the POST parameter, which has priority over 
 
 If the server has data in different languages, it should try to find the best-fitting language according to the client's request.
 
-The value of the language argument MUST be a list of language tags as defined by [RFC5646], separated by a comma sign, sorted by preference, and containing at least one element.
+If the GET or POST parameter is used, then the value MUST be a list of language tags as defined by [RFC5646], separated by a comma sign, sorted by preference, and containing at least one element.  So, in contrast to the "Accept-Language" request header, weights and wildcards MUST NOT be used.
 
 The translation SHALL only affect the "message", "name", "description", and "information" fields, as well as additional fields and comments if their translation makes sense.  Field names MUST NOT be translated.  For example, the field name "description" will always be in the English language, even if the client requests a response in a different language.
 
@@ -380,13 +382,11 @@ Names MUST be alphanumeric, lower-case, and non-empty, and SHOULD be written in 
 Values MUST be case-sensitive and non-empty, and MUST NOT contain a dollar sign ("$") or an equal sign ("=").
 
 The usage of the custom input parameters MUST be OPTIONAL.
-
-
+.bp
 .ti 0
 2.1.6  Cookies
 
-The presence (or absence) of cookies MUST NOT make any difference to the OID-IP output.
-
+The presence (or absence) of cookies MUST NOT make any difference to the OID-IP output.  Cookies MUST NOT be used for authentication.
 
 .ti 0
 2.1.7  HTTP(S) Response Status Codes
@@ -404,9 +404,7 @@ There are the following requirements based on the result of the query (see secti
 - If the response contains a referral server (field "oidip-service"), then the HTTP(S) Response Code MUST NOT be a 3xx redirection status code.
 
 While the 3xx redirection status code is not allowed to indicate an OID-IP referral as specified by section\04, the 3xx redirection status codes may be used if the OID-IP service itself moves, e.g. to a different domain name.
-
-
-
+.bp
 .ti 0
 2.2  Request via WHOIS Protocol (Backwards Compatibility)
 
@@ -442,7 +440,7 @@ oid:.2.999
 .in 3
 
 All OIDs MUST be interpreted as absolute OIDs.  Relative OIDs (e.g. relative to the OID of the Registration Authority operating the OID-IP service) are not allowed.
-
+.bp
 .ti 0
 2.2.1.2  Input Parameters
 
@@ -605,7 +603,7 @@ oid:2.999$lang=en-US,en
 .in 3
 
 The usage of the argument "lang" is OPTIONAL.
-
+.bp
 .ti 0
 2.2.5  Custom Input Parameters
 
@@ -642,7 +640,7 @@ The usage of the custom input parameters MUST be OPTIONAL.
 
 (8) Comment lines MUST start with a percent sign ("%") at the beginning of a line, without prepending whitespaces.  They MUST NOT be evaluated by machines (except for signature validation, as mentioned in section\03.3 "Digital Signature").
 
-(9) A response consists of sections, which MUST be separated by at least one empty line and/or comment line. 
+(9) A response consists of sections, which MUST be separated by at least one empty line and/or comment line.
 
 (10) Custom sections CAN be added after any section defined in this document.  The query section MUST be the first section in the response.
 
@@ -1181,6 +1179,12 @@ There are no IANA Considerations.
 [RFC3629]  Yergeau, F., "UTF-8, a transformation format of ISO 10646", STD\063, RFC\03629, DOI\010.17487/RFC3629, November\02003,
 .br
 <https://www.rfc-editor.org/info/rfc3629>.
+
+.\" https://www.rfc-editor.org/refs/ref3912.txt
+.ti 3
+[RFC3912]  Daigle, L., "WHOIS Protocol Specification", RFC 3912, DOI 10.17487/RFC3912, September\02004,
+.fr
+<https://www.rfc-editor.org/info/rfc3912>.
 
 .\" https://www.rfc-editor.org/refs/ref3986.txt
 .ti 3
