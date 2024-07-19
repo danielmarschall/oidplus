@@ -313,7 +313,7 @@ The default format is "text", which is assumed if the "format" argument is omitt
 
 Besides these 3 formats, the server can accept other formats not defined in this document.  The name of the formats MUST be alphanumeric, lower-case, and non-empty, and SHOULD be written in the English language (e.g. "text") or be common abbreviations (e.g. "json").
 
-If the client requests a format that is not implemented, then the server MUST respond with the "text" format, and the output MUST consist of the "query" field, "result: Service error", and a fitting "message" field (as described in section\03.2.1).
+If the client requests a format that is not implemented, then the server MUST respond with the "text" format, and the output MUST consist of the "query" field, "result: Service error", a fitting "message" field (as described in section\03.2.1), and MUST be sending the HTTP response code "400 Bad Request".
 .bp
 .ti 0
 2.1.3  Authentication
@@ -393,7 +393,7 @@ The presence (or absence) of cookies MUST NOT make any difference to the OID-IP 
 
 An OID-IP service usually responds to queries using the HTTP(S) Response Code "200 OK".  Other HTTP(S) Response Codes such as "500 Internal Server Error" or "400 Bad Request" are possible if required.
 
-There are the following requirements based on the result of the query (see section\02.3.1):
+There are the following requirements based on the result of the query (see section\03.2.1):
 
 - If the result is "Found", then then the HTTP(S) Response Code MUST be "200 OK".
 

@@ -96,6 +96,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 			$ary = explode('/', trim($rel_url,'/'), 3);
 			$ns = $ary[0] ?? null;
 			$id = $ary[1] ?? null;
+			if ($id === 'root') $id = '';
 			$format = $ary[2] ?? 'text';
 			if ($ns && $id && $format) {
 				$query = "$ns:$id\$format=$format";
@@ -115,9 +116,18 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 				// echo "$query\n\n";
 
 				$x = new OIDplusOIDIP();
-				list($out_content, $out_type) = $x->oidipQuery($query);
+				list($out_content, $out_type, $out_http_code) = $x->oidipQuery($query);
 
-				@header('Content-Type:'.$out_type);
+				if ($out_http_code) {
+					if ($out_http_code == 200) $out_http_code_hf = 'OK';
+					else if ($out_http_code == 400) $out_http_code_hf = 'Bad Request';
+					else if ($out_http_code == 404) $out_http_code_hf = 'Not Found';
+					else if ($out_http_code == 470) $out_http_code_hf = 'Not Found - Superior Object Found';
+					else $out_http_code_hf = 'Undefined';
+					@header(($_SERVER['SERVER_PROTOCOL']??'HTTP/1.0').' '.$out_http_code.' '.$out_http_code_hf);
+				}
+
+				@header('Content-Type: '.$out_type);
 				echo $out_content;
 			}
 

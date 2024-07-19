@@ -67,6 +67,7 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 
 		$out_type = null;
 		$out_content = '';
+		$out_http_code = 0;
 
 		// Split input into query and arguments
 		$chunks = explode('$', $query);
@@ -120,6 +121,7 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 		$query = OIDplus::prefilterQuery($query, false);
 
 		if ($unimplemented_format) {
+			$out_http_code = 400;
 			$out[] = $this->_oidip_attr('result', 'Service error');
 			$out[] = $this->_oidip_attr('message', 'Format is not implemented');
 			$out[] = $this->_oidip_attr('lang', 'en-US');
@@ -135,6 +137,7 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 
 			if (!$obj) {
 				// Object type not known or invalid syntax of $query
+				$out_http_code = 404;
 				$out[] = $this->_oidip_attr('result', 'Not found'); // DO NOT TRANSLATE!
 				$continue = false;
 			} else {
@@ -162,9 +165,11 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 					}
 					if ($obj) {
 						if ($distance > 0) {
+							$out_http_code = 470;
 							$out[] = $this->_oidip_attr('result', 'Not found; superior object found'); // DO NOT TRANSLATE!
 							$out[] = $this->_oidip_attr('distance', $distance); // DO NOT TRANSLATE
 						} else {
+							$out_http_code = 200;
 							$out[] = $this->_oidip_attr('result', 'Found'); // DO NOT TRANSLATE!
 						}
 						$continue = true;
@@ -188,6 +193,7 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 						}
 
 						if ($distance > 0) {
+							$out_http_code = 470;
 							$out[] = $this->_oidip_attr('result', 'Not found; superior object found'); // DO NOT TRANSLATE!
 							$out[] = $this->_oidip_attr('distance', $distance); // DO NOT TRANSLATE
 						}
@@ -206,9 +212,11 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 						if ($res_test->any()) {
 							$obj = OIDplusObject::parse($query);
 							if ($distance > 0) {
+								$out_http_code = 470;
 								$out[] = $this->_oidip_attr('result', 'Not found; superior object found'); // DO NOT TRANSLATE!
 								$out[] = $this->_oidip_attr('distance', $distance); // DO NOT TRANSLATE
 							} else {
+								$out_http_code = 200;
 								$out[] = $this->_oidip_attr('result', 'Found'); // DO NOT TRANSLATE!
 							}
 							$only_wellknown_ids_found = true; // Information partially available
@@ -223,6 +231,7 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 				}
 
 				if (!$obj) {
+					$out_http_code = 404;
 					$out[] = $this->_oidip_attr('result', 'Not found'); // DO NOT TRANSLATE!
 					$continue = false;
 				}
@@ -650,7 +659,7 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 			$out_content .= $xml;
 		}
 
-		return array($out_content, $out_type);
+		return array($out_content, $out_type, $out_http_code);
 	}
 
 	/**
