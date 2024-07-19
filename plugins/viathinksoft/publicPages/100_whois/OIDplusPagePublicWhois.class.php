@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2024 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -93,7 +93,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 			$rel_url = preg_replace('@^'.preg_quote($expect,'@').'@', '', $rel_url);
 
 			$rel_url = explode('?', $rel_url, 2)[0];
-			$ary = explode('/', rtrim($rel_url,'/'), 3);
+			$ary = explode('/', trim($rel_url,'/'), 3);
 			$ns = $ary[0] ?? null;
 			$id = $ary[1] ?? null;
 			$format = $ary[2] ?? 'text';
