@@ -76,7 +76,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 		if ($this->forceAllLoggedOut()) return null;
 
 		// Logged in via JWT
-		// (The JWT can come from a login cookie, an REST Authentication Bearer, an AJAX Cookie, or an Automated AJAX Call GET/POST token.)
+		// (The JWT can come from a login cookie, an REST Authorization Bearer, an AJAX Cookie, or an Automated AJAX Call GET/POST token.)
 		$tmp = OIDplusAuthContentStoreJWT::getActiveProvider();
 		if ($tmp) return $tmp;
 

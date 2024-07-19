@@ -1,6 +1,6 @@
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2024 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -70,9 +70,13 @@ var OIDplusPagePublicWhois = {
 		// -------------------------------------------------------------
 		// var sys = getSystemUrl(false);
 		var sys = oidplus_webpath_absolute_canonical;
-		$("#whois_url_bar")[0].innerText = sys + 'plugins/viathinksoft/publicPages/100_whois/whois/webwhois.php?query=' + encodeURIComponent(query);
 
 		$("#whois_query_bar")[0].innerText = query;
+
+		//$("#whois_url_bar")[0].innerText = sys + 'plugins/viathinksoft/publicPages/100_whois/whois/webwhois.php?query=' + encodeURIComponent(query);
+		var query2 = 'oidip/' + encodeURIComponent(ns) + '/' + encodeURIComponent(id) + '/' + encodeURIComponent(format);
+		if (auth != "") query2 += "?auth=" + encodeURIComponent(auth);
+		$("#whois_url_bar")[0].innerText = sys + query2;
 	}
 
 };

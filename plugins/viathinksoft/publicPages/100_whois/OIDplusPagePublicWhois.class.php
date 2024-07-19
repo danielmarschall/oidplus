@@ -60,6 +60,75 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 	}
 
 	/**
+	 * Input from "Accept-Language" HTTP request header, e.g. "fr-CH, fr;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5"
+	 * @return string Outputs for example "fr-CH,fr,en,de" according to OID-IP.
+	 */
+	private static function getAcceptLangInOurFormat(): string {
+		$header_val = getHttpRequestHeader('Accept-Language') ?? '';
+		$out = [];
+		foreach (explode(',', $header_val) as $part) {
+			$part = explode(';', $part)[0];
+			$part = trim($part);
+			if ($part == '*') continue;
+			$out[] = $part;
+		}
+		return implode(',',$out);
+	}
+
+	/**
+	 * @param string $request
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function handle404(string $request): bool {
+
+		if (!isset($_SERVER['REQUEST_URI']) || !isset($_SERVER["REQUEST_METHOD"])) return false;
+
+		$rel_url = substr($_SERVER['REQUEST_URI'], strlen(OIDplus::webpath(null, OIDplus::PATH_RELATIVE_TO_ROOT)));
+		$expect = 'oidip/';
+		if (str_starts_with($rel_url, $expect)) {
+			originHeaders(); // Allows queries from other domains
+			OIDplus::authUtils()->disableCSRF(); // allow access to ajax.php without valid CSRF token
+
+			$rel_url = preg_replace('@^'.preg_quote($expect,'@').'@', '', $rel_url);
+
+			$rel_url = explode('?', $rel_url, 2)[0];
+			$ary = explode('/', rtrim($rel_url,'/'), 3);
+			$ns = $ary[0] ?? null;
+			$id = $ary[1] ?? null;
+			$format = $ary[2] ?? 'text';
+			if ($ns && $id && $format) {
+				$query = "$ns:$id\$format=$format";
+
+				$auth = null;
+				if (isset($_GET['auth'])) $auth = $_GET['auth'];
+				else if (isset($_POST['auth'])) $auth = $_POST['auth'];
+				else if ($tmp = getBearerToken()) $auth = $tmp;
+				if ($auth) $query .= "\$auth=$auth";
+
+				$lang = null;
+				if (isset($_GET['lang'])) $lang = $_GET['lang'];
+				else if (isset($_POST['lang'])) $lang = $_POST['lang'];
+				else if ($tmp = self::getAcceptLangInOurFormat()) $lang = $tmp;
+				if ($lang) $query .= "\$lang=$lang";
+
+				// echo "$query\n\n";
+
+				$x = new OIDplusOIDIP();
+				list($out_content, $out_type) = $x->oidipQuery($query);
+
+				@header('Content-Type:'.$out_type);
+				echo $out_content;
+			}
+
+			OIDplus::invoke_shutdown();
+			die(); // return true;
+		}
+
+		return false;
+	}
+
+	/**
 	 * @return mixed|string
 	 * @throws OIDplusException
 	 */
@@ -111,9 +180,9 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 			$out['text']  = '<p>'._L('With the OID Information Protocol (OID-IP), you can query object information in a format that is human-readable and machine-readable.').'</p>';
 
 			// Use this if webwhois.php matches the currently uploaded Internet Draft:
-			$out['text'] .= '<p>'._L('RFC Internet Draft').': <a target="_blank" href="https://datatracker.ietf.org/doc/draft-viathinksoft-oidip/">draft-viathinksoft-oidip-07</a></p>';
+			$out['text'] .= '<p>'._L('RFC Internet Draft').': <a target="_blank" href="https://datatracker.ietf.org/doc/draft-viathinksoft-oidip/">draft-viathinksoft-oidip-08</a></p>';
 			// Use this if webwhois.php implements something which is not yet uploaded to IETF:
-			//$out['text'] .= '<p>'._L('RFC Internet Draft').': <a href="'.OIDplus::webpath(__DIR__.'/whois/rfc/draft-viathinksoft-oidip-07.txt', true).'" target="_blank">draft-viathinksoft-oidip-07</a></p>';
+			//$out['text'] .= '<p>'._L('RFC Internet Draft').': <a href="'.OIDplus::webpath(__DIR__.'/whois/rfc/draft-viathinksoft-oidip-08.txt', true).'" target="_blank">draft-viathinksoft-oidip-08</a></p>';
 			# ---
 			$out['text'] .= '<noscript>';
 			$out['text'] .= '<p><font color="red">'._L('You need to enable JavaScript to use this feature.').'</font></p>';
@@ -130,9 +199,9 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 			$out['text'] .= '    <input type="radio" id="text" name="format" value="text" checked onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
 			$out['text'] .= '    <label for="text"><code>$format=text</code> '._L('Text format').'</label><br>';
 			$out['text'] .= '    <input type="radio" id="json" name="format" value="json" onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
-			$out['text'] .= '    <label for="json"><code>$format=json</code>  '._L('JSON format').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/draft-viathinksoft-oidip-07.json">'._L('Schema').'</a>)<br>';
+			$out['text'] .= '    <label for="json"><code>$format=json</code>  '._L('JSON format').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/draft-viathinksoft-oidip-08.json">'._L('Schema').'</a>)<br>';
 			$out['text'] .= '    <input type="radio" id="xml" name="format" value="xml" onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
-			$out['text'] .= '    <label for="xml"><code>$format=xml</code>  '._L('XML format').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/draft-viathinksoft-oidip-07.xsd">'._L('Schema').'</a>)<br>';
+			$out['text'] .= '    <label for="xml"><code>$format=xml</code>  '._L('XML format').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/draft-viathinksoft-oidip-08.xsd">'._L('Schema').'</a>)<br>';
 			$out['text'] .= '</fieldset><br>';
 			# ---
 			$out['text'] .= _L('Authentication token(s), comma separated (optional)').':<br>';
