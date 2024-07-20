@@ -4,7 +4,7 @@
 
 INTERNET-DRAFT                                              D. Marschall
 Intended Status: Informational                              ViaThinkSoft
-Expires: 20 January 2025                                    19 July 2024
+Expires: 21 January 2025                                    20 July 2024
 
 
     Retrieving information about Object Identifiers in a consistent
@@ -35,7 +35,7 @@ Status of This Memo
    time.  It is inappropriate to use Internet-Drafts as reference
    material or to cite them other than as "work in progress."
 
-   This Internet-Draft will expire on 20 January 2025.
+   This Internet-Draft will expire on 21 January 2025.
 
 Copyright Notice
 
@@ -53,9 +53,9 @@ Copyright Notice
  
 
 
-Marschall               Expires 20 January 2025                 [Page 1]
+Marschall               Expires 21 January 2025                 [Page 1]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
 Table of Contents
@@ -70,33 +70,33 @@ Table of Contents
        2.1.4  Preferred Language  . . . . . . . . . . . . . . . . . .  9
        2.1.5  Custom Input Parameters . . . . . . . . . . . . . . . .  9
        2.1.6  Cookies . . . . . . . . . . . . . . . . . . . . . . . . 10
-       2.1.7  HTTP(S) Response Status Codes . . . . . . . . . . . . . 10
-     2.2  Request via WHOIS Protocol (Backwards Compatibility)  . . . 11
-       2.2.1  Request Method  . . . . . . . . . . . . . . . . . . . . 11
-         2.2.1.1  Basic Query String  . . . . . . . . . . . . . . . . 11
-         2.2.1.2  Input Parameters  . . . . . . . . . . . . . . . . . 12
-         2.2.1.3  Request ABNF Notation . . . . . . . . . . . . . . . 12
-       2.2.2  Format ("format" Argument)  . . . . . . . . . . . . . . 14
-       2.2.3  Authentication Tokens ("auth" Argument) . . . . . . . . 14
-       2.2.4  Preferred Language ("lang" Argument)  . . . . . . . . . 15
-       2.2.5  Custom Input Parameters . . . . . . . . . . . . . . . . 16
-   3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
-     3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . . 17
-       3.1.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 17
-       3.1.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 17
-       3.1.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 18
-     3.2  Sections  . . . . . . . . . . . . . . . . . . . . . . . . . 18
-       3.2.1  Query-Section (Information about Query and Result)  . . 18
-       3.2.2  Object-Section (Information about the OID)  . . . . . . 19
-       3.2.3  RA-Section (Information about the Current RA) . . . . . 23
-       3.2.4  Sections for Previous Registration Authorities  . . . . 25
-     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 25
-       3.3.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 25
-       3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 26
-       3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 26
-     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 26
-       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 27
-       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 27
+     2.2  Request via WHOIS Protocol (Backwards Compatibility)  . . . 10
+       2.2.1  Request Method  . . . . . . . . . . . . . . . . . . . . 10
+         2.2.1.1  Basic Query String  . . . . . . . . . . . . . . . . 10
+         2.2.1.2  Input Parameters  . . . . . . . . . . . . . . . . . 11
+         2.2.1.3  Request ABNF Notation . . . . . . . . . . . . . . . 11
+       2.2.2  Format ("format" Argument)  . . . . . . . . . . . . . . 13
+       2.2.3  Authentication Tokens ("auth" Argument) . . . . . . . . 13
+       2.2.4  Preferred Language ("lang" Argument)  . . . . . . . . . 14
+       2.2.5  Custom Input Parameters . . . . . . . . . . . . . . . . 15
+   3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
+     3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . . 16
+       3.1.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 16
+       3.1.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 16
+       3.1.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 17
+     3.2  Sections  . . . . . . . . . . . . . . . . . . . . . . . . . 17
+       3.2.1  Query-Section (Information about Query and Result)  . . 17
+       3.2.2  Object-Section (Information about the OID)  . . . . . . 18
+       3.2.3  RA-Section (Information about the Current RA) . . . . . 22
+       3.2.4  Sections for Previous Registration Authorities  . . . . 24
+     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 24
+       3.3.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 24
+       3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 25
+       3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 25
+     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 25
+       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 26
+       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 26
+     3.5  HTTP Response Status Codes  . . . . . . . . . . . . . . . . 27
    4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
    5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 29
      5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 29
@@ -109,9 +109,9 @@ Table of Contents
  
 
 
-Marschall               Expires 20 January 2025                 [Page 2]
+Marschall               Expires 21 January 2025                 [Page 2]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
    8  Security Considerations . . . . . . . . . . . . . . . . . . . . 32
@@ -165,9 +165,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                 [Page 3]
+Marschall               Expires 21 January 2025                 [Page 3]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
 1  Introduction
@@ -221,9 +221,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                 [Page 4]
+Marschall               Expires 21 January 2025                 [Page 4]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
 1.1  Terminology
@@ -277,9 +277,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                 [Page 5]
+Marschall               Expires 21 January 2025                 [Page 5]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
 2  Request
@@ -333,9 +333,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                 [Page 6]
+Marschall               Expires 21 January 2025                 [Page 6]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
    (1) Authentication tokens ("auth" parameter), which is described in
@@ -389,9 +389,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                 [Page 7]
+Marschall               Expires 21 January 2025                 [Page 7]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
 2.1.3  Authentication
@@ -445,9 +445,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                 [Page 8]
+Marschall               Expires 21 January 2025                 [Page 8]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
 2.1.4  Preferred Language
@@ -501,66 +501,15 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                 [Page 9]
+Marschall               Expires 21 January 2025                 [Page 9]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
 2.1.6  Cookies
 
    The presence (or absence) of cookies MUST NOT make any difference to
    the OID-IP output.  Cookies MUST NOT be used for authentication.
-
-2.1.7  HTTP(S) Response Status Codes
-
-   An OID-IP service usually responds to queries using the HTTP(S)
-   Response Code "200 OK".  Other HTTP(S) Response Codes such as "500
-   Internal Server Error" or "400 Bad Request" are possible if required.
-
-   There are the following requirements based on the result of the query
-   (see section 3.2.1):
-
-   - If the result is "Found", then then the HTTP(S) Response Code MUST
-   be "200 OK".
-
-   - If the result is "Not found; superior object found", the HTTP(S)
-   Response Code MUST be "470 Not Found - Superior Object Found".
-
-   - If the result is "Not found", then the HTTP(S) Response Code MUST
-   be "404 Not Found".
-
-   - If the response contains a referral server (field "oidip-service"),
-   then the HTTP(S) Response Code MUST NOT be a 3xx redirection status
-   code.
-
-   While the 3xx redirection status code is not allowed to indicate an
-   OID-IP referral as specified by section 4, the 3xx redirection status
-   codes may be used if the OID-IP service itself moves, e.g. to a
-   different domain name.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
-Marschall               Expires 20 January 2025                [Page 10]
-
-INTERNET DRAFT          OID Information Protocol            19 July 2024
-
 
 2.2  Request via WHOIS Protocol (Backwards Compatibility)
 
@@ -605,18 +554,17 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
        oid:2.999
        oid:.2.999
 
-   All OIDs MUST be interpreted as absolute OIDs.  Relative OIDs (e.g.
-   relative to the OID of the Registration Authority operating the OID-
-   IP service) are not allowed.
-
-
  
 
 
-Marschall               Expires 20 January 2025                [Page 11]
+Marschall               Expires 21 January 2025                [Page 10]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
+
+   All OIDs MUST be interpreted as absolute OIDs.  Relative OIDs (e.g.
+   relative to the OID of the Registration Authority operating the OID-
+   IP service) are not allowed.
 
 2.2.1.2  Input Parameters
 
@@ -662,17 +610,17 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    object          = ( str-oid       ":" optional-oid ) /
                      ( other-ns-name ":" other-ns-val )
    str-oid         = %x6F.69.64           ; %s"oid"    in RFC 7405
+ 
+
+
+Marschall               Expires 21 January 2025                [Page 11]
+
+INTERNET DRAFT          OID Information Protocol            20 July 2024
+
 
    ; Additional constraint: Query MUST NOT contain more than one
    ;                        argument with the same name.
    optional-args   = *( "$" argument )
- 
-
-
-Marschall               Expires 20 January 2025                [Page 12]
-
-INTERNET DRAFT          OID Information Protocol            19 July 2024
-
 
    argument        = ( str-format     "=" format ) /
                      ( str-auth       "=" tokens ) /
@@ -718,18 +666,18 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    ; Printable characters (%x21-7E), excluding dollar sign (%x24 "$").
    other-ns-val    = *( %x21-23 / %x25-7E )
 
+ 
+
+
+Marschall               Expires 21 January 2025                [Page 12]
+
+INTERNET DRAFT          OID Information Protocol            20 July 2024
+
+
    unsigned-number = "0" / ( nonzero-digit *digit )
 
    digit           = %x30-39  ; 0-9
    nonzero-digit   = %x31-39  ; 1-9
- 
-
-
-Marschall               Expires 20 January 2025                [Page 13]
-
-INTERNET DRAFT          OID Information Protocol            19 July 2024
-
-
    lowercase-char  = %x61-7A  ; a-z
 
 2.2.2  Format ("format" Argument)
@@ -774,18 +722,17 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
    Authentication tokens MUST be case-sensitive and non-empty, and MUST
    NOT contain a dollar sign ("$"), an equal sign ("="), or a comma sign
    (",").
+ 
+
+
+Marschall               Expires 21 January 2025                [Page 13]
+
+INTERNET DRAFT          OID Information Protocol            20 July 2024
+
 
    If multiple authentication tokens need to be submitted, then the
    "auth" argument MUST NOT be repeated.  Instead, the tokens are
    separated using a comma sign (",").  A token MUST NOT be used
- 
-
-
-Marschall               Expires 20 January 2025                [Page 14]
-
-INTERNET DRAFT          OID Information Protocol            19 July 2024
-
-
    multiple times in the same query.
 
    Examples of valid queries are:
@@ -831,15 +778,12 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
 
 
 
-
-
-
  
 
 
-Marschall               Expires 20 January 2025                [Page 15]
+Marschall               Expires 21 January 2025                [Page 14]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
 2.2.5  Custom Input Parameters
@@ -893,9 +837,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 16]
+Marschall               Expires 21 January 2025                [Page 15]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
 3  Response
@@ -949,9 +893,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 17]
+Marschall               Expires 21 January 2025                [Page 16]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
    (3) Custom sections CAN be added.  The name of these custom sections
@@ -1005,9 +949,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 18]
+Marschall               Expires 21 January 2025                [Page 17]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
    (1) "query" MUST be present and contains the request string the
@@ -1061,9 +1005,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 19]
+Marschall               Expires 21 January 2025                [Page 18]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
    superior object found".  It MUST start with the field "object".  It
@@ -1117,9 +1061,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 20]
+Marschall               Expires 21 January 2025                [Page 19]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
    Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 32.3
@@ -1173,9 +1117,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 21]
+Marschall               Expires 21 January 2025                [Page 20]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
    most likely a hint that subordinate OIDs will be found at that OID-IP
@@ -1229,9 +1173,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 22]
+Marschall               Expires 21 January 2025                [Page 21]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
    readable information, e.g. a description or a list of ASN.1
@@ -1285,9 +1229,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 23]
+Marschall               Expires 21 January 2025                [Page 22]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
    (4) "ra-contact-name" (OPTIONAL, multiple values allowed) contains
@@ -1341,9 +1285,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 24]
+Marschall               Expires 21 January 2025                [Page 23]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
    (13) "ra-updated" (OPTIONAL) contains the date and time (as specified
@@ -1397,9 +1341,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 25]
+Marschall               Expires 21 January 2025                [Page 24]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
 3.3.2  "json" Format
@@ -1453,9 +1397,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 26]
+Marschall               Expires 21 January 2025                [Page 25]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
    If parts of the date/time reference are uncertain, then they SHOULD
@@ -1509,9 +1453,65 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 27]
+Marschall               Expires 21 January 2025                [Page 26]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
+
+
+3.5  HTTP Response Status Codes
+
+   An OID-IP service usually responds to queries using the HTTP(S)
+   Response Code "200 OK".  Other HTTP(S) Response Codes such as "400
+   Bad Request", "429 Too Many Requests", or "500 Internal Server Error"
+   are possible if required.
+
+   There are the following requirements based on the result of the query
+   (see section 3.2.1):
+
+   - If the result is "Found", then then the HTTP(S) Response Code MUST
+   be "200 OK".
+
+   - If the result is "Not found; superior object found", the HTTP(S)
+   Response Code MUST be "470 Not Found - Superior Object Found".
+
+   - If the result is "Not found", then the HTTP(S) Response Code MUST
+   be "404 Not Found".
+
+   - If the result is "Service Error", then the HTTP(S) Response Code
+   MUST be either "400 Bad Request" or "500 Internal Server Error",
+   depending on whether it is a problem with the client request or with
+   the server itself.
+
+   - If the response contains a referral server (field "oidip-service"),
+   then the HTTP(S) Response Code MUST NOT be a 3xx redirection status
+   code.
+
+   While the 3xx redirection status code MUST NOT indicate an OID-IP
+   referral as specified by section 4, the 3xx redirection status codes
+   may be used if the OID-IP service itself moves, e.g. to a different
+   domain name.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+Marschall               Expires 21 January 2025                [Page 27]
+
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
 4  Referral
@@ -1565,9 +1565,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 28]
+Marschall               Expires 21 January 2025                [Page 28]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
 5  Full Example ("text" Format)
@@ -1621,9 +1621,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 29]
+Marschall               Expires 21 January 2025                [Page 29]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
 6  Alternative Namespaces
@@ -1677,9 +1677,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 30]
+Marschall               Expires 21 January 2025                [Page 30]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
 6.1  Example: UUID Namespace
@@ -1733,9 +1733,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 31]
+Marschall               Expires 21 January 2025                [Page 31]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
 8  Security Considerations
@@ -1789,9 +1789,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 32]
+Marschall               Expires 21 January 2025                [Page 32]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
 10  References
@@ -1845,9 +1845,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 33]
+Marschall               Expires 21 January 2025                [Page 33]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
               <https://www.rfc-editor.org/info/rfc8141>.
@@ -1901,9 +1901,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 34]
+Marschall               Expires 21 January 2025                [Page 34]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
    [XSD]      W3C XML Schema Definition Language (XSD)
@@ -1957,9 +1957,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 35]
+Marschall               Expires 21 January 2025                [Page 35]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
 Appendix A.  JSON Format Schema and Example
@@ -2013,9 +2013,9 @@ NOTE: '\' line wrapping per RFC 8792  [RFC8792]
  
 
 
-Marschall               Expires 20 January 2025                [Page 36]
+Marschall               Expires 21 January 2025                [Page 36]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
             "query",
@@ -2069,9 +2069,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 37]
+Marschall               Expires 21 January 2025                [Page 37]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
                 },
@@ -2125,9 +2125,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 38]
+Marschall               Expires 21 January 2025                [Page 38]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
             "long-arc":{
@@ -2181,9 +2181,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 39]
+Marschall               Expires 21 January 2025                [Page 39]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
             },
@@ -2237,9 +2237,9 @@ Ra1SectionType et al.",
  
 
 
-Marschall               Expires 20 January 2025                [Page 40]
+Marschall               Expires 21 January 2025                [Page 40]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
             },
@@ -2293,9 +2293,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 41]
+Marschall               Expires 21 January 2025                [Page 41]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
         "ra4Section":{"$ref":"#/properties/oidip/properties/raSection"},
@@ -2349,9 +2349,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 42]
+Marschall               Expires 21 January 2025                [Page 42]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
        "ra52Section":{"$ref":"#/properties/oidip/properties/raSection"},
@@ -2405,9 +2405,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 43]
+Marschall               Expires 21 January 2025                [Page 43]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
       },
@@ -2461,9 +2461,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 44]
+Marschall               Expires 21 January 2025                [Page 44]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
 Appendix A.2.  JSON Format Example of Output
@@ -2517,9 +2517,9 @@ purposes of documenting examples of Object Identifiers.",
  
 
 
-Marschall               Expires 20 January 2025                [Page 45]
+Marschall               Expires 21 January 2025                [Page 45]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
       "subordinate": [],
@@ -2573,9 +2573,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 46]
+Marschall               Expires 21 January 2025                [Page 46]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
 Appendix B.  XML Format Schema and Example
@@ -2629,9 +2629,9 @@ NOTE: '\' line wrapping per RFC 8792  [RFC8792]
  
 
 
-Marschall               Expires 20 January 2025                [Page 47]
+Marschall               Expires 21 January 2025                [Page 47]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
       <xs:element name="ra2Section" minOccurs="0" maxOccurs="1"
@@ -2685,9 +2685,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 48]
+Marschall               Expires 21 January 2025                [Page 48]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
       <xs:element name="ra26Section" minOccurs="0" maxOccurs="1"
@@ -2741,9 +2741,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 49]
+Marschall               Expires 21 January 2025                [Page 49]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
       <xs:element name="ra50Section" minOccurs="0" maxOccurs="1"
@@ -2797,9 +2797,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 50]
+Marschall               Expires 21 January 2025                [Page 50]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
       <xs:element name="ra74Section" minOccurs="0" maxOccurs="1"
@@ -2853,9 +2853,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 51]
+Marschall               Expires 21 January 2025                [Page 51]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
       <xs:element name="ra98Section" minOccurs="0" maxOccurs="1"
@@ -2909,9 +2909,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 52]
+Marschall               Expires 21 January 2025                [Page 52]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
   <xs:complexType name="ObjectSectionType">
@@ -2965,9 +2965,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 53]
+Marschall               Expires 21 January 2025                [Page 53]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
     <xs:restriction base="xs:string">
@@ -3021,9 +3021,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 54]
+Marschall               Expires 21 January 2025                [Page 54]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
                   type="xs:string"/>
@@ -3077,9 +3077,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 55]
+Marschall               Expires 21 January 2025                [Page 55]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
 Appendix B.2.  XML Format Example of Output
@@ -3133,9 +3133,9 @@ purposes of documenting examples of Object Identifiers."</description>
  
 
 
-Marschall               Expires 20 January 2025                [Page 56]
+Marschall               Expires 21 January 2025                [Page 56]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
      <long-arc>(Russian characters are omitted)</long-arc>
@@ -3189,9 +3189,9 @@ INTERNET DRAFT          OID Information Protocol            19 July 2024
  
 
 
-Marschall               Expires 20 January 2025                [Page 57]
+Marschall               Expires 21 January 2025                [Page 57]
 
-INTERNET DRAFT          OID Information Protocol            19 July 2024
+INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
 Acknowledgements
@@ -3245,4 +3245,4 @@ Authors' Addresses
 
 
 
-Marschall               Expires 20 January 2025                [Page 58]
+Marschall               Expires 21 January 2025                [Page 58]
