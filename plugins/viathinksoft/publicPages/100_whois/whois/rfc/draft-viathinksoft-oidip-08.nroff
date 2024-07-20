@@ -152,13 +152,13 @@ Table of Contents
        3.2.2  Object-Section (Information about the OID)  . . . . . . 18
        3.2.3  RA-Section (Information about the Current RA) . . . . . 22
        3.2.4  Sections for Previous Registration Authorities  . . . . 24
-     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 24
-       3.3.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 24
+     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 25
+       3.3.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 25
        3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 25
-       3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 25
-     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 25
+       3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 26
+     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 26
        3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 26
-       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 26
+       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 27
      3.5  HTTP Response Status Codes  . . . . . . . . . . . . . . . . 27
    4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
    5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 29
@@ -740,9 +740,16 @@ Note: A line break, to break up lines that are too long, as defined in section\0
 
 (13) "long-arc" (OPTIONAL, multiple values allowed) contains a Non-integer Unicode label that can be used as the first identifier in an OID Internationalized Resource Identifier (OID-IRI), shortening it.  More information can be found in Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-1:2012, clause 3.5.8 [X660].
 
-(14) "oidip-service" (OPTIONAL) contains the address of a system that offers an OID-IP service that can supply information about the OID and/or its subordinate OIDs.  The address can be a HTTP(S) URI with trailing path delimiter (e.g. https://example.com/oidip/), or it can be an IP address or hostname, followed by a double-colon (:) and a port number (e.g. oidip.example.com:43).  If the result is "Found" (i.e. the OID is existing in the local database), then the information "oidip-service" is only informational; its existence is most likely a hint that subordinate OIDs will be found at that OID-IP server.  If the result is "Not found; superior object found", then the client SHOULD query the referred OID-IP server to receive more information about the OID.  See more information in section\04 "Referral".
+(14) "oidip-service" (OPTIONAL, multiple values allowed) contains the address of a system that offers an OID-IP service that can supply information about the OID and/or its subordinate OIDs.
 
-(15) "oidip-pubkey" (OPTIONAL) contains the public key of the service that is identified with "oidip-service", in case it uses signatures (see section\03.3 "Digital Signature") and the referring service knows about it.
+.in 7
+For a HTTP(S) service, the value MUST be a URI with trailing path delimiter (e.g. https://example.com/oidip/).  For a WHOIS service, the value MUST be an IP address or hostname, followed by a double-colon (:) and a port number (e.g. oidip.example.com:43).
+Multiple values are allowed.  If the server accepts both the HTTP(S) protocol and the WHOIS protocol, then it is RECOMMENDED to present both services (two "oidip-service" lines).
+
+If the result is "Found" (i.e. the OID is existing in the local database), then the information "oidip-service" is only informational; its existence is most likely a hint that subordinate OIDs will be found at that OID-IP server.  If the result is "Not found; superior object found", then the client SHOULD query the referred OID-IP server to receive more information about the OID.  See more information in section\04 "Referral".
+.in 3
+
+(15) "oidip-pubkey" (OPTIONAL, multiple values allowed) contains the public key of the service that is identified with "oidip-service", in case it uses signatures (see section\03.3 "Digital Signature") and the referring service knows about it.  "oidip-pubkey" should be located directly below "oidip-service".  If multiple keys are present, then the first key is for the first service, the second key is for the second service, etc.  If there is only one key but multiple "oidip-service", then it is assumed that all these services have the same public key.
 
 (16) "attribute" (OPTIONAL, multiple values allowed) contains attributes of the OID.  An attribute MUST be one of the following values:
 
@@ -838,7 +845,7 @@ Each section MUST start with the field "ra1", "ra2", etc.
 The definition of these sections is identical to the definition of the RA-Section (described in section\03.2.3 "RA-Section"), just with a different prefix.
 
 The history does not need to be complete, e.g. it is no problem to only serve information about the first ("ra1") and the current RA ("ra"), or only serve information about the current RA ("ra").
-
+.bp
 .ti 0
 3.3  Digital Signature
 
@@ -846,7 +853,6 @@ The history does not need to be complete, e.g. it is no problem to only serve in
 3.3.1  "text" Format
 
 If integrity/authenticity is required, the whole response can be signed, e.g. by using PGP, RSA, ECDSA, etc.  Depending on the signature method being used, various things need to be appended and/or prepended to the response (e.g. "-----BEGIN PGP MESSAGE-----" and "-----END PGP MESSAGE-----").  These additional lines MUST be prepended by a percent sign ("%") to avoid an application confusing these additional lines (e.g. lines belonging to a PGP header, as defined in RFC\04880 [RFC4880]) with parts of the actual OID-IP response.
-
 
 .ti 0
 3.3.2  "json" Format
@@ -939,7 +945,7 @@ Examples of valid date/time references are:
 2025
 .fi
 .in 3
-.bp
+
 .ti 0
 3.5  HTTP Response Status Codes
 

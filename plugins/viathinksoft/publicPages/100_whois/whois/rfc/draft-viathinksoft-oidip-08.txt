@@ -89,13 +89,13 @@ Table of Contents
        3.2.2  Object-Section (Information about the OID)  . . . . . . 18
        3.2.3  RA-Section (Information about the Current RA) . . . . . 22
        3.2.4  Sections for Previous Registration Authorities  . . . . 24
-     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 24
-       3.3.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 24
+     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 25
+       3.3.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 25
        3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 25
-       3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 25
-     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 25
+       3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 26
+     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 26
        3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 26
-       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 26
+       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 27
      3.5  HTTP Response Status Codes  . . . . . . . . . . . . . . . . 27
    4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
    5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 29
@@ -1106,14 +1106,14 @@ INTERNET DRAFT          OID Information Protocol            20 July 2024
    More information can be found in Recommendation ITU-T X.660 (2011) |
    ISO/IEC 9834-1:2012, clause 3.5.8 [X660].
 
-   (14) "oidip-service" (OPTIONAL) contains the address of a system that
-   offers an OID-IP service that can supply information about the OID
-   and/or its subordinate OIDs.  The address can be a HTTP(S) URI with
-   trailing path delimiter (e.g. https://example.com/oidip/), or it can
-   be an IP address or hostname, followed by a double-colon (:) and a
-   port number (e.g. oidip.example.com:43).  If the result is "Found"
-   (i.e. the OID is existing in the local database), then the
-   information "oidip-service" is only informational; its existence is
+   (14) "oidip-service" (OPTIONAL, multiple values allowed) contains the
+   address of a system that offers an OID-IP service that can supply
+   information about the OID and/or its subordinate OIDs.
+
+       For a HTTP(S) service, the value MUST be a URI with trailing path
+       delimiter (e.g. https://example.com/oidip/).  For a WHOIS
+       service, the value MUST be an IP address or hostname, followed by
+       a double-colon (:) and a port number (e.g. oidip.example.com:43).
  
 
 
@@ -1122,16 +1122,28 @@ Marschall               Expires 21 January 2025                [Page 20]
 INTERNET DRAFT          OID Information Protocol            20 July 2024
 
 
-   most likely a hint that subordinate OIDs will be found at that OID-IP
-   server.  If the result is "Not found; superior object found", then
-   the client SHOULD query the referred OID-IP server to receive more
-   information about the OID.  See more information in section 4
-   "Referral".
+       Multiple values are allowed.  If the server accepts both the
+       HTTP(S) protocol and the WHOIS protocol, then it is RECOMMENDED
+       to present both services (two "oidip-service" lines).
 
-   (15) "oidip-pubkey" (OPTIONAL) contains the public key of the service
-   that is identified with "oidip-service", in case it uses signatures
-   (see section 3.3 "Digital Signature") and the referring service knows
-   about it.
+       If the result is "Found" (i.e. the OID is existing in the local
+       database), then the information "oidip-service" is only
+       informational; its existence is most likely a hint that
+       subordinate OIDs will be found at that OID-IP server.  If the
+       result is "Not found; superior object found", then the client
+       SHOULD query the referred OID-IP server to receive more
+       information about the OID.  See more information in section 4
+       "Referral".
+
+   (15) "oidip-pubkey" (OPTIONAL, multiple values allowed) contains the
+   public key of the service that is identified with "oidip-service", in
+   case it uses signatures (see section 3.3 "Digital Signature") and the
+   referring service knows about it.  "oidip-pubkey" should be located
+   directly below "oidip-service".  If multiple keys are present, then
+   the first key is for the first service, the second key is for the
+   second service, etc.  If there is only one key but multiple "oidip-
+   service", then it is assumed that all these services have the same
+   public key.
 
    (16) "attribute" (OPTIONAL, multiple values allowed) contains
    attributes of the OID.  An attribute MUST be one of the following
@@ -1158,6 +1170,14 @@ INTERNET DRAFT          OID Information Protocol            20 July 2024
        integer Unicode labels.
 
        "retired" means that the OID is withdrawn, revoked, retired,
+ 
+
+
+Marschall               Expires 21 January 2025                [Page 21]
+
+INTERNET DRAFT          OID Information Protocol            20 July 2024
+
+
        expired, etc.  Please consult Recommendation ITU-T X.660 (2011) |
        ISO/IEC 9834-1:2012 [X660] for more information about such cases.
 
@@ -1170,14 +1190,6 @@ INTERNET DRAFT          OID Information Protocol            20 July 2024
    (18) "subordinate" (OPTIONAL, multiple values allowed) contains a
    list of subordinate OIDs, prepended by namespace identifier and
    double colon, i.e. "oid:".  It MAY be followed by additional human-
- 
-
-
-Marschall               Expires 21 January 2025                [Page 21]
-
-INTERNET DRAFT          OID Information Protocol            20 July 2024
-
-
    readable information, e.g. a description or a list of ASN.1
    identifiers.  There SHALL be at least 1 whitespace in between.
 
@@ -1214,6 +1226,14 @@ INTERNET DRAFT          OID Information Protocol            20 July 2024
        fully available.
 
        "Information partially available" means that part of the
+ 
+
+
+Marschall               Expires 21 January 2025                [Page 22]
+
+INTERNET DRAFT          OID Information Protocol            20 July 2024
+
+
        information is not available.  A possible reason could be that
        part of the information is redacted due to confidentiality.  The
        field "attribute" MAY be used with the value "confidential".
@@ -1226,13 +1246,6 @@ INTERNET DRAFT          OID Information Protocol            20 July 2024
    (3) "ra-lang" (OPTIONAL) contains the language of the fields in this
    section, if their translation makes sense.  The language should be a
    language tag as defined in [RFC5646].
- 
-
-
-Marschall               Expires 21 January 2025                [Page 22]
-
-INTERNET DRAFT          OID Information Protocol            20 July 2024
-
 
    (4) "ra-contact-name" (OPTIONAL, multiple values allowed) contains
    the name of a person responsible for the allocation of subordinate
@@ -1269,6 +1282,13 @@ INTERNET DRAFT          OID Information Protocol            20 July 2024
    (11) "ra-attribute" (OPTIONAL, multiple values allowed) contains
    attributes of the RA.  An attribute MUST be one of the following
    values:
+ 
+
+
+Marschall               Expires 21 January 2025                [Page 23]
+
+INTERNET DRAFT          OID Information Protocol            20 July 2024
+
 
        "confidential" means that the information about the RA or part of
        it is confidential.
@@ -1281,14 +1301,6 @@ INTERNET DRAFT          OID Information Protocol            20 July 2024
    (12) "ra-created" (OPTIONAL) contains the date and time (as specified
    in section 3.4 "Date/Time Format") when the RA was created/registered
    in the database.
-
- 
-
-
-Marschall               Expires 21 January 2025                [Page 23]
-
-INTERNET DRAFT          OID Information Protocol            20 July 2024
-
 
    (13) "ra-updated" (OPTIONAL) contains the date and time (as specified
    in section 3.4 "Date/Time Format") when the RA information was last
@@ -1323,6 +1335,17 @@ INTERNET DRAFT          OID Information Protocol            20 July 2024
    only serve information about the first ("ra1") and the current RA
    ("ra"), or only serve information about the current RA ("ra").
 
+
+
+
+ 
+
+
+Marschall               Expires 21 January 2025                [Page 24]
+
+INTERNET DRAFT          OID Information Protocol            20 July 2024
+
+
 3.3  Digital Signature
 
 3.3.1  "text" Format
@@ -1336,15 +1359,6 @@ INTERNET DRAFT          OID Information Protocol            20 July 2024
    these additional lines (e.g. lines belonging to a PGP header, as
    defined in RFC 4880 [RFC4880]) with parts of the actual OID-IP
    response.
-
-
- 
-
-
-Marschall               Expires 21 January 2025                [Page 24]
-
-INTERNET DRAFT          OID Information Protocol            20 July 2024
-
 
 3.3.2  "json" Format
 
@@ -1380,6 +1394,14 @@ INTERNET DRAFT          OID Information Protocol            20 July 2024
        of the JSON Web Signature which was extracted before.  The
        contents MUST be equal.
 
+ 
+
+
+Marschall               Expires 21 January 2025                [Page 25]
+
+INTERNET DRAFT          OID Information Protocol            20 July 2024
+
+
        5. Verify the JSON Web Signature of the original JSON file
        according to the procedures described in RFC 7515 [RFC7515].
 
@@ -1393,14 +1415,6 @@ INTERNET DRAFT          OID Information Protocol            20 July 2024
 
    Date/Time references SHALL be formatted as described in
    section 3.4.1.
-
- 
-
-
-Marschall               Expires 21 January 2025                [Page 25]
-
-INTERNET DRAFT          OID Information Protocol            20 July 2024
-
 
    If parts of the date/time reference are uncertain, then they SHOULD
    be omitted until the date/time reference has the highest correctness.
@@ -1436,6 +1450,13 @@ INTERNET DRAFT          OID Information Protocol            20 July 2024
    second    = %x30-35 DIGIT        ; 00-59
 
    timezone  = ( "+" / "-" ) hour minute
+ 
+
+
+Marschall               Expires 21 January 2025                [Page 26]
+
+INTERNET DRAFT          OID Information Protocol            20 July 2024
+
 
 3.4.2  Date/Time Format Examples
 
@@ -1448,15 +1469,6 @@ INTERNET DRAFT          OID Information Protocol            20 July 2024
        2025-01-23
        2025-01
        2025
-
-
- 
-
-
-Marschall               Expires 21 January 2025                [Page 26]
-
-INTERNET DRAFT          OID Information Protocol            20 July 2024
-
 
 3.5  HTTP Response Status Codes
 
@@ -1490,18 +1502,6 @@ INTERNET DRAFT          OID Information Protocol            20 July 2024
    - Response codes 401 and 403 MUST NOT be used to indicate that
    information is partially redacted or fully unavailable due to missing
    authorization.
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
