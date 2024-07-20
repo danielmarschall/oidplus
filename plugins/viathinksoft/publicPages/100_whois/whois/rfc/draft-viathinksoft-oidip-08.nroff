@@ -236,20 +236,34 @@ An Object Identifier (OID) is an extensively used identification mechanism joint
 
 There are a few methods of retrieving information about an OID, like:
 
+.in 7
+.ti 3
 (A) Searching through web repositories like <http://www.oid-info.com> or <http://www.alvestrand.no/objectid/>.  This has the disadvantage that the information is usually not machine-readable without functionalities like an API.
+.in 3
 
+.in 7
+.ti 3
 (B) Retrieving information using the Object Identifier Resolution System (ORS) as defined in Recommendation ITU-T X.672 (2010) | ISO/IEC 29168-1:2011 [X672].  This has the disadvantage that Registration Authorities need to include specific DNS Resource Records to their domains, and additionally, all RAs of the superior OIDs must implement the ORS.
+.in 3
 
-This document describes an additional method for retrieving information about OIDs, which is both human-readable and machine-readable.
+This document describes a method for retrieving information about OIDs, which is both human-readable and machine-readable.
 
 Three of many possible use-case scenarios are:
 
+.in 7
+.ti 3
 (1) Many web browsers and Operating Systems can handle ITU-T X.509 certificates [X509] and usually contain a viewer application that shows the contents of these certificates.  Attributes that are unknown by the application are either only displayed by their OID, or hidden to avoid confusion for the user.  With OID-IP, the application could query the name of these unknown OIDs or even retrieve instructions on how the data described by this OID can be parsed and displayed.
+.in 3
 
+.in 7
+.ti 3
 (2) Applications that handle SNMP (Simple Network Management Protocol) [RFC1157] might need information about additional MIB files or their OIDs.  OID-IP could aid these applications in gathering the required information.
+.in 3
 
+.in 7
+.ti 3
 (3) In directory services like LDAP (Lightweight Directory Access Protocol) [RFC4511], applications could query the name of attributes that are described by an OID the application doesn't know.
-
+.in 3
 
 .ti 0
 1.1  Terminology
@@ -314,11 +328,11 @@ All requests MUST be made using the HTTP(S) request methods "GET" or "POST" in t
 
 whereas
 
-- <objectType> is a namespace identifier which MUST be written in lower-case.  It is usually "oid" (but can also be something else, see an example in section\06).
+<objectType> is a namespace identifier which MUST be written in lower-case.  It is usually "oid" (but can also be something else, see an example in section\06).
 
-- <objectIdentifier> is the identifier to be requested.  For OIDs, it MUST be an absolute OID and MUST be written in dot-notation without leading dot as defined in RFC\03061, section\02 [RFC3061], e.g. "2.999".
+<objectIdentifier> is the identifier to be requested.  For OIDs, it MUST be an absolute OID and MUST be written in dot-notation without leading dot as defined in RFC\03061, section\02 [RFC3061], e.g. "2.999".
 
-- <format> is the desired output format.  This document defines "text", "json", and "xml" which are described in section\02.1.2.
+<format> is the desired output format.  This document defines "text", "json", and "xml" which are described in section\02.1.2.
 
 Example of an URL that receives a GET request:
 
@@ -329,12 +343,18 @@ To query the root node of any object type, <objectIdentifier> MUST have the valu
     https://example.com/oidip/oid/root/text
 
 Since the word "root" has thereby a special meaning, identifiers that actually have the name "root" CANNOT be queried using OID-IP.
-
+.bp
 This document describes the following additional GET/POST parameters:
 
+.in 7
+.ti 3
 (1) Authentication tokens ("auth" parameter), which is described in section\02.1.3.
+.in 3
 
+.in 7
+.ti 3
 (2) Preferred language ("lang" parameter), which is described in section\02.1.4.
+.in 3
 
 Constraints for custom input parameters are described in section\02.1.5.
 
@@ -344,11 +364,20 @@ Constraints for custom input parameters are described in section\02.1.5.
 
 This document defines 3 formats:
 
+.in 7
+.ti 3
 (1) "text": A text representation as defined in section\03.1.1 (MANDATORY).  The "Content-Type" response header MUST be "text/plain".
+.in 3
 
+.in 7
+.ti 3
 (2) "json": The JavaScript Object Notation (JSON, [RFC8259]) representation as defined in section\03.1.2 (MANDATORY for the HTTP(S) request method).  The "Content-Type" response header MUST be either "text/json" or "application/json".
+.in 3
 
+.in 7
+.ti 3
 (3) "xml": Extensible Markup Language (XML, [XML]) representation as defined in section\03.1.3 (MANDATORY for the HTTP(S) request method).  The "Content-Type" response header MUST be either "text/xml" or "application/xml".
+.in 3
 
 The default format is "text", which is assumed if the "format" argument is omitted.
 
@@ -361,11 +390,15 @@ If the client requests a format that is not implemented, then the server MUST re
 
 Some organizations might not want to present their OID information (or part of it) to the public, e.g. for reasons like privacy or confidentiality.  Therefore, the following authentication methods are possible to control the display of confidential information returned by the OID-IP service:
 
-1. Whitelisting the client's IP address
-
-2. Supply of authentication tokens by the sender
+.in 7
+.ti 3
+(1) Whitelisting the client's IP address
+.in 3
 
 .in 7
+.ti 3
+(2) Supply of authentication tokens by the sender
+
 Authentication tokens can be sent as "auth" GET parameter (can be entered by a human in a browser), as "auth" POST parameter, or as "Authorization: Bearer ..." request header (for automated requests).  To make authentication as easy as possible, it is RECOMMENDED to allow all three methods if authentication is implemented.
 
 The origin of the authentication token (whether it is hardcoded or previously generated by an external authentication frameworks such as OAuth\02.0)
@@ -448,9 +481,15 @@ The namespace identifier MUST be written in lower-case.
 
 If the namespace identifier is "oid", then the identifier must be an absolute OID in dot-notation, as defined in RFC\03061, section\02 [RFC3061], but with the following differences:
 
+.in 7
+.ti 3
 (1) The OID MAY contain a leading dot.
+.in 3
 
+.in 7
+.ti 3
 (2) To query the root of the OID tree, the OID MUST be either missing or consisting only of a single dot.
+.in 3
 
 Examples of valid queries are:
 
@@ -480,11 +519,20 @@ Each name MUST only appear a single time in the list of input parameters.
 
 This document describes the following input parameters:
 
+.in 7
+.ti 3
 (1) Format ("format" argument), which is described in section\02.2.2.
+.in 3
 
+.in 7
+.ti 3
 (2) Authentication tokens ("auth" argument), which is described in section\02.2.3.
+.in 3
 
+.in 7
+.ti 3
 (3) Preferred language ("lang" argument), which is described in section\02.2.4.
+.in 3
 
 Constraints for custom input parameters are described in section\02.2.5.
 
@@ -571,11 +619,20 @@ The "format" argument defines the desired output format.
 
 This document defines 3 formats:
 
+.in 7
+.ti 3
 (1) "text": A text representation as defined in section\03.1.1 (MANDATORY).
+.in 3
 
+.in 7
+.ti 3
 (2) "json": The JavaScript Object Notation (JSON, [RFC8259]) representation as defined in section\03.1.2 (RECOMMENDED).
+.in 3
 
+.in 7
+.ti 3
 (3) "xml": Extensible Markup Language (XML, [XML]) representation as defined in section\03.1.3 (RECOMMENDED).
+.in 3
 
 The default format is "text", which is assumed if the "format" argument is omitted.
 
@@ -648,60 +705,126 @@ The usage of the custom input parameters MUST be OPTIONAL.
 .ti 0
 3.1.1  "text" Format
 
+.in 7
+.ti 3
 (1) The response MUST be UTF-8 encoded (as defined in RFC\03629 [RFC3629]), without Byte-Order-Mark (BOM).
+.in 3
 
+.in 7
+.ti 3
 (2) The response contains multiple lines with field names and values, which MUST be separated by a double colon (":").  Whitespace characters after the double colon are allowed.
+.in 3
 
+.in 7
+.ti 3
 (3) If possible, each line SHOULD be limited to 80 characters, including the field name, double colon, value, and whitespaces.
+.in 3
 
+.in 7
+.ti 3
 (4) Field names and values MUST be treated as case-sensitive.
+.in 3
 
+.in 7
+.ti 3
 (5) If a value needs to be split into multiple lines, e.g. if the line would exceed the length limit, the same field name including double colon MUST be repeated at the beginning of the next line.
+.in 3
 
+.in 7
+.ti 3
 (6) If an attribute has multiple values (e.g. multiple Unicode labels, alternative email addresses, etc.), each value MUST be written in a new line with the same field name.
+.in 3
 
+.in 7
+.ti 3
 (7) Lines with the same field name SHALL be kept together.
+.in 3
 
+.in 7
+.ti 3
 (8) Comment lines MUST start with a percent sign ("%") at the beginning of a line, without prepending whitespaces.  They MUST NOT be evaluated by machines (except for signature validation, as mentioned in section\03.3 "Digital Signature").
+.in 3
 
+.in 7
+.ti 3
 (9) A response consists of sections, which MUST be separated by at least one empty line and/or comment line.
+.in 3
 
+.in 7
+.ti 2
 (10) Custom sections CAN be added after any section defined in this document.  The query section MUST be the first section in the response.
+.in 3
 
 .ti 0
 3.1.2  "json" Format
 
+.in 7
+.ti 3
 (1) The response MUST be UTF-8 encoded (as defined in RFC\03629 [RFC3629]), without Byte-Order-Mark (BOM).
+.in 3
 
+.in 7
+.ti 3
 (2) A response consists of sections, which MUST be named "querySection", "objectSection", "raSection", "ra1Section", etc. which SHOULD stay in this order.
+.in 3
 
+.in 7
+.ti 3
 (3) Custom sections CAN be added.  The name of these custom sections MUST be the name of the first field, appended by the string "Section".
+.in 3
 
+.in 7
+.ti 3
 (4) The JavaScript Object Notation (JSON, [RFC8259]) output MUST match the schema defined in Appendix\0A.1 of this document.
+.in 3
 
 .ti 0
 3.1.3  "xml" Format
 
+.in 7
+.ti 3
 (1) The response MUST be UTF-8 encoded (as defined in RFC\03629 [RFC3629]), without Byte-Order-Mark (BOM).
+.in 3
 
+.in 7
+.ti 3
 (2) A response consists of sections, which MUST be named "querySection", "objectSection", "raSection", "ra1Section", etc. which MUST stay in this order.
+.in 3
 
+.in 7
+.ti 3
 (3) Custom sections CAN be added.  The name of these custom sections MUST be the name of the first field, appended by the string "Section".  These custom sections MUST be specified in a different XML namespace at the end of the last RA section.
+.in 3
 
+.in 7
+.ti 3
 (4) The Extensible Markup Language (XML, [XML]) output MUST match the schema defined in Appendix\0B.1 of this document.
+.in 3
 
 .ti 0
 3.2  Sections
 
 This document specifies the following sections:
 
+.in 7
+.ti 3
 (1) Query-Section which contains the request and the result, as described in section\03.2.1.
+.in 3
 
+.in 7
+.ti 3
 (2) Object-Section which contains information about the OID, as described in section\03.2.2.
+.in 3
 
+.in 7
+.ti 3
 (3) RA-Section which contains information about the current Registration Authority, as described in section\03.2.3.
+.in 3
 
+.in 7
+.ti 3
 (4) Optional RA-Sections containing information about RAs that were previously in charge of managing the OID, as described in section\03.2.4.
+.in 3
 .bp
 .ti 0
 3.2.1  Query-Section (Information about Query and Result)
@@ -720,13 +843,25 @@ Possible fields are:
 
 "result" MUST be present and SHALL be one of the following values:
 
-- "Found" means that the OID-IP service can verify that the requested OID exists.  The following sections will contain information about this OID.
+.in 7
+.ti 3
+(1) "Found" means that the OID-IP service can verify that the requested OID exists.  The following sections will contain information about this OID.
+.in 3
 
-- "Not found; superior object found" means that the OID-IP service cannot verify that the requested OID exists, or it denies that the OID exists (e.g. because it is confidential).  However, the OID-IP service knows a superior OID which does exist.  The following sections will contain information about that superior OID instead.
+.in 7
+.ti 3
+(2) "Not found; superior object found" means that the OID-IP service cannot verify that the requested OID exists, or it denies that the OID exists (e.g. because it is confidential).  However, the OID-IP service knows a superior OID which does exist.  The following sections will contain information about that superior OID instead.
+.in 3
 
-- "Not found" means that the OID-IP service cannot verify that the requested OID exists, or it denies that the OID exists (e.g. because it is confidential).  Additionally, the OID-IP service does not have information about any superior OID, or their existence is also denied.
+.in 7
+.ti 3
+(3) "Not found" means that the OID-IP service cannot verify that the requested OID exists, or it denies that the OID exists (e.g. because it is confidential).  Additionally, the OID-IP service does not have information about any superior OID, or their existence is also denied.
+.in 3
 
-- "Service error" means that an internal error occurred, or that the system is in maintenance mode.  The client should try again later.
+.in 7
+.ti 3
+(4) "Service error" means that an internal error occurred, or that the system is in maintenance mode.  The client should try again later.
+.in 3
 
 .ti 0
 3.2.1.3  Query-Section "distance" Field
@@ -765,11 +900,20 @@ Possible fields are:
 
 "status" MUST be present and SHALL be one of the following values:
 
-- "Information available" means that information about the OID is fully available.
+.in 7
+.ti 3
+(1) "Information available" means that information about the OID is fully available.
+.in 3
 
-- "Information partially available" means that part of the information about the OID is not available.  Possible reasons could be that part of the information is redacted due to confidentiality, or the OID-IP service only knows basic information, while the full information can be found somewhere else (e.g. at a referred OID-IP service).  The field "attribute" MAY be used with the value "confidential".
+.in 7
+.ti 3
+(2) "Information partially available" means that part of the information about the OID is not available.  Possible reasons could be that part of the information is redacted due to confidentiality, or the OID-IP service only knows basic information, while the full information can be found somewhere else (e.g. at a referred OID-IP service).  The field "attribute" MAY be used with the value "confidential".
+.in 3
 
-- "Information unavailable" means that the information about the OID is missing, redacted due to confidentiality, or otherwise unavailable.  The field "attribute" MAY be used with the value "confidential".
+.in 7
+.ti 3
+(3) "Information unavailable" means that the information about the OID is missing, redacted due to confidentiality, or otherwise unavailable.  The field "attribute" MAY be used with the value "confidential".
+.in 3
 .bp
 .ti 0
 3.2.2.3  Object-Section "lang" Field
@@ -850,19 +994,40 @@ If the result is "Found" (i.e. the OID is existing in the local database), then 
 
 "attribute" (OPTIONAL, multiple values allowed) contains attributes of the OID.  An attribute MUST be one of the following values:
 
-- "confidential" means that information about the OID or part of it is confidential.
+.in 7
+.ti 3
+(1) "confidential" means that information about the OID or part of it is confidential.
+.fi
 
-- "draft" means that the allocation of the OID is not yet official and the information is subject to change without notice.  This includes deletion and relocation.
+.in 7
+.ti 3
+(2) "draft" means that the allocation of the OID is not yet official and the information is subject to change without notice.  This includes deletion and relocation.
+.in 3
 
-- "frozen" means that no more child OIDs can be created under this OID, e.g. because the RA has stopped operating, but the existing child OIDs stay valid.
+.in 7
+.ti 3
+(3) "frozen" means that no more child OIDs can be created under this OID, e.g. because the RA has stopped operating, but the existing child OIDs stay valid.
+.in 3
 
-- "leaf" means that no child OIDs can be allocated under this OID.  The field "subordinate" SHALL therefore not be present.
+.in 7
+.ti 3
+(4) "leaf" means that no child OIDs can be allocated under this OID.  The field "subordinate" SHALL therefore not be present.
+.in 3
 
-- "no-identifiers" means that the RA is not allocating alphanumeric identifiers.
+.in 7
+.ti 3
+(5) "no-identifiers" means that the RA is not allocating alphanumeric identifiers.
+.in 3
 
-- "no-unicode-labels" means that the RA is not allocating Non-integer Unicode labels.
+.in 7
+.ti 3
+(6) "no-unicode-labels" means that the RA is not allocating Non-integer Unicode labels.
+.in 3
 
-- "retired" means that the OID is withdrawn, revoked, retired, expired, etc.  Please consult Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-1:2012 [X660] for more information about such cases.
+.in 7
+.ti 3
+(7) "retired" means that the OID is withdrawn, revoked, retired, expired, etc.  Please consult Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-1:2012 [X660] for more information about such cases.
+.in 3
 .bp
 .ti 0
 3.2.2.17  Object-Section "parent" Field
@@ -906,11 +1071,20 @@ Possible fields are:
 
 "ra-status" MUST be present and SHALL be one of the following values:
 
-- "Information available" means that information about this RA is fully available.
+.in 7
+.ti 3
+(1) "Information available" means that information about this RA is fully available.
+.in 3
 
-- "Information partially available" means that part of the information is not available.  A possible reason could be that part of the information is redacted due to confidentiality.  The field "attribute" MAY be used with the value "confidential".
+.in 7
+.ti 3
+(2) "Information partially available" means that part of the information is not available.  A possible reason could be that part of the information is redacted due to confidentiality.  The field "attribute" MAY be used with the value "confidential".
+.in 3
 
-- "Information unavailable" means that the data is missing (if the OID-IP service only knows the name of the RA and nothing else), redacted due to confidentiality, or otherwise unavailable.  The field "attribute" MAY be used with the value "confidential".
+.in 7
+.ti 3
+(3) "Information unavailable" means that the data is missing (if the OID-IP service only knows the name of the RA and nothing else), redacted due to confidentiality, or otherwise unavailable.  The field "attribute" MAY be used with the value "confidential".
+.in 3
 
 .ti 0
 3.2.3.3  RA-Section "ra-lang" Field
@@ -957,9 +1131,15 @@ Possible fields are:
 
 "ra-attribute" (OPTIONAL, multiple values allowed) contains attributes of the RA.  An attribute MUST be one of the following values:
 
-- "confidential" means that the information about the RA or part of it is confidential.
+.in 7
+.ti 3
+(1) "confidential" means that the information about the RA or part of it is confidential.
+.in 3
 
-- "retired" means that the RA is defunct.  If this attribute is set to the current RA, then the OID MUST have the attribute "frozen" (until the responsibility is transferred to a non-defunct RA, or until the current RA becomes active again).
+.in 7
+.ti 3
+(2) "retired" means that the RA is defunct.  If this attribute is set to the current RA, then the OID MUST have the attribute "frozen" (until the responsibility is transferred to a non-defunct RA, or until the current RA becomes active again).
+.in 3
 
 .ti 0
 3.2.3.12  RA-Section "ra-created" Field
@@ -1008,27 +1188,50 @@ If integrity/authenticity is required, the whole response can be signed, e.g. by
 Steps for signing a message:
 
 .in 7
-1. Make sure that the JSON file has no signature (remove the "signature" key if one exists).
+.ti 3
+(1) Make sure that the JSON file has no signature (remove the "signature" key if one exists).
+.in 3
 
-2. Create a working-copy of the JSON file and canonize the contents using the procedures described in RFC\08785 [RFC8785].
+.in 7
+.ti 3
+(2) Create a working-copy of the JSON file and canonize the contents using the procedures described in RFC\08785 [RFC8785].
+.in 3
 
-3. Create a JSON Web Signature (JWS, RFC\07515 [RFC7515]) using your public key and the canonized form of the JSON contents.
+.in 7
+.ti 3
+(3) Create a JSON Web Signature (JWS, RFC\07515 [RFC7515]) using your public key and the canonized form of the JSON contents.
+.in 3
 
-4. Add the signature in the "signature" field to the original JSON file.  Note that the original JSON does not need to be canonized, since the canonization will be repeated in the verification procedure.
+.in 7
+.ti 3
+(4) Add the signature in the "signature" field to the original JSON file.  Note that the original JSON does not need to be canonized, since the canonization will be repeated in the verification procedure.
 .in 3
 
 Steps for verifying a message:
 
 .in 7
-1. Extract the contents of the "signature" key from the JSON file.  This is the JSON Web Signature containing a header, a payload, and a signature.
+.ti 3
+(1) Extract the contents of the "signature" key from the JSON file.  This is the JSON Web Signature containing a header, a payload, and a signature.
+.in 3
 
-2. Create a working-copy of the JSON file and remove the "signature" key there.
+.in 7
+.ti 3
+(2) Create a working-copy of the JSON file and remove the "signature" key there.
+.in 3
 
-3. Canonize the remaining contents using the procedures described in RFC\08785 [RFC8785].
+.in 7
+.ti 3
+(3) Canonize the remaining contents using the procedures described in RFC\08785 [RFC8785].
+.in 3
 
-4. Compare the canonized contents to the base64-encoded payload of the JSON Web Signature which was extracted before.  The contents MUST be equal.
+.in 7
+.ti 3
+(4) Compare the canonized contents to the base64-encoded payload of the JSON Web Signature which was extracted before.  The contents MUST be equal.
+.in 3
 
-5. Verify the JSON Web Signature of the original JSON file according to the procedures described in RFC\07515 [RFC7515].
+.in 7
+.ti 3
+(5) Verify the JSON Web Signature of the original JSON file according to the procedures described in RFC\07515 [RFC7515].
 .in 3
 
 .ti 0
@@ -1099,19 +1302,40 @@ Examples of valid date/time references are:
 
 For the HTTP transmission, there are the following requirements based on the result of the query defined in section\03.2.1:
 
-- If the result is "Found", then the HTTP(S) Response Code MUST be "200 OK".
+.in 7
+.ti 3
+(1) If the result is "Found", then the HTTP(S) Response Code MUST be "200 OK".
+.in 3
 
-- If the result is "Not found; superior object found", then the HTTP(S) Response Code MUST be "470 Not Found - Superior Object Found".
+.in 7
+.ti 3
+(2) If the result is "Not found; superior object found", then the HTTP(S) Response Code MUST be "470 Not Found - Superior Object Found".
+.in 3
 
-- If the result is "Not found", then the HTTP(S) Response Code MUST be "404 Not Found".
+.in 7
+.ti 3
+(3) If the result is "Not found", then the HTTP(S) Response Code MUST be "404 Not Found".
+.in 3
 
-- If the result is "Service Error", then the HTTP(S) Response Code MUST be in the range 400, 402, 405-469, 471-499, and 500-599.  Examples for fitting response codes are "400 Bad Request", "429 Too Many Requests", or "500 Internal Server Error".
+.in 7
+.ti 3
+(4) If the result is "Service Error", then the HTTP(S) Response Code MUST be in the range 400, 402, 405-469, 471-499, and 500-599.  Examples for fitting response codes are "400 Bad Request", "429 Too Many Requests", or "500 Internal Server Error".
+.in 3
 
-- If the response contains a referral server (field "oidip-service"), then the HTTP(S) Response Code MUST NOT be a 3xx redirection status code.
+.in 7
+.ti 3
+(5) If the response contains a referral server (field "oidip-service"), then the HTTP(S) Response Code MUST NOT be a 3xx redirection status code.
+.in 3
 
-- While the 3xx redirection status code MUST NOT indicate an OID-IP referral as specified by section\04, the 3xx redirection status codes may be used if the OID-IP service itself moves, e.g. to a different domain name.
+.in 7
+.ti 3
+(6) While the 3xx redirection status code MUST NOT indicate an OID-IP referral as specified by section\04, the 3xx redirection status codes may be used if the OID-IP service itself moves, e.g. to a different domain name.
+.in 3
 
-- Response codes 401 and 403 MUST NOT be used to indicate that information is partially redacted or fully unavailable due to missing authorization.
+.in 7
+.ti 3
+(7) Response codes 401 and 403 MUST NOT be used to indicate that information is partially redacted or fully unavailable due to missing authorization.
+.in 3
 .bp
 .ti 0
 4  Referral
@@ -1222,21 +1446,45 @@ This document describes the retrieval of information about OIDs using the OID-IP
 
 The following things need to be considered if alternative namespaces are implemented:
 
+.in 7
+.ti 3
 (1) The request MUST be UTF-8 encoded (as defined in RFC\03629 [RFC3629]), without Byte-Order-Mark (BOM).
+.in 3
 
+.in 7
+.ti 3
 (2) The namespace SHALL be a namespace identifier (NID) as defined in RFC\08141 [RFC8141].
+.in 3
 
+.in 7
+.ti 3
 (3) The namespace identifier SHALL be written in lower-case (this is already defined in section\02 "Request").
+.in 3
 
+.in 7
+.ti 3
 (4) If available, a formal URN namespace identifier (as defined in RFC\08141, section\05.1 [RFC8141]) SHOULD be used, e.g. "uuid" should be used instead of "guid".
+.in 3
 
+.in 7
+.ti 3
 (5) If things like "Owner", "Creator", "Manager", "Administrator", etc., are relevant to the identifiers in the namespace, then the RA-section as described in section\03.2.3 SHALL be used, even though the word "Registration Authority" might not be appropriate in the terminology of the namespace.
+.in 3
 
+.in 7
+.ti 3
 (6) For WHOIS requests, the namespace-specific identifier MUST NOT contain dollar signs ("$"), because section\02.2.1.1 "Input Parameters" defines them as a separator for input parameters.  For HTTP(S) requests, the namespace-specific identifier MUST NOT contain a slash ("/") and MUST NOT be called "root".
+.in 3
 
+.in 7
+.ti 3
 (7) The namespace-specific identifier MUST be treated as case-sensitive if the namespace distinguishes between lower-case and upper-case.
+.in 3
 
+.in 7
+.ti 3
 (8) Fields that can only be used in the OID namespace (e.g. "unicode-label") MUST NOT be used for other namespaces.
+.in 3
 .bp
 .ti 0
 6.1  Example: UUID Namespace
@@ -1283,22 +1531,45 @@ The OID-IP service can define additional field names, but they SHOULD be written
 .ti 0
 8  Security Considerations
 
+.in 7
+.ti 3
 (1) The knowledge of the existence of an OID, or information about some OIDs could be considered confidential.  In this case, the OID-IP service can either deny the existence of the requested OID (by setting the result to "Not found") or redact information in the Object-Section, as defined in section\03.2.2 "Object-Section".
+.in 3
 
+.in 7
+.ti 3
 (2) Registration Authorities might demand that their data be kept confidential, or at least be partially redacted to increase privacy or as a measurement against spam.  In this case, the OID-IP service can redact information in the RA-Section, as defined in section\03.2.3 "RA-Section".
+.in 3
 
+.in 7
+.ti 3
 (3) The OID-IP service can decide if confidential material is omitted or shown, based on authentication mechanisms like white-listing client IP addresses or by using authentication tokens supplied by the client during the request, as defined in section\02.1.3 "Authentication" and section\02.2.3 "Authentication Tokens".
+.in 3
 
+.in 7
+.ti 3
 (4) Unless HTTPS is used, the usage of authentication tokens or transmitting confidential information is not recommended if the traffic between client and server is transmitted through an untrusted network.
+.in 3
 
+.in 7
+.ti 3
 (5) Authentication tokens must have a sufficient length and complexity to avoid successful brute force attacks, or the OID-IP service must limit the number of requests per time.
+.in 3
 
+.in 7
+.ti 3
 (6) Like for passwords, the authentication token should be unique and not be used for any other purpose, e.g. as online account password.
+.in 3
 
+.in 7
+.ti 3
 (7) Based on the client software, authentication tokens might be saved in the history, which might be a security risk.  For example, the browser history (if authentication tokens are sent as HTTP(S) GET parameter, or in the command-line history if the authentication token has been sent via command-line).
+.in 3
 
+.in 7
+.ti 3
 (8) If integrity/authenticity is required, the OID-IP response can be signed, as described in section\03.3 "Digital Signature".
-
+.in 3
 
 .ti 0
 9  IANA Considerations
