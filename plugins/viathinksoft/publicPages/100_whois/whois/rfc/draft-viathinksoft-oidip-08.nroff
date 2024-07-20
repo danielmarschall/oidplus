@@ -123,65 +123,106 @@ provided without warranty as described in the Revised BSD License.
 Table of Contents
 
 .nf
-   1  Introduction  . . . . . . . . . . . . . . . . . . . . . . . . .  4
-     1.1  Terminology . . . . . . . . . . . . . . . . . . . . . . . .  5
-   2  Request . . . . . . . . . . . . . . . . . . . . . . . . . . . .  6
-     2.1  Request via HTTP(S) Protocol (Recommended)  . . . . . . . .  6
-       2.1.1 Request Method and Path  . . . . . . . . . . . . . . . .  6
-       2.1.2  Formats and Content-Types . . . . . . . . . . . . . . .  7
-       2.1.3  Authentication  . . . . . . . . . . . . . . . . . . . .  8
-       2.1.4  Preferred Language  . . . . . . . . . . . . . . . . . .  9
-       2.1.5  Custom Input Parameters . . . . . . . . . . . . . . . .  9
-       2.1.6  Cookies . . . . . . . . . . . . . . . . . . . . . . . . 10
-     2.2  Request via WHOIS Protocol (Backwards Compatibility)  . . . 10
-       2.2.1  Request Method  . . . . . . . . . . . . . . . . . . . . 10
-         2.2.1.1  Basic Query String  . . . . . . . . . . . . . . . . 10
-         2.2.1.2  Input Parameters  . . . . . . . . . . . . . . . . . 11
-         2.2.1.3  Request ABNF Notation . . . . . . . . . . . . . . . 11
-       2.2.2  Format ("format" Argument)  . . . . . . . . . . . . . . 13
-       2.2.3  Authentication Tokens ("auth" Argument) . . . . . . . . 13
-       2.2.4  Preferred Language ("lang" Argument)  . . . . . . . . . 14
-       2.2.5  Custom Input Parameters . . . . . . . . . . . . . . . . 15
-   3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
-     3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . . 16
-       3.1.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 16
-       3.1.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 16
-       3.1.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 17
-     3.2  Sections  . . . . . . . . . . . . . . . . . . . . . . . . . 17
-       3.2.1  Query-Section (Information about Query and Result)  . . 17
-       3.2.2  Object-Section (Information about the OID)  . . . . . . 18
-       3.2.3  RA-Section (Information about the Current RA) . . . . . 22
-       3.2.4  Sections for Previous Registration Authorities  . . . . 24
-     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 25
-       3.3.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 25
-       3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 25
-       3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 26
-     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 26
-       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 26
-       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 27
-     3.5  HTTP Response Status Codes  . . . . . . . . . . . . . . . . 27
-   4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
-   5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 29
-     5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 29
-     5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 29
-   6  Alternative Namespaces  . . . . . . . . . . . . . . . . . . . . 30
-     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 31
-       6.1.1  Request . . . . . . . . . . . . . . . . . . . . . . . . 31
-       6.1.2  Response  . . . . . . . . . . . . . . . . . . . . . . . 31
-   7  Internationalization Considerations . . . . . . . . . . . . . . 31
-   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 32
-   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 32
-   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 33
-     10.1  Normative References . . . . . . . . . . . . . . . . . . . 33
-     10.2  Informative References . . . . . . . . . . . . . . . . . . 35
-   Appendix A.  JSON Format Schema and Example  . . . . . . . . . . . 36
-   Appendix A.1.  JSON Format Schema  . . . . . . . . . . . . . . . . 36
-   Appendix A.2.  JSON Format Example of Output . . . . . . . . . . . 45
-   Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 47
-   Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 47
-   Appendix B.2.  XML Format Example of Output  . . . . . . . . . . . 56
-   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 58
-   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 58
+   1  Introduction  . . . . . . . . . . . . . . . . . . . . . . . . .  5
+     1.1  Terminology . . . . . . . . . . . . . . . . . . . . . . . .  6
+   2  Request . . . . . . . . . . . . . . . . . . . . . . . . . . . .  7
+     2.1  Request via HTTP(S) Protocol (Recommended)  . . . . . . . .  7
+       2.1.1 Request Method and Path  . . . . . . . . . . . . . . . .  7
+       2.1.2  Formats and Content-Types . . . . . . . . . . . . . . .  8
+       2.1.3  Authentication  . . . . . . . . . . . . . . . . . . . .  9
+       2.1.4  Preferred Language  . . . . . . . . . . . . . . . . . . 10
+       2.1.5  Custom Input Parameters . . . . . . . . . . . . . . . . 10
+       2.1.6  Cookies . . . . . . . . . . . . . . . . . . . . . . . . 11
+     2.2  Request via WHOIS Protocol (Backwards Compatibility)  . . . 11
+       2.2.1  Request Method  . . . . . . . . . . . . . . . . . . . . 11
+         2.2.1.1  Basic Query String  . . . . . . . . . . . . . . . . 11
+         2.2.1.2  Input Parameters  . . . . . . . . . . . . . . . . . 12
+         2.2.1.3  Request ABNF Notation . . . . . . . . . . . . . . . 12
+       2.2.2  Format ("format" Argument)  . . . . . . . . . . . . . . 14
+       2.2.3  Authentication Tokens ("auth" Argument) . . . . . . . . 14
+       2.2.4  Preferred Language ("lang" Argument)  . . . . . . . . . 15
+       2.2.5  Custom Input Parameters . . . . . . . . . . . . . . . . 16
+   3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
+     3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . . 17
+       3.1.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 17
+       3.1.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 17
+       3.1.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 18
+     3.2  Sections  . . . . . . . . . . . . . . . . . . . . . . . . . 18
+       3.2.1  Query-Section (Information about Query and Result)  . . 19
+         3.2.1.1  Query-Section "query" Field . . . . . . . . . . . . 19
+         3.2.1.2  Query-Section "result" Field  . . . . . . . . . . . 19
+         3.2.1.3  Query-Section "distance" Field  . . . . . . . . . . 19
+         3.2.1.4  Query-Section "message" Field . . . . . . . . . . . 19
+         3.2.1.5  Query-Section "lang" Field  . . . . . . . . . . . . 20
+         3.2.1.6  Query-Section Other Fields  . . . . . . . . . . . . 20
+       3.2.2  Object-Section (Information about the OID)  . . . . . . 20
+         3.2.2.1  Object-Section "object" Field . . . . . . . . . . . 20
+         3.2.2.2  Object-Section "status" Field . . . . . . . . . . . 20
+         3.2.2.3  Object-Section "lang" Field . . . . . . . . . . . . 21
+         3.2.2.4  Object-Section "name" Field . . . . . . . . . . . . 21
+         3.2.2.5  Object-Section "description" Field  . . . . . . . . 21
+         3.2.2.6  Object-Section "information" Field  . . . . . . . . 21
+         3.2.2.7  Object-Section "url" Field  . . . . . . . . . . . . 21
+         3.2.2.8  Object-Section "asn1-notation" Field  . . . . . . . 21
+         3.2.2.9  Object-Section "iri-notation" Field . . . . . . . . 21
+         3.2.2.10  Object-Section "identifier" Field  . . . . . . . . 22
+         3.2.2.11  Object-Section "standardized-id" Field . . . . . . 22
+         3.2.2.12  Object-Section "unicode-label" Field . . . . . . . 22
+         3.2.2.13  Object-Section "long-arc" Field  . . . . . . . . . 22
+         3.2.2.14  Object-Section "oidip-service" Field . . . . . . . 22
+         3.2.2.15  Object-Section "oidip-pubkey" Field  . . . . . . . 23
+         3.2.2.16  Object-Section "attribute" Field . . . . . . . . . 23
+         3.2.2.17  Object-Section "parent" Field  . . . . . . . . . . 24
+         3.2.2.18  Object-Section "subordinate" Field . . . . . . . . 24
+         3.2.2.19  Object-Section "created" Field . . . . . . . . . . 24
+         3.2.2.20  Object-Section "updated" Field . . . . . . . . . . 24
+         3.2.2.21  Object-Section Other Fields  . . . . . . . . . . . 24
+       3.2.3  RA-Section (Information about the Current RA) . . . . . 25
+         3.2.3.1  RA-Section "ra" Field . . . . . . . . . . . . . . . 25
+         3.2.3.2  RA-Section "ra-status" Field  . . . . . . . . . . . 25
+         3.2.3.3  RA-Section "ra-lang" Field  . . . . . . . . . . . . 25
+         3.2.3.4  RA-Section "ra-contact-name" Field  . . . . . . . . 25
+         3.2.3.5  RA-Section "ra-address" Field . . . . . . . . . . . 25
+         3.2.3.6  RA-Section "ra-phone" Field . . . . . . . . . . . . 26
+         3.2.3.7  RA-Section "ra-mobile" Field  . . . . . . . . . . . 26
+         3.2.3.8  RA-Section "ra-fax" Field . . . . . . . . . . . . . 26
+         3.2.3.9  RA-Section "ra-email" Field . . . . . . . . . . . . 26
+         3.2.3.10  RA-Section "ra-url" Field  . . . . . . . . . . . . 26
+         3.2.3.11  RA-Section "ra-attribute" Field  . . . . . . . . . 26
+         3.2.3.12  RA-Section "ra-created" Field  . . . . . . . . . . 27
+         3.2.3.13  RA-Section "ra-updated" Field  . . . . . . . . . . 27
+         3.2.3.14  RA-Section Other Fields  . . . . . . . . . . . . . 27
+       3.2.4  Sections for Previous Registration Authorities  . . . . 27
+     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 28
+       3.3.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 28
+       3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 28
+       3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 29
+     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 29
+       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 29
+       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 30
+     3.5  HTTP Response Status Codes  . . . . . . . . . . . . . . . . 30
+   4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 31
+   5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 32
+     5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 32
+     5.2  Response  . . . . . . . . . . . . . . . . . . . . . . . . . 32
+   6  Alternative Namespaces  . . . . . . . . . . . . . . . . . . . . 33
+     6.1  Example: UUID Namespace . . . . . . . . . . . . . . . . . . 34
+       6.1.1  Request . . . . . . . . . . . . . . . . . . . . . . . . 34
+       6.1.2  Response  . . . . . . . . . . . . . . . . . . . . . . . 34
+   7  Internationalization Considerations . . . . . . . . . . . . . . 34
+   8  Security Considerations . . . . . . . . . . . . . . . . . . . . 35
+   9  IANA Considerations . . . . . . . . . . . . . . . . . . . . . . 35
+   10  References . . . . . . . . . . . . . . . . . . . . . . . . . . 36
+     10.1  Normative References . . . . . . . . . . . . . . . . . . . 36
+     10.2  Informative References . . . . . . . . . . . . . . . . . . 38
+   Appendix A.  JSON Format Schema and Example  . . . . . . . . . . . 39
+   Appendix A.1.  JSON Format Schema  . . . . . . . . . . . . . . . . 39
+   Appendix A.2.  JSON Format Example of Output . . . . . . . . . . . 48
+   Appendix B.  XML Format Schema and Example . . . . . . . . . . . . 50
+   Appendix B.1.  XML Format Schema . . . . . . . . . . . . . . . . . 50
+   Appendix B.2.  XML Format Example of Output  . . . . . . . . . . . 59
+   Acknowledgements . . . . . . . . . . . . . . . . . . . . . . . . . 61
+   Authors' Addresses . . . . . . . . . . . . . . . . . . . . . . . . 61
 .fi
 .in 3
 
@@ -661,7 +702,7 @@ This document specifies the following sections:
 (3) RA-Section which contains information about the current Registration Authority, as described in section\03.2.3.
 
 (4) Optional RA-Sections containing information about RAs that were previously in charge of managing the OID, as described in section\03.2.4.
-
+.bp
 .ti 0
 3.2.1  Query-Section (Information about Query and Result)
 
@@ -669,27 +710,43 @@ This section MUST always be present and MUST start with the field "query".  It M
 
 Possible fields are:
 
-(1) "query" MUST be present and contains the request string the client has sent.  Canonization or sanitation (like removing a leading dot in front of the OID) SHOULD NOT be applied at this step.  Authentication tokens SHOULD be omitted, though.
+.ti 0
+3.2.1.1  Query-Section "query" Field
 
-(2) "result" MUST be present and SHALL be one of the following values:
+"query" MUST be present and contains the request string the client has sent.  Canonization or sanitation (like removing a leading dot in front of the OID) SHOULD NOT be applied at this step.  Authentication tokens SHOULD be omitted, though.
 
-.in 7
-"Found" means that the OID-IP service can verify that the requested OID exists.  The following sections will contain information about this OID.
+.ti 0
+3.2.1.2  Query-Section "result" Field
 
-"Not found; superior object found" means that the OID-IP service cannot verify that the requested OID exists, or it denies that the OID exists (e.g. because it is confidential).  However, the OID-IP service knows a superior OID which does exist.  The following sections will contain information about that superior OID instead.
+"result" MUST be present and SHALL be one of the following values:
 
-"Not found" means that the OID-IP service cannot verify that the requested OID exists, or it denies that the OID exists (e.g. because it is confidential).  Additionally, the OID-IP service does not have information about any superior OID, or their existence is also denied.
+- "Found" means that the OID-IP service can verify that the requested OID exists.  The following sections will contain information about this OID.
 
-"Service error" means that an internal error occurred, or that the system is in maintenance mode.  The client should try again later.
-.in 3
+- "Not found; superior object found" means that the OID-IP service cannot verify that the requested OID exists, or it denies that the OID exists (e.g. because it is confidential).  However, the OID-IP service knows a superior OID which does exist.  The following sections will contain information about that superior OID instead.
 
-(3) "distance" SHOULD be present if it is applicable in the requested namespace (it is always applicable for OIDs) and if the result is "Not found; superior object found".  A distance of 1 means that the direct parent was found.  A distance of 2 means that the grand-parent was found, etc.
+- "Not found" means that the OID-IP service cannot verify that the requested OID exists, or it denies that the OID exists (e.g. because it is confidential).  Additionally, the OID-IP service does not have information about any superior OID, or their existence is also denied.
 
-(4) "message" SHOULD be present if the result is "Service error".  It contains a message explaining why the service is not available (e.g. displaying an error message).  It MUST NOT be present if the result has a different value.
+- "Service error" means that an internal error occurred, or that the system is in maintenance mode.  The client should try again later.
 
-(5) "lang" (OPTIONAL) contains the language of the field "message".  The language should be a language tag as defined in [RFC5646].
+.ti 0
+3.2.1.3  Query-Section "distance" Field
 
-The OID-IP service SHOULD NOT add additional fields to this section.
+"distance" SHOULD be present if it is applicable in the requested namespace (it is always applicable for OIDs) and if the result is "Not found; superior object found".  A distance of 1 means that the direct parent was found.  A distance of 2 means that the grand-parent was found, etc.
+
+.ti 0
+3.2.1.4  Query-Section "message" Field
+
+"message" SHOULD be present if the result is "Service error".  It contains a message explaining why the service is not available (e.g. displaying an error message).  It MUST NOT be present if the result has a different value.
+
+.ti 0
+3.2.1.5  Query-Section "lang" Field
+
+"lang" (OPTIONAL) contains the language of the field "message".  The language should be a language tag as defined in [RFC5646].
+
+.ti 0
+3.2.1.6  Query-Section Other Fields
+
+The OID-IP service SHOULD NOT add additional fields to the Query section.
 
 .ti 0
 3.2.2  Object-Section (Information about the OID)
@@ -698,87 +755,140 @@ This section MUST be present if the result is "Found" or "Not found; superior ob
 
 Possible fields are:
 
-(1) "object" contains the OID in dot-notation, prepended by the namespace identifier and double colon ("oid:").  This field MUST be present.
+.ti 0
+3.2.2.1  Object-Section "object" Field
 
-(2) "status" MUST be present and SHALL be one of the following values:
+"object" contains the OID in dot-notation, prepended by the namespace identifier and double colon ("oid:").  This field MUST be present.
 
-.in 7
-"Information available" means that information about the OID is fully available.
+.ti 0
+3.2.2.2  Object-Section "status" Field
 
-"Information partially available" means that part of the information about the OID is not available.  Possible reasons could be that part of the information is redacted due to confidentiality, or the OID-IP service only knows basic information, while the full information can be found somewhere else (e.g. at a referred OID-IP service).  The field "attribute" MAY be used with the value "confidential".
+"status" MUST be present and SHALL be one of the following values:
 
-"Information unavailable" means that the information about the OID is missing, redacted due to confidentiality, or otherwise unavailable.  The field "attribute" MAY be used with the value "confidential".
-.in 3
+- "Information available" means that information about the OID is fully available.
 
-(3) "lang" (OPTIONAL) contains the language of the fields "name", "description", "information", and additional fields if their translation makes sense.  The language should be a language tag as defined in [RFC5646].
+- "Information partially available" means that part of the information about the OID is not available.  Possible reasons could be that part of the information is redacted due to confidentiality, or the OID-IP service only knows basic information, while the full information can be found somewhere else (e.g. at a referred OID-IP service).  The field "attribute" MAY be used with the value "confidential".
 
-(4) "name" (OPTIONAL) contains the name of the OID.  It SHOULD be as short as possible.
+- "Information unavailable" means that the information about the OID is missing, redacted due to confidentiality, or otherwise unavailable.  The field "attribute" MAY be used with the value "confidential".
+.bp
+.ti 0
+3.2.2.3  Object-Section "lang" Field
 
-(5) "description" (OPTIONAL) contains a short description of the OID.  The description SHOULD only be a single sentence.
+"lang" (OPTIONAL) contains the language of the fields "name", "description", "information", and additional fields if their translation makes sense.  The language should be a language tag as defined in [RFC5646].
 
-(6) "information" (OPTIONAL) contains additional information, e.g. Management Information Base (MIB) definitions.
+.ti 0
+3.2.2.4  Object-Section "name" Field
 
-(7) "url" (OPTIONAL, multiple values allowed) contains a URL (as defined in RFC\03986 [RFC3986]) leading to more information about the OID.
+"name" (OPTIONAL) contains the name of the OID.  It SHOULD be as short as possible.
 
-(8) "asn1-notation" (OPTIONAL, multiple values allowed) contains one or more possible notations in the ASN.1 syntax, as defined in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 32.3 [X680], e.g. {joint-iso-itu-t(2) example(999)}.
+.ti 0
+3.2.2.5  Object-Section "description" Field
 
-.in 7
+"description" (OPTIONAL) contains a short description of the OID.  The description SHOULD only be a single sentence.
+
+.ti 0
+3.2.2.6  Object-Section "information" Field
+
+"information" (OPTIONAL) contains additional information, e.g. Management Information Base (MIB) definitions.
+
+.ti 0
+3.2.2.7  Object-Section "url" Field
+
+"url" (OPTIONAL, multiple values allowed) contains a URL (as defined in RFC\03986 [RFC3986]) leading to more information about the OID.
+
+.ti 0
+3.2.2.8  Object-Section "asn1-notation" Field
+
+"asn1-notation" (OPTIONAL, multiple values allowed) contains one or more possible notations in the ASN.1 syntax, as defined in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 32.3 [X680], e.g. {joint-iso-itu-t(2) example(999)}.
+
 Note: A line break, to break up lines that are too long, as defined in section\03.1 ("Format and Encoding") SHOULD be used.  This is no problem because multiple ASN.1 notations can be distinguished by their opening curly bracket and their closing curly bracket.
-.in 3
 
-(9) "iri-notation" (OPTIONAL, multiple values allowed) contains one or more possible notations in the OID-IRI syntax, as defined in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 34.3 [X680] (but without quotation marks), e.g. /Joint-ISO-ITU-T/Example.
+.ti 0
+3.2.2.9  Object-Section "iri-notation" Field
 
-.in 7
+"iri-notation" (OPTIONAL, multiple values allowed) contains one or more possible notations in the OID-IRI syntax, as defined in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 34.3 [X680] (but without quotation marks), e.g. /Joint-ISO-ITU-T/Example.
+
 Note: A line break, to break up lines that are too long, as defined in section\03.1 ("Format and Encoding") SHALL NOT be used, otherwise, it would be ambiguous if the line break was used to shorten the line, or if the line break indicates a new value in case multiple OID-IRI notations are supplied.
-.in 3
 
-(10) "identifier" (OPTIONAL, multiple values allowed) contains an alphanumeric identifier ("NameForm") as defined in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 12.3 [X680].
+.ti 0
+3.2.2.10  Object-Section "identifier" Field
 
-(11) "standardized-id" (OPTIONAL, multiple values allowed) contains an alphanumeric identifier that has a standardized "NameForm", i.e. in ASN.1 notation, it can be written without its associated number.  See more information in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 32.7 [X680].
+"identifier" (OPTIONAL, multiple values allowed) contains an alphanumeric identifier ("NameForm") as defined in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 12.3 [X680].
 
-(12) "unicode-label" (OPTIONAL, multiple values allowed) contains a Non-integer Unicode label, as defined in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 12.27 [X680].
+.ti 0
+3.2.2.11  Object-Section "standardized-id" Field
 
-(13) "long-arc" (OPTIONAL, multiple values allowed) contains a Non-integer Unicode label that can be used as the first identifier in an OID Internationalized Resource Identifier (OID-IRI), shortening it.  More information can be found in Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-1:2012, clause 3.5.8 [X660].
+"standardized-id" (OPTIONAL, multiple values allowed) contains an alphanumeric identifier that has a standardized "NameForm", i.e. in ASN.1 notation, it can be written without its associated number.  See more information in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 32.7 [X680].
 
-(14) "oidip-service" (OPTIONAL, multiple values allowed) contains the address of a system that offers an OID-IP service that can supply information about the OID and/or its subordinate OIDs.
+.ti 0
+3.2.2.12  Object-Section "unicode-label" Field
 
-.in 7
+"unicode-label" (OPTIONAL, multiple values allowed) contains a Non-integer Unicode label, as defined in Recommendation ITU-T X.680 (2015) | ISO/IEC 8824-1:2015, clause 12.27 [X680].
+
+.ti 0
+3.2.2.13  Object-Section "long-arc" Field
+
+"long-arc" (OPTIONAL, multiple values allowed) contains a Non-integer Unicode label that can be used as the first identifier in an OID Internationalized Resource Identifier (OID-IRI), shortening it.  More information can be found in Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-1:2012, clause 3.5.8 [X660].
+
+.ti 0
+3.2.2.14  Object-Section "oidip-service" Field
+
+"oidip-service" (OPTIONAL, multiple values allowed) contains the address of a system that offers an OID-IP service that can supply information about the OID and/or its subordinate OIDs.
+
 For a HTTP(S) service, the value MUST be a URI with trailing path delimiter (e.g. https://example.com/oidip/).  For a WHOIS service, the value MUST be an IP address or hostname, followed by a double-colon (:) and a port number (e.g. oidip.example.com:43).
 Multiple values are allowed.  If the server accepts both the HTTP(S) protocol and the WHOIS protocol, then it is RECOMMENDED to present both services (two "oidip-service" lines).
 
 If the result is "Found" (i.e. the OID is existing in the local database), then the information "oidip-service" is only informational; its existence is most likely a hint that subordinate OIDs will be found at that OID-IP server.  If the result is "Not found; superior object found", then the client SHOULD query the referred OID-IP server to receive more information about the OID.  See more information in section\04 "Referral".
-.in 3
 
-(15) "oidip-pubkey" (OPTIONAL, multiple values allowed) contains the public key of the service that is identified with "oidip-service", in case it uses signatures (see section\03.3 "Digital Signature") and the referring service knows about it.  "oidip-pubkey" should be located directly below "oidip-service".  If multiple keys are present, then the first key is for the first service, the second key is for the second service, etc.  If there is only one key but multiple "oidip-service", then it is assumed that all these services have the same public key.
+.ti 0
+3.2.2.15  Object-Section "oidip-pubkey" Field
 
-(16) "attribute" (OPTIONAL, multiple values allowed) contains attributes of the OID.  An attribute MUST be one of the following values:
+"oidip-pubkey" (OPTIONAL, multiple values allowed) contains the public key of the service that is identified with "oidip-service", in case it uses signatures (see section\03.3 "Digital Signature") and the referring service knows about it.  "oidip-pubkey" should be located directly below "oidip-service".  If multiple keys are present, then the first key is for the first service, the second key is for the second service, etc.  If there is only one key but multiple "oidip-service", then it is assumed that all these services have the same public key.
 
-.in 7
-"confidential" means that information about the OID or part of it is confidential.
+.ti 0
+3.2.2.16  Object-Section "attribute" Field
 
-"draft" means that the allocation of the OID is not yet official and the information is subject to change without notice.  This includes deletion and relocation.
+"attribute" (OPTIONAL, multiple values allowed) contains attributes of the OID.  An attribute MUST be one of the following values:
 
-"frozen" means that no more child OIDs can be created under this OID, e.g. because the RA has stopped operating, but the existing child OIDs stay valid.
+- "confidential" means that information about the OID or part of it is confidential.
 
-"leaf" means that no child OIDs can be allocated under this OID.  The field "subordinate" SHALL therefore not be present.
+- "draft" means that the allocation of the OID is not yet official and the information is subject to change without notice.  This includes deletion and relocation.
 
-"no-identifiers" means that the RA is not allocating alphanumeric identifiers.
+- "frozen" means that no more child OIDs can be created under this OID, e.g. because the RA has stopped operating, but the existing child OIDs stay valid.
 
-"no-unicode-labels" means that the RA is not allocating Non-integer Unicode labels.
+- "leaf" means that no child OIDs can be allocated under this OID.  The field "subordinate" SHALL therefore not be present.
 
-"retired" means that the OID is withdrawn, revoked, retired, expired, etc.  Please consult Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-1:2012 [X660] for more information about such cases.
-.in 3
+- "no-identifiers" means that the RA is not allocating alphanumeric identifiers.
 
-(17) "parent" (OPTIONAL) contains the OID of the nearest known parent OID, prepended by namespace identifier and double colon, i.e. "oid:".  It MAY be followed by additional human-readable information, e.g. a description or a list of ASN.1 identifiers.  There SHALL be at least 1 whitespace in between.
+- "no-unicode-labels" means that the RA is not allocating Non-integer Unicode labels.
 
-(18) "subordinate" (OPTIONAL, multiple values allowed) contains a list of subordinate OIDs, prepended by namespace identifier and double colon, i.e. "oid:".  It MAY be followed by additional human-readable information, e.g. a description or a list of ASN.1 identifiers.  There SHALL be at least 1 whitespace in between.
+- "retired" means that the OID is withdrawn, revoked, retired, expired, etc.  Please consult Recommendation ITU-T X.660 (2011) | ISO/IEC 9834-1:2012 [X660] for more information about such cases.
+.bp
+.ti 0
+3.2.2.17  Object-Section "parent" Field
 
-(19) "created" (OPTIONAL) contains the date and time (as specified in section\03.4 "Date/Time Format") when the OID was first allocated by the RA of the superior OID.
+"parent" (OPTIONAL) contains the OID of the nearest known parent OID, prepended by namespace identifier and double colon, i.e. "oid:".  It MAY be followed by additional human-readable information, e.g. a description or a list of ASN.1 identifiers.  There SHALL be at least 1 whitespace in between.
 
-(20) "updated" (OPTIONAL) contains the date and time (as specified in section\03.4 "Date/Time Format") when the OID information was last updated.
+.ti 0
+3.2.2.18  Object-Section "subordinate" Field
 
-Additional fields can be defined by the OID-IP service.  The field names SHALL only consist of the lower-case letters "a..z", hyphens ("-"), and numbers, and SHOULD be written in the English language.  The field name MUST NOT begin or end with a hyphen and a hyphen MUST NOT be followed by another hyphen.
+"subordinate" (OPTIONAL, multiple values allowed) contains a list of subordinate OIDs, prepended by namespace identifier and double colon, i.e. "oid:".  It MAY be followed by additional human-readable information, e.g. a description or a list of ASN.1 identifiers.  There SHALL be at least 1 whitespace in between.
 
+.ti 0
+3.2.2.19  Object-Section "created" Field
+
+"created" (OPTIONAL) contains the date and time (as specified in section\03.4 "Date/Time Format") when the OID was first allocated by the RA of the superior OID.
+
+.ti 0
+3.2.2.20  Object-Section "updated" Field
+
+"updated" (OPTIONAL) contains the date and time (as specified in section\03.4 "Date/Time Format") when the OID information was last updated.
+
+.ti 0
+3.2.2.21  Object-Section Other Fields
+
+Additional fields for the Object section can be defined by the OID-IP service.  The field names SHALL only consist of the lower-case letters "a..z", hyphens ("-"), and numbers, and SHOULD be written in the English language.  The field name MUST NOT begin or end with a hyphen and a hyphen MUST NOT be followed by another hyphen.
+.bp
 .ti 0
 3.2.3  RA-Section (Information about the Current RA)
 
@@ -786,47 +896,85 @@ This section MUST NOT be present if the result is "Not found" or "Service error"
 
 Possible fields are:
 
-(1) "ra" contains a general name of the RA, like the name of a person, the name of a group, or the name of an organization.  This field MUST be present.
+.ti 0
+3.2.3.1  RA-Section "ra" Field
 
-(2) "ra-status" MUST be present and SHALL be one of the following values:
+"ra" contains a general name of the RA, like the name of a person, the name of a group, or the name of an organization.  This field MUST be present.
 
-.in 7
-"Information available" means that information about this RA is fully available.
+.ti 0
+3.2.3.2  RA-Section "ra-status" Field
 
-"Information partially available" means that part of the information is not available.  A possible reason could be that part of the information is redacted due to confidentiality.  The field "attribute" MAY be used with the value "confidential".
+"ra-status" MUST be present and SHALL be one of the following values:
 
-"Information unavailable" means that the data is missing (if the OID-IP service only knows the name of the RA and nothing else), redacted due to confidentiality, or otherwise unavailable.  The field "attribute" MAY be used with the value "confidential".
-.in 3
+- "Information available" means that information about this RA is fully available.
 
-(3) "ra-lang" (OPTIONAL) contains the language of the fields in this section, if their translation makes sense.  The language should be a language tag as defined in [RFC5646].
+- "Information partially available" means that part of the information is not available.  A possible reason could be that part of the information is redacted due to confidentiality.  The field "attribute" MAY be used with the value "confidential".
 
-(4) "ra-contact-name" (OPTIONAL, multiple values allowed) contains the name of a person responsible for the allocation of subordinate OIDs, in case "ra" is a group or organization.
+- "Information unavailable" means that the data is missing (if the OID-IP service only knows the name of the RA and nothing else), redacted due to confidentiality, or otherwise unavailable.  The field "attribute" MAY be used with the value "confidential".
 
-(5) "ra-address" (OPTIONAL) contains the physical location of the RA.  While a fully qualified postal address is recommended, the field can also just contain a rough location like city and country name, state and country name, or just the country name, etc.  The name of the country SHOULD always be present.
+.ti 0
+3.2.3.3  RA-Section "ra-lang" Field
 
-(6) "ra-phone" (OPTIONAL, multiple values allowed) contains a landline phone number of the Registration Authority.  It SHOULD be written in the international number format specified in Recommendation ITU-T E.164 (2010) [E164], e.g. +1 206 555 0100.
+"ra-lang" (OPTIONAL) contains the language of the fields in this section, if their translation makes sense.  The language should be a language tag as defined in [RFC5646].
 
-(7) "ra-mobile" (OPTIONAL, multiple values allowed) contains a mobile phone number of the Registration Authority.  It SHOULD be written in the international number format specified in Recommendation ITU-T E.164 (2010) [E164], e.g. +1 206 555 0100.
+.ti 0
+3.2.3.4  RA-Section "ra-contact-name" Field
 
-(8) "ra-fax" (OPTIONAL, multiple values allowed) contains a fax number of the Registration Authority.  It SHOULD be written in the international number format specified in Recommendation ITU-T E.164 (2010) [E164], e.g. +1 206 555 0100.
+"ra-contact-name" (OPTIONAL, multiple values allowed) contains the name of a person responsible for the allocation of subordinate OIDs, in case "ra" is a group or organization.
 
-(9) "ra-email" (OPTIONAL, multiple values allowed) contains an email address of the Registration Authority.
+.ti 0
+3.2.3.5  RA-Section "ra-address" Field
 
-(10) "ra-url" (OPTIONAL, multiple values allowed) contains a URL (as defined in RFC\03986 [RFC3986]) leading to more information about the RA (usually the website of the RA).
+"ra-address" (OPTIONAL) contains the physical location of the RA.  While a fully qualified postal address is recommended, the field can also just contain a rough location like city and country name, state and country name, or just the country name, etc.  The name of the country SHOULD always be present.
 
-(11) "ra-attribute" (OPTIONAL, multiple values allowed) contains attributes of the RA.  An attribute MUST be one of the following values:
+.ti 0
+3.2.3.6  RA-Section "ra-phone" Field
 
-.in 7
-"confidential" means that the information about the RA or part of it is confidential.
+"ra-phone" (OPTIONAL, multiple values allowed) contains a landline phone number of the Registration Authority.  It SHOULD be written in the international number format specified in Recommendation ITU-T E.164 (2010) [E164], e.g. +1 206 555 0100.
 
-"retired" means that the RA is defunct.  If this attribute is set to the current RA, then the OID MUST have the attribute "frozen" (until the responsibility is transferred to a non-defunct RA, or until the current RA becomes active again).
-.in 3
+.ti 0
+3.2.3.7  RA-Section "ra-mobile" Field
 
-(12) "ra-created" (OPTIONAL) contains the date and time (as specified in section\03.4 "Date/Time Format") when the RA was created/registered in the database.
+"ra-mobile" (OPTIONAL, multiple values allowed) contains a mobile phone number of the Registration Authority.  It SHOULD be written in the international number format specified in Recommendation ITU-T E.164 (2010) [E164], e.g. +1 206 555 0100.
 
-(13) "ra-updated" (OPTIONAL) contains the date and time (as specified in section\03.4 "Date/Time Format") when the RA information was last modified.
+.ti 0
+3.2.3.8  RA-Section "ra-fax" Field
 
-Additional fields can be defined by the OID-IP service, but they MUST begin with "ra-".  The field names SHALL only consist of the lower-case letters "a..z", hyphens ("-"), and numbers, and SHOULD be written in the English language.  The field name MUST NOT begin or end with a hyphen and a hyphen MUST NOT be followed by another hyphen.
+"ra-fax" (OPTIONAL, multiple values allowed) contains a fax number of the Registration Authority.  It SHOULD be written in the international number format specified in Recommendation ITU-T E.164 (2010) [E164], e.g. +1 206 555 0100.
+
+.ti 0
+3.2.3.9  RA-Section "ra-email" Field
+
+"ra-email" (OPTIONAL, multiple values allowed) contains an email address of the Registration Authority.
+
+.ti 0
+3.2.3.10  RA-Section "ra-url" Field
+
+"ra-url" (OPTIONAL, multiple values allowed) contains a URL (as defined in RFC\03986 [RFC3986]) leading to more information about the RA (usually the website of the RA).
+
+.ti 0
+3.2.3.11  RA-Section "ra-attribute" Field
+
+"ra-attribute" (OPTIONAL, multiple values allowed) contains attributes of the RA.  An attribute MUST be one of the following values:
+
+- "confidential" means that the information about the RA or part of it is confidential.
+
+- "retired" means that the RA is defunct.  If this attribute is set to the current RA, then the OID MUST have the attribute "frozen" (until the responsibility is transferred to a non-defunct RA, or until the current RA becomes active again).
+
+.ti 0
+3.2.3.12  RA-Section "ra-created" Field
+
+"ra-created" (OPTIONAL) contains the date and time (as specified in section\03.4 "Date/Time Format") when the RA was created/registered in the database.
+
+.ti 0
+3.2.3.13  RA-Section "ra-updated" Field
+
+"ra-updated" (OPTIONAL) contains the date and time (as specified in section\03.4 "Date/Time Format") when the RA information was last modified.
+
+.ti 0
+3.2.3.14  RA-Section Other Fields
+
+Additional fields for the RA section can be defined by the OID-IP service, but they MUST begin with "ra-".  The field names SHALL only consist of the lower-case letters "a..z", hyphens ("-"), and numbers, and SHOULD be written in the English language.  The field name MUST NOT begin or end with a hyphen and a hyphen MUST NOT be followed by another hyphen.
 
 .ti 0
 3.2.4  Sections for Previous Registration Authorities
