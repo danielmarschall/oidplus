@@ -34,11 +34,11 @@
 .\" Left header text
 .ds LH INTERNET DRAFT
 .\" Right header text
-.ds RH 19 July 2024
+.ds RH 20 July 2024
 .\" Center header text
 .ds CH OID Information Protocol
 .\" Center footer text
-.ds CF Expires 20 January 2025
+.ds CF Expires 21 January 2025
 .\" Hyphenation mode set to 0
 .hy 0
 .\" Disable hyphenation
@@ -51,7 +51,7 @@
 .nf
 .tl 'INTERNET-DRAFT''D. Marschall'
 .tl 'Intended Status: Informational''ViaThinkSoft'
-.tl 'Expires: 20 January 2025''19 July 2024'
+.tl 'Expires: 21 January 2025''20 July 2024'
 .fi
 
 .\" Note. The ".tl" directive is used to generate the leading header 
@@ -94,7 +94,7 @@ and may be updated, replaced, or obsoleted by other documents at any
 time.  It is inappropriate to use Internet-Drafts as reference
 material or to cite them other than as "work in progress."
 
-This Internet-Draft will expire on 20 January 2025.
+This Internet-Draft will expire on 21 January 2025.
 
 .ti 0
 Copyright Notice
@@ -133,33 +133,33 @@ Table of Contents
        2.1.4  Preferred Language  . . . . . . . . . . . . . . . . . .  9
        2.1.5  Custom Input Parameters . . . . . . . . . . . . . . . .  9
        2.1.6  Cookies . . . . . . . . . . . . . . . . . . . . . . . . 10
-       2.1.7  HTTP(S) Response Status Codes . . . . . . . . . . . . . 10
-     2.2  Request via WHOIS Protocol (Backwards Compatibility)  . . . 11
-       2.2.1  Request Method  . . . . . . . . . . . . . . . . . . . . 11
-         2.2.1.1  Basic Query String  . . . . . . . . . . . . . . . . 11
-         2.2.1.2  Input Parameters  . . . . . . . . . . . . . . . . . 12
-         2.2.1.3  Request ABNF Notation . . . . . . . . . . . . . . . 12
-       2.2.2  Format ("format" Argument)  . . . . . . . . . . . . . . 14
-       2.2.3  Authentication Tokens ("auth" Argument) . . . . . . . . 14
-       2.2.4  Preferred Language ("lang" Argument)  . . . . . . . . . 15
-       2.2.5  Custom Input Parameters . . . . . . . . . . . . . . . . 16
-   3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . . 17
-     3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . . 17
-       3.1.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 17
-       3.1.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 17
-       3.1.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 18
-     3.2  Sections  . . . . . . . . . . . . . . . . . . . . . . . . . 18
-       3.2.1  Query-Section (Information about Query and Result)  . . 18
-       3.2.2  Object-Section (Information about the OID)  . . . . . . 19
-       3.2.3  RA-Section (Information about the Current RA) . . . . . 23
-       3.2.4  Sections for Previous Registration Authorities  . . . . 25
-     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 25
-       3.3.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 25
-       3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 26
-       3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 26
-     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 26
-       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 27
-       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 27
+     2.2  Request via WHOIS Protocol (Backwards Compatibility)  . . . 10
+       2.2.1  Request Method  . . . . . . . . . . . . . . . . . . . . 10
+         2.2.1.1  Basic Query String  . . . . . . . . . . . . . . . . 10
+         2.2.1.2  Input Parameters  . . . . . . . . . . . . . . . . . 11
+         2.2.1.3  Request ABNF Notation . . . . . . . . . . . . . . . 11
+       2.2.2  Format ("format" Argument)  . . . . . . . . . . . . . . 13
+       2.2.3  Authentication Tokens ("auth" Argument) . . . . . . . . 13
+       2.2.4  Preferred Language ("lang" Argument)  . . . . . . . . . 14
+       2.2.5  Custom Input Parameters . . . . . . . . . . . . . . . . 15
+   3  Response  . . . . . . . . . . . . . . . . . . . . . . . . . . . 16
+     3.1  Format and Encoding . . . . . . . . . . . . . . . . . . . . 16
+       3.1.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 16
+       3.1.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 16
+       3.1.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 17
+     3.2  Sections  . . . . . . . . . . . . . . . . . . . . . . . . . 17
+       3.2.1  Query-Section (Information about Query and Result)  . . 17
+       3.2.2  Object-Section (Information about the OID)  . . . . . . 18
+       3.2.3  RA-Section (Information about the Current RA) . . . . . 22
+       3.2.4  Sections for Previous Registration Authorities  . . . . 24
+     3.3  Digital Signature . . . . . . . . . . . . . . . . . . . . . 24
+       3.3.1  "text" Format . . . . . . . . . . . . . . . . . . . . . 24
+       3.3.2  "json" Format . . . . . . . . . . . . . . . . . . . . . 25
+       3.3.3  "xml" Format  . . . . . . . . . . . . . . . . . . . . . 25
+     3.4  Date/Time Format  . . . . . . . . . . . . . . . . . . . . . 25
+       3.4.1  Date/Time Format ABNF Notation  . . . . . . . . . . . . 26
+       3.4.2  Date/Time Format Examples . . . . . . . . . . . . . . . 26
+     3.5  HTTP Response Status Codes  . . . . . . . . . . . . . . . . 27
    4  Referral  . . . . . . . . . . . . . . . . . . . . . . . . . . . 28
    5  Full Example ("text" Format)  . . . . . . . . . . . . . . . . . 29
      5.1  Request . . . . . . . . . . . . . . . . . . . . . . . . . . 29
@@ -389,23 +389,6 @@ The usage of the custom input parameters MUST be OPTIONAL.
 The presence (or absence) of cookies MUST NOT make any difference to the OID-IP output.  Cookies MUST NOT be used for authentication.
 
 .ti 0
-2.1.7  HTTP(S) Response Status Codes
-
-An OID-IP service usually responds to queries using the HTTP(S) Response Code "200 OK".  Other HTTP(S) Response Codes such as "500 Internal Server Error" or "400 Bad Request" are possible if required.
-
-There are the following requirements based on the result of the query (see section\03.2.1):
-
-- If the result is "Found", then then the HTTP(S) Response Code MUST be "200 OK".
-
-- If the result is "Not found; superior object found", the HTTP(S) Response Code MUST be "470 Not Found - Superior Object Found".
-
-- If the result is "Not found", then the HTTP(S) Response Code MUST be "404 Not Found".
-
-- If the response contains a referral server (field "oidip-service"), then the HTTP(S) Response Code MUST NOT be a 3xx redirection status code.
-
-While the 3xx redirection status code is not allowed to indicate an OID-IP referral as specified by section\04, the 3xx redirection status codes may be used if the OID-IP service itself moves, e.g. to a different domain name.
-.bp
-.ti 0
 2.2  Request via WHOIS Protocol (Backwards Compatibility)
 
 .ti 0
@@ -440,7 +423,7 @@ oid:.2.999
 .in 3
 
 All OIDs MUST be interpreted as absolute OIDs.  Relative OIDs (e.g. relative to the OID of the Registration Authority operating the OID-IP service) are not allowed.
-.bp
+
 .ti 0
 2.2.1.2  Input Parameters
 
@@ -958,6 +941,25 @@ Examples of valid date/time references are:
 .in 3
 .bp
 .ti 0
+3.5  HTTP Response Status Codes
+
+An OID-IP service usually responds to queries using the HTTP(S) Response Code "200 OK".  Other HTTP(S) Response Codes such as "400 Bad Request", "429 Too Many Requests", or "500 Internal Server Error" are possible if required.
+
+There are the following requirements based on the result of the query (see section\03.2.1):
+
+- If the result is "Found", then then the HTTP(S) Response Code MUST be "200 OK".
+
+- If the result is "Not found; superior object found", the HTTP(S) Response Code MUST be "470 Not Found - Superior Object Found".
+
+- If the result is "Not found", then the HTTP(S) Response Code MUST be "404 Not Found".
+
+- If the result is "Service Error", then the HTTP(S) Response Code MUST be either "400 Bad Request" or "500 Internal Server Error", depending on whether it is a problem with the client request or with the server itself.
+
+- If the response contains a referral server (field "oidip-service"), then the HTTP(S) Response Code MUST NOT be a 3xx redirection status code.
+
+While the 3xx redirection status code MUST NOT indicate an OID-IP referral as specified by section\04, the 3xx redirection status codes may be used if the OID-IP service itself moves, e.g. to a different domain name.
+.bp
+.ti 0
 4  Referral
 
 By using the fields "oidip-service" and "oidip-pubkey", the OID-IP service can instruct the client to query another OID-IP service that might have more information about the requested OID.
@@ -1158,7 +1160,7 @@ There are no IANA Considerations.
 .in 14
 
 .ti 3
-[E164]     "The international public telecommunication numbering plan", Recommendation ITU-T\0E.164 (2010), November 2010,
+[E164]     "The international public telecommunication numbering plan", Recommendation ITU-T\0E.164 (2010), November\02010,
 .br
 <http://handle.itu.int/11.1002/1000/10688>.
 
@@ -1247,7 +1249,7 @@ There are no IANA Considerations.
 <https://www.rfc-editor.org/info/rfc9112>.
 
 .ti 3
-[X660]     "Information technology - Procedures for the operation of object identifier registration authorities: General procedures and top arcs of the international object identifier tree", Recommendation ITU-T\0X.660 (2011) | ISO/IEC\09834-1:2012, July\02011,
+[X660]     "Information technology - Procedures for the operation of object identifier registration authorities: General procedures and top arcs of the international object identifier tree", Recommendation ITU-T\0X.660\0(2011) | ISO/IEC\09834-1:2012, July\02011,
 .br
 <http://handle.itu.int/11.1002/1000/11336>.
 
