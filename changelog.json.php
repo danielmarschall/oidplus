@@ -3,6 +3,14 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.1.28",
+		"date": "2024-07-21 10:55:00 +0200",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"Released OID-IP draft 8 which introduces the HTTP communication channel"
+		]
+	},
+	{
 		"version": "2.0.1.27",
 		"date": "2024-07-19 13:00:00 +0200",
 		"author": "Daniel Marschall (ViaThinkSoft)",
