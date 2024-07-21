@@ -90,7 +90,7 @@ class OIDplusQueryResultPgSql extends OIDplusQueryResult {
 	 * @return false|object|null
 	 */
 	protected function do_fetch_object()/*: ?object*/ {
-		$ret = pg_fetch_object($this->res, null, PGSQL_ASSOC);
+		$ret = pg_fetch_object($this->res);
 		if ($ret === false) $ret = null;
 		if (!is_null($ret)) {
 			foreach ($ret as $key => &$value){
