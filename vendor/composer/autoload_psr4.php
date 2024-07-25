@@ -7,7 +7,6 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'phpseclib3\\' => array($vendorDir . '/phpseclib/phpseclib/phpseclib'),
-    'bb\\Sha3\\' => array($vendorDir . '/danielmarschall/php-sha3/src'),
     'ViaThinkSoft\\Glip\\' => array($vendorDir . '/danielmarschall/glip/src'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'SpomkyLabs\\' => array($vendorDir . '/spomky-labs/php-punycode/src'),

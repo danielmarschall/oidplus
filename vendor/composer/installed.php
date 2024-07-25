@@ -70,17 +70,6 @@
             'aliases' => array(),
             'dev_requirement' => false,
         ),
-        'danielmarschall/php-sha3' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
-            'reference' => '5605bd539677494558470234266cb5885343e72b',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../danielmarschall/php-sha3',
-            'aliases' => array(
-                0 => '9999999-dev',
-            ),
-            'dev_requirement' => false,
-        ),
         'danielmarschall/php_utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',

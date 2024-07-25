@@ -12,8 +12,6 @@ danielmarschall/glip             0.1.3.x-dev 681871b GPL-2.0-or-later
 danielmarschall/glip             dev-master 681871b  GPL-2.0-or-later      
 danielmarschall/oidconverter     9999999-dev cd036ff Apache-2.0            
 danielmarschall/oidconverter     dev-master cd036ff  Apache-2.0            
-danielmarschall/php-sha3         9999999-dev 5605bd5 MIT                   
-danielmarschall/php-sha3         dev-master 5605bd5  MIT                   
 danielmarschall/php_utils        9999999-dev 32d3ea8 Apache-2.0            
 danielmarschall/php_utils        dev-master 32d3ea8  Apache-2.0            
 danielmarschall/uuid_mac_utils   9999999-dev 27c7f2d Apache-2.0            

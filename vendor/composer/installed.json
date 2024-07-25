@@ -289,61 +289,6 @@
             "install-path": "../danielmarschall/oidconverter"
         },
         {
-            "name": "danielmarschall/php-sha3",
-            "version": "dev-master",
-            "version_normalized": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/danielmarschall/php-sha3.git",
-                "reference": "5605bd539677494558470234266cb5885343e72b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/php-sha3/zipball/5605bd539677494558470234266cb5885343e72b",
-                "reference": "5605bd539677494558470234266cb5885343e72b",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.4.0"
-            },
-            "require-dev": {
-                "php-coveralls/php-coveralls": "dev-master",
-                "phpstan/phpstan": "^1.8",
-                "phpunit/phpunit": "^4.8"
-            },
-            "time": "2023-02-28T22:45:45+00:00",
-            "default-branch": true,
-            "type": "library",
-            "installation-source": "dist",
-            "autoload": {
-                "psr-4": {
-                    "bb\\Sha3\\": "src"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Bruno Bierbaumer",
-                    "homepage": "https://github.com/0xbb/php-sha3"
-                }
-            ],
-            "description": "Pure PHP implementation of SHA-3",
-            "keywords": [
-                "keccak",
-                "sha-3",
-                "sha3",
-                "shake"
-            ],
-            "support": {
-                "issues": "https://github.com/danielmarschall/php-sha3/issues",
-                "source": "https://github.com/danielmarschall/php-sha3/tree/master"
-            },
-            "install-path": "../danielmarschall/php-sha3"
-        },
-        {
             "name": "danielmarschall/php_utils",
             "version": "dev-master",
             "version_normalized": "dev-master",

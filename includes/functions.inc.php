@@ -295,11 +295,7 @@ function extractHtmlContents(string $cont): array {
  * @throws Exception
  */
 function sha3_512(string $password, bool $raw_output=false): string {
-	if (hash_supported_natively('sha3-512')) {
-		return hash('sha3-512', $password, $raw_output);
-	} else {
-		return \bb\Sha3\Sha3::hash($password, 512, $raw_output);
-	}
+	return hash('sha3-512', $password, $raw_output);
 }
 
 /**
@@ -310,11 +306,7 @@ function sha3_512(string $password, bool $raw_output=false): string {
  */
 function sha3_512_hmac(string $message, string $key, bool $raw_output=false): string {
 	// RFC 2104 HMAC
-	if (hash_hmac_supported_natively('sha3-512')) {
-		return hash_hmac('sha3-512', $message, $key, $raw_output);
-	} else {
-		return \bb\Sha3\Sha3::hash_hmac($message, $key, 512, $raw_output);
-	}
+	return hash_hmac('sha3-512', $message, $key, $raw_output);
 }
 
 /**
@@ -326,11 +318,7 @@ function sha3_512_hmac(string $message, string $key, bool $raw_output=false): st
  * @return string
  */
 function sha3_512_pbkdf2(string $password, string $salt, int $iterations, int $length=0, bool $binary=false): string {
-	if (hash_pbkdf2_supported_natively('sha3-512')) {
-		return hash_pbkdf2('sha3-512', $password, $salt, $iterations, $length, $binary);
-	} else {
-		return \bb\Sha3\Sha3::hash_pbkdf2($password, $salt, $iterations, 512, $length, $binary);
-	}
+	return hash_pbkdf2('sha3-512', $password, $salt, $iterations, $length, $binary);
 }
 
 /**

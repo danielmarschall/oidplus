@@ -30,12 +30,12 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 	/**
 	 *
 	 */
-	/*private*/ const QUERY_LIST_OIDINFO_OIDS_V1 = '1.3.6.1.4.1.37476.2.5.2.1.5.1';
+	private const QUERY_LIST_OIDINFO_OIDS_V1 = '1.3.6.1.4.1.37476.2.5.2.1.5.1';
 
 	/**
 	 *
 	 */
-	/*private*/ const QUERY_GET_OIDINFO_DATA_V1  = '1.3.6.1.4.1.37476.2.5.2.1.6.1';
+	private const QUERY_GET_OIDINFO_DATA_V1  = '1.3.6.1.4.1.37476.2.5.2.1.6.1';
 
 	/**
 	 * @param array $params
@@ -979,9 +979,9 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 		return array($first_name, $last_name);
 	}
 
-	/*protected*/ const ORPHAN_IGNORE = 0;
-	/*protected*/ const ORPHAN_AUTO_DEORPHAN = 1;
-	/*protected*/ const ORPHAN_DISALLOW_ORPHANS = 2;
+	protected const ORPHAN_IGNORE = 0;
+	protected const ORPHAN_AUTO_DEORPHAN = 1;
+	protected const ORPHAN_DISALLOW_ORPHANS = 2;
 
 	/**
 	 * @param string $xml_contents
