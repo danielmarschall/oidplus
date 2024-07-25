@@ -137,7 +137,7 @@ class OIDplusDatabaseConnectionSqlSrv extends OIDplusDatabaseConnection {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	protected function doConnect()/*: void*/ {
+	protected function doConnect(): void {
 		// Download here: https://learn.microsoft.com/en-us/sql/connect/php/download-drivers-php-sql-server?view=sql-server-ver16
 		if (!function_exists('sqlsrv_connect')) throw new OIDplusException(_L('PHP extension "%1" not installed',self::get_sqlsrv_dll_name()));
 
@@ -168,7 +168,7 @@ class OIDplusDatabaseConnectionSqlSrv extends OIDplusDatabaseConnection {
 	/**
 	 * @return void
 	 */
-	protected function doDisconnect()/*: void*/ {
+	protected function doDisconnect(): void {
 		if (!is_null($this->conn)) {
 			sqlsrv_close($this->conn);
 			$this->conn = null;
@@ -198,7 +198,7 @@ class OIDplusDatabaseConnectionSqlSrv extends OIDplusDatabaseConnection {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function transaction_begin()/*: void*/ {
+	public function transaction_begin(): void {
 		if ($this->intransaction) throw new OIDplusException(_L('Nested transactions are not supported by this database plugin.'));
 		if (sqlsrv_begin_transaction($this->conn)) $this->intransaction = true;
 	}
@@ -206,14 +206,14 @@ class OIDplusDatabaseConnectionSqlSrv extends OIDplusDatabaseConnection {
 	/**
 	 * @return void
 	 */
-	public function transaction_commit()/*: void*/ {
+	public function transaction_commit(): void {
 		if (sqlsrv_commit($this->conn)) $this->intransaction = false;
 	}
 
 	/**
 	 * @return void
 	 */
-	public function transaction_rollback()/*: void*/ {
+	public function transaction_rollback(): void {
 		if (sqlsrv_rollback($this->conn)) $this->intransaction = false;
 	}
 

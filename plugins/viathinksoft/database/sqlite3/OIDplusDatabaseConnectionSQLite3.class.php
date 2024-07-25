@@ -132,7 +132,7 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 	 * @return void
 	 * @throws OIDplusConfigInitializationException
 	 */
-	protected function doConnect()/*: void*/ {
+	protected function doConnect(): void {
 		if (!class_exists('SQLite3')) throw new OIDplusConfigInitializationException(_L('PHP extension "%1" not installed','SQLite3'));
 
 		// Try connecting to the database
@@ -162,7 +162,7 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 	/**
 	 * @return void
 	 */
-	protected function doDisconnect()/*: void*/ {
+	protected function doDisconnect(): void {
 		$this->prepare_cache = array();
 		$this->conn = null;
 	}
@@ -190,7 +190,7 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function transaction_begin()/*: void*/ {
+	public function transaction_begin(): void {
 		if ($this->intransaction) throw new OIDplusException(_L('Nested transactions are not supported by this database plugin.'));
 		$this->query('begin transaction');
 		$this->intransaction = true;
@@ -200,7 +200,7 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function transaction_commit()/*: void*/ {
+	public function transaction_commit(): void {
 		$this->query('commit');
 		$this->intransaction = false;
 	}
@@ -209,7 +209,7 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function transaction_rollback()/*: void*/ {
+	public function transaction_rollback(): void {
 		$this->query('rollback');
 		$this->intransaction = false;
 	}

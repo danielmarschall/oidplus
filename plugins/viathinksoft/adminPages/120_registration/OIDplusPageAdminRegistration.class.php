@@ -578,7 +578,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public function oobeEntry(int $step, bool $do_edits, bool &$errors_happened)/*: void*/ {
+	public function oobeEntry(int $step, bool $do_edits, bool &$errors_happened): void {
 		echo '<h2>'._L('Step %1: System registration and automatic publishing (optional)',$step).'</h2>';
 
 		if (file_exists(__DIR__ . '/info$'.OIDplus::getCurrentLang().'.html')) {

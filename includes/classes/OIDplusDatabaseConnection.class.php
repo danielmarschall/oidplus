@@ -65,17 +65,17 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	/**
 	 * @return void
 	 */
-	public abstract function transaction_begin()/*: void*/;
+	public abstract function transaction_begin(): void;
 
 	/**
 	 * @return void
 	 */
-	public abstract function transaction_commit()/*: void*/;
+	public abstract function transaction_commit(): void;
 
 	/**
 	 * @return void
 	 */
-	public abstract function transaction_rollback()/*: void*/;
+	public abstract function transaction_rollback(): void;
 
 	/**
 	 * @return bool
@@ -90,12 +90,12 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	/**
 	 * @return void
 	 */
-	protected abstract function doConnect()/*: void*/;
+	protected abstract function doConnect(): void;
 
 	/**
 	 * @return void
 	 */
-	protected abstract function doDisconnect()/*: void*/;
+	protected abstract function doDisconnect(): void;
 
 	/**
 	 * @return OIDplusDatabasePlugin|null
@@ -209,7 +209,7 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public final function connect()/*: void*/ {
+	public final function connect(): void {
 		if ($this->connected) return;
 
 		$bcKeys = OIDplus::baseConfig()->getAllKeys();
@@ -231,7 +231,7 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	/**
 	 * @return void
 	 */
-	public final function disconnect()/*: void*/ {
+	public final function disconnect(): void {
 		if (!$this->connected) return;
 		$this->beforeDisconnect();
 		$this->doDisconnect();
@@ -242,29 +242,29 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	/**
 	 * @return void
 	 */
-	protected function beforeDisconnect()/*: void*/ {}
+	protected function beforeDisconnect(): void {}
 
 	/**
 	 * @return void
 	 */
-	protected function afterDisconnect()/*: void*/ {}
+	protected function afterDisconnect(): void {}
 
 	/**
 	 * @return void
 	 */
-	protected function beforeConnect()/*: void*/ {}
+	protected function beforeConnect(): void {}
 
 	/**
 	 * @return void
 	 */
-	protected function afterConnect()/*: void*/ {}
+	protected function afterConnect(): void {}
 
 	/**
 	 * @return void
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	private function afterConnectMandatory()/*: void*/ {
+	private function afterConnectMandatory(): void {
 		// In case an auto-detection of the slang is required (for generic providers like PDO or ODBC),
 		// we must not be inside a transaction, because the detection requires intentionally submitting
 		// invalid queries to detect the correct DBMS. If we would be inside a transaction, providers like
@@ -292,7 +292,7 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	private function initRequireTables(array $tableNames)/*: void*/ {
+	private function initRequireTables(array $tableNames): void {
 		$msgs = array();
 
 		// Check for a general database error like a locked file DBMS
@@ -336,7 +336,7 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	 * @param bool $html
 	 * @return void
 	 */
-	public function init(bool $html = true)/*: void*/ {
+	public function init(bool $html = true): void {
 		$this->html = $html;
 	}
 

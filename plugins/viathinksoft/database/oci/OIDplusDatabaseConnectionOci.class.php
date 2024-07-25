@@ -123,7 +123,7 @@ class OIDplusDatabaseConnectionOci extends OIDplusDatabaseConnection {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	protected function doConnect()/*: void*/ {
+	protected function doConnect(): void {
 		if (!function_exists('oci_connect')) throw new OIDplusConfigInitializationException(_L('PHP extension "%1" not installed','OCI8'));
 
 		// Try connecting to the database
@@ -154,7 +154,7 @@ class OIDplusDatabaseConnectionOci extends OIDplusDatabaseConnection {
 	/**
 	 * @return void
 	 */
-	protected function doDisconnect()/*: void*/ {
+	protected function doDisconnect(): void {
 		if (!is_null($this->conn)) {
 			oci_close($this->conn);
 			$this->conn = null;
@@ -184,7 +184,7 @@ class OIDplusDatabaseConnectionOci extends OIDplusDatabaseConnection {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function transaction_begin()/*: void*/ {
+	public function transaction_begin(): void {
 		if ($this->intransaction) throw new OIDplusException(_L('Nested transactions are not supported by this database plugin.'));
 		// Later, in oci_execute() we will include OCI_NO_AUTO_COMMIT
 		$this->intransaction = true;
@@ -193,7 +193,7 @@ class OIDplusDatabaseConnectionOci extends OIDplusDatabaseConnection {
 	/**
 	 * @return void
 	 */
-	public function transaction_commit()/*: void*/ {
+	public function transaction_commit(): void {
 		oci_commit($this->conn);
 		$this->intransaction = false;
 	}
@@ -201,7 +201,7 @@ class OIDplusDatabaseConnectionOci extends OIDplusDatabaseConnection {
 	/**
 	 * @return void
 	 */
-	public function transaction_rollback()/*: void*/ {
+	public function transaction_rollback(): void {
 		oci_rollback($this->conn);
 		$this->intransaction = false;
 	}

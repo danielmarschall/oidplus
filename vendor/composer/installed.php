@@ -3,7 +3,7 @@
         'name' => 'danielmarschall/oidplus',
         'pretty_version' => '2.0',
         'version' => '2.0.0.0',
-        'reference' => null,
+        'reference' => NULL,
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -64,7 +64,7 @@
         'danielmarschall/oidplus' => array(
             'pretty_version' => '2.0',
             'version' => '2.0.0.0',
-            'reference' => null,
+            'reference' => NULL,
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

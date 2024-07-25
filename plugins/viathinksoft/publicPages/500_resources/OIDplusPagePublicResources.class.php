@@ -447,7 +447,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	private function tree_rec(array &$children, string $rootdir=null, int $depth=0)/*: void*/ {
+	private function tree_rec(array &$children, string $rootdir=null, int $depth=0): void {
 		if (is_null($rootdir)) $rootdir = '';
 		if ($depth > 100) return; // something is wrong!
 

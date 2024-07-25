@@ -36,6 +36,6 @@ interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1 {
 	 * @param bool $errors_happened
 	 * @return void
 	 */
-	public function oobeEntry(int $step, bool $do_edits, bool &$errors_happened)/*: void*/;
+	public function oobeEntry(int $step, bool $do_edits, bool &$errors_happened): void;
 
 }

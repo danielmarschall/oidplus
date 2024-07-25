@@ -201,7 +201,7 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	protected function doConnect()/*: void*/ {
+	protected function doConnect(): void {
 		if (!function_exists('odbc_connect')) throw new OIDplusConfigInitializationException(_L('PHP extension "%1" not installed','ODBC'));
 
 		// Try connecting to the database
@@ -257,7 +257,7 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 	/**
 	 * @return void
 	 */
-	protected function doDisconnect()/*: void*/ {
+	protected function doDisconnect(): void {
 		if (!is_null($this->conn)) {
 			@odbc_close($this->conn);
 			$this->conn = null;
@@ -291,7 +291,7 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function transaction_begin()/*: void*/ {
+	public function transaction_begin(): void {
 		if (!$this->transaction_supported()) {
 			// TODO?
 			return;
@@ -304,7 +304,7 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 	/**
 	 * @return void
 	 */
-	public function transaction_commit()/*: void*/ {
+	public function transaction_commit(): void {
 		if (!$this->transaction_supported()) {
 			// TODO?
 			return;
@@ -317,7 +317,7 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 	/**
 	 * @return void
 	 */
-	public function transaction_rollback()/*: void*/ {
+	public function transaction_rollback(): void {
 		if (!$this->transaction_supported()) {
 			// TODO?
 			return;
