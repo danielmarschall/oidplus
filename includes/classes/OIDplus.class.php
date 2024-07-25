@@ -77,34 +77,34 @@ class OIDplus extends OIDplusBaseClass {
 	/**
 	 * e.g. "../"
 	 */
-	/*public*/ const PATH_RELATIVE = 1;
+	public const PATH_RELATIVE = 1;
 
 	/**
 	 * e.g. "http://www.example.com/oidplus/"
 	 */
-	/*public*/ const PATH_ABSOLUTE = 2;
+	public const PATH_ABSOLUTE = 2;
 
 	/**
 	 * e.g. "http://www.example.org/oidplus/" (if baseconfig CANONICAL_SYSTEM_URL is set)
 	 */
-	/*public*/ const PATH_ABSOLUTE_CANONICAL = 3;
+	public const PATH_ABSOLUTE_CANONICAL = 3;
 
 	/**
 	 * e.g. "/oidplus/"
 	 */
-	/*public*/ const PATH_RELATIVE_TO_ROOT = 4;
+	public const PATH_RELATIVE_TO_ROOT = 4;
 
 	/**
 	 * e.g. "/oidplus/" (if baseconfig CANONICAL_SYSTEM_URL is set)
 	 */
-	/*public*/ const PATH_RELATIVE_TO_ROOT_CANONICAL = 5;
+	public const PATH_RELATIVE_TO_ROOT_CANONICAL = 5;
 
 	/**
 	 * These plugin types can contain HTML code and therefore may
 	 * emit (non-setup) CSS/JS code via their manifest.
 	 * Note that design plugins may only output CSS, not JS.
 	 */
-	/*public*/ const INTERACTIVE_PLUGIN_TYPES = array(
+	public const INTERACTIVE_PLUGIN_TYPES = array(
 		'publicPages',
 		'raPages',
 		'adminPages',

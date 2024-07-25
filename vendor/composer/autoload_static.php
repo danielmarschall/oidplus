@@ -16,10 +16,6 @@ class ComposerStaticInitOidPlusComposer
         array (
             'phpseclib3\\' => 11,
         ),
-        'b' => 
-        array (
-            'bb\\Sha3\\' => 8,
-        ),
         'V' => 
         array (
             'ViaThinkSoft\\Glip\\' => 18,
@@ -48,10 +44,6 @@ class ComposerStaticInitOidPlusComposer
         'phpseclib3\\' => 
         array (
             0 => __DIR__ . '/..' . '/phpseclib/phpseclib/phpseclib',
-        ),
-        'bb\\Sha3\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/danielmarschall/php-sha3/src',
         ),
         'ViaThinkSoft\\Glip\\' => 
         array (

@@ -30,17 +30,17 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin
 	/**
 	 *
 	 */
-	/*public*/ const RECAPTCHA_V2_CHECKBOX  = 1;
+	public const RECAPTCHA_V2_CHECKBOX  = 1;
 
 	/**
 	 *
 	 */
-	/*public*/ const RECAPTCHA_V2_INVISIBLE = 2;
+	public const RECAPTCHA_V2_INVISIBLE = 2;
 
 	/**
 	 *
 	 */
-	/*public*/ const RECAPTCHA_V3           = 3;
+	public const RECAPTCHA_V3           = 3;
 
 	/**
 	 * @return string

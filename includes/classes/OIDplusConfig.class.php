@@ -32,17 +32,17 @@ class OIDplusConfig extends OIDplusBaseClass implements OIDplusGetterSetterInter
 	/**
 	 *
 	 */
-	/*public*/ const PROTECTION_EDITABLE = 0;
+	public const PROTECTION_EDITABLE = 0;
 
 	/**
 	 *
 	 */
-	/*public*/ const PROTECTION_READONLY = 1;
+	public const PROTECTION_READONLY = 1;
 
 	/**
 	 *
 	 */
-	/*public*/ const PROTECTION_HIDDEN   = 2;
+	public const PROTECTION_HIDDEN   = 2;
 
 	/**
 	 * @var bool
