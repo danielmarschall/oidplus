@@ -160,7 +160,7 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	protected function doConnect()/*: void*/ {
+	protected function doConnect(): void {
 		if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') {
 			throw new OIDplusConfigInitializationException(_L('Functionality only available on Windows systems'));
 		}
@@ -242,7 +242,7 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 	/**
 	 * @return void
 	 */
-	protected function doDisconnect()/*: void*/ {
+	protected function doDisconnect(): void {
 		if (!is_null($this->conn)) {
 			if ($this->conn->State != 0) $this->conn->Close();
 			$this->conn = null;
@@ -294,7 +294,7 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function transaction_begin()/*: void*/ {
+	public function transaction_begin(): void {
 		if (!$this->transaction_supported()) {
 			// TODO?
 			return;
@@ -306,7 +306,7 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 	/**
 	 * @return void
 	 */
-	public function transaction_commit()/*: void*/ {
+	public function transaction_commit(): void {
 		if (!$this->transaction_supported()) {
 			// TODO?
 			return;
@@ -318,7 +318,7 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 	/**
 	 * @return void
 	 */
-	public function transaction_rollback()/*: void*/ {
+	public function transaction_rollback(): void {
 		if (!$this->transaction_supported()) {
 			// TODO?
 			return;

@@ -99,7 +99,7 @@
 		}
 	},
 	"require": {
-		"php": ">=7.0",
+		"php": ">=7.4",
 		"components/jquery": "^3.5",
 		"components/jqueryui": "^1.12",
 		"matthiasmullie/minify": "^1.3",

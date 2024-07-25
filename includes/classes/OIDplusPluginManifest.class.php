@@ -264,7 +264,7 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 	 * @param string $filename
 	 * @return void
 	 */
-	public function loadManifest(string $filename)/*: void*/ {
+	public function loadManifest(string $filename): void {
 		if (!file_exists($filename)) throw new OIDplusException(_L("File %1 does not exist", $filename));;
 		$cont = @file_get_contents($filename);
 		if ($cont === false) throw new OIDplusException(_L("Cannot read file %1", $filename));

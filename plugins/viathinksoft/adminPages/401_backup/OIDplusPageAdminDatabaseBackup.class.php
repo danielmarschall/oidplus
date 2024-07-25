@@ -439,7 +439,7 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 	 * @throws OIDplusException
 	 * @throws \ViaThinkSoft\OIDplus\OIDplusConfigInitializationException
 	 */
-	public static function restoreBackup(bool $showReport, string $cont, bool $import_objects=true, bool $import_ra=true, bool $import_config=false, bool $import_log=false, bool $import_pki=false)/*: void*/ {
+	public static function restoreBackup(bool $showReport, string $cont, bool $import_objects=true, bool $import_ra=true, bool $import_config=false, bool $import_log=false, bool $import_pki=false): void {
 		$num_rows = [
 			"objects" => $import_objects ? 0 : "n/a",
 			"asn1id" => $import_objects ? 0 : "n/a",

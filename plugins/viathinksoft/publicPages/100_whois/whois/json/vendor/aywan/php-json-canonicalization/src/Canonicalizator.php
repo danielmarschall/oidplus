@@ -19,7 +19,7 @@ class Canonicalizator implements JsonCanonicalizationInterface
         return $asHex ? Utils::asHex($result) :  $result;
     }
 
-    private function serialize($item)/*: void*/  // ViaThinkSoft: Removed ": void" for PHP 7.0 compatibility
+    private function serialize($item): void
     {
         if (is_float($item)) {
             echo Utils::es6NumberFormat($item);

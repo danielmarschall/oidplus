@@ -133,7 +133,7 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	protected function doConnect()/*: void*/ {
+	protected function doConnect(): void {
 		if (!function_exists('mysqli_connect')) throw new OIDplusException(_L('PHP extension "%1" not installed','MySQLi'));
 
 		// Try connecting to the database
@@ -159,7 +159,7 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 	/**
 	 * @return void
 	 */
-	protected function doDisconnect()/*: void*/ {
+	protected function doDisconnect(): void {
 		$this->prepare_cache = array();
 		if (!is_null($this->conn)) {
 			$this->conn->close();
@@ -190,7 +190,7 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function transaction_begin()/*: void*/ {
+	public function transaction_begin(): void {
 		if ($this->intransaction) throw new OIDplusException(_L('Nested transactions are not supported by this database plugin.'));
 		$this->conn->autocommit(false);
 		$this->conn->begin_transaction();
@@ -200,7 +200,7 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 	/**
 	 * @return void
 	 */
-	public function transaction_commit()/*: void*/ {
+	public function transaction_commit(): void {
 		$this->conn->commit();
 		$this->conn->autocommit(true);
 		$this->intransaction = false;
@@ -209,7 +209,7 @@ class OIDplusDatabaseConnectionMySQLi extends OIDplusDatabaseConnection {
 	/**
 	 * @return void
 	 */
-	public function transaction_rollback()/*: void*/ {
+	public function transaction_rollback(): void {
 		$this->conn->rollback();
 		$this->conn->autocommit(true);
 		$this->intransaction = false;

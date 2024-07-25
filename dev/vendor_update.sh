@@ -114,11 +114,6 @@ remove_vendor_rubbish plugins/viathinksoft/publicPages/100_whois/whois/json/
 
 # !!! Great tool for escaping these hotfixes: https://dwaves.de/tools/escape/ !!!
 
-# Change the PHP 7.2 requirement to PHP 7.0
-# Since this is no official packagist package, composer does not know the required php version,
-# so we do not need to patch platform_check.php
-sed -i 's@private function serialize($item): void@private function serialize($item)/*: void*/  // ViaThinkSoft: Removed ": void" for PHP 7.0 compatibility@g' plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/aywan/php-json-canonicalization/src/Canonicalizator.php
-
 # Apply hotfix: https://github.com/aywan/php-json-canonicalization/issues/1
 sed -i 's@\$formatted = rtrim(\$formatted, \x27\.0\x27);@\$formatted = rtrim(\$formatted, \x270\x27);\$formatted = rtrim(\$formatted, \x27\.\x27); \/\/Hotfix: https:\/\/github\.com\/aywan\/php-json-canonicalization\/issues\/1@g' plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/aywan/php-json-canonicalization/src/Utils.php
 sed -i 's@\$parts\[0\] = rtrim(\$parts\[0\], \x27\.0\x27);@\$parts\[0\] = rtrim(\$parts\[0\], \x270\x27);\$parts\[0\] = rtrim(\$parts\[0\], \x27\.\x27); \/\/Hotfix: https:\/\/github\.com\/aywan\/php-json-canonicalization\/issues\/1@g' plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/aywan/php-json-canonicalization/src/Utils.php

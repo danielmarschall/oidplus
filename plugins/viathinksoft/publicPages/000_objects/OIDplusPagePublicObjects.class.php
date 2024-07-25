@@ -1748,7 +1748,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 * @param bool $errors_happened
 	 * @return void
 	 */
-	public function oobeEntry(int $step, bool $do_edits, bool &$errors_happened)/*: void*/ {
+	public function oobeEntry(int $step, bool $do_edits, bool &$errors_happened): void {
 		echo '<h2>'._L('Step %1: Enable/Disable object type plugins',$step).'</h2>';
 		echo '<p>'._L('Which object types do you want to manage using OIDplus? (This can be changed at a later time)').'</p>';
 

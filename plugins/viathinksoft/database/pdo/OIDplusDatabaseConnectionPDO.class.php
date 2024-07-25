@@ -153,7 +153,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	protected function doConnect()/*: void*/ {
+	protected function doConnect(): void {
 		if (!class_exists('PDO')) throw new OIDplusConfigInitializationException(_L('PHP extension "%1" not installed','PDO'));
 
 		try {
@@ -254,7 +254,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 	/**
 	 * @return void
 	 */
-	protected function doDisconnect()/*: void*/ {
+	protected function doDisconnect(): void {
 		/*
 		if (!$this->conn->getAttribute(\PDO::ATTR_AUTOCOMMIT)) {
 			try {
@@ -293,7 +293,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function transaction_begin()/*: void*/ {
+	public function transaction_begin(): void {
 		if (!$this->transaction_supported()) {
 			// TODO?
 			return;
@@ -306,7 +306,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 	/**
 	 * @return void
 	 */
-	public function transaction_commit()/*: void*/ {
+	public function transaction_commit(): void {
 		if (!$this->transaction_supported()) {
 			// TODO?
 			return;
@@ -318,7 +318,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 	/**
 	 * @return void
 	 */
-	public function transaction_rollback()/*: void*/ {
+	public function transaction_rollback(): void {
 		if (!$this->transaction_supported()) {
 			// TODO?
 			return;

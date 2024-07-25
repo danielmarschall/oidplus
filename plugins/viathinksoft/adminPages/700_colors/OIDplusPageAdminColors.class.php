@@ -264,7 +264,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function oobeEntry(int $step, bool $do_edits, bool &$errors_happened)/*: void*/ {
+	public function oobeEntry(int $step, bool $do_edits, bool &$errors_happened): void {
 		echo '<h2>'._L('Step %1: Color Theme',$step).'</h2>';
 
 		echo '<input type="checkbox" name="color_invert" id="color_invert"';
