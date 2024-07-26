@@ -25,14 +25,14 @@ namespace ViaThinkSoft\OIDplus;
 
 class OIDplusGs1 extends OIDplusObject {
 	/**
-	 * @var int|string
+	 * @var string
 	 */
 	private $number;
 
 	/**
-	 * @param string|int $number
+	 * @param string $number
 	 */
-	public function __construct($number) {
+	public function __construct(string $number) {
 		// TODO: syntax checks
 		$this->number = $number;
 	}
