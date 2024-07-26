@@ -121,7 +121,7 @@ abstract class OIDplusQueryResult extends OIDplusBaseClass {
 	 * Please override do_fetch_object(), do_fetch_array(), or both.
 	 * @return array|null
 	 */
-	protected function do_fetch_array()/*: ?array*/ {
+	protected function do_fetch_array(): ?array {
 		assert(false);
 		return null;
 	}
@@ -132,7 +132,7 @@ abstract class OIDplusQueryResult extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 * @throws \ReflectionException
 	 */
-	public final function fetch_array()/*: ?array*/ {
+	public final function fetch_array(): ?array {
 		if (!$this->containsResultSet()) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 		if (!is_null($this->prefetchedArray)) {
 			// Prefetched value exists. Use it.
@@ -163,20 +163,20 @@ abstract class OIDplusQueryResult extends OIDplusBaseClass {
 
 	/**
 	 * Please override do_fetch_object(), do_fetch_array(), or both.
-	 * @return object|null
+	 * @return \stdClass|null
 	 */
-	protected function do_fetch_object()/*: ?\stdClass*/ {
+	protected function do_fetch_object(): ?\stdClass {
 		assert(false);
 		return null;
 	}
 
 	/**
-	 * @return object|null
+	 * @return \stdClass|null
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 * @throws \ReflectionException
 	 */
-	public final function fetch_object()/*: ?\stdClass*/ {
+	public final function fetch_object(): ?\stdClass {
 		if (!$this->containsResultSet()) throw new OIDplusException(_L('The query has returned no result set (i.e. it was not a SELECT query)'));
 		if (!is_null($this->prefetchedArray)) {
 			// Prefetched value exists (as array). Convert and use it.

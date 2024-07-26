@@ -40,7 +40,7 @@ abstract class OIDplusPagePlugin extends OIDplusPlugin {
 	 * @param string $req_goto To which node should be auto-expanded to? (Special values: ""=no auto expand. "*"=expand all.)
 	 * @return bool
 	 */
-	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
+	public function tree(array &$json, ?string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		return false;
 	}
 

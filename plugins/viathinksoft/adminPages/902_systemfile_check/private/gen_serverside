@@ -46,7 +46,7 @@ if (!is_dir($output_dir)) {
  * @return array
  * @throws Exception
  */
-function getDirContents(string $dir, string $basepath = null, array &$results = array()): array {
+function getDirContents(string $dir, ?string $basepath=null, array &$results = array()): array {
 	if (is_null($basepath)) $basepath = $dir;
 	$basepath = realpath($basepath) . DIRECTORY_SEPARATOR;
 	$dir = realpath($dir) . DIRECTORY_SEPARATOR;

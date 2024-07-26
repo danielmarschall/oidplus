@@ -40,7 +40,7 @@ class OIDplusPageRaNotifications extends OIDplusPagePluginRa {
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
+	public function tree(array &$json, ?string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (!$ra_email) return false;
 		if (!OIDplus::authUtils()->isRaLoggedIn($ra_email) && !OIDplus::authUtils()->isAdminLoggedIn()) return false;
 		if (is_null(OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.3.10'))) return false; // OIDplusPageAdminNotifications

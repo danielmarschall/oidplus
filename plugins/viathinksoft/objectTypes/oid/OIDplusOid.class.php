@@ -54,7 +54,7 @@ class OIDplusOid extends OIDplusObject {
 	 * @return OIDplusOid|null
 	 * @throws OIDplusException
 	 */
-	public static function parse(string $node_id)/*: ?OIDplusOid*/ {
+	public static function parse(string $node_id): ?OIDplusOid {
 		@list($namespace, $oid) = explode(':', $node_id, 2);
 		if ($namespace !== self::ns()) return null;
 		return new self($oid);
@@ -133,7 +133,7 @@ class OIDplusOid extends OIDplusObject {
 	 * @return string
 	 * @throws OIDplusException
 	 */
-	public function jsTreeNodeName(OIDplusObject $parent = null): string {
+	public function jsTreeNodeName(?OIDplusObject $parent=null): string {
 		if ($parent == null) return $this->objectTypeTitle();
 		if ($parent instanceof OIDplusOid) {
 			return $this->viewGetArcAsn1s($parent);
@@ -394,7 +394,7 @@ class OIDplusOid extends OIDplusObject {
 	 * @return string
 	 * @throws OIDplusException
 	 */
-	public function viewGetArcAsn1s(OIDplusOid $parent=null, string $separator = ' | '): string {
+	public function viewGetArcAsn1s(?OIDplusOid $parent=null, string $separator = ' | '): string {
 		$asn_ids = array();
 
 		if (is_null($parent)) $parent = OIDplusOid::parse(self::root());
@@ -608,7 +608,7 @@ class OIDplusOid extends OIDplusObject {
 	/**
 	 * @return OIDplusOid|null
 	 */
-	public function one_up()/*: ?OIDplusOid*/ {
+	public function one_up(): ?OIDplusOid {
 		return self::parse(self::ns().':'.oid_up($this->oid));
 	}
 
@@ -616,7 +616,7 @@ class OIDplusOid extends OIDplusObject {
 	 * @param OIDplusObject|string $to
 	 * @return int|null
 	 */
-	public function distance($to) {
+	public function distance($to): ?int {
 		if (!is_object($to)) $to = OIDplusObject::parse($to);
 		if (!$to) return null;
 		if (!($to instanceof $this)) return null;

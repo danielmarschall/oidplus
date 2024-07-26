@@ -45,8 +45,9 @@ class OIDplusSqlSlangPluginPgSQL extends OIDplusSqlSlangPlugin {
 	 */
 	public function detect(OIDplusDatabaseConnection $db): bool {
 		try {
-			$vers = $db->query("select version() as dbms_version")->fetch_object()->dbms_version;
-			return stripos($vers, 'PostgreSQL') !== false;
+			$vers = $db->query("select version() as dbms_version")->fetch_object();
+			if (!$vers) return false;
+			return stripos($vers->dbms_version, 'PostgreSQL') !== false;
 		} catch (\Exception $e) {
 			return false;
 		}
@@ -60,6 +61,7 @@ class OIDplusSqlSlangPluginPgSQL extends OIDplusSqlSlangPlugin {
 	public function insert_id(OIDplusDatabaseConnection $db): int {
 		$res = $db->query("SELECT LASTVAL() AS ID");
 		$row = $res->fetch_array();
+		if (!$row) return 0;
 		return (int)$row['ID'];
 	}
 

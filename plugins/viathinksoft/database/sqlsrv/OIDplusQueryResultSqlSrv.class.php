@@ -78,7 +78,7 @@ class OIDplusQueryResultSqlSrv extends OIDplusQueryResult {
 	/**
 	 * @return array|null
 	 */
-	protected function do_fetch_array()/*: ?array*/ {
+	protected function do_fetch_array(): ?array {
 		$ary = sqlsrv_fetch_array($this->res);
 
 		if ($ary) {
@@ -92,9 +92,9 @@ class OIDplusQueryResultSqlSrv extends OIDplusQueryResult {
 	}
 
 	/**
-	 * @return object|null
+	 * @return stdClass|null
 	 */
-	//protected function do_fetch_object()/*: ?object*/ {
+	//protected function do_fetch_object(): ?\stdClass {
 	//	return sqlsrv_fetch_object($this->res, \stdClass::class);
 	//}
 

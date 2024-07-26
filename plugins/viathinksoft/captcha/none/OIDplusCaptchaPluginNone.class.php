@@ -44,7 +44,7 @@ class OIDplusCaptchaPluginNone extends OIDplusCaptchaPlugin {
 	 * @param string|null $footer_text
 	 * @return string
 	 */
-	public function captchaGenerate(string $header_text=null, string $footer_text=null): string {
+	public function captchaGenerate(?string $header_text=null, ?string $footer_text=null): string {
 		return '<script>
 		var oidplus_captcha_response = function() {
 			return OIDplusCaptchaPluginNone.captchaResponse();
@@ -60,7 +60,7 @@ class OIDplusCaptchaPluginNone extends OIDplusCaptchaPlugin {
 	 * @param string|null $fieldname
 	 * @return bool
 	 */
-	public function captchaVerify(array $params, string $fieldname=null): bool {
+	public function captchaVerify(array $params, ?string $fieldname=null): bool {
 		return true;
 	}
 

@@ -50,7 +50,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 	 * @return OIDplusQueryResultPDO
 	 * @throws OIDplusException
 	 */
-	public function doQuery(string $sql, array $prepared_args=null): OIDplusQueryResult {
+	public function doQuery(string $sql, ?array $prepared_args=null): OIDplusQueryResult {
 		$this->last_error = null;
 		if (is_null($prepared_args)) {
 			$res = $this->conn->query($sql);

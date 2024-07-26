@@ -25,7 +25,7 @@
  * @param string|null $basepath_new
  * @return void
  */
-function getDirContents_del(string &$outscript, string $dir_old, string $dir_new, string $basepath_old=null, string $basepath_new=null) {
+function getDirContents_del(string &$outscript, string $dir_old, string $dir_new, ?string $basepath_old=null, ?string $basepath_new=null) {
 	if (is_null($basepath_old)) $basepath_old = $dir_old;
 	$basepath_old = my_realpath($basepath_old) . DIRECTORY_SEPARATOR;
 	if ($basepath_old == '/') {
@@ -81,7 +81,7 @@ function getDirContents_del(string &$outscript, string $dir_old, string $dir_new
  * @return void
  * @throws Exception
  */
-function getDirContents_diff(string &$outscript, string $dir_old, string $dir_new, string $basepath_old=null, string $basepath_new=null) {
+function getDirContents_diff(string &$outscript, string $dir_old, string $dir_new, ?string $basepath_old=null, ?string $basepath_new=null) {
 	if (is_null($basepath_old)) $basepath_old = $dir_old;
 	$basepath_old = my_realpath($basepath_old) . DIRECTORY_SEPARATOR;
 	if ($basepath_old == '/') {
@@ -193,7 +193,7 @@ function getDirContents_diff(string &$outscript, string $dir_old, string $dir_ne
  * @return void
  * @throws Exception
  */
-function getDirContents_add(string &$outscript, string $dir_old, string $dir_new, string $basepath_old=null, string $basepath_new=null) {
+function getDirContents_add(string &$outscript, string $dir_old, string $dir_new, ?string $basepath_old=null, ?string $basepath_new=null) {
 	if (is_null($basepath_new)) $basepath_new = $dir_new;
 	$basepath_new = my_realpath($basepath_new) . DIRECTORY_SEPARATOR;
 	if ($basepath_new == '/') {

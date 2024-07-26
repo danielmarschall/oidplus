@@ -72,14 +72,14 @@ class OIDplusQueryResultMySQL extends OIDplusQueryResult {
 	/**
 	 * @return array|null
 	 */
-	protected function do_fetch_array()/*: ?array*/ {
+	protected function do_fetch_array(): ?array {
 		return $this->res->fetch_array(MYSQLI_ASSOC);
 	}
 
 	/**
-	 * @return object|null
+	 * @return \stdClass|null
 	 */
-	protected function do_fetch_object()/*: ?object*/ {
+	protected function do_fetch_object(): ?\stdClass {
 		return $this->res->fetch_object(\stdClass::class);
 	}
 }

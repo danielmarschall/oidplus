@@ -65,11 +65,11 @@ if (file_exists($candidate1) || is_dir($candidate1)) {
 if (($mode == 'leaf_url_icon16') || ($mode == 'leaf_doc_icon16') || ($mode == 'folder_icon16')) {
 
 	if (!empty($lang) && file_exists($icon_candidate = getIconCandidate($file, 'png', 'tree', $lang))) {
-		httpOutWithETag(file_get_contents($icon_candidate), 'image/png', basename($icon_candidate));
+		httpOutWithETag(file_get_contents($icon_candidate)?:SPACER_PNG, 'image/png', basename($icon_candidate));
 	} else if (file_exists($icon_candidate = getIconCandidate($file, 'png', 'tree', ''))) {
-		httpOutWithETag(file_get_contents($icon_candidate), 'image/png', basename($icon_candidate));
+		httpOutWithETag(file_get_contents($icon_candidate)?:SPACER_PNG, 'image/png', basename($icon_candidate));
 	} else if (file_exists($icon_candidate = __DIR__.'/img/'.$mode.'.png')) { // default icon for mode
-		httpOutWithETag(file_get_contents($icon_candidate), 'image/png', basename($icon_candidate));
+		httpOutWithETag(file_get_contents($icon_candidate)?:SPACER_PNG, 'image/png', basename($icon_candidate));
 	} else {
 		httpOutWithETag(SPACER_PNG, 'image/png'); // should not happen
 	}
@@ -77,11 +77,11 @@ if (($mode == 'leaf_url_icon16') || ($mode == 'leaf_doc_icon16') || ($mode == 'f
 } else if (($mode == 'leaf_url_icon') || ($mode == 'leaf_doc_icon') || ($mode == 'folder_icon')) {
 
 	if (!empty($lang) && file_exists($icon_candidate = getIconCandidate($file, 'png', 'big', $lang))) {
-		httpOutWithETag(file_get_contents($icon_candidate), 'image/png', basename($icon_candidate));
+		httpOutWithETag(file_get_contents($icon_candidate)?:SPACER_PNG, 'image/png', basename($icon_candidate));
 	} else if (file_exists($icon_candidate = getIconCandidate($file, 'png', 'big', ''))) {
-		httpOutWithETag(file_get_contents($icon_candidate), 'image/png', basename($icon_candidate));
+		httpOutWithETag(file_get_contents($icon_candidate)?:SPACER_PNG, 'image/png', basename($icon_candidate));
 	} else if (file_exists($icon_candidate = __DIR__.'/img/'.$mode.'.png')) { // default icon for mode
-		httpOutWithETag(file_get_contents($icon_candidate), 'image/png', basename($icon_candidate));
+		httpOutWithETag(file_get_contents($icon_candidate)?:SPACER_PNG, 'image/png', basename($icon_candidate));
 	} else {
 		httpOutWithETag(SPACER_PNG, 'image/png', 'spacer.png'); // should not happen
 	}

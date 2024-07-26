@@ -35,7 +35,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 * @param string|OIDplusObject $ot
 	 * @return string|null
 	 */
-	private function get_treeicon_root($ot)/*: ?string*/ {
+	private function get_treeicon_root($ot): ?string {
 		$root = $ot::parse($ot::root());
 		if (!$root) return null;
 		return $root->getIcon();
@@ -1244,7 +1244,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
+	public function tree(array &$json, ?string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if ($nonjs) {
 			$json[] = array(
 				'id' => 'oidplus:system',
@@ -1800,7 +1800,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 * @return array
 	 * @throws OIDplusException
 	 */
-	public function getNotifications(string $user=null): array {
+	public function getNotifications(?string $user=null): array {
 		$notifications = array();
 		$res = OIDplus::db()->query("select id, title from ###objects");
 		$res->naturalSortByField('id');

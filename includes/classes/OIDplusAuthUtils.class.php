@@ -71,7 +71,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @return OIDplusAuthContentStoreJWT|null
 	 * @throws OIDplusException
 	 */
-	protected function getAuthContentStore()/*: ?OIDplusAuthContentStoreJWT*/ {
+	protected function getAuthContentStore(): ?OIDplusAuthContentStoreJWT {
 		// Sitemap may not make use of any login/logout state
 		if ($this->forceAllLoggedOut()) return null;
 
@@ -87,10 +87,10 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	/**
 	 * @param string $name
 	 * @param mixed|null $default
-	 * @return mixed
+	 * @return mixed|null
 	 * @throws OIDplusException
 	 */
-	public function getExtendedAttribute(string $name, $default=NULL) {
+	public function getExtendedAttribute(string $name, $default=null) {
 		$acs = $this->getAuthContentStore();
 		if (is_null($acs)) return $default;
 		return $acs->getValue($name, $default);

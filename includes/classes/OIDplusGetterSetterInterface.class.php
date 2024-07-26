@@ -37,7 +37,7 @@ interface OIDplusGetterSetterInterface {
 	 * @param mixed $value
 	 * @return void
 	 */
-	public function setValue(string $name, $value);
+	public function setValue(string $name, $value): void;
 
 	/**
 	 * @param string $name
@@ -49,6 +49,6 @@ interface OIDplusGetterSetterInterface {
 	 * @param string $name
 	 * @return void
 	 */
-	public function delete(string $name);
+	public function delete(string $name): void;
 
 }

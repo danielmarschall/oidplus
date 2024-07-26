@@ -165,7 +165,7 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
+	public function tree(array &$json, ?string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
@@ -198,7 +198,7 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 	 * @param array $results
 	 * @return array
 	 */
-	public static function getDirContents(string $dir, string $basepath = null, array $exclude=[], array &$results=[]): array {
+	public static function getDirContents(string $dir, ?string $basepath=null, array $exclude=[], array &$results=[]): array {
 		if (is_null($basepath)) $basepath = $dir;
 		$basepath = realpath($basepath) . DIRECTORY_SEPARATOR;
 		$dir = realpath($dir) . DIRECTORY_SEPARATOR;

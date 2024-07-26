@@ -71,7 +71,7 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 	 * @throws OIDplusException
 	 * @throws OIDplusSQLException
 	 */
-	protected function doQueryInternalPrepare(string $sql, array $prepared_args=null): OIDplusQueryResultODBC {
+	protected function doQueryInternalPrepare(string $sql, ?array $prepared_args=null): OIDplusQueryResultODBC {
 		foreach ($prepared_args as &$value) {
 			// ODBC/SQLServer has problems converting "true" to the data type "bit"
 			// Error "Invalid character value for cast specification"
@@ -119,7 +119,7 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 	 * @throws OIDplusException
 	 * @throws OIDplusSQLException
 	 */
-	protected function doQueryPrepareEmulation(string $sql, array $prepared_args=null): OIDplusQueryResultODBC {
+	protected function doQueryPrepareEmulation(string $sql, ?array $prepared_args=null): OIDplusQueryResultODBC {
 		// For some drivers (e.g. Microsoft Access), we need to do this kind of emulation, because odbc_prepare() does not work
 		$dummy = find_nonexisting_substr($sql);
 		$sql = str_replace('?', $dummy, $sql);
@@ -167,7 +167,7 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 	 * @return OIDplusQueryResultODBC
 	 * @throws OIDplusException
 	 */
-	public function doQuery(string $sql, array $prepared_args=null): OIDplusQueryResult {
+	public function doQuery(string $sql, ?array $prepared_args=null): OIDplusQueryResult {
 		$this->last_error = null;
 		if (is_null($prepared_args)) {
 			$res = @odbc_exec($this->conn, $sql);

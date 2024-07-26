@@ -48,14 +48,14 @@ abstract class OIDplusCaptchaPlugin extends OIDplusPlugin {
 	 * @param string|null $footer_text
 	 * @return string
 	 */
-	public abstract function captchaGenerate(string $header_text=null, string $footer_text=null): string;
+	public abstract function captchaGenerate(?string $header_text=null, ?string $footer_text=null): string;
 
 	/**
 	 * @param string[] $params
 	 * @param string|null $fieldname
 	 * @return void
 	 */
-	public abstract function captchaVerify(array $params, string $fieldname=null);
+	public abstract function captchaVerify(array $params, ?string $fieldname=null);
 
 	/**
 	 * @return string

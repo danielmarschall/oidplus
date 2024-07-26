@@ -45,8 +45,9 @@ class OIDplusSqlSlangPluginMsSQL extends OIDplusSqlSlangPlugin {
 	 */
 	public function detect(OIDplusDatabaseConnection $db): bool {
 		try {
-			$vers = $db->query("select @@version as dbms_version")->fetch_object()->dbms_version;
-			return stripos($vers, 'Microsoft SQL Server') !== false;
+			$vers = $db->query("select @@version as dbms_version")->fetch_object();
+			if (!$vers) return false;
+			return stripos($vers->dbms_version, 'Microsoft SQL Server') !== false;
 		} catch (\Exception $e) {
 			return false;
 		}
@@ -67,12 +68,14 @@ class OIDplusSqlSlangPluginMsSQL extends OIDplusSqlSlangPlugin {
 			// -1 means: it is not implemented or possible with that driver
 			$res = $db->query("SELECT @@ROWCOUNT AS RC");
 			$row = $res->fetch_array();
+			if (!$row) return 0;
 			$rc = (int)$row['RC'];
 		}
 		if ($rc == 0) return 0;
 
 		$res = $db->query("SELECT @@IDENTITY AS ID");
 		$row = $res->fetch_array();
+		if (!$row) return 0;
 		return (int)$row['ID'];
 	}
 

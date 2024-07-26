@@ -49,7 +49,7 @@ class OIDplusPageAdminForgotPasswordAdmin extends OIDplusPagePluginAdmin {
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
+	public function tree(array &$json, ?string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 		if (is_null(OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.1.92'))) return false; // OIDplusPagePublicForgotPasswordAdmin
 

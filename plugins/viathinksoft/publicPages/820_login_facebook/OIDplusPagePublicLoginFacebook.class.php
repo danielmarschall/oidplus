@@ -68,7 +68,7 @@ class OIDplusPagePublicLoginFacebook extends OIDplusPagePluginPublic
 			$out['text'] .= '<p><font color="red">'._L('You need to enable JavaScript to use this feature.').'</font></p>';
 			$out['text'] .= '</noscript>';
 			$out['text'] .= '<form action="https://www.facebook.com/v8.0/dialog/oauth" method="GET">';
-			$out['text'] .= '<input type="hidden" name="client_id" value="'.htmlentities(OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_CLIENT_ID')).'">'."\n";
+			$out['text'] .= '<input type="hidden" name="client_id" value="'.htmlentities(OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_CLIENT_ID')??'').'">'."\n";
 			$out['text'] .= '<input type="hidden" name="redirect_uri" value="'.htmlentities('').'">'."\n"; // URL will be filled by JavaScript
 			$out['text'] .= '<input type="hidden" name="state" value="'.htmlentities($_COOKIE['csrf_token_weak']).'">'."\n"; // URL will be added by JavaScript
 			$out['text'] .= '<input type="hidden" name="scope" value="'.htmlentities(implode(' ', array('email'))).'">'."\n";
@@ -97,7 +97,7 @@ class OIDplusPagePublicLoginFacebook extends OIDplusPagePluginPublic
 	 * @param string $req_goto
 	 * @return bool
 	 */
-	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
+	public function tree(array &$json, ?string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		return true;
 	}
 
@@ -132,7 +132,7 @@ class OIDplusPagePublicLoginFacebook extends OIDplusPagePluginPublic
 	 * @return array
 	 * @throws OIDplusException
 	 */
-	public function getNotifications(string $user=null): array {
+	public function getNotifications(?string $user=null): array {
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			if (OIDplus::baseConfig()->getValue('FACEBOOK_OAUTH2_ENABLED', false)) {

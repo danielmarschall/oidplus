@@ -61,7 +61,7 @@ class OIDplusSqlSlangPluginFirebird extends OIDplusSqlSlangPlugin {
 	}
 
 	/**
-	 * @var mixed
+	 * @var ?int
 	 */
 	private $last_insert_id = null;
 
@@ -82,9 +82,10 @@ class OIDplusSqlSlangPluginFirebird extends OIDplusSqlSlangPlugin {
 	 * @param array|null $prepared_args
 	 * @return void
 	 */
-	public function reviewResult(OIDplusQueryResult $res, string $sql, array $prepared_args=null) {
+	public function reviewResult(OIDplusQueryResult $res, string $sql, ?array $prepared_args=null): void {
 		if (str_starts_with(trim(strtolower($sql)),'insert')) {
-			$this->last_insert_id = $res->fetch_array()["id"];
+			$tmp = $res->fetch_array();
+			$this->last_insert_id = $tmp ? $tmp["id"] : 0;
 		} else {
 			$this->last_insert_id = null;
 		}

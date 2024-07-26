@@ -93,9 +93,9 @@ class OIDplusQueryResultSQLite3 extends OIDplusQueryResult {
 	}
 
 	/**
-	 * @return array|mixed|null
+	 * @return array|null
 	 */
-	protected function do_fetch_array()/*: ?array*/ {
+	protected function do_fetch_array(): ?array {
 		//$ret = $this->res->fetchArray(SQLITE3_ASSOC);
 		$cursor = $this->cursor;
 		if (!isset($this->all_results[$cursor])) return null;

@@ -47,7 +47,7 @@ class OIDplusCaptchaPluginHCaptcha extends OIDplusCaptchaPlugin
 	 * @return string
 	 * @throws OIDplusException
 	 */
-	public function captchaGenerate(string $header_text=null, string $footer_text=null): string {
+	public function captchaGenerate(?string $header_text=null, ?string $footer_text=null): string {
 		return ($header_text ? '<p>'.$header_text.'</p>' : '') .
 		       '<noscript>'.
 		       '<p><font color="red">'._L('You need to enable JavaScript to solve the CAPTCHA.').'</font></p>'.
@@ -66,7 +66,7 @@ class OIDplusCaptchaPluginHCaptcha extends OIDplusCaptchaPlugin
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function captchaVerify(array $params, string $fieldname=null) {
+	public function captchaVerify(array $params, ?string $fieldname=null) {
 		$sitekey=OIDplus::baseConfig()->getValue('HCAPTCHA_SITEKEY', '');
 		$secret=OIDplus::baseConfig()->getValue('HCAPTCHA_SECRET', '');
 
@@ -144,7 +144,7 @@ class OIDplusCaptchaPluginHCaptcha extends OIDplusCaptchaPlugin
 	 * @return array
 	 * @throws OIDplusException
 	 */
-	public function getNotifications(string $user=null): array {
+	public function getNotifications(?string $user=null): array {
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			if ($this->isActive()) {

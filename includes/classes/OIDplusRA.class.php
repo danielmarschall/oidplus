@@ -102,7 +102,7 @@ class OIDplusRA extends OIDplusBaseClass {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function register_ra(string $new_password=null) {
+	public function register_ra(?string $new_password=null) {
 		if (is_null($new_password)) {
 			// Invalid password (used for LDAP/OAuth)
 			$calc_authkey = '';
@@ -118,7 +118,7 @@ class OIDplusRA extends OIDplusBaseClass {
 	 * @return OIDplusRAAuthInfo|null
 	 * @throws OIDplusException
 	 */
-	public function getAuthInfo()/*: ?OIDplusRAAuthInfo*/ {
+	public function getAuthInfo(): ?OIDplusRAAuthInfo {
 		$ra_res = OIDplus::db()->query("select authkey from ###ra where email = ?", array($this->email));
 		if (!$ra_res->any()) return null; // User not found
 		$ra_row = $ra_res->fetch_array();
@@ -156,7 +156,7 @@ class OIDplusRA extends OIDplusBaseClass {
 	 * @return bool|null
 	 * @throws OIDplusException
 	 */
-	public function isPasswordLess()/*: ?bool*/ {
+	public function isPasswordLess(): ?bool {
 		$authInfo = $this->getAuthInfo();
 		if (!$authInfo) return null; // user not found
 		return $authInfo->isPasswordLess();

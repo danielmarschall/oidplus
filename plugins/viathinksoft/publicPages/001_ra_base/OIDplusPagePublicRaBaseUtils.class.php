@@ -107,7 +107,7 @@ class OIDplusPagePublicRaBaseUtils extends OIDplusPagePluginPublic {
 	 * @param string $req_goto
 	 * @return bool
 	 */
-	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
+	public function tree(array &$json, ?string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		return false;
 	}
 

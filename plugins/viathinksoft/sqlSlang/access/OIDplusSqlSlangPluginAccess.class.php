@@ -87,6 +87,7 @@ class OIDplusSqlSlangPluginAccess extends OIDplusSqlSlangPlugin {
 	public function insert_id(OIDplusDatabaseConnection $db): int {
 		$res = $db->query("SELECT @@IDENTITY AS ID");
 		$row = $res->fetch_array();
+		if (!$row) return 0;
 		return (int)$row['ID'];
 	}
 

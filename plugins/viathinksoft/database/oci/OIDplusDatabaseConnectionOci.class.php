@@ -40,7 +40,7 @@ class OIDplusDatabaseConnectionOci extends OIDplusDatabaseConnection {
 	 * @return OIDplusQueryResultOci
 	 * @throws OIDplusException
 	 */
-	public function doQuery(string $sql, array $prepared_args=null): OIDplusQueryResult {
+	public function doQuery(string $sql, ?array $prepared_args=null): OIDplusQueryResult {
 		$this->last_error = null;
 
 		$mode = $this->intransaction ? OCI_NO_AUTO_COMMIT : OCI_COMMIT_ON_SUCCESS;
@@ -211,7 +211,7 @@ class OIDplusDatabaseConnectionOci extends OIDplusDatabaseConnection {
 	 * @return OIDplusSqlSlangPlugin|null
 	 * @throws OIDplusConfigInitializationException
 	 */
-	protected function doGetSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
+	protected function doGetSlang(bool $mustExist=true): ?OIDplusSqlSlangPlugin {
 		$slang = OIDplus::getSqlSlangPlugin('oracle');
 		if (is_null($slang)) {
 			throw new OIDplusConfigInitializationException(_L('SQL-Slang plugin "%1" is missing. Please check if it exists in the directory "plugin/sqlSlang". If it is not existing, please recover it from an GIT/SVN snapshot or OIDplus archive file.','oracle'));

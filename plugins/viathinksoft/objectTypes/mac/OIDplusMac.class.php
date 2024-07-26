@@ -41,7 +41,7 @@ class OIDplusMac extends OIDplusObject {
 	 * @param string $node_id
 	 * @return OIDplusMac|null
 	 */
-	public static function parse(string $node_id)/*: ?OIDplusMac*/ {
+	public static function parse(string $node_id): ?OIDplusMac {
 		@list($namespace, $number) = explode(':', $node_id, 2);
 		if ($namespace !== self::ns()) return null;
 		return new self($number);
@@ -145,7 +145,7 @@ class OIDplusMac extends OIDplusObject {
 	 * @param OIDplusObject|null $parent
 	 * @return string
 	 */
-	public function jsTreeNodeName(OIDplusObject $parent = null): string {
+	public function jsTreeNodeName(?OIDplusObject $parent=null): string {
 		if ($parent == null) return $this->objectTypeTitle();
 		return substr($this->nodeId(), strlen($parent->nodeId()));
 	}
@@ -335,20 +335,20 @@ class OIDplusMac extends OIDplusObject {
 	/**
 	 * @return OIDplusMac|null
 	 */
-	public function one_up()/*: ?OIDplusMac*/ {
+	public function one_up(): ?OIDplusMac {
 		return self::parse($this->ns().':'.substr($this->number,0,strlen($this->number)-1));
 	}
 
 	/**
 	 * @param string $a
 	 * @param string $b
-	 * @return false|int
+	 * @return null|int
 	 */
-	private static function distance_(string $a, string $b) {
+	private static function distance_(string $a, string $b): ?int {
 		$min_len = min(strlen($a), strlen($b));
 
 		for ($i=0; $i<$min_len; $i++) {
-			if ($a[$i] != $b[$i]) return false;
+			if ($a[$i] != $b[$i]) return null;
 		}
 
 		return strlen($a) - strlen($b);
@@ -358,7 +358,7 @@ class OIDplusMac extends OIDplusObject {
 	 * @param OIDplusObject|string $to
 	 * @return int|null
 	 */
-	public function distance($to) {
+	public function distance($to): ?int {
 		if (!is_object($to)) $to = OIDplusObject::parse($to);
 		if (!$to) return null;
 		if (!($to instanceof $this)) return null;
@@ -368,7 +368,7 @@ class OIDplusMac extends OIDplusObject {
 		$b = $this->number;
 		$a = $to->number;
 		$tmp = self::distance_($a, $b);
-		if ($tmp !== false) return $tmp;
+		if ($tmp !== null) return $tmp;
 
 		return null;
 	}

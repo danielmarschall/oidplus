@@ -61,7 +61,7 @@ class OIDplusBaseConfig extends OIDplusBaseClass implements OIDplusGetterSetterI
 	 * @param mixed $value
 	 * @return void
 	 */
-	public function setValue(string $name, $value) {
+	public function setValue(string $name, $value): void {
 		// Note: The value is only set at run time level!
 		// This function will NOT change the userdata/baseconfig/config.inc.php file!
 		$this->data[$name] = $value;
@@ -71,7 +71,7 @@ class OIDplusBaseConfig extends OIDplusBaseClass implements OIDplusGetterSetterI
 	 * @param string $name
 	 * @return void
 	 */
-	public function delete(string $name) {
+	public function delete(string $name): void {
 		// Note: The value is only deleted at run time level!
 		// This function will NOT change the userdata/baseconfig/config.inc.php file!
 		unset($this->data[$name]);

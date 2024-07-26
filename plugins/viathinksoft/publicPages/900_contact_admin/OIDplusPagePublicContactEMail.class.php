@@ -46,11 +46,11 @@ class OIDplusPagePublicContactEMail extends OIDplusPagePluginPublic {
 			$out['title'] = _L('Contact administrator');
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
-			if (empty(OIDplus::config()->getValue('admin_email'))) {
+			$admin_email = OIDplus::config()->getValue('admin_email');
+			if (empty($admin_email)) {
 				$out['text'] = '<p>'._L('The administrator of this OIDplus system has not entered a contact email address.').'</p>';
 			} else {
-				$admin_email = OIDplus::config()->getValue('admin_email');
-				$out['text'] = '<p>'._L('You can contact the administrator of this OIDplus system at this email address').':</p><p><a href="mailto:'.htmlentities($admin_email).'">'.htmlentities($admin_email).'</a></p>';
+				$out['text'] = '<p>'._L('You can contact the administrator of this OIDplus system at this email address').':</p><p><a href="mailto:'.htmlentities(strval($admin_email)).'">'.htmlentities(strval($admin_email)).'</a></p>';
 			}
 		}
 	}
@@ -71,7 +71,7 @@ class OIDplusPagePublicContactEMail extends OIDplusPagePluginPublic {
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
+	public function tree(array &$json, ?string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon16.png';
 		} else {

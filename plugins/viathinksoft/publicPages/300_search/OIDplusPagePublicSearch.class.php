@@ -86,6 +86,8 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 
 		$this->prepareSearchParams($params, true);
 
+		$slang = OIDplus::db()->getSlang();
+
 		if (strlen($params['term']) == 0) {
 			$output .= '<p><font color="red">'._L('Error: You must enter a search term.').'</font></p>';
 		} else if (strlen($params['term']) < $min_length) {
@@ -96,8 +98,8 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 
 				$sql_where = array(); $prep_where = array();
 
-				$sql_where[] = OIDplus::db()->getSlang()->lowerCase('email')." like ?";   $prep_where[] = '%'.$params['term'].'%';
-				$sql_where[] = OIDplus::db()->getSlang()->lowerCase('ra_name')." like ?"; $prep_where[] = '%'.$params['term'].'%';
+				$sql_where[] = $slang->lowerCase('email')." like ?";   $prep_where[] = '%'.$params['term'].'%';
+				$sql_where[] = $slang->lowerCase('ra_name')." like ?"; $prep_where[] = '%'.$params['term'].'%';
 
 				if (count($sql_where) == 0) $sql_where[] = '1=0';
 				$res = OIDplus::db()->query("select * from ###ra where (".implode(' or ', $sql_where).")", $prep_where);
@@ -105,7 +107,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 				$count = 0;
 				while ($row = $res->fetch_object()) {
 					$email = str_replace('@', '&', $row->email);
-					$output .= '<p><a '.OIDplus::gui()->link('oidplus:rainfo$'.str_replace('@','&',$email)).'>'.$this->highlight_match(htmlentities($email),$params['term']).'</a>: <b>'.$this->highlight_match(htmlentities($row->ra_name??''),$params['term']).'</b></p>';
+					$output .= '<p><a '.OIDplus::gui()->link('oidplus:rainfo$'.$email).'>'.$this->highlight_match(htmlentities($email),$params['term']).'</a>: <b>'.$this->highlight_match(htmlentities($row->ra_name??''),$params['term']).'</b></p>';
 					$count++;
 				}
 				if ($count == 0) {
@@ -115,19 +117,19 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 				$output .= '<h2>'._L('Search results for %1 (%2)','<font color="red">'.htmlentities($params['term']).'</font>',htmlentities($params['namespace'])).'</h2>';
 
 				$sql_where = array(); $prep_where = array();
-				$sql_where[] = OIDplus::db()->getSlang()->lowerCase('id')." like ?"; $prep_where[] = '%'.$params['term'].'%'; // TODO: should we rather do findFitting(), so we can e.g. find GUIDs with different notation?
-				if ($params["search_title"])       { $sql_where[] = OIDplus::db()->getSlang()->lowerCase('title')." like ?";       $prep_where[] = '%'.$params['term'].'%'; }
-				if ($params["search_description"]) { $sql_where[] = OIDplus::db()->getSlang()->lowerCase('description')." like ?"; $prep_where[] = '%'.$params['term'].'%'; }
+				$sql_where[] = $slang->lowerCase('id')." like ?"; $prep_where[] = '%'.$params['term'].'%'; // TODO: should we rather do findFitting(), so we can e.g. find GUIDs with different notation?
+				if ($params["search_title"])       { $sql_where[] = $slang->lowerCase('title')." like ?";       $prep_where[] = '%'.$params['term'].'%'; }
+				if ($params["search_description"]) { $sql_where[] = $slang->lowerCase('description')." like ?"; $prep_where[] = '%'.$params['term'].'%'; }
 
 				if ($params["search_asn1id"]) {
-					$res = OIDplus::db()->query("select * from ###asn1id where ".OIDplus::db()->getSlang()->lowerCase('name')." like ?", array('%'.$params['term'].'%'));
+					$res = OIDplus::db()->query("select * from ###asn1id where ".$slang->lowerCase('name')." like ?", array('%'.$params['term'].'%'));
 					while ($row = $res->fetch_object()) {
 						$sql_where[] = "id = ?"; $prep_where[] = $row->oid;
 					}
 				}
 
 				if ($params["search_iri"]) {
-					$res = OIDplus::db()->query("select * from ###iri where ".OIDplus::db()->getSlang()->lowerCase('name')." like ?", array('%'.$params['term'].'%'));
+					$res = OIDplus::db()->query("select * from ###iri where ".$slang->lowerCase('name')." like ?", array('%'.$params['term'].'%'));
 					while ($row = $res->fetch_object()) {
 						$sql_where[] = "id = ?"; $prep_where[] = $row->oid;
 					}
@@ -136,7 +138,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 				if (count($sql_where) == 0) $sql_where[] = '1=0';
 				array_unshift($prep_where, $params['namespace'].':%');
 
-				$res = OIDplus::db()->query("select * from ###objects where ".OIDplus::db()->getSlang()->lowerCase('id')." like ? and (".implode(' or ', $sql_where).")", $prep_where);
+				$res = OIDplus::db()->query("select * from ###objects where ".$slang->lowerCase('id')." like ? and (".implode(' or ', $sql_where).")", $prep_where);
 
 				$count = 0;
 				while ($row = $res->fetch_object()) {
@@ -274,7 +276,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
+	public function tree(array &$json, ?string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
 			$tree_icon = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon16.png';
 		} else {

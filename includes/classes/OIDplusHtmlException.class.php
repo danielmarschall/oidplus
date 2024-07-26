@@ -42,7 +42,7 @@ class OIDplusHtmlException extends OIDplusException {
 	 * @param string $message
 	 * @param string|null $title
 	 */
-	public function __construct(string $message, string $title=null, int $httpStatus=500) {
+	public function __construct(string $message, ?string $title=null, int $httpStatus=500) {
 		$this->htmlTitle = $title;
 		if ($title) {
 			$title = strip_tags($title);

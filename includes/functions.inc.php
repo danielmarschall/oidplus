@@ -55,7 +55,7 @@ function verify_private_public_key(string $privKey, string $pubKey): bool {
  * @param string|null $passphrase_new
  * @return false|string
  */
-function change_private_key_passphrase(string $privKeyOld, string $passphrase_old=null, string $passphrase_new=null) {
+function change_private_key_passphrase(string $privKeyOld, ?string $passphrase_old=null, ?string $passphrase_new=null) {
 	$pkey_config = array(
 	    //"digest_alg" => "sha512",
 	    //"private_key_bits" => 2048,
@@ -328,7 +328,7 @@ function sha3_512_pbkdf2(string $password, string $salt, int $iterations, int $l
  * @throws OIDplusException
  * @throws \ViaThinkSoft\OIDplus\OIDplusConfigInitializationException
  */
-function url_post_contents_available(bool $require_ssl=true, string &$reason=null): bool {
+function url_post_contents_available(bool $require_ssl=true, ?string &$reason=null): bool {
 	if (class_exists(OIDplus::class)) {
 		if (OIDplus::baseConfig()->getValue('OFFLINE_MODE', false)) {
 			$reason = _L('OIDplus is running in offline mode due to the base configuration setting %1.', 'OFFLINE_MODE');
@@ -402,7 +402,7 @@ function url_post_contents(string $url, array $params=array(), array $extraHeade
  * @throws OIDplusException
  * @throws \ViaThinkSoft\OIDplus\OIDplusConfigInitializationException
  */
-function url_get_contents_available(bool $require_ssl=true, string &$reason=null): bool {
+function url_get_contents_available(bool $require_ssl=true, ?string &$reason=null): bool {
 	if (class_exists(OIDplus::class)) {
 		if (OIDplus::baseConfig()->getValue('OFFLINE_MODE', false)) {
 			$reason = _L('OIDplus is running in offline mode due to the base configuration setting %1.', 'OFFLINE_MODE');

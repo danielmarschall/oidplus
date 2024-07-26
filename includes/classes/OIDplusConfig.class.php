@@ -83,7 +83,7 @@ class OIDplusConfig extends OIDplusBaseClass implements OIDplusGetterSetterInter
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function prepareConfigKey(string $name, string $description, string $init_value, int $protection, callable $validateCallback=null) {
+	public function prepareConfigKey(string $name, string $description, string $init_value, int $protection, ?callable $validateCallback=null) {
 		// Check if the protection flag is valid
 		switch ($protection) {
 			case OIDplusConfig::PROTECTION_EDITABLE:
@@ -157,7 +157,7 @@ class OIDplusConfig extends OIDplusBaseClass implements OIDplusGetterSetterInter
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function clearCache() {
+	public function clearCache(): void {
 		$this->configTableReadOnce = false;
 		$this->buildConfigArray();
 	}
@@ -166,7 +166,7 @@ class OIDplusConfig extends OIDplusBaseClass implements OIDplusGetterSetterInter
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	protected function buildConfigArray() {
+	protected function buildConfigArray(): void {
 		if ($this->configTableReadOnce) return;
 
 		$this->values = array();
@@ -240,7 +240,7 @@ class OIDplusConfig extends OIDplusBaseClass implements OIDplusGetterSetterInter
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function setValue(string $name, $value) {
+	public function setValue(string $name, $value): void {
 		// Read all config settings once and write them in array $this->values
 		$this->buildConfigArray();
 
@@ -264,11 +264,11 @@ class OIDplusConfig extends OIDplusBaseClass implements OIDplusGetterSetterInter
 
 	/**
 	 * @param string $name
-	 * @param string $value
+	 * @param mixed $value
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function setValueNoCallback(string $name, string $value) {
+	public function setValueNoCallback(string $name, $value): void {
 		// Read all config settings once and write them in array $this->values
 		$this->buildConfigArray();
 
@@ -289,7 +289,7 @@ class OIDplusConfig extends OIDplusBaseClass implements OIDplusGetterSetterInter
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function delete(string $name) {
+	public function delete(string $name): void {
 		if ($this->configTableReadOnce) {
 			if (isset($this->values[$name])) {
 				OIDplus::db()->query("delete from ###config where name = ?", array($name));

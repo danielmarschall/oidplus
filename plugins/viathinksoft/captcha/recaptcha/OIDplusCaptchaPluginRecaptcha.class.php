@@ -63,7 +63,7 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin
 	 * @return string
 	 * @throws OIDplusException
 	 */
-	public function captchaGenerate(string $header_text=null, string $footer_text=null): string {
+	public function captchaGenerate(?string $header_text=null, ?string $footer_text=null): string {
 		return '<noscript>'.
 		       '<p><font color="red">'._L('You need to enable JavaScript to solve the CAPTCHA.').'</font></p>'.
 		       '</noscript>'.
@@ -108,7 +108,7 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function captchaVerify(array $params, string $fieldname=null) {
+	public function captchaVerify(array $params, ?string $fieldname=null) {
 		$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
 
 		if (is_null($fieldname)) $fieldname = 'oidplus-recaptcha-response'; // no individual AJAX field name (created by oidplus_captcha_response()) means that it is a plain POST event (e.g. by oobe.php)
@@ -170,7 +170,7 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin
 	 * @return array
 	 * @throws OIDplusException
 	 */
-	public function getNotifications(string $user=null): array {
+	public function getNotifications(?string $user=null): array {
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			if ($this->isActive()) {

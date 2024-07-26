@@ -70,10 +70,10 @@ class OIDplusQueryResultOci extends OIDplusQueryResult {
 		if (!is_null($this->prefetchedArray)) return;
 		$this->prefetchedArray = array();
 		oci_fetch_all($this->res, $this->prefetchedArray, 0, -1, OCI_FETCHSTATEMENT_BY_ROW);
-		foreach ($this->prefetchedArray as &$row) { /** @phpstan-ignore-line */
+		foreach ($this->prefetchedArray as &$row) {
 			$this->fixFields($row);
 		}
-		unset($row); /** @phpstan-ignore-line */
+		unset($row);
 	}
 
 	/**
@@ -93,16 +93,16 @@ class OIDplusQueryResultOci extends OIDplusQueryResult {
 	/**
 	 * @return array|null
 	 */
-	protected function do_fetch_array()/*: ?array*/ {
+	protected function do_fetch_array(): ?array {
 		$ret = oci_fetch_array($this->res);
 		if ($ret === false) $ret = null;
 		return $ret;
 	}
 
 	/**
-	 * @return object|null
+	 * @return \stdClass|null
 	 */
-	protected function do_fetch_object()/*: ?object*/ {
+	protected function do_fetch_object(): ?\stdClass {
 		$ret = oci_fetch_object($this->res);
 		if ($ret === false) $ret = null;
 		return $ret;

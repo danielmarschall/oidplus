@@ -51,7 +51,7 @@ function process_file(string $filename): string {
 		$cont = str_ireplace("url(data:", "url###(data:", $cont);
 		$cont = str_ireplace("url(", "url(".$dir.'/', $cont);
 	} else {
-		$cont = file_get_contents($filename);
+		$cont = file_get_contents($filename)?:'';
 		$cont = str_ireplace('url("data:', 'url###("data:', $cont);
 		$cont = str_ireplace('url("', 'url("'.$dir.'/', $cont);
 		$cont = str_ireplace("url('data:", "url###('data:", $cont);

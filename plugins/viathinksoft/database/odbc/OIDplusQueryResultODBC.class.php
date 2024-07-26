@@ -115,7 +115,7 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 	/**
 	 * @return array|null
 	 */
-	protected function do_fetch_array()/*: ?array*/ {
+	protected function do_fetch_array(): ?array {
 		//$this->gotoLastResultSet(); // TODO: This causes problems (read dbms_version on null)
 		$ret = @odbc_fetch_array($this->res);
 		if ($ret === false) $ret = null;
@@ -123,9 +123,9 @@ class OIDplusQueryResultODBC extends OIDplusQueryResult {
 	}
 
 	/**
-	 * @return object|null
+	 * @return \stdClass|null
 	 */
-	protected function do_fetch_object()/*: ?object*/ {
+	protected function do_fetch_object(): ?\stdClass {
 		//$this->gotoLastResultSet(); // TODO: This causes problems (read dbms_version on null)
 		$ret = @odbc_fetch_object($this->res);
 		if ($ret === false) $ret = null;

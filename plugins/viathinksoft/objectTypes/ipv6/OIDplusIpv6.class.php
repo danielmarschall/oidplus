@@ -65,7 +65,7 @@ class OIDplusIpv6 extends OIDplusObject {
 	 * @return OIDplusIpv6|null
 	 * @throws OIDplusException
 	 */
-	public static function parse(string $node_id)/*: ?OIDplusIpv6*/ {
+	public static function parse(string $node_id): ?OIDplusIpv6 {
 		@list($namespace, $ipv6) = explode(':', $node_id, 2);
 		if ($namespace !== self::ns()) return null;
 		return new self($ipv6);
@@ -148,7 +148,7 @@ class OIDplusIpv6 extends OIDplusObject {
 	 * @param OIDplusObject|null $parent
 	 * @return string
 	 */
-	public function jsTreeNodeName(OIDplusObject $parent = null): string {
+	public function jsTreeNodeName(?OIDplusObject $parent=null): string {
 		if ($parent == null) return $this->objectTypeTitle();
 		return $this->ipv6;
 	}
@@ -250,7 +250,7 @@ class OIDplusIpv6 extends OIDplusObject {
 	/**
 	 * @return OIDplusIpv6|null
 	 */
-	public function one_up()/*: ?OIDplusIpv6*/ {
+	public function one_up(): ?OIDplusIpv6 {
 		$cidr = $this->cidr - 1;
 		if ($cidr < 0) return null; // cannot go further up
 
@@ -260,9 +260,9 @@ class OIDplusIpv6 extends OIDplusObject {
 
 	/**
 	 * @param OIDplusObject|string $to
-	 * @return float|int|mixed|string|null
+	 * @return ?int
 	 */
-	public function distance($to) {
+	public function distance($to): ?int {
 		if (!is_object($to)) $to = OIDplusObject::parse($to);
 		if (!$to) return null;
 		if (!($to instanceof $this)) return null;

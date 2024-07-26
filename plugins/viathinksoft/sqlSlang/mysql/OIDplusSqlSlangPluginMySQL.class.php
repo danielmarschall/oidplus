@@ -45,8 +45,9 @@ class OIDplusSqlSlangPluginMySQL extends OIDplusSqlSlangPlugin {
 	 */
 	public function detect(OIDplusDatabaseConnection $db): bool {
 		try {
-			$vers = $db->query("select version() as dbms_version")->fetch_object()->dbms_version;
-			return (stripos($vers, 'MySQL') !== false) || (stripos($vers, 'MariaDB') !== false);
+			$vers = $db->query("select version() as dbms_version")->fetch_object();
+			if (!$vers) return false;
+			return (stripos($vers->dbms_version, 'MySQL') !== false) || (stripos($vers->dbms_version, 'MariaDB') !== false);
 		} catch (\Exception $e) {
 			return false;
 		}
@@ -60,6 +61,7 @@ class OIDplusSqlSlangPluginMySQL extends OIDplusSqlSlangPlugin {
 	public function insert_id(OIDplusDatabaseConnection $db): int {
 		$res = $db->query("SELECT LAST_INSERT_ID() AS ID");
 		$row = $res->fetch_array();
+		if (!$row) return 0;
 		return (int)$row['ID'];
 	}
 
