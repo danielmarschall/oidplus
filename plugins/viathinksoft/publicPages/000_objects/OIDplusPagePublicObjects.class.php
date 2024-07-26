@@ -1704,6 +1704,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		$out = '<script>
 				tinymce.EditorManager.baseURL = "vendor/tinymce/tinymce";
 				tinymce.init({
+					license_key: "gpl",
 					document_base_url: getSystemUrl(),
 					selector: "#'.$name.'",
 					height: 200,
