@@ -39,7 +39,7 @@ class OIDplusMailUtils extends OIDplusBaseClass {
 	 * @param int $level
 	 * @return string|null
 	 */
-	public function secureEmailAddress(string $email, string $linktext, int $level=1)/*: ?string*/ {
+	public function secureEmailAddress(string $email, string $linktext, int $level=1): ?string {
 
 		// see http://www.spamspan.de/
 

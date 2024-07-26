@@ -95,16 +95,16 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 	/**
 	 * @return array|null
 	 */
-	protected function do_fetch_array()/*: ?array*/ {
+	protected function do_fetch_array(): ?array {
 		$ret = $this->res->fetch(\PDO::FETCH_ASSOC);
 		if ($ret === false) $ret = null;
 		return $ret;
 	}
 
 	/**
-	 * @return object|null
+	 * @return \stdClass|null
 	 */
-	protected function do_fetch_object()/*: ?object*/ {
+	protected function do_fetch_object(): ?\stdClass {
 		$ret = $this->res->fetch(\PDO::FETCH_OBJ);
 		if ($ret === false) $ret = null;
 		return $ret;

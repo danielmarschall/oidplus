@@ -295,7 +295,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic
 			for ($i=1; $i<=$numDomains; $i++) {
 				$cfgSuffix = $i == 1 ? '' : "__$i";
 				$upnSuffix = OIDplus::baseConfig()->getValue('LDAP_UPN_SUFFIX'.$cfgSuffix, '');
-				if ($upnSuffix == '') throw new OIDplusException(_L('Invalid base configuration setting: %1 is missing or empty', 'LDAP_UPN_SUFFIX'.$cfgSuffix));
+				if (!$upnSuffix) throw new OIDplusException(_L('Invalid base configuration setting: %1 is missing or empty', 'LDAP_UPN_SUFFIX'.$cfgSuffix));
 				$out['text'] .= '<option value="'.htmlentities($upnSuffix).'">'.htmlentities($upnSuffix).'</option>';
 			}
 
@@ -335,7 +335,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic
 	 * @param string $req_goto
 	 * @return bool
 	 */
-	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
+	public function tree(array &$json, ?string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		return true;
 	}
 
@@ -370,7 +370,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic
 	 * @return array
 	 * @throws OIDplusException
 	 */
-	public function getNotifications(string $user=null): array {
+	public function getNotifications(?string $user=null): array {
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			if (OIDplus::baseConfig()->getValue('LDAP_ENABLED', false)) {

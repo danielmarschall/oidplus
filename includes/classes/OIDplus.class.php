@@ -484,7 +484,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @param string $id
 	 * @return OIDplusSqlSlangPlugin|null
 	 */
-	public static function getSqlSlangPlugin(string $id)/*: ?OIDplusSqlSlangPlugin*/ {
+	public static function getSqlSlangPlugin(string $id): ?OIDplusSqlSlangPlugin {
 		return self::$sqlSlangPlugins[$id] ?? null;
 	}
 
@@ -651,7 +651,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @param string $id
 	 * @return OIDplusAuthPlugin|null
 	 */
-	public static function getAuthPluginById(string $id)/*: ?OIDplusAuthPlugin*/ {
+	public static function getAuthPluginById(string $id): ?OIDplusAuthPlugin {
 		$plugins = OIDplus::getAuthPlugins();
 		foreach ($plugins as $plugin) {
 			if ($plugin->id() == $id) {
@@ -685,15 +685,16 @@ class OIDplus extends OIDplusBaseClass {
 
 	/**
 	 * @param bool $must_hash
-	 * @return OIDplusAuthPlugin|null
+	 * @return OIDplusAuthPlugin
 	 * @throws OIDplusException
 	 */
-	public static function getDefaultRaAuthPlugin(bool $must_hash)/*: OIDplusAuthPlugin*/ {
+	public static function getDefaultRaAuthPlugin(bool $must_hash): OIDplusAuthPlugin {
 		// 1. Priority: Use the auth plugin the user prefers
 		$def_plugin_id = OIDplus::config()->getValue('default_ra_auth_method');
 		if (trim($def_plugin_id) !== '') {
 			OIDplus::checkRaAuthPluginAvailable($def_plugin_id, $must_hash);
-			return OIDplus::getAuthPluginById($def_plugin_id);
+			$tmp = OIDplus::getAuthPluginById($def_plugin_id);
+			if ($tmp) return $tmp;
 		}
 
 		// 2. Priority: If empty (i.e. OIDplus may decide), choose the best ViaThinkSoft plugin that is supported on this system
@@ -804,7 +805,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @return OIDplusDesignPlugin|null
 	 * @throws OIDplusException
 	 */
-	public static function getActiveDesignPlugin()/*: ?OIDplusDesignPlugin*/ {
+	public static function getActiveDesignPlugin(): ?OIDplusDesignPlugin {
 		$plugins = OIDplus::getDesignPlugins();
 		foreach ($plugins as $plugin) {
 			if ($plugin->id() == OIDplus::config()->getValue('design','default')) {
@@ -1013,7 +1014,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @param string $oid
 	 * @return OIDplusPlugin|null
 	 */
-	public static function getPluginByOid(string $oid)/*: ?OIDplusPlugin*/ {
+	public static function getPluginByOid(string $oid): ?OIDplusPlugin {
 		$plugins = self::getAllPlugins();
 		foreach ($plugins as $plugin) {
 			if (oid_dotnotation_equal($plugin->getManifest()->getOid(), $oid)) {
@@ -1027,7 +1028,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @param string $classname
 	 * @return OIDplusPlugin|null
 	 */
-	public static function getPluginByClassName(string $classname)/*: ?OIDplusPlugin*/ {
+	public static function getPluginByClassName(string $classname): ?OIDplusPlugin {
 		$plugins = self::getAllPlugins();
 		foreach ($plugins as $plugin) {
 			if (get_class($plugin) === $classname) {
@@ -1137,7 +1138,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 * @throws \ReflectionException
 	 */
-	public static function registerAllPlugins($pluginDirName, string $expectedPluginClass, callable $registerCallback=null): array {
+	public static function registerAllPlugins($pluginDirName, string $expectedPluginClass, ?callable $registerCallback=null): array {
 		$out = array();
 		if (is_array($pluginDirName)) {
 			$ary = array();
@@ -1151,7 +1152,7 @@ class OIDplus extends OIDplusBaseClass {
 		$known_main_classes_no_namespace = array();
 		foreach ($ary as $plugintype_folder => $bry) {
 			foreach ($bry as $vendor_folder => $cry) {
-				foreach ($cry as $pluginname_folder => $manifest) {
+				foreach ($cry as $pluginname_folder => $manifest) { /* @phpstan-ignore-line */
 					$class_name = $manifest->getPhpMainClass();
 
 					// Before we load the plugin, we want to make some checks to confirm
@@ -2201,7 +2202,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @param bool $relative If true, the returning path is relative to the currently executed PHP file (not the CLI working directory)
 	 * @return string|false The local path, with guaranteed trailing path delimiter for directories
 	 */
-	public static function localpath(string $target=null, bool $relative=false) {
+	public static function localpath(?string $target=null, bool $relative=false) {
 		if (is_null($target)) {
 			$target = __DIR__.'/../../';
 		}
@@ -2239,7 +2240,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @return string|false The URL, with guaranteed trailing path delimiter for directories
 	 * @throws OIDplusException
 	 */
-	public static function webpath(string $target=null, $mode=self::PATH_ABSOLUTE_CANONICAL) {
+	public static function webpath(?string $target=null, $mode=self::PATH_ABSOLUTE_CANONICAL) {
 		// backwards compatibility
 		if ($mode === true) $mode = self::PATH_RELATIVE;
 		if ($mode === false) $mode = self::PATH_ABSOLUTE;
@@ -2284,7 +2285,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @return false|string
 	 * @throws OIDplusException
 	 */
-	public static function canonicalURL(string $goto=null) {
+	public static function canonicalURL(?string $goto=null) {
 		// First part: OIDplus system URL (or canonical system URL)
 		$sysurl = OIDplus::getSystemUrl(self::PATH_ABSOLUTE_CANONICAL);
 

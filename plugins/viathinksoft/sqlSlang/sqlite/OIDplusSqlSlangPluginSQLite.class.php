@@ -60,6 +60,7 @@ class OIDplusSqlSlangPluginSQLite extends OIDplusSqlSlangPlugin {
 	public function insert_id(OIDplusDatabaseConnection $db): int {
 		$res = $db->query("SELECT last_insert_rowid() AS ID");
 		$row = $res->fetch_array();
+		if (!$row) return 0;
 		return (int)$row['ID'];
 	}
 

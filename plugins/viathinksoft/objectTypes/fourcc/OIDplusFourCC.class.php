@@ -74,7 +74,7 @@ class OIDplusFourCC extends OIDplusObject {
 	 * @param string $node_id
 	 * @return OIDplusFourCC|null
 	 */
-	public static function parse(string $node_id)/*: ?OIDplusFourCC*/ {
+	public static function parse(string $node_id): ?OIDplusFourCC {
 		@list($namespace, $fourcc) = explode(':', $node_id, 2);
 		if ($namespace !== self::ns()) return null;
 		return new self($fourcc);
@@ -171,7 +171,7 @@ class OIDplusFourCC extends OIDplusObject {
 	 * @param OIDplusObject|null $parent
 	 * @return string
 	 */
-	public function jsTreeNodeName(OIDplusObject $parent = null): string {
+	public function jsTreeNodeName(?OIDplusObject $parent=null): string {
 		if ($parent == null) return $this->objectTypeTitle();
 		return $this->crudShowId($parent);
 	}
@@ -272,7 +272,7 @@ class OIDplusFourCC extends OIDplusObject {
 	/**
 	 * @return OIDplusFourCC|null
 	 */
-	public function one_up()/*: ?OIDplusFourCC*/ {
+	public function one_up(): ?OIDplusFourCC {
 		// A FourCC is a FourCC, there is no hierarchy
 		return self::parse(self::ns().':');
 	}
@@ -281,7 +281,7 @@ class OIDplusFourCC extends OIDplusObject {
 	 * @param OIDplusObject|string $to
 	 * @return int|null
 	 */
-	public function distance($to) {
+	public function distance($to): ?int {
 		// Distance between FourCCs is not possible
 		return null;
 	}

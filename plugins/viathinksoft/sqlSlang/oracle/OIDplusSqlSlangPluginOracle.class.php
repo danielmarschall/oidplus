@@ -45,8 +45,9 @@ class OIDplusSqlSlangPluginOracle extends OIDplusSqlSlangPlugin {
 	 */
 	public function detect(OIDplusDatabaseConnection $db): bool {
 		try {
-			$vers = $db->query("SELECT banner FROM v\$version WHERE banner LIKE 'Oracle%'")->fetch_object()->banner;
-			return (stripos($vers, 'Oracle') !== false);
+			$vers = $db->query("SELECT banner FROM v\$version WHERE banner LIKE 'Oracle%'")->fetch_object();
+			if (!$vers) return false;
+			return (stripos($vers->banner, 'Oracle') !== false);
 		} catch (\Exception $e) {
 			return false;
 		}
@@ -70,6 +71,7 @@ class OIDplusSqlSlangPluginOracle extends OIDplusSqlSlangPlugin {
 		if (!isset($row['sequence_name'])) return 0;
 		$res = $db->query("select ".$row['sequence_name'].".currval from dual");
 		$row = $res->fetch_array();
+		if (!$row) return 0;
 		return (int)$row['CURRVAL'];
 	}
 

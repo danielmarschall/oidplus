@@ -70,7 +70,7 @@ class OIDplusQueryResultADO extends OIDplusQueryResult {
 	/**
 	 * @return array|null
 	 */
-	protected function do_fetch_array()/*: ?array*/ {
+	protected function do_fetch_array(): ?array {
 		if ($this->res->EOF) return null;
 
 		$ary = array();

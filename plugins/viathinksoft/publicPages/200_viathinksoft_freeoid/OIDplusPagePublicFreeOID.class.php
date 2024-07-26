@@ -30,7 +30,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 	 * @return string|null
 	 * @throws OIDplusException
 	 */
-	private static function getFreeRootOid(bool $with_ns)/*: ?string*/ {
+	private static function getFreeRootOid(bool $with_ns): ?string {
 		if (!in_array('ViaThinkSoft\OIDplus\OIDplusOid',OIDplus::getEnabledObjectTypes())) {
 			return null;
 		} else {
@@ -361,7 +361,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
+	public function tree(array &$json, ?string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (empty(self::getFreeRootOid(false))) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {

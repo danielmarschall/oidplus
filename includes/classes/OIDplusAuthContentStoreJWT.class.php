@@ -98,8 +98,9 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 
 	/**
 	 * @param int $gen
+	 * @return string
 	 */
-	private static function generatorName($gen) {
+	private static function generatorName(int $gen): string {
 		// Note: The strings are not translated, because the name is used in config keys or logs
 		if ($gen === self::JWT_GENERATOR_AJAX)   return 'Automated AJAX calls';
 		if ($gen === self::JWT_GENERATOR_REST)   return 'REST API';
@@ -114,7 +115,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public static function jwtBlacklist(int $gen, string $sub) {
+	public static function jwtBlacklist(int $gen, string $sub): void {
 		$cfg = self::jwtGetBlacklistConfigKey($gen, $sub);
 		$bl_time = time()-1;
 
@@ -152,7 +153,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	private static function jwtSecurityCheck(OIDplusAuthContentStoreJWT $contentProvider, int $validGenerators=null) {
+	private static function jwtSecurityCheck(OIDplusAuthContentStoreJWT $contentProvider, ?int $validGenerators=null): void {
 		// Check if the token is intended for us
 		// Note 'aud' is mandatory for OIDplus, so we do not check for exists()
 		if ($contentProvider->getValue('aud','') !== $contentProvider->getAudIss()) {
@@ -292,7 +293,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	 * @param mixed|null $default
 	 * @return mixed|null
 	 */
-	public function getValue(string $name, $default = NULL) {
+	public function getValue(string $name, $default=null) {
 		return $this->content[$name] ?? $default;
 	}
 
@@ -301,7 +302,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	 * @param mixed $value
 	 * @return void
 	 */
-	public function setValue(string $name, $value) {
+	public function setValue(string $name, $value): void {
 		$this->content[$name] = $value;
 	}
 
@@ -317,14 +318,14 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	 * @param string $name
 	 * @return void
 	 */
-	public function delete(string $name) {
+	public function delete(string $name): void {
 		unset($this->content[$name]);
 	}
 
 	/**
 	 * @return void
 	 */
-	public function activate() {
+	public function activate(): void {
 		// Send cookie at the end of the HTTP request, in case there are multiple activate() calls
 		OIDplus::register_shutdown_function(array($this,'activateNow'));
 	}
@@ -333,7 +334,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function activateNow() {
+	public function activateNow(): void {
 		$token = $this->getJWTToken();
 		$exp = $this->getValue('exp',0);
 		OIDplus::cookieUtils()->setcookie(self::COOKIE_NAME, $token, $exp, false);
@@ -343,7 +344,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function destroySession() {
+	public function destroySession(): void {
 		OIDplus::cookieUtils()->unsetcookie(self::COOKIE_NAME);
 	}
 
@@ -379,7 +380,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	 * @param string $email
 	 * @return void
 	 */
-	public function raLogin(string $email) {
+	public function raLogin(string $email): void {
 		if ($email == 'admin') return;
 
 		$list = $this->getValue(self::CLAIM_LOGIN_LIST, null);
@@ -427,7 +428,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function raLogout(string $email) {
+	public function raLogout(string $email): void {
 		if ($email == 'admin') return;
 
 		$gen = $this->getValue(self::CLAIM_GENERATOR, -1);
@@ -446,7 +447,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function raLogoutEx(string $email, string &$loginfo) {
+	public function raLogoutEx(string $email, string &$loginfo): void {
 		$this->raLogout($email);
 		$loginfo = 'from JWT session';
 	}
@@ -456,7 +457,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	/**
 	 * @return void
 	 */
-	public function adminLogin() {
+	public function adminLogin(): void {
 		$list = $this->getValue(self::CLAIM_LOGIN_LIST, null);
 		if (is_null($list)) $list = [];
 		if (!in_array('admin', $list)) $list[] = 'admin';
@@ -476,7 +477,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function adminLogout() {
+	public function adminLogout(): void {
 		$gen = $this->getValue(self::CLAIM_GENERATOR, -1);
 		if ($gen >= 0) self::jwtBlacklist($gen, 'admin');
 
@@ -492,7 +493,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function adminLogoutEx(string &$loginfo) {
+	public function adminLogoutEx(string &$loginfo): void {
 		$this->adminLogout();
 		$loginfo = 'from JWT session';
 	}
@@ -503,7 +504,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	 * @return OIDplusAuthContentStoreJWT|null
 	 * @throws OIDplusException
 	 */
-	public static function getActiveProvider()/*: ?OIDplusAuthContentStoreJWT*/ {
+	public static function getActiveProvider(): ?OIDplusAuthContentStoreJWT {
 		if (!self::$contentProvider) {
 
 			$tmp = null;
@@ -583,7 +584,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function raLoginEx(string $email, string &$loginfo) {
+	public function raLoginEx(string $email, string &$loginfo): void {
 		if (is_null(self::getActiveProvider())) {
 			$loginfo = 'into new JWT session';
 			self::$contentProvider = $this;
@@ -621,7 +622,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function adminLoginEx(string &$loginfo) {
+	public function adminLoginEx(string &$loginfo): void {
 		if (is_null(self::getActiveProvider())) {
 			$loginfo = 'into new JWT session';
 			self::$contentProvider = $this;
@@ -662,7 +663,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function loadJWT(string $jwt) {
+	public function loadJWT(string $jwt): void {
 		\Firebase\JWT\JWT::$leeway = 60; // leeway in seconds
 		$cls_content = null;
 		if (OIDplus::getPkiStatus()) {
@@ -675,7 +676,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 			$k = new \Firebase\JWT\Key($key, 'HS512'); // HMAC+SHA512 is hardcoded here
 			$cls_content = \Firebase\JWT\JWT::decode($jwt, $k);
 		}
-		$this->content = json_decode(json_encode($cls_content), true); // convert stdClass to array
+		$this->content = json_decode(json_encode($cls_content)?:'{}', true); // convert stdClass to array
 	}
 
 	/**

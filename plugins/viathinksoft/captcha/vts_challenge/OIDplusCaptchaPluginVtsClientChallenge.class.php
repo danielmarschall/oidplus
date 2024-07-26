@@ -120,7 +120,7 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 	 * @return string
 	 * @throws OIDplusException
 	 */
-	public function captchaGenerate(string $header_text=null, string $footer_text=null): string {
+	public function captchaGenerate(?string $header_text=null, ?string $footer_text=null): string {
 		return '<noscript>'.
 		       '<p><font color="red">'._L('You need to enable JavaScript to solve the CAPTCHA.').'</font></p>'.
 		       '</noscript>'.
@@ -136,7 +136,7 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function captchaVerify(array $params, string $fieldname=null) {
+	public function captchaVerify(array $params, ?string $fieldname=null) {
 
 		if (is_null($fieldname)) $fieldname = 'vts_validation_result';
 

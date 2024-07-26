@@ -35,7 +35,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @param string $node_id
 	 * @return OIDplusObject|null
 	 */
-	public static function parse(string $node_id)/*: ?OIDplusObject*/ {
+	public static function parse(string $node_id): ?OIDplusObject {
 		foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 			try {
 				$good = false;
@@ -172,7 +172,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	/**
 	 * @return OIDplusObjectTypePlugin|null
 	 */
-	public function getPlugin()/*: ?OIDplusObjectTypePlugin */ {
+	public function getPlugin(): ?OIDplusObjectTypePlugin {
 		$plugins = OIDplus::getObjectTypePlugins();
 		foreach ($plugins as $plugin) {
 			if (get_class($this) == $plugin::getObjectTypeClassName()) {
@@ -205,7 +205,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 
 	/**
 	 * @param string $str
-	 * @return string mixed
+	 * @return string
 	 * @throws OIDplusException
 	 */
 	public abstract function addString(string $str): string;
@@ -234,7 +234,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @param OIDplusObject|null $parent
 	 * @return string
 	 */
-	public abstract function jsTreeNodeName(OIDplusObject $parent = null): string;
+	public abstract function jsTreeNodeName(?OIDplusObject $parent=null): string;
 
 	/**
 	 * @return string
@@ -260,7 +260,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public static function getRaRoots($ra=null) : array{
+	public static function getRaRoots(/*OIDplusRA|string|null*/ $ra=null) : array{
 		if ($ra instanceof OIDplusRA) $ra = $ra->raEmail();
 
 		$out = array();
@@ -456,7 +456,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @return OIDplusRA|null
 	 * @throws OIDplusException
 	 */
-	public function getRa()/*: ?OIDplusRA*/ {
+	public function getRa(): ?OIDplusRA {
 		$ra = $this->getRaMail();
 		return $ra ? new OIDplusRA($ra) : null;
 	}
@@ -467,7 +467,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public function userHasReadRights($ra=null): bool {
+	public function userHasReadRights(/*OIDplusRA|string|null*/ $ra=null): bool {
 		if ($ra instanceof OIDplusRA) $ra = $ra->raEmail();
 
 		// If it is not confidential, everybody can read/see it.
@@ -502,7 +502,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @return string|null
 	 * @throws OIDplusException
 	 */
-	public function getIcon(array $row=null) {
+	public function getIcon(?array $row=null) {
 		$namespace = $this->ns(); // must use $this, not self::, otherwise the virtual method will not be called
 
 		if (is_null($row)) {
@@ -566,7 +566,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @return OIDplusObject|null
 	 * @throws OIDplusException
 	 */
-	public function getParent()/*: ?OIDplusObject*/ {
+	public function getParent(): ?OIDplusObject {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select parent from ###objects where id = ?", array($this->nodeId()));
 			if ($res->any()) {
@@ -718,7 +718,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	public function userHasParentalWriteRights($ra=null): bool {
+	public function userHasParentalWriteRights(/*OIDplusRA|string|null*/ $ra=null): bool {
 		if ($ra instanceof OIDplusRA) $ra = $ra->raEmail();
 
 		if (!$ra) {
@@ -735,7 +735,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	public function userHasWriteRights($ra=null): bool {
+	public function userHasWriteRights(/*OIDplusRA|string|null*/ $ra=null): bool {
 		if ($ra instanceof OIDplusRA) $ra = $ra->raEmail();
 
 		if (!$ra) {
@@ -752,7 +752,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @param string|OIDplusObject $to
 	 * @return int|null
 	 */
-	public function distance($to)/*: ?int*/ {
+	public function distance($to): ?int {
 		return null; // not implemented
 	}
 
@@ -810,7 +810,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	/**
 	 * @return OIDplusObject|null
 	 */
-	public function one_up()/*: ?OIDplusObject*/ {
+	public function one_up(): ?OIDplusObject {
 		return null; // not implemented
 	}
 

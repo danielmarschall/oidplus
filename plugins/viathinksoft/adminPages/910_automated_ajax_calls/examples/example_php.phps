@@ -29,7 +29,7 @@ if (!($res = @curl_exec($ch))) {
 }
 curl_close($ch);
 
-$json = json_decode($res, true);
+$json = json_decode("$res", true);
 
 if (!$json) {
 	die("Invalid JSON data $res");

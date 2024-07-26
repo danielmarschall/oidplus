@@ -117,7 +117,7 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public function tree_populate(string $parent, $goto_path=null): array {
+	public function tree_populate(string $parent, /*array|true|null*/ $goto_path=null): array {
 		$children = array();
 
 		$parentObj = OIDplusObject::parse($parent);

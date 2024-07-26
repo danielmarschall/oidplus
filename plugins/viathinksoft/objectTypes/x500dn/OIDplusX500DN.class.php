@@ -41,7 +41,7 @@ class OIDplusX500DN extends OIDplusObject {
 	 * @param string $node_id
 	 * @return OIDplusX500DN|null
 	 */
-	public static function parse(string $node_id)/*: ?OIDplusX500DN*/ {
+	public static function parse(string $node_id): ?OIDplusX500DN {
 		@list($namespace, $identifier) = explode_with_escaping(':', $node_id, 2);
 		if ($namespace !== self::ns()) return null;
 		return new self($identifier);
@@ -583,7 +583,7 @@ class OIDplusX500DN extends OIDplusObject {
 	 * @param OIDplusObject|null $parent
 	 * @return string
 	 */
-	public function jsTreeNodeName(OIDplusObject $parent = null): string {
+	public function jsTreeNodeName(?OIDplusObject $parent=null): string {
 		if ($parent == null) return $this->objectTypeTitle();
 		if ($parent->isRoot()) {
 			return substr($this->nodeId(), strlen($parent->nodeId()));
@@ -749,7 +749,7 @@ class OIDplusX500DN extends OIDplusObject {
 	/**
 	 * @return OIDplusX500DN|null
 	 */
-	public function one_up()/*: ?OIDplusX500DN*/ {
+	public function one_up(): ?OIDplusX500DN {
 		$oid = $this->identifier;
 
 		$p = strrpos($oid, '/');
@@ -765,7 +765,7 @@ class OIDplusX500DN extends OIDplusObject {
 	 * @param OIDplusObject|string $to
 	 * @return int|null
 	 */
-	public function distance($to) {
+	public function distance($to): ?int {
 		if (!is_object($to)) $to = OIDplusObject::parse($to);
 		if (!$to) return null;
 		if (!($to instanceof $this)) return null;

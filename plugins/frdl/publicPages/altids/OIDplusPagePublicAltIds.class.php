@@ -300,7 +300,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 	 * @param string $req_goto
 	 * @return bool
 	 */
-	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
+	public function tree(array &$json, ?string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		return false;
 	}
 
@@ -422,7 +422,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 	 * @return array
 	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
 	 */
-	public function getNotifications(string $user=null): array {
+	public function getNotifications(?string $user=null): array {
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			if (!$this->db_table_exists) {

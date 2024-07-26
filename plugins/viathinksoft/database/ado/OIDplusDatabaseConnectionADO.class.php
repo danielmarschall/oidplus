@@ -42,7 +42,7 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 	 * @throws OIDplusException
 	 * @throws OIDplusSQLException
 	 */
-	protected function doQueryPrepareEmulation(string $sql, array $prepared_args=null): OIDplusQueryResultADO {
+	protected function doQueryPrepareEmulation(string $sql, ?array $prepared_args=null): OIDplusQueryResultADO {
 		$dummy = find_nonexisting_substr($sql);
 		$sql = str_replace('?', $dummy, $sql);
 		foreach ($prepared_args as $arg) {
@@ -94,7 +94,7 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 	 * @return OIDplusQueryResultADO
 	 * @throws OIDplusException
 	 */
-	public function doQuery(string $sql, array $prepared_args=null): OIDplusQueryResult {
+	public function doQuery(string $sql, ?array $prepared_args=null): OIDplusQueryResult {
 		$this->last_error = null;
 		if (is_null($prepared_args)) {
 			try {

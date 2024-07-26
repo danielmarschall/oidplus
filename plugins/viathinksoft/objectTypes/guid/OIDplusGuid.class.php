@@ -44,7 +44,7 @@ class OIDplusGuid extends OIDplusObject {
 	 * @param string $node_id
 	 * @return OIDplusGuid|null
 	 */
-	public static function parse(string $node_id)/*: ?OIDplusGuid*/ {
+	public static function parse(string $node_id): ?OIDplusGuid {
 		@list($namespace, $guid) = explode(':', $node_id, 2);
 		if ($namespace !== self::ns()) return null;
 		return new self($guid);
@@ -132,7 +132,7 @@ class OIDplusGuid extends OIDplusObject {
 	 * @param OIDplusObject|null $parent
 	 * @return string
 	 */
-	public function jsTreeNodeName(OIDplusObject $parent = null): string {
+	public function jsTreeNodeName(?OIDplusObject $parent=null): string {
 		if ($parent == null) return $this->objectTypeTitle();
 		return $this->crudShowId($parent);
 	}
@@ -256,7 +256,7 @@ class OIDplusGuid extends OIDplusObject {
 	/**
 	 * @return OIDplusGuid|null
 	 */
-	public function one_up()/*: ?OIDplusGuid*/ {
+	public function one_up(): ?OIDplusGuid {
 		// A GUID is a GUID, there is no hierarchy
 		return self::parse(self::ns().':');
 	}
@@ -265,7 +265,7 @@ class OIDplusGuid extends OIDplusObject {
 	 * @param OIDplusObject|string $to
 	 * @return int|null
 	 */
-	public function distance($to) {
+	public function distance($to): ?int {
 		// Distance between GUIDs is not possible
 		return null;
 	}

@@ -92,7 +92,7 @@ class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 
 			$out['text'] .= '<p>'._L('You can make automated calls to your OIDplus account by calling the AJAX API.').'</p>';
 			$out['text'] .= '<p>'._L('The URL for the AJAX script is:').'</p>';
-			$out['text'] .= '<p><b>'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'ajax.php</b></p>';
+			$out['text'] .= '<p><b>'.(OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL)?:'.../').'ajax.php</b></p>';
 			$out['text'] .= '<p>'._L('You must at least provide following fields:').'</p>';
 			$out['text'] .= '<p><pre id="oidplus_auth_jwt">';
 			$out['text'] .= htmlentities(OIDplusAuthContentStoreJWT::COOKIE_NAME).' = "'.htmlentities($token).'"'."\n";
@@ -111,33 +111,41 @@ class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 			}
 			$out['text'] .= '<button type="button" name="btn_blacklist_jwt" id="btn_blacklist_jwt" class="btn btn-danger btn-xs" onclick="OIDplusPageAdminAutomatedAJAXCalls.blacklistJWT()">'._L('Blacklist all previously generated tokens').'</button>';
 
-			$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using JavaScript').'</h2>';
 			$cont = file_get_contents(__DIR__.'/examples/example_js.html');
-			$cont = str_replace('<url>', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'ajax.php', $cont);
-			$cont = str_replace('<token>', $token, $cont);
-			$out['text'] .= '<pre id="example_js">'.htmlentities($cont).'</pre>';
-			$out['text'] .= '<p><input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(example_js)"></p>';
+			if ($cont) {
+				$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using JavaScript').'</h2>';
+				$cont = str_replace('<url>', (OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL)?:'.../').'ajax.php', $cont);
+				$cont = str_replace('<token>', $token, $cont);
+				$out['text'] .= '<pre id="example_js">'.htmlentities($cont).'</pre>';
+				$out['text'] .= '<p><input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(example_js)"></p>';
+			}
 
-			$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using PHP (located at a foreign server)').'</h2>';
 			$cont = file_get_contents(__DIR__.'/examples/example_php.phps');
-			$cont = str_replace('<url>', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'ajax.php', $cont);
-			$cont = str_replace('<token>', $token, $cont);
-			$out['text'] .= '<pre id="example_php">'.preg_replace("@<br.*>@ismU","",highlight_string($cont,true)).'</pre>';
-			$out['text'] .= '<p><input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(example_php)"></p>';
+			if ($cont) {
+				$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using PHP (located at a foreign server)').'</h2>';
+				$cont = str_replace('<url>', (OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL)?:'.../').'ajax.php', $cont);
+				$cont = str_replace('<token>', $token, $cont);
+				$out['text'] .= '<pre id="example_php">'.preg_replace("@<br.*>@ismU","",highlight_string($cont,true)).'</pre>';
+				$out['text'] .= '<p><input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(example_php)"></p>';
+			}
 
-			$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using Python').'</h2>';
 			$cont = file_get_contents(__DIR__.'/examples/example_python.py');
-			$cont = str_replace('<url>', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'ajax.php', $cont);
-			$cont = str_replace('<token>', $token, $cont);
-			$out['text'] .= '<pre id="example_python">'.htmlentities($cont).'</pre>';
-			$out['text'] .= '<p><input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(example_python)"></p>';
+			if ($cont) {
+				$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using Python').'</h2>';
+				$cont = str_replace('<url>', (OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL)?:'.../').'ajax.php', $cont);
+				$cont = str_replace('<token>', $token, $cont);
+				$out['text'] .= '<pre id="example_python">'.htmlentities($cont).'</pre>';
+				$out['text'] .= '<p><input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(example_python)"></p>';
+			}
 
-			$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using VBScript').'</h2>';
 			$cont = file_get_contents(__DIR__.'/examples/example_vbs.vbs');
-			$cont = str_replace('<url>', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'ajax.php', $cont);
-			$cont = str_replace('<token>', $token, $cont);
-			$out['text'] .= '<pre id="example_vbs">'.htmlentities($cont).'</pre>';
-			$out['text'] .= '<p><input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(example_vbs)"></p>';
+			if ($cont) {
+				$out['text'] .= '<h2>'._L('Example for adding OID 2.999.123 using VBScript').'</h2>';
+				$cont = str_replace('<url>', (OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL)?:'.../').'ajax.php', $cont);
+				$cont = str_replace('<token>', $token, $cont);
+				$out['text'] .= '<pre id="example_vbs">'.htmlentities($cont).'</pre>';
+				$out['text'] .= '<p><input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(example_vbs)"></p>';
+			}
 		}
 	}
 
@@ -149,7 +157,7 @@ class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
+	public function tree(array &$json, ?string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {

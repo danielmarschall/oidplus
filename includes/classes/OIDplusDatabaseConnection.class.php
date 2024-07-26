@@ -55,7 +55,7 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	 * @return OIDplusQueryResult
 	 * @throws OIDplusException
 	 */
-	protected abstract function doQuery(string $sql, array $prepared_args=null): OIDplusQueryResult;
+	protected abstract function doQuery(string $sql, ?array $prepared_args=null): OIDplusQueryResult;
 
 	/**
 	 * @return string
@@ -100,7 +100,7 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	/**
 	 * @return OIDplusDatabasePlugin|null
 	 */
-	public function getPlugin()/*: ?OIDplusDatabasePlugin*/ {
+	public function getPlugin(): ?OIDplusDatabasePlugin {
 		$plugins = OIDplus::getDatabasePlugins();
 		foreach ($plugins as $plugin) {
 			if (get_class($this) == get_class($plugin::newConnection())) {
@@ -175,7 +175,7 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	 * @return OIDplusQueryResult
 	 * @throws OIDplusException
 	 */
-	public final function query(string $sql, array $prepared_args=null): OIDplusQueryResult {
+	public final function query(string $sql, ?array $prepared_args=null): OIDplusQueryResult {
 
 		$query_logfile = OIDplus::baseConfig()->getValue('QUERY_LOGFILE', '');
 		if (!empty($query_logfile)) {
@@ -360,7 +360,7 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	protected function doGetSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
+	protected function doGetSlang(bool $mustExist=true): ?OIDplusSqlSlangPlugin {
 		$res = null;
 
 		if (OIDplus::baseConfig()->exists('FORCE_DBMS_SLANG')) {
@@ -405,7 +405,7 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public final function getSlang(bool $mustExist=true)/*: ?OIDplusSqlSlangPlugin*/ {
+	public final function getSlang(bool $mustExist=true): ?OIDplusSqlSlangPlugin {
 		if ($this->slangDetectionDone) {
 			return $this->slangCache;
 		}

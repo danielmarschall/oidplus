@@ -33,7 +33,8 @@ if (file_exists($BASECONFIG_FILE_OLD)) $existing_config = $BASECONFIG_FILE_OLD;
 if (file_exists($BASECONFIG_FILE_NEW)) $existing_config = $BASECONFIG_FILE_NEW;
 $already_setup = $existing_config != '';
 if ($existing_config == '') $existing_config = $BASECONFIG_FILE_NEW;
-$existing_config = substr($existing_config, strlen(OIDplus::localpath(NULL))); // "censor" the system local path
+$lp = OIDplus::localpath(NULL);
+if ($lp) $existing_config = substr($existing_config, strlen($lp)); // "censor" the system local path
 
 OIDplus::handleLangArgument();
 
@@ -169,7 +170,7 @@ echo '</select></p>';
 
 echo '<h3>'._L('Public URL of this system (Canonical URL)').'</h3>';
 
-echo '<p><input id="canonical_url" type="text" value="'.htmlentities(OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL)).'" onkeypress="rebuild()" onkeyup="rebuild()"></p>';
+echo '<p><input id="canonical_url" type="text" value="'.htmlentities(OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL)?:'').'" onkeypress="rebuild()" onkeyup="rebuild()"></p>';
 
 // ----------------------------------------
 

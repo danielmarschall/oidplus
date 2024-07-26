@@ -41,7 +41,7 @@ class OIDplusGs1 extends OIDplusObject {
 	 * @param string $node_id
 	 * @return OIDplusGs1|null
 	 */
-	public static function parse(string $node_id)/*: ?OIDplusGs1*/ {
+	public static function parse(string $node_id): ?OIDplusGs1 {
 		@list($namespace, $number) = explode(':', $node_id, 2);
 		if ($namespace !== self::ns()) return null;
 		return new self($number);
@@ -125,7 +125,7 @@ class OIDplusGs1 extends OIDplusObject {
 	 * @param OIDplusObject|null $parent
 	 * @return string
 	 */
-	public function jsTreeNodeName(OIDplusObject $parent = null): string {
+	public function jsTreeNodeName(?OIDplusObject $parent=null): string {
 		if ($parent == null) return $this->objectTypeTitle();
 		return substr($this->nodeId(), strlen($parent->nodeId()));
 	}
@@ -306,20 +306,20 @@ class OIDplusGs1 extends OIDplusObject {
 	/**
 	 * @return OIDplusGs1|null
 	 */
-	public function one_up()/*: ?OIDplusGs1*/ {
+	public function one_up(): ?OIDplusGs1 {
 		return self::parse($this->ns().':'.substr($this->number,0,strlen($this->number)-1));
 	}
 
 	/**
 	 * @param string $a
 	 * @param string $b
-	 * @return false|int
+	 * @return null|int
 	 */
-	private static function distance_(string $a, string $b) {
+	private static function distance_(string $a, string $b): ?int {
 		$min_len = min(strlen($a), strlen($b));
 
 		for ($i=0; $i<$min_len; $i++) {
-			if ($a[$i] != $b[$i]) return false;
+			if ($a[$i] != $b[$i]) return null;
 		}
 
 		return strlen($a) - strlen($b);
@@ -329,7 +329,7 @@ class OIDplusGs1 extends OIDplusObject {
 	 * @param OIDplusObject|string $to
 	 * @return int|null
 	 */
-	public function distance($to) {
+	public function distance($to): ?int {
 		if (!is_object($to)) $to = OIDplusObject::parse($to);
 		if (!$to) return null;
 		if (!($to instanceof $this)) return null;
@@ -342,17 +342,17 @@ class OIDplusGs1 extends OIDplusObject {
 		$b = $this->number;
 		$a = $to->number;
 		$tmp = self::distance_($a, $b);
-		if ($tmp !== false) return $tmp;
+		if ($tmp !== null) return $tmp;
 
 		$b = $this->number.$this->checkDigit();
 		$a = $to->number;
 		$tmp = self::distance_($a, $b);
-		if ($tmp !== false) return $tmp;
+		if ($tmp !== null) return $tmp;
 
 		$b = $this->number;
 		$a = $to->number.$to->checkDigit();
 		$tmp = self::distance_($a, $b);
-		if ($tmp !== false) return $tmp;
+		if ($tmp !== null) return $tmp;
 
 		return null;
 	}

@@ -55,9 +55,9 @@ class OIDInfoAPI {
 	// "1" = OID is not an illegal OID, and none of its ascendant is a leaf and its parent OID is not frozen
 	private const PING_IDX_MAY_CREATE = 1;
 
-	private const SOFT_CORRECT_BEHAVIOR_NONE = 0;
-	private const SOFT_CORRECT_BEHAVIOR_LOWERCASE_BEGINNING = 1;
-	private const SOFT_CORRECT_BEHAVIOR_ALL_POSSIBLE = 2;
+	public const SOFT_CORRECT_BEHAVIOR_NONE = 0;
+	public const SOFT_CORRECT_BEHAVIOR_LOWERCASE_BEGINNING = 1;
+	public const SOFT_CORRECT_BEHAVIOR_ALL_POSSIBLE = 2;
 
 	public const DEFAULT_ILLEGALITY_RULE_FILE = __DIR__ . '/oid_illegality_rules';
 

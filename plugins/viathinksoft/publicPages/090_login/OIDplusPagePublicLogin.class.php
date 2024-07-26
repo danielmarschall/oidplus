@@ -292,7 +292,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
+	public function tree(array &$json, ?string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		$loginChildren = array();
 
 		if (OIDplus::authUtils()->isAdminLoggedIn()) {

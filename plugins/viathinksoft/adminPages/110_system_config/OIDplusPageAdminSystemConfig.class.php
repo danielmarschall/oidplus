@@ -46,6 +46,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 			throw new OIDplusException(_L('Setting does not exist'));
 		}
 		$row = $res->fetch_array();
+		assert(!is_null($row));
 		if (($row['protected'] == 1) || ($row['visible'] == 0)) {
 			throw new OIDplusException(_L("Setting %1 is read-only",$name));
 		}
@@ -112,7 +113,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 
 			OIDplus::config(); // <-- make sure that the config table is loaded/filled correctly before we do a select
 
-			$result = OIDplus::db()->query("select * from ###config where visible = ? order by name", array(true));
+			$result = OIDplus::db()->query("select name, description, protected, value from ###config where visible = ? order by name", array(true));
 			while ($row = $result->fetch_object()) {
 				$output .= '<tr>';
 				$output .= '     <td>'.htmlentities($row->name??'').'</td>';
@@ -156,7 +157,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
+	public function tree(array &$json, ?string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {

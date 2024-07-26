@@ -77,7 +77,7 @@ class OIDplusQueryResultMySQLNoNativeDriver extends OIDplusQueryResult {
 	/**
 	 * @return array|null
 	 */
-	protected function do_fetch_array()/*: ?array*/ {
+	protected function do_fetch_array(): ?array {
 		// https://stackoverflow.com/questions/10752815/mysqli-get-result-alternative , modified
 		$stmt = $this->stmt;
 		//$this->stmt->store_result();

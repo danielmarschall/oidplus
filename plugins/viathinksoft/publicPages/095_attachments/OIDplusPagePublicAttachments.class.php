@@ -125,7 +125,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	 * @return string
 	 * @throws OIDplusException
 	 */
-	public static function getUploadDir(string $id=null): string {
+	public static function getUploadDir(?string $id=null): string {
 		$basepath = self::getUploadBaseDir();
 
 		try {
@@ -389,7 +389,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	 * @param string $req_goto
 	 * @return bool
 	 */
-	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
+	public function tree(array &$json, ?string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		return false;
 	}
 
@@ -642,7 +642,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	 * @param string|null $user
 	 * @return array  returns array of array($severity, $htmlMessage)
 	 */
-	public function getNotifications(string $user=null): array {
+	public function getNotifications(?string $user=null): array {
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			$error = '';

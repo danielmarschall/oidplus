@@ -70,9 +70,9 @@ class OIDplusQueryResultPgSql extends OIDplusQueryResult {
 	}
 
 	/**
-	 * @return array|false|null
+	 * @return array|null
 	 */
-	protected function do_fetch_array()/*: ?array*/ {
+	protected function do_fetch_array(): ?array {
 		$ret = pg_fetch_array($this->res, null, PGSQL_ASSOC);
 		if ($ret === false) $ret = null;
 		if (!is_null($ret)) {
@@ -87,9 +87,9 @@ class OIDplusQueryResultPgSql extends OIDplusQueryResult {
 	}
 
 	/**
-	 * @return false|object|null
+	 * @return \stdClass|null
 	 */
-	protected function do_fetch_object()/*: ?object*/ {
+	protected function do_fetch_object(): ?\stdClass {
 		$ret = pg_fetch_object($this->res);
 		if ($ret === false) $ret = null;
 		if (!is_null($ret)) {

@@ -361,8 +361,8 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 
 								if (!empty($row->title)) {
 									$tmp_description = $row->title;
-									$tmp_information = $row->description;/** @phpstan-ignore-line */
-									if (trim($row->title) == trim(strip_tags($row->description))) {/** @phpstan-ignore-line */
+									$tmp_information = $row->description;
+									if (trim($row->title) == trim(strip_tags($row->description))) {
 										$tmp_information = '';
 									}
 								} else if (isset($asn1_ids[0])) {
@@ -683,7 +683,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
+	public function tree(array &$json, ?string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		if (!OIDplus::authUtils()->isAdminLoggedIn()) return false;
 
 		if (file_exists(__DIR__.'/img/main_icon16.png')) {
@@ -1167,7 +1167,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 	 * @return array
 	 * @throws OIDplusException
 	 */
-	public function getNotifications(string $user=null): array {
+	public function getNotifications(?string $user=null): array {
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			if (!url_post_contents_available(true, $reason)) {

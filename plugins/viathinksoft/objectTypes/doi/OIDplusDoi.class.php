@@ -41,7 +41,7 @@ class OIDplusDoi extends OIDplusObject {
 	 * @param string $node_id
 	 * @return OIDplusDoi|null
 	 */
-	public static function parse(string $node_id)/*: ?OIDplusDoi*/ {
+	public static function parse(string $node_id): ?OIDplusDoi {
 		@list($namespace, $doi) = explode(':', $node_id, 2);
 		if ($namespace !== self::ns()) return null;
 		return new self($doi);
@@ -132,7 +132,7 @@ class OIDplusDoi extends OIDplusObject {
 	 * @param OIDplusObject|null $parent
 	 * @return string
 	 */
-	public function jsTreeNodeName(OIDplusObject $parent = null): string {
+	public function jsTreeNodeName(?OIDplusObject $parent=null): string {
 		if ($parent == null) return $this->objectTypeTitle();
 		$out = $this->doi;
 		$ary = explode('/', $out, 2);
@@ -220,7 +220,7 @@ class OIDplusDoi extends OIDplusObject {
 	/**
 	 * @return OIDplusDoi|null
 	 */
-	public function one_up()/*: ?OIDplusDoi*/ {
+	public function one_up(): ?OIDplusDoi {
 		$oid = $this->doi;
 
 		$p = strrpos($oid, '/');
@@ -236,7 +236,7 @@ class OIDplusDoi extends OIDplusObject {
 	 * @param OIDplusObject|string $to
 	 * @return int|null
 	 */
-	public function distance($to) {
+	public function distance($to): ?int {
 		if (!is_object($to)) $to = OIDplusObject::parse($to);
 		if (!$to) return null;
 		if (!($to instanceof $this)) return null;

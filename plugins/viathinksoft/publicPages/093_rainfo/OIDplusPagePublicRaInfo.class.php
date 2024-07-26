@@ -170,7 +170,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 	 * @param string $req_goto
 	 * @return bool
 	 */
-	public function tree(array &$json, string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
+	public function tree(array &$json, ?string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
 		return false;
 	}
 
@@ -180,7 +180,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 	 * @return string
 	 * @throws OIDplusException
 	 */
-	public static function showRAInfo(/*?string*/ $email, OIDplusObject $oid=null): string {
+	public static function showRAInfo(?string $email, OIDplusObject $oid=null): string {
 		$out = '';
 
 		if (empty($email)) {
