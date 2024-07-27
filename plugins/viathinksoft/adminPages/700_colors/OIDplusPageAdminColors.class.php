@@ -39,7 +39,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function htmlHeaderUpdate(array &$head_elems) {
+	public function htmlHeaderUpdate(array &$head_elems): void {
 		foreach ($head_elems as &$line) {
 			if (strpos($line,'oidplus.min.css.php') !== false) {
 				$add_css_args = array();
@@ -118,7 +118,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 		OIDplus::config()->prepareConfigKey('color_hue_shift', 'HSV Hue shift of CSS colors (-360..360)', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < -360) || ($value > 360)) {
 				throw new OIDplusException(_L('Please enter a valid value.'));
@@ -162,7 +162,7 @@ class OIDplusPageAdminColors extends OIDplusPagePluginAdmin
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		if ($id === 'oidplus:colors') {
 			$handled = true;
 			$out['title'] = _L('Design');

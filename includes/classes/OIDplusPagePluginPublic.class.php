@@ -29,6 +29,6 @@ abstract class OIDplusPagePluginPublic extends OIDplusPagePlugin {
 	 * @param string[] $out
 	 * @return void
 	 */
-	public function publicSitemap(array &$out) {}
+	public function publicSitemap(array &$out): void {}
 
 }

@@ -124,7 +124,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 		OIDplus::config()->prepareConfigKey('max_ra_invite_time', 'Max RA invite time in seconds (0 = infinite)', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
 				throw new OIDplusException(_L('Please enter a valid value.'));
@@ -144,7 +144,7 @@ class OIDplusPageRaInvite extends OIDplusPagePluginRa {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		if (explode('$',$id)[0] == 'oidplus:invite_ra') {
 			$handled = true;
 

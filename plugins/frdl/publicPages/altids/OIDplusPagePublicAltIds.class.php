@@ -122,7 +122,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 	 * @throws \ViaThinkSoft\OIDplus\Core\OIDplusConfigInitializationException
 	 * @throws \ViaThinkSoft\OIDplus\Core\OIDplusException
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 		if (!OIDplus::db()->tableExists("###altids")) {
 			if (OIDplus::db()->getSlang()->id() == 'mysql') {
 				OIDplus::db()->query("CREATE TABLE ###altids ( `origin` varchar(255) NOT NULL, `alternative` varchar(255) NOT NULL, UNIQUE KEY (`origin`, `alternative`)   )");
@@ -281,7 +281,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 	 * @param bool $handled
 	 * @return void
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		// $this->saveAltIdsForQuery($id);
 	}
 
@@ -289,7 +289,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 	 * @param array $out
 	 * @return void
 	 */
-	public function publicSitemap(array &$out) {
+	public function publicSitemap(array &$out): void {
 
 	}
 

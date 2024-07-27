@@ -40,7 +40,7 @@ class OIDplusAuthPluginArgon2 extends OIDplusAuthPlugin {
 	 * @param bool $html
 	 * @return void
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 		// TODO: Let the admin decide about the memory, iterations, and parallelism options
 	}
 

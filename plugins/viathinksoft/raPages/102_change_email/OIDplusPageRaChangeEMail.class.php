@@ -218,7 +218,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 		OIDplus::config()->prepareConfigKey('max_ra_email_change_time', 'Max RA email change time in seconds (0 = infinite)', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
 				throw new OIDplusException(_L('Please enter a valid value.'));
@@ -238,7 +238,7 @@ class OIDplusPageRaChangeEMail extends OIDplusPagePluginRa {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		if (explode('$',$id)[0] == 'oidplus:change_ra_email') {
 			$handled = true;
 

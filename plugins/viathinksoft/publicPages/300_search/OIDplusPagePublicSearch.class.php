@@ -35,7 +35,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 		OIDplus::config()->prepareConfigKey('search_min_term_length', 'Minimum length of a search term', '3', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
 				throw new OIDplusException(_L('Please enter a valid value.'));
@@ -202,7 +202,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		if (explode('$',$id)[0] == 'oidplus:search') {
 			$handled = true;
 
@@ -269,7 +269,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 	 * @param array $out
 	 * @return void
 	 */
-	public function publicSitemap(array &$out) {
+	public function publicSitemap(array &$out): void {
 		$out[] = 'oidplus:search';
 	}
 

@@ -106,7 +106,7 @@ class OIDplusPageRaChangePassword extends OIDplusPagePluginRa {
 	 * @param bool $html
 	 * @return void
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 		// Nothing
 	}
 
@@ -117,7 +117,7 @@ class OIDplusPageRaChangePassword extends OIDplusPagePluginRa {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		if (explode('$',$id)[0] == 'oidplus:change_ra_password') {
 			$handled = true;
 

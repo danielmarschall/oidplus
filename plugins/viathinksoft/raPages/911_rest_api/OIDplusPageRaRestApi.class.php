@@ -81,7 +81,7 @@ class OIDplusPageRaRestApi extends OIDplusPagePluginRa {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		$parts = explode('$',$id,3);
 		$ra_email = $parts[1] ?? '';
 		$subpage = $parts[2] ?? '';

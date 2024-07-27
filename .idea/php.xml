@@ -29,7 +29,6 @@
       <path value="$PROJECT_DIR$/vendor/vakata/jstree" />
       <path value="$PROJECT_DIR$/vendor/spamspan/spamspan" />
       <path value="$PROJECT_DIR$/vendor/danielmarschall/oidconverter" />
-      <path value="$PROJECT_DIR$/vendor/danielmarschall/php-sha3" />
       <path value="$PROJECT_DIR$/vendor/danielmarschall/vnag" />
       <path value="$PROJECT_DIR$/vendor/symfony/polyfill-mbstring" />
       <path value="$PROJECT_DIR$/vendor/danielmarschall/php_utils" />
@@ -46,7 +45,7 @@
       <path value="$PROJECT_DIR$/vendor/spomky-labs/php-punycode" />
     </include_path>
   </component>
-  <component name="PhpProjectSharedConfiguration" php_language_level="7.0" />
+  <component name="PhpProjectSharedConfiguration" php_language_level="7.4" />
   <component name="PhpStanOptionsConfiguration">
     <option name="autoload" value="D:\SVN\OIDplus\trunk\includes\oidplus.inc.php" />
     <option name="config" value="D:\SVN\OIDplus\trunk\phpstan.neon.dist" />

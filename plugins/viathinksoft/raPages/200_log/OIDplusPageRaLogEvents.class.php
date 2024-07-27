@@ -34,7 +34,7 @@ class OIDplusPageRaLogEvents extends OIDplusPagePluginRa {
 	 * @param bool $html
 	 * @return void
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 	}
 
 	/**
@@ -44,7 +44,7 @@ class OIDplusPageRaLogEvents extends OIDplusPagePluginRa {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		$parts = explode('$', $id);
 		if ($parts[0] == 'oidplus:ra_log') {
 			$ra_email = $parts[1] ?? null;

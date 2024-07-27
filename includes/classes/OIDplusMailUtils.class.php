@@ -157,7 +157,7 @@ class OIDplusMailUtils extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 * @throws OIDplusMailException
 	 */
-	public function sendMail(string $to, string $title, string $msg, string $cc='', string $bcc='') {
+	public function sendMail(string $to, string $title, string $msg, string $cc='', string $bcc=''): void {
 		$h = new \SecureMailer();
 
 		// DM 14.04.2022: Added Reply-To, because some servers might change the 'From' attribute (Anti-Spoof?)

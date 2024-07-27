@@ -37,7 +37,7 @@ class OIDplusLogTargetUser extends OIDplusLogTarget {
 	/**
 	 * @var string
 	 */
-	private $username;
+	private string $username;
 
 	/**
 	 * @return string
@@ -50,7 +50,7 @@ class OIDplusLogTargetUser extends OIDplusLogTarget {
 	 * @param string $username
 	 * @return void
 	 */
-	public function setUsername(string $username) {
+	public function setUsername(string $username): void {
 		$this->username = $username;
 	}
 

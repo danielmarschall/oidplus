@@ -36,7 +36,7 @@ class OIDplusPageRaObjectLog extends OIDplusPagePluginRa
 	 * @param bool $html
 	 * @return void
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 	}
 
 	/**
@@ -45,7 +45,7 @@ class OIDplusPageRaObjectLog extends OIDplusPagePluginRa
 	 * @param bool $handled
 	 * @return void
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 	}
 
 	/**

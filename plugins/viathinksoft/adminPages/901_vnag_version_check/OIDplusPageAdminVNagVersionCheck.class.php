@@ -37,7 +37,7 @@ class OIDplusPageAdminVNagVersionCheck extends OIDplusPagePluginAdmin {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 		OIDplus::config()->prepareConfigKey('vnag_version_check_password_protected', 'If set to 1 ("on"), the VNag version check is password protected', '1', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (($value != '0') && ($value != '1')) {
 				throw new OIDplusException(_L('Please enter either 0 ("off") or 1 ("on").'));
@@ -63,7 +63,7 @@ class OIDplusPageAdminVNagVersionCheck extends OIDplusPagePluginAdmin {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		if ($id == 'oidplus:vnag_version_check') {
 			@set_time_limit(0);
 

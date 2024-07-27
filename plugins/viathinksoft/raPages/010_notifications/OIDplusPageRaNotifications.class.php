@@ -33,7 +33,7 @@ class OIDplusPageRaNotifications extends OIDplusPagePluginRa {
 	 * @param bool $html
 	 * @return void
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 	}
 
 	/**

@@ -43,7 +43,7 @@ class OIDplusAuthPluginBCrypt extends OIDplusAuthPlugin {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 		// Note: Example #3 here https://www.php.net/manual/en/function.password-hash.php can help you with finding a good cost value
 		OIDplus::config()->prepareConfigKey('ra_bcrypt_cost', 'How complex should the BCrypt hash of RA passwords be? (Only for plugin A3_bcrypt; values 4-31, default 10)', '10', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (empty($value) || !is_numeric($value) || ($value<4) || ($value>31)) {

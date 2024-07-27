@@ -26,9 +26,9 @@ namespace ViaThinkSoft\OIDplus\Core;
 class OIDplusRA extends OIDplusBaseClass {
 
 	/**
-	 * @var string
+	 * @var ?string
 	 */
-	private $email = null;
+	private ?string $email;
 
 	/**
 	 * @param string $email
@@ -55,7 +55,7 @@ class OIDplusRA extends OIDplusBaseClass {
 
 	/**
 	 * @return string
-	 * @throws OIDplusException
+	 * @throws OIDplusException|\ReflectionException
 	 */
 	public function raName(): string {
 		$res = OIDplus::db()->query("select ra_name from ###ra where email = ?", array($this->email));
@@ -66,7 +66,7 @@ class OIDplusRA extends OIDplusBaseClass {
 
 	/**
 	 * @return OIDplusRA[]
-	 * @throws OIDplusException
+	 * @throws OIDplusException|\ReflectionException
 	 */
 	public static function getAllRAs(): array {
 		$out = array();
@@ -82,7 +82,7 @@ class OIDplusRA extends OIDplusBaseClass {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function change_password(string $new_password) {
+	public function change_password(string $new_password): void {
 		$authInfo = OIDplus::authUtils()->raGeneratePassword($new_password);
 		$calc_authkey = $authInfo->getAuthKey();
 		OIDplus::db()->query("update ###ra set authkey=? where email = ?", array($calc_authkey, $this->email));
@@ -93,7 +93,7 @@ class OIDplusRA extends OIDplusBaseClass {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function change_email(string $new_email) {
+	public function change_email(string $new_email): void {
 		OIDplus::db()->query("update ###ra set email = ? where email = ?", array($new_email, $this->email));
 	}
 
@@ -102,7 +102,7 @@ class OIDplusRA extends OIDplusBaseClass {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function register_ra(?string $new_password=null) {
+	public function register_ra(?string $new_password=null): void {
 		if (is_null($new_password)) {
 			// Invalid password (used for LDAP/OAuth)
 			$calc_authkey = '';
@@ -116,7 +116,7 @@ class OIDplusRA extends OIDplusBaseClass {
 
 	/**
 	 * @return OIDplusRAAuthInfo|null
-	 * @throws OIDplusException
+	 * @throws OIDplusException|\ReflectionException
 	 */
 	public function getAuthInfo(): ?OIDplusRAAuthInfo {
 		$ra_res = OIDplus::db()->query("select authkey from ###ra where email = ?", array($this->email));
@@ -139,7 +139,7 @@ class OIDplusRA extends OIDplusBaseClass {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function delete() {
+	public function delete(): void {
 		OIDplus::db()->query("delete from ###ra where email = ?", array($this->email));
 	}
 
@@ -148,13 +148,13 @@ class OIDplusRA extends OIDplusBaseClass {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function setRaName(string $ra_name) {
+	public function setRaName(string $ra_name): void {
 		OIDplus::db()->query("update ###ra set ra_name = ? where email = ?", array($ra_name, $this->email));
 	}
 
 	/**
 	 * @return bool|null
-	 * @throws OIDplusException
+	 * @throws OIDplusException|\ReflectionException
 	 */
 	public function isPasswordLess(): ?bool {
 		$authInfo = $this->getAuthInfo();

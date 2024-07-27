@@ -260,7 +260,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public static function getRaRoots(/*OIDplusRA|string|null*/ $ra=null) : array{
+	public static function getRaRoots(/*OIDplusRA|string|null*/ $ra=null) : array {
 		if ($ra instanceof OIDplusRA) $ra = $ra->raEmail();
 
 		$out = array();
@@ -502,7 +502,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @return string|null
 	 * @throws OIDplusException
 	 */
-	public function getIcon(?array $row=null) {
+	public function getIcon(?array $row=null): ?string {
 		$namespace = $this->ns(); // must use $this, not self::, otherwise the virtual method will not be called
 
 		if (is_null($row)) {
@@ -603,7 +603,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @return string|null
 	 * @throws OIDplusException
 	 */
-	public function getRaMail() {
+	public function getRaMail(): ?string {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select ra_email from ###objects where id = ?", array($this->nodeId()));
 			if (!$res->any()) return null;
@@ -622,7 +622,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @return string|null
 	 * @throws OIDplusException
 	 */
-	public function getTitle() {
+	public function getTitle(): ?string {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select title from ###objects where id = ?", array($this->nodeId()));
 			if (!$res->any()) return null;
@@ -641,7 +641,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @return string|null
 	 * @throws OIDplusException
 	 */
-	public function getDescription() {
+	public function getDescription(): ?string {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select description from ###objects where id = ?", array($this->nodeId()));
 			if (!$res->any()) return null;
@@ -660,7 +660,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @return string|null
 	 * @throws OIDplusException
 	 */
-	public function getComment() {
+	public function getComment(): ?string {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select comment from ###objects where id = ?", array($this->nodeId()));
 			if (!$res->any()) return null;
@@ -679,7 +679,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @return string|null
 	 * @throws OIDplusException
 	 */
-	public function getCreatedTime() {
+	public function getCreatedTime(): ?string {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select created from ###objects where id = ?", array($this->nodeId()));
 			if (!$res->any()) return null;
@@ -698,7 +698,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @return string|null
 	 * @throws OIDplusException
 	 */
-	public function getUpdatedTime() {
+	public function getUpdatedTime(): ?string {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select updated from ###objects where id = ?", array($this->nodeId()));
 			if (!$res->any()) return null;
@@ -752,7 +752,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @param string|OIDplusObject $to
 	 * @return int|null
 	 */
-	public function distance($to): ?int {
+	public function distance(/*string|OIDplusObject*/ $to): ?int {
 		return null; // not implemented
 	}
 
@@ -760,7 +760,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @param OIDplusObject|string $obj
 	 * @return bool
 	 */
-	public function equals($obj): bool {
+	public function equals(/*string|OIDplusObject*/ $obj): bool {
 		if (!$obj) return false;
 		if (!is_object($obj)) {
 			if ($this->nodeId(true) === $obj) return true; // simplest case
@@ -782,7 +782,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @return OIDplusObject|false
 	 * @throws OIDplusException
 	 */
-	public static function findFitting(string $search_id) {
+	public static function findFitting(string $search_id)/*: OIDplusObject|false*/ {
 		$obj = OIDplusObject::parse($search_id);
 		if (!$obj) return false; // e.g. if ObjectType plugin is disabled
 
@@ -816,30 +816,33 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 
 	// Caching stuff
 
-	protected static $object_info_cache = null;
+	/**
+	 * @var ?array
+	 */
+	protected static ?array $object_info_cache = null;
 
 	/**
 	 * @return void
 	 */
-	public static function resetObjectInformationCache() {
+	public static function resetObjectInformationCache(): void {
 		self::$object_info_cache = null;
 	}
 
-	const CACHE_ID = 'id';
-	const CACHE_PARENT = 'parent';
-	const CACHE_TITLE = 'title';
-	const CACHE_DESCRIPTION = 'description';
-	const CACHE_RA_EMAIL = 'ra_email';
-	const CACHE_CONFIDENTIAL = 'confidential';
-	const CACHE_CREATED = 'created';
-	const CACHE_UPDATED = 'updated';
-	const CACHE_COMMENT = 'comment';
+	private const CACHE_ID = 'id'; /*@phpstan-ignore-line*/
+	private const CACHE_PARENT = 'parent';
+	private const CACHE_TITLE = 'title';
+	private const CACHE_DESCRIPTION = 'description';
+	private const CACHE_RA_EMAIL = 'ra_email';
+	private const CACHE_CONFIDENTIAL = 'confidential';
+	private const CACHE_CREATED = 'created';
+	private const CACHE_UPDATED = 'updated';
+	private const CACHE_COMMENT = 'comment';
 
 	/**
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	private static function buildObjectInformationCache() {
+	private static function buildObjectInformationCache(): void {
 		if (is_null(self::$object_info_cache)) {
 			self::$object_info_cache = array();
 			$res = OIDplus::db()->query("select * from ###objects");

@@ -36,7 +36,7 @@ class OIDplusPageAdminOOBE extends OIDplusPagePluginAdmin {
 	 * @param bool $handled
 	 * @return void
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		// Nothing
 	}
 
@@ -64,7 +64,7 @@ class OIDplusPageAdminOOBE extends OIDplusPagePluginAdmin {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 		OIDplus::config()->delete('reg_wizard_done'); // deprecated name
 		OIDplus::config()->prepareConfigKey('oobe_main_done', '"Out Of Box Experience" wizard for the system settings done once?', '0', OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
 

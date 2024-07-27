@@ -55,7 +55,7 @@ abstract class OIDplusCaptchaPlugin extends OIDplusPlugin {
 	 * @param string|null $fieldname
 	 * @return void
 	 */
-	public abstract function captchaVerify(array $params, ?string $fieldname=null);
+	public abstract function captchaVerify(array $params, ?string $fieldname=null): void;
 
 	/**
 	 * @return string

@@ -30,7 +30,7 @@ class OIDplusCookieUtils extends OIDplusBaseClass {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function unsetcookie(string $name) {
+	public function unsetcookie(string $name): void {
 		$this->setcookie($name, '', time()-9999, true);
 	}
 
@@ -98,7 +98,7 @@ class OIDplusCookieUtils extends OIDplusBaseClass {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function setcookie(string $name, string $value, int $expires=0, bool $allowJS=false, ?string $samesite=null, bool $forceInsecure=false) {
+	public function setcookie(string $name, string $value, int $expires=0, bool $allowJS=false, ?string $samesite=null, bool $forceInsecure=false): void {
 		$domain = $this->getCookieDomain();
 		$path = $this->getCookiePath();
 		$secure = !$forceInsecure && OIDplus::isSSL();

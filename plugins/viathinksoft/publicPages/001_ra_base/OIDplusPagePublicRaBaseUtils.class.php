@@ -81,7 +81,7 @@ class OIDplusPagePublicRaBaseUtils extends OIDplusPagePluginPublic {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 		// Will be used by: plugins admin-130, public-091, public-200, ra-092, ra-101
 		OIDplus::config()->prepareConfigKey('ra_min_password_length', 'Minimum length for RA passwords', '6', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 1)) {
@@ -96,14 +96,14 @@ class OIDplusPagePublicRaBaseUtils extends OIDplusPagePluginPublic {
 	 * @param bool $handled
 	 * @return void
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 	}
 
 	/**
 	 * @param array $out
 	 * @return void
 	 */
-	public function publicSitemap(array &$out) {
+	public function publicSitemap(array &$out): void {
 	}
 
 	/**

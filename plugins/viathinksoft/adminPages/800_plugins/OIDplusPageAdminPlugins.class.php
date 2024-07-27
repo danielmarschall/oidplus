@@ -46,7 +46,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 	 * @param bool $html
 	 * @return void
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 	}
 
 	/**
@@ -98,7 +98,7 @@ class OIDplusPageAdminPlugins extends OIDplusPagePluginAdmin {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		$tmp = explode('$',$id,2);
 		$classname = $tmp[1] ?? null;
 

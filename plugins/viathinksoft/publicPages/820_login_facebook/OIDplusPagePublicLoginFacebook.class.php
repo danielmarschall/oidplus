@@ -49,7 +49,7 @@ class OIDplusPagePublicLoginFacebook extends OIDplusPagePluginPublic
 	 * @param bool $html
 	 * @return void
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 		// Nothing
 	}
 
@@ -60,7 +60,7 @@ class OIDplusPagePublicLoginFacebook extends OIDplusPagePluginPublic
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		if ($id === 'oidplus:login_facebook') {
 			$handled = true;
 			$out['title'] = _L('Login using Facebook');
@@ -93,7 +93,7 @@ class OIDplusPagePublicLoginFacebook extends OIDplusPagePluginPublic
 	 * @param array $out
 	 * @return void
 	 */
-	public function publicSitemap(array &$out) {
+	public function publicSitemap(array &$out): void {
 		$out[] = 'oidplus:login_facebook';
 	}
 

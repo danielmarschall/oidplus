@@ -38,7 +38,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 		OIDplus::config()->prepareConfigKey('whois_auth_token',                       'OID-over-WHOIS authentication token to display confidential data', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			$test_value = preg_replace('@[0-9a-zA-Z]*@', '', $value);
 			if ($test_value != '') {
@@ -176,7 +176,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		if (explode('$',$id)[0] == 'oidplus:whois') {
 			$handled = true;
 
@@ -257,7 +257,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 	 * @param array $out
 	 * @return void
 	 */
-	public function publicSitemap(array &$out) {
+	public function publicSitemap(array &$out): void {
 		$out[] = 'oidplus:whois';
 	}
 

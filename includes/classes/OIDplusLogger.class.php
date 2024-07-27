@@ -38,7 +38,7 @@ class OIDplusLogger extends OIDplusBaseClass {
 	 * where $severity is 'INFO' or [$online,$offline] like ['INFO','INFO']
 	 * and $target is like ['A'], ['OID', '2.999'], etc.
 	 */
-	public static function parse_maskcode(string $maskcode) {
+	public static function parse_maskcode(string $maskcode)/*: array|false*/ {
 		$out = array();
 		$sevs = array(); // Note: The severity block will repeat for the next components if not changed explicitly
 
@@ -236,7 +236,10 @@ class OIDplusLogger extends OIDplusBaseClass {
 		return $out;
 	}
 
-	private $missing_plugin_queue = array();
+	/**
+	 * @var array
+	 */
+	private array $missing_plugin_queue = array();
 
 	/**
 	 * @return bool

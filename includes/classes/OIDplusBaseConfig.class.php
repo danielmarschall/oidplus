@@ -31,7 +31,7 @@ class OIDplusBaseConfig extends OIDplusBaseClass implements OIDplusGetterSetterI
 	/**
 	 * @var array
 	 */
-	protected $data = array();
+	protected array $data = array();
 
 	/**
 	 * @return string[]

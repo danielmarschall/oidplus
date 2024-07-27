@@ -40,7 +40,7 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		$ary = explode('$', $id);
 		if (isset($ary[1])) {
 			$id = $ary[0];

@@ -871,7 +871,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 		OIDplus::config()->prepareConfigKey('oobe_objects_done', '"Out Of Box Experience" wizard for OIDplusPagePublicObjects done once?', '0', OIDplusConfig::PROTECTION_HIDDEN, function($value) {});
 		OIDplus::config()->prepareConfigKey('oid_grid_show_weid', 'Show WEID/Base36 column in CRUD grid of OIDs?', '1', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0) || ($value > 1)) {
@@ -953,7 +953,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		if ($id === 'oidplus:system') {
 			$handled = true;
 
@@ -1229,7 +1229,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 * @param array $out
 	 * @return void
 	 */
-	private function publicSitemap_rec(array $json, array &$out) {
+	private function publicSitemap_rec(array $json, array &$out): void {
 		foreach ($json as $x) {
 			if (isset($x['id']) && $x['id']) {
 				$out[] = $x['id'];
@@ -1244,7 +1244,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 * @param array $out
 	 * @return void
 	 */
-	public function publicSitemap(array &$out) {
+	public function publicSitemap(array &$out): void {
 		$json = array();
 		$this->tree($json, null/*RA EMail*/, false/*HTML tree algorithm*/, "*"/*display all*/);
 		$this->publicSitemap_rec($json, $out);
