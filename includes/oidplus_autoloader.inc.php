@@ -32,7 +32,7 @@ spl_autoload_register(function ($fq_class_name) {
 			// - File       ..................../plugins/viathinksoft/adminPages/101_notifications/*.class.php
 			// - Namespace  ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n101_notifications/*
 			$x = substr($x, 1);
-		} else if (version_compare(PHP_VERSION, $oidplus_min_version='8.0.0') < 0) {
+		} else {
 			// "Keywords" in namespaces are only allowed in PHP 8.0, so we prepend a "_" in front of it
 			// Example:
 			// - File       ..................../plugins/viathinksoft/design/default/*.class.php
