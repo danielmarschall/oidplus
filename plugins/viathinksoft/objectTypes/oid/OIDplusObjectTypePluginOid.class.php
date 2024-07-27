@@ -67,10 +67,10 @@ class OIDplusObjectTypePluginOid extends OIDplusObjectTypePlugin
 		// Convert WEID to OID
 		// A WEID is just a different notation of an OID.
 		// To allow that people use OID-IP or the GoTo-box with a "weid:" identifier, rewrite it to "oid:", so that the plugin OIDplusObjectTypePluginOid can handle it.
-		if (str_starts_with($static_node_id,'weid:') && class_exists('\Frdl\Weid\WeidOidConverter')) {
+		if (str_starts_with($static_node_id,'weid:')) {
 			$ary = explode('$', $static_node_id, 2);
 			$weid = $ary[0];
-			$oid = \Frdl\Weid\WeidOidConverter::weid2oid($weid);
+			$oid = WeidOidConverter::weid2oid($weid);
 			if ($oid === false) {
 				if ($throw_exception) throw new OIDplusException(_L('This is not a valid WEID'));
 			} else {

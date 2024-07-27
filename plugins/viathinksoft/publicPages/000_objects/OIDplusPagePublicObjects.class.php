@@ -31,6 +31,7 @@ use ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n010_notifications\INTF
 use ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n010_notifications\OIDplusNotification;
 use ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n050_oobe\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1;
 use ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\oid\OIDplusOid;
+use ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\oid\WeidOidConverter;
 use ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n002_rest_api\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9;
 use ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n093_rainfo\OIDplusPagePublicRaInfo;
 
@@ -686,7 +687,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			assert($objParent instanceof OIDplusOid); //assert(get_class($objParent) === "ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\oid\OIDplusOid");
 			if (strtolower(substr(trim($params['id']),0,5)) === 'weid:') {
 				if ($objParent->isRoot()) {
-					$params['id'] = \Frdl\Weid\WeidOidConverter::weid2oid($params['id']);
+					$params['id'] = WeidOidConverter::weid2oid($params['id']);
 					if ($params['id'] === false) {
 						throw new OIDplusException(_L('Invalid WEID'));
 					}

@@ -1068,7 +1068,7 @@ class OIDplus extends OIDplusBaseClass {
 
 	/**
 	 * Checks if the plugin is disabled
-	 * @param $oid OID of the plugin to be checked
+	 * @param string $oid OID of the plugin to be checked
 	 * @return bool true if plugin is enabled, false if plugin is disabled
 	 * @throws OIDplusException if the class name or config file (disabled setting) does not contain a namespace
 	 */
