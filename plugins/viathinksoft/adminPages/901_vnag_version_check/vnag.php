@@ -17,10 +17,10 @@
  * limitations under the License.
  */
 
-use ViaThinkSoft\OIDplus\OIDplus;
-use ViaThinkSoft\OIDplus\OIDplusException;
-use ViaThinkSoft\OIDplus\OIDplusGui;
-use ViaThinkSoft\OIDplus\OIDplusPageAdminVNagVersionCheck;
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
+use ViaThinkSoft\OIDplus\Core\OIDplusGui;
+use ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n901_vnag_version_check\OIDplusPageAdminVNagVersionCheck;
 
 include __DIR__ . '/../../../../vendor/danielmarschall/vnag/src/framework/vnag_framework.inc.php';
 include __DIR__ . '/../../../../includes/oidplus.inc.php';
@@ -31,7 +31,7 @@ set_exception_handler(array(OIDplusGui::class, 'html_exception_handler'));
 
 OIDplus::init(true);
 
-if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplusPageAdminVNagVersionCheck', false)) {
+if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n901_vvnag_version_check\OIDplusPageAdminVNagVersionCheck', false)) {
 	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
 }
 

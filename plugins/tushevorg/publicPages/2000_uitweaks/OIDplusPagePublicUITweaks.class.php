@@ -24,12 +24,12 @@
 * SOFTWARE.
 */
 
-namespace TushevOrg\OIDplus;
+namespace ViaThinkSoft\OIDplus\Plugins\tushevorg\publicPages\n2000_uitweaks;
 
-use ViaThinkSoft\OIDplus\OIDplus;
-use ViaThinkSoft\OIDplus\OIDplusConfig;
-use ViaThinkSoft\OIDplus\OIDplusException;
-use ViaThinkSoft\OIDplus\OIDplusPagePluginPublic;
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusConfig;
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
+use ViaThinkSoft\OIDplus\Core\OIDplusPagePluginPublic;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;

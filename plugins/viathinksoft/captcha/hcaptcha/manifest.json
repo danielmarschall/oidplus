@@ -1,7 +1,7 @@
 {
 	"$schema": "urn:oid:1.3.6.1.4.1.37476.2.5.2.5.12.1",
 	"manifest": {
-		"type": "ViaThinkSoft\\OIDplus\\OIDplusCaptchaPlugin",
+		"type": "ViaThinkSoft\\OIDplus\\Core\\OIDplusCaptchaPlugin",
 		"info": {
 			"name": "hCaptcha",
 			"author": "ViaThinkSoft",
@@ -11,7 +11,7 @@
 			"oid": "1.3.6.1.4.1.37476.2.5.2.4.11.4"
 		},
 		"php": {
-			"mainclass": "ViaThinkSoft\\OIDplus\\OIDplusCaptchaPluginHCaptcha"
+			"mainclass": "ViaThinkSoft\\OIDplus\\Plugins\\viathinksoft\\captcha\\hcaptcha\\OIDplusCaptchaPluginHCaptcha"
 		},
 		"cssSetup": [],
 		"jsSetup": [

@@ -17,7 +17,10 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus;
+namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\database\sqlsrv;
+
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
+use ViaThinkSoft\OIDplus\Core\OIDplusQueryResult;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;
@@ -92,7 +95,7 @@ class OIDplusQueryResultSqlSrv extends OIDplusQueryResult {
 	}
 
 	/**
-	 * @return stdClass|null
+	 * @return \stdClass|null
 	 */
 	//protected function do_fetch_object(): ?\stdClass {
 	//	return sqlsrv_fetch_object($this->res, \stdClass::class);

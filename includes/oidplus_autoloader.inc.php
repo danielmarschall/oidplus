@@ -17,67 +17,59 @@
  * limitations under the License.
  */
 
+/**
+ * This classloader includes plugins/... and includes/classes/...
+ */
 spl_autoload_register(function ($fq_class_name) {
-	static $class_refs = null;
+	$path = explode('\\', $fq_class_name);
+	$classname_no_namespace = end($path);
 
-	// We only load based on the last element of the class name (ignore namespace)
-	// If there are multiple classes matching that name we just include all class files
-	$path = explode('\\',$fq_class_name);
-	$class_name = array_pop($path);
-	$namespace = implode('\\',$path);
-
-	if (is_null($class_refs)) {
-		$valid_plugin_folders = array(
-			'adminPages',
-			'auth',
-			'database',
-			'design',
-			'language',
-			'logger',
-			'objectTypes',
-			'publicPages',
-			'raPages',
-			'sqlSlang',
-			'captcha'
-		);
-
-		$func = function(&$class_refs, $class_files, $namespace='') {
-			foreach ($class_files as $filename) {
-				$cn = strtolower(basename($filename));
-				$cn = preg_replace('@(\\.class){0,1}\\.phps{0,1}$@', '', $cn);
-				if (!empty($namespace)) {
-					if (substr($namespace,-1,1) !== '\\') $namespace .= '\\';
-					$cn = strtolower($namespace) . $cn;
-				}
-				if (!isset($class_refs[$cn])) {
-					$class_refs[$cn] = array($filename);
-				} else {
-					$class_refs[$cn][] = $filename;
-				}
-			}
-		};
-
-		$class_files = array();
-
-		// Global namespace / OIDplus
-		// (the last has the highest priority)
-		foreach ($valid_plugin_folders as $folder) {
-			$class_files = array_merge($class_files, glob(__DIR__ . '/../plugins/'.'*'.'/'.$folder.'/'.'*'.'/'.'*'.'.class.php'));
+	foreach ($path as &$x) {
+		if ((substr($x, 0, 1) == 'n') && (is_numeric(substr($x, 1, 1)))) {
+			// n101_notifications => 101_notifications
+			$x = substr($x, 1);
+		} else if ($x == "_default") {
+			// Problem with ViaThinkSoft\OIDplus\Plugins\viathinksoft\design\default
+			// "Keywords" in namespaces are only allowed in PHP 8.0
+			$x = "default";
 		}
-		$class_files = array_merge($class_files, glob(__DIR__ . '/classes/'.'*'.'.class.php'));
-		$class_files = array_merge($class_files, glob(__DIR__ . '/../vendor/danielmarschall/fileformats/'.'*'.'.class.php'));
-		$class_files = array_merge($class_files, glob(__DIR__ . '/../vendor/danielmarschall/php_utils/'.'*'.'.class.php'));
-		$class_files = array_merge($class_files, glob(__DIR__ . '/../vendor/danielmarschall/oidconverter/php/'.'*'.'.class.phps'));
-		$func($class_refs, $class_files);
 	}
 
-	$class_name = strtolower($class_name);
-	if (isset($class_refs[$class_name])) {
-		foreach ($class_refs[$class_name] as $inc) {
-			require $inc;
-		}
-		unset($class_refs[$class_name]); // this emulates a "require_once" and is faster
+	if (str_starts_with($fq_class_name, "ViaThinkSoft\\OIDplus\\Core\\")) {
+		require __DIR__ . "/classes/" . $path[3] . ".class.php";
+		return;
 	}
+	if (str_starts_with($fq_class_name, "ViaThinkSoft\\OIDplus\\Plugins\\")) {
+		require __DIR__ . "/../plugins/" . $path[3] . "/" . $path[4] . "/" . $path[5] . "/" . $path[6] . ".class.php";
+		return;
+	}
+});
+
+/**
+ * This autoloaded includes vendor/danielmarschall/...
+ */
+spl_autoload_register(function ($fq_class_name) {
+	$path = explode('\\', $fq_class_name);
+	$classname_no_namespace = end($path);
+
+	$tmp = __DIR__ . '/../vendor/danielmarschall/fileformats/'.$classname_no_namespace.'.class.php';
+	if (file_exists($tmp)) {
+		require $tmp;
+		return;
+	}
+
+	$tmp = __DIR__ . '/../vendor/danielmarschall/php_utils/'.$classname_no_namespace.'.class.php';
+	if (file_exists($tmp)) {
+		require $tmp;
+		return;
+	}
+
+	$tmp = __DIR__ . '/../vendor/danielmarschall/oidconverter/php/'.$classname_no_namespace.'.class.phps';
+	if (file_exists($tmp)) {
+		require $tmp;
+		return;
+	}
+
 });
 
 /*
@@ -95,11 +87,11 @@ spl_autoload_register(function ($fq_class_name) {
 	$namespace = implode('\\',$path);
 
 	if (str_starts_with($class_name, "INTF_OID_")) {
-		if (($namespace != "ViaThinkSoft\\OIDplus") && str_starts_with($class_name, "INTF_OID_1_3_6_1_4_1_37476_")) {
+		if (($namespace != "ViaThinkSoft\\OIDplus\\Plugins\\viathinksoft") && str_starts_with($class_name, "INTF_OID_1_3_6_1_4_1_37476_")) {
 			throw new Exception(_L('Third-party plugin tries to access a ViaThinkSoft-INTF_OID interface "%1", but is not in the ViaThinkSoft\\OIDplus namespace', $fq_class_name));
 		}
 
-		if (($namespace == "ViaThinkSoft\\OIDplus") && !str_starts_with($class_name, "INTF_OID_1_3_6_1_4_1_37476_")) {
+		if (($namespace == "ViaThinkSoft\\OIDplus\\Plugins\\viathinksoft") && !str_starts_with($class_name, "INTF_OID_1_3_6_1_4_1_37476_")) {
 			throw new Exception(_L('ViaThinkSoft plugin tries to access a Third-Party-INTF_OID interface "%1", but is not in the third-party namespace', $fq_class_name));
 		}
 

@@ -18,7 +18,7 @@
  */
 
 use MatthiasMullie\Minify;
-use ViaThinkSoft\OIDplus\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplus;
 
 require_once __DIR__ . '/../includes/oidplus.inc.php';
 

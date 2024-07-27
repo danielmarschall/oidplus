@@ -24,8 +24,8 @@
 // If you cannot use cron.sh or cron.bat for cronjobs, then you can use
 // a WebCron service (e.g. https://www.easycron.com/ ) instead, using cron.php
 
-use ViaThinkSoft\OIDplus\OIDplus;
-use ViaThinkSoft\OIDplus\OIDplusException;
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
 
 try {
 	require_once __DIR__ . '/includes/oidplus.inc.php';

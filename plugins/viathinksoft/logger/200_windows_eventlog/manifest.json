@@ -1,7 +1,7 @@
 {
 	"$schema": "urn:oid:1.3.6.1.4.1.37476.2.5.2.5.9.1",
 	"manifest": {
-		"type": "ViaThinkSoft\\OIDplus\\OIDplusLoggerPlugin",
+		"type": "ViaThinkSoft\\OIDplus\\Core\\OIDplusLoggerPlugin",
 		"info": {
 			"name": "Windows Event Log",
 			"author": "ViaThinkSoft",
@@ -11,7 +11,7 @@
 			"oid": "1.3.6.1.4.1.37476.2.5.2.4.7.200"
 		},
 		"php": {
-			"mainclass": "ViaThinkSoft\\OIDplus\\OIDplusLoggerPluginWindowsEventLog"
+			"mainclass": "ViaThinkSoft\\OIDplus\\Plugins\\viathinksoft\\logger\\n200_windows_eventlog\\OIDplusLoggerPluginWindowsEventLog"
 		}
 	}
 }

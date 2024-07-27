@@ -17,10 +17,10 @@
  * limitations under the License.
  */
 
-use ViaThinkSoft\OIDplus\OIDplus;
-use ViaThinkSoft\OIDplus\OIDplusDatabasePlugin;
-use ViaThinkSoft\OIDplus\OIDplusSqlSlangPlugin;
-use ViaThinkSoft\OIDplus\OIDplusCaptchaPlugin;
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusDatabasePlugin;
+use ViaThinkSoft\OIDplus\Core\OIDplusSqlSlangPlugin;
+use ViaThinkSoft\OIDplus\Core\OIDplusCaptchaPlugin;
 
 require_once __DIR__ . '/../includes/oidplus.inc.php';
 

@@ -17,10 +17,10 @@
  * limitations under the License.
  */
 
-use ViaThinkSoft\OIDplus\OIDplus;
-use ViaThinkSoft\OIDplus\OIDplusException;
-use ViaThinkSoft\OIDplus\OIDplusGui;
-use ViaThinkSoft\OIDplus\OIDplusPagePublicAttachments;
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
+use ViaThinkSoft\OIDplus\Core\OIDplusGui;
+use ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n095_attachments\OIDplusPagePublicAttachments;
 
 require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 
@@ -29,7 +29,7 @@ try {
 
 	OIDplus::init(true);
 
-	if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplusPagePublicAttachments', false)) {
+	if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n095_attachments\OIDplusPagePublicAttachments', false)) {
 		throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
 	}
 

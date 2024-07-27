@@ -1,7 +1,7 @@
 {
 	"$schema": "urn:oid:1.3.6.1.4.1.37476.2.5.2.5.11.1",
 	"manifest": {
-		"type": "ViaThinkSoft\\OIDplus\\OIDplusSqlSlangPlugin",
+		"type": "ViaThinkSoft\\OIDplus\\Core\\OIDplusSqlSlangPlugin",
 		"info": {
 			"name": "Microsoft Access SQL dialect",
 			"author": "ViaThinkSoft",
@@ -11,7 +11,7 @@
 			"oid": "1.3.6.1.4.1.37476.2.5.2.4.6.5"
 		},
 		"php": {
-			"mainclass": "ViaThinkSoft\\OIDplus\\OIDplusSqlSlangPluginAccess"
+			"mainclass": "ViaThinkSoft\\OIDplus\\Plugins\\viathinksoft\\sqlSlang\\access\\OIDplusSqlSlangPluginAccess"
 		}
 	}
 }

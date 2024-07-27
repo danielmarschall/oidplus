@@ -17,7 +17,17 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus;
+namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n200_viathinksoft_freeoid;
+
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusConfig;
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
+use ViaThinkSoft\OIDplus\Core\OIDplusHtmlException;
+use ViaThinkSoft\OIDplus\Core\OIDplusMailException;
+use ViaThinkSoft\OIDplus\Core\OIDplusObject;
+use ViaThinkSoft\OIDplus\Core\OIDplusPagePluginPublic;
+use ViaThinkSoft\OIDplus\Core\OIDplusRA;
+use ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\oid\OIDplusOid;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;
@@ -31,7 +41,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 	 * @throws OIDplusException
 	 */
 	private static function getFreeRootOid(bool $with_ns): ?string {
-		if (!in_array('ViaThinkSoft\OIDplus\OIDplusOid',OIDplus::getEnabledObjectTypes())) {
+		if (!in_array('ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\oid\OIDplusOid',OIDplus::getEnabledObjectTypes())) {
 			return null;
 		} else {
 			$res = ($with_ns ? 'oid:' : '').OIDplus::config()->getValue('freeoid_root_oid');

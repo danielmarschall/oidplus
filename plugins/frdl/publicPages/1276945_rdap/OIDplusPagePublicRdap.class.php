@@ -17,12 +17,12 @@
  * limitations under the License.
  */
 
-namespace Frdlweb\OIDplus;
+namespace ViaThinkSoft\OIDplus\Plugins\frdl\publicPages\n1276945_rdap;
 
-use ViaThinkSoft\OIDplus\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_2;
-use ViaThinkSoft\OIDplus\OIDplus;
-use ViaThinkSoft\OIDplus\OIDplusException;
-use ViaThinkSoft\OIDplus\OIDplusPagePluginPublic;
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
+use ViaThinkSoft\OIDplus\Core\OIDplusPagePluginPublic;
+use ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n000_objects\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_2;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;
@@ -39,7 +39,7 @@ class OIDplusPagePublicRdap extends OIDplusPagePluginPublic
 	 * @param string $icon
 	 * @param string $text
 	 * @return void
-	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
+	 * @throws \ViaThinkSoft\OIDplus\Core\OIDplusException
 	 */
 	public function modifyContent(string $id, string &$title, string &$icon, string &$text) {
 	    $payload = '<br /> <a href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE)

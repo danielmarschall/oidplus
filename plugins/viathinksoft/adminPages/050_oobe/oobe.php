@@ -17,10 +17,10 @@
  * limitations under the License.
  */
 
-use ViaThinkSoft\OIDplus\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1;
-use ViaThinkSoft\OIDplus\OIDplus;
-use ViaThinkSoft\OIDplus\OIDplusGui;
-use ViaThinkSoft\OIDplus\OIDplusException;
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusGui;
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
+use ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n050_oobe\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1;
 
 require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 
@@ -33,7 +33,7 @@ header('Content-Type:text/html; charset=UTF-8');
 OIDplus::init(true);
 set_exception_handler(array(OIDplusGui::class, 'html_exception_handler'));
 
-if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplusPageAdminOOBE', false)) {
+if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n050_oobe\OIDplusPageAdminOOBE', false)) {
 	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
 }
 
@@ -98,7 +98,7 @@ $do_edits = isset($_POST['sent']) && $edits_possible;
  * @param bool $errors_happened
  * @return void
  * @throws OIDplusException
- * @throws \ViaThinkSoft\OIDplus\OIDplusConfigInitializationException
+ * @throws \ViaThinkSoft\OIDplus\Core\OIDplusConfigInitializationException
  */
 function step_admin_email(int $step, bool $do_edits, bool &$errors_happened) {
 	echo '<h2>'._L('Step %1: Please enter the email address of the system administrator',$step).'</h2>';
@@ -131,7 +131,7 @@ step_admin_email($step++, $do_edits, $errors_happened);
  * @param bool $errors_happened
  * @return void
  * @throws OIDplusException
- * @throws \ViaThinkSoft\OIDplus\OIDplusConfigInitializationException
+ * @throws \ViaThinkSoft\OIDplus\Core\OIDplusConfigInitializationException
  */
 function step_system_title(int $step, bool $do_edits, bool &$errors_happened) {
 	echo '<h2>'._L('Step %1: What title should your Registration Authority / OIDplus instance have?',$step).'</h2>';

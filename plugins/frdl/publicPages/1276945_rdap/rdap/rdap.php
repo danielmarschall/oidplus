@@ -19,10 +19,10 @@
  * limitations under the License.
  */
 
-use ViaThinkSoft\OIDplus\OIDplus;
-use ViaThinkSoft\OIDplus\OIDplusGui;
-use ViaThinkSoft\OIDplus\OIDplusException;
-use Frdlweb\OIDplus\OIDplusRDAP;
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusGui;
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
+use ViaThinkSoft\OIDplus\Plugins\frdl\publicPages\n1276945_rdap\OIDplusRDAP;
 
 require_once __DIR__ . '/../../../../../includes/oidplus.inc.php';
 

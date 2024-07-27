@@ -20,7 +20,7 @@
 
 // This script will be called before publishing a new version
 
-namespace ViaThinkSoft\OIDplus;
+use ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n902_systemfile_check\OIDplusPageAdminSystemFileCheck;
 
 include __DIR__.'/../../../../../includes/oidplus.inc.php';
 

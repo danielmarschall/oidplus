@@ -28,8 +28,8 @@
 
 require_once __DIR__ . '/../includes/oidplus.inc.php';
 
-use ViaThinkSoft\OIDplus\OIDplus;
-use ViaThinkSoft\OIDplus\OIDplusDatabaseConnection;
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusDatabaseConnection;
 
 $num_errs = 0;
 $num_succ = 0;

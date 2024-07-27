@@ -1,7 +1,7 @@
 {
 	"$schema": "urn:oid:1.3.6.1.4.1.37476.2.5.2.5.6.1",
 	"manifest": {
-		"type": "ViaThinkSoft\\OIDplus\\OIDplusDatabasePlugin",
+		"type": "ViaThinkSoft\\OIDplus\\Core\\OIDplusDatabasePlugin",
 		"info": {
 			"name": "PostgreSQL",
 			"author": "ViaThinkSoft",
@@ -11,7 +11,7 @@
 			"oid": "1.3.6.1.4.1.37476.2.5.2.4.5.4"
 		},
 		"php": {
-			"mainclass": "ViaThinkSoft\\OIDplus\\OIDplusDatabasePluginPgSql"
+			"mainclass": "ViaThinkSoft\\OIDplus\\Plugins\\viathinksoft\\database\\pgsql\\OIDplusDatabasePluginPgSql"
 		},
 		"cssSetup": [],
 		"jsSetup": [

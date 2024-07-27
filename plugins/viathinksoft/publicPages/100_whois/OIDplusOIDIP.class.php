@@ -17,7 +17,15 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus;
+namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n100_whois;
+
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusBaseClass;
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
+use ViaThinkSoft\OIDplus\Core\OIDplusObject;
+use ViaThinkSoft\OIDplus\Core\OIDplusRA;
+use ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\oid\OIDplusOid;
+use ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n000_objects\OIDplusPagePublicObjects;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;
@@ -279,7 +287,7 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 					}
 
 					if (substr($query,0,4) === 'oid:') {
-						assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\OIDplusOid");
+						assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\oid\OIDplusOid");
 
 						$out[] = $this->_oidip_attr('asn1-notation', $obj->getAsn1Notation(false)); // DO NOT TRANSLATE!
 						$out[] = $this->_oidip_attr('iri-notation', $obj->getIriNotation(false)); // DO NOT TRANSLATE!

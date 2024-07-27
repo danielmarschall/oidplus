@@ -17,7 +17,8 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
 
 define('SPACER_PNG', base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bKAAAAA1BMVEUAAACnej3aAAAAAXRSTlMAQObYZgAAAApJREFUCNdjYAAAAAIAAeIhvDMAAAAASUVORK5CYII='));
 
@@ -25,7 +26,7 @@ define('SPACER_PNG', base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bK
 
 require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 
-if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplusPagePublicResources', false)) {
+if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n500_resources\OIDplusPagePublicResources', false)) {
 	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
 }
 

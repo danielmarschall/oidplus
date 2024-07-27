@@ -17,7 +17,9 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus;
+namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\design\_default;
+
+use ViaThinkSoft\OIDplus\Core\OIDplusDesignPlugin;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;

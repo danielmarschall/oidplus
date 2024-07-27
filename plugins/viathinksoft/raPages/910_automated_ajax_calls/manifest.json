@@ -1,7 +1,7 @@
 {
 	"$schema": "urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2.1",
 	"manifest": {
-		"type": "ViaThinkSoft\\OIDplus\\OIDplusPagePluginRa",
+		"type": "ViaThinkSoft\\OIDplus\\Core\\OIDplusPagePluginRa",
 		"info": {
 			"name": "Automated AJAX calls",
 			"author": "ViaThinkSoft",
@@ -11,7 +11,7 @@
 			"oid": "1.3.6.1.4.1.37476.2.5.2.4.2.910"
 		},
 		"php": {
-			"mainclass": "ViaThinkSoft\\OIDplus\\OIDplusPageRaAutomatedAJAXCalls"
+			"mainclass": "ViaThinkSoft\\OIDplus\\Plugins\\viathinksoft\\raPages\\n910_automated_ajax_calls\\OIDplusPageRaAutomatedAJAXCalls"
 		},
 		"css": [],
 		"js": [
