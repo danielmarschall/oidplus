@@ -277,7 +277,7 @@ class OIDplusOid extends OIDplusObject {
 		// Dirty hack: We prepend '0.' in front of the OID to enforce the
 		//             creation of a Class A weid (weid:root:) . Otherwise we could not
 		//             get the hidden arc value "8" from "weid:4" (which is actually "weid:pen:SZ5-8-?"
-		$weid = \Frdl\Weid\WeidOidConverter::oid2weid('0.'.$this->getDotNotation());
+		$weid = WeidOidConverter::oid2weid('0.'.$this->getDotNotation());
 		if ($weid === false) return false;
 		$ary = explode(':', $weid);
 		$weid = array_pop($ary); // remove namespace and sub-namespace if existing
@@ -291,7 +291,7 @@ class OIDplusOid extends OIDplusObject {
 	 * @return string
 	 */
 	public function getWeidNotation(bool $withAbbr=true): string {
-		$weid = \Frdl\Weid\WeidOidConverter::oid2weid($this->getDotNotation());
+		$weid = WeidOidConverter::oid2weid($this->getDotNotation());
 		if ($withAbbr) {
 			$ary = explode(':', $weid);
 			$weid = array_pop($ary); // remove namespace and sub-namespace if existing
