@@ -24,17 +24,27 @@ spl_autoload_register(function ($fq_class_name) {
 	$path = explode('\\', $fq_class_name);
 	$classname_no_namespace = end($path);
 
+	// Convert "Namespace" to "Folder"
 	foreach ($path as &$x) {
 		if ((substr($x, 0, 1) == 'n') && (is_numeric(substr($x, 1, 1)))) {
-			// n101_notifications => 101_notifications
+			// Namespaces cannot start with numbers, so we prepend a "n" in front of it.
+			// Example:
+			// - File       ..................../plugins/viathinksoft/adminPages/101_notifications/*.class.php
+			// - Namespace  ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n101_notifications/*
 			$x = substr($x, 1);
-		} else if ($x == "_default") {
-			// Problem with ViaThinkSoft\OIDplus\Plugins\viathinksoft\design\default
-			// "Keywords" in namespaces are only allowed in PHP 8.0
-			$x = "default";
+		} else if (version_compare(PHP_VERSION, $oidplus_min_version='8.0.0') < 0) {
+			// "Keywords" in namespaces are only allowed in PHP 8.0, so we prepend a "_" in front of it
+			// Example:
+			// - File       ..................../plugins/viathinksoft/design/default/*.class.php
+			// - Namespace  ViaThinkSoft\OIDplus\Plugins\viathinksoft\design\_default
+			$keywords = array('__halt_compiler', 'abstract', 'and', 'array', 'as', 'break', 'callable', 'case', 'catch', 'class', 'clone', 'const', 'continue', 'declare', 'default', 'die', 'do', 'echo', 'else', 'elseif', 'empty', 'enddeclare', 'endfor', 'endforeach', 'endif', 'endswitch', 'endwhile', 'eval', 'exit', 'extends', 'final', 'fn', 'for', 'foreach', 'function', 'global', 'goto', 'if', 'implements', 'include', 'include_once', 'instanceof', 'insteadof', 'interface', 'isset', 'list', 'namespace', 'new', 'or', 'print', 'private', 'protected', 'public', 'require', 'require_once', 'return', 'static', 'switch', 'throw', 'trait', 'try', 'unset', 'use', 'var', 'while', 'xor');
+			foreach ($keywords as $keyword) {
+				if ($x == '_'.$keyword) {
+					$x = $keyword;
+				}
+			}
 		}
 	}
-
 	if (str_starts_with($fq_class_name, "ViaThinkSoft\\OIDplus\\Core\\")) {
 		require __DIR__ . "/classes/" . $path[3] . ".class.php";
 		return;
@@ -46,7 +56,7 @@ spl_autoload_register(function ($fq_class_name) {
 });
 
 /**
- * This autoloaded includes vendor/danielmarschall/...
+ * This classloader includes vendor/danielmarschall/...
  */
 spl_autoload_register(function ($fq_class_name) {
 	$path = explode('\\', $fq_class_name);
@@ -72,7 +82,7 @@ spl_autoload_register(function ($fq_class_name) {
 
 });
 
-/*
+/**
  * Interfaces starting with INTF_OID are "optional interfaces". If they are not found by previous autoloaders,
  * then they will be defined by a "fake interface" that contains nothing.
  * For OIDplus, INTF_OID interfaces are used if plugins communicate with other plugins, i.e.
