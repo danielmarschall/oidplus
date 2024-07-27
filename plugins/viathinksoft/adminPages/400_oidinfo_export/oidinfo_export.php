@@ -31,7 +31,7 @@ header('Content-Type:text/html; charset=UTF-8');
 
 OIDplus::init(true);
 
-if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n400_oidinfo_export\OIDplusPageAdminOIDInfoExport', false)) {
+if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_1.3.6.1.4.1.37476.2.5.2.4.3.400', false)) {
 	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
 }
 

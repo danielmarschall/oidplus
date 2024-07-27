@@ -31,7 +31,7 @@ set_exception_handler(array(OIDplusGui::class, 'html_exception_handler'));
 
 OIDplus::init(true);
 
-if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n901_vvnag_version_check\OIDplusPageAdminVNagVersionCheck', false)) {
+if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_1.3.6.1.4.1.37476.2.5.2.4.3.901', false)) {
 	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
 }
 

@@ -385,12 +385,11 @@ would be several Megabytes large.
 This gives you the possibility to disable a plugin without
 requiring it to be removed from the file system.
 (Removing a plugin from the file system can result in various
-problems, e.g. they can be re-added during a SVN/software update.)
-Replace "..." with the main PHP class of the plugin you want to disable.
-The namespace must be included.
+problems, e.g. they can be re-added during a GIT/SVN/software update.)
+Replace "..." with the main OID of the plugin you want to disable.
 Example:
-`"DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplusLoggerPluginUserdataLogfile"`
-disables the plugin "logger/300_userdata_logfile".
+`"DISABLE_PLUGIN_1.3.6.1.4.1.37476.2.5.2.4.7.300"`
+disables the plugin "plugins/viathinksoft/logger/300_userdata_logfile".
 
 ### DISABLE_AJAX_TRANSACTIONS
 
