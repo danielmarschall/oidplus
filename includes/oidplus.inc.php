@@ -25,7 +25,7 @@
 
 const INSIDE_OIDPLUS = true;
 
-if (version_compare(PHP_VERSION, $oidplus_min_version='7.0.0') < 0) {
+if (version_compare(PHP_VERSION, $oidplus_min_version='7.4.0') < 0) {
 	// Note: These strings are not translated, because in case of an incompatible
 	// PHP version, we are not able to load language plugins at all.
 	$message = '<p>'.sprintf('OIDplus requires at least PHP version %s!<br>You are currently using version %s',$oidplus_min_version,PHP_VERSION).'</p>';
