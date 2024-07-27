@@ -140,7 +140,7 @@ class OIDplusCaptchaPluginVtsClientChallenge extends OIDplusCaptchaPlugin {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function captchaVerify(array $params, ?string $fieldname=null) {
+	public function captchaVerify(array $params, ?string $fieldname=null): void {
 
 		if (is_null($fieldname)) $fieldname = 'vts_validation_result';
 

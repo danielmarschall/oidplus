@@ -35,7 +35,7 @@ class OIDplusPageAdminListRAs extends OIDplusPagePluginAdmin {
 	 * @param bool $html
 	 * @return void
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 		// Nothing
 	}
 
@@ -79,7 +79,7 @@ class OIDplusPageAdminListRAs extends OIDplusPagePluginAdmin {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		if ($id === 'oidplus:list_ra') {
 			$handled = true;
 			$out['title'] = _L('RA Listing');

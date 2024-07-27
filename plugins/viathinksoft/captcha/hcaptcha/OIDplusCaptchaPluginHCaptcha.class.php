@@ -72,7 +72,7 @@ class OIDplusCaptchaPluginHCaptcha extends OIDplusCaptchaPlugin
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function captchaVerify(array $params, ?string $fieldname=null) {
+	public function captchaVerify(array $params, ?string $fieldname=null): void {
 		$sitekey=OIDplus::baseConfig()->getValue('HCAPTCHA_SITEKEY', '');
 		$secret=OIDplus::baseConfig()->getValue('HCAPTCHA_SECRET', '');
 
@@ -119,7 +119,7 @@ class OIDplusCaptchaPluginHCaptcha extends OIDplusCaptchaPlugin
 	 * @param array $http_headers
 	 * @return void
 	 */
-	function httpHeaderCheck(array &$http_headers) {
+	function httpHeaderCheck(array &$http_headers): void {
 
 		// If you use CSP headers, please add the following to your configuration:
 		// script-src should include https://hcaptcha.com, https://*.hcaptcha.com

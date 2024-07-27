@@ -38,12 +38,12 @@ abstract class OIDplusQueryResult extends OIDplusBaseClass {
 	/**
 	 * @var array|null
 	 */
-	protected $prefetchedArray = null;
+	protected ?array $prefetchedArray = null;
 
 	/**
 	 * @var int
 	 */
-	protected $countAlreadyFetched = 0;
+	protected int $countAlreadyFetched = 0;
 
 	/**
 	 * Please override this method if the database driver can perform a "fetch all" in its own way
@@ -53,7 +53,7 @@ abstract class OIDplusQueryResult extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 * @throws \ReflectionException
 	 */
-	public function prefetchAll() {
+	public function prefetchAll(): void {
 		if (!is_null($this->prefetchedArray)) return;
 		$pfa = array();
 		while ($row = $this->fetch_array()) {
@@ -89,7 +89,7 @@ abstract class OIDplusQueryResult extends OIDplusBaseClass {
 	 * @param array|object &$ret
 	 * @return void
 	 */
-	protected function fixFields(&$ret) {
+	protected function fixFields(&$ret): void {
 		// ODBC gives bit(1) as binary, MySQL as integer and PDO as string.
 		// We'll do it like MySQL does, although ODBC semms to be more correct.
 		// We don't put this code into OIDplusQueryResultODBC.class.php, because other
@@ -226,7 +226,7 @@ abstract class OIDplusQueryResult extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 * @throws \ReflectionException
 	 */
-	public final function naturalSortByField(string $dbField) { // TODO: Argument asc or desc order
+	public final function naturalSortByField(string $dbField): void { // TODO: Argument asc or desc order
 		if (is_null($this->prefetchedArray)) {
 			$this->prefetchAll();
 		}

@@ -28,30 +28,31 @@ class OIDplusAltId extends OIDplusBaseClass {
 	/**
 	 * @var string
 	 */
-	private $ns;
+	private string $ns;
 	/**
 	 * @var string
 	 */
-	private $id;
+	private string $id;
 	/**
 	 * @var string
 	 */
-	private $desc;
+	private string $desc;
 	/**
 	 * @var string
 	 */
-	private $suffix;
+	private string $suffix;
 
 	/**
 	 * @var string
 	 */
-	private $moreInfoUrl;
+	private string $moreInfoUrl;
 
 	/**
 	 * @param string $ns
 	 * @param string $id
 	 * @param string $desc
 	 * @param string $suffix
+	 * @param string $moreInfoUrl
 	 */
 	function __construct(string $ns, string $id, string $desc, string $suffix='', string $moreInfoUrl='') {
 		$this->ns = $ns;

@@ -42,7 +42,7 @@ class OIDplusPagePublicUITweaks extends OIDplusPagePluginPublic {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 		OIDplus::config()->prepareConfigKey('uitweaks_expand_objects_tree', 'UITweaks plugin: 1=Fully expand objects tree on page reload, 0=Default behavior', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0) || ($value > 1)) {
 				throw new OIDplusException(_L('Please enter a valid value.'));
@@ -81,7 +81,7 @@ class OIDplusPagePublicUITweaks extends OIDplusPagePluginPublic {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function htmlHeaderUpdate(array &$head_elems) {
+	public function htmlHeaderUpdate(array &$head_elems): void {
 		$w  = js_escape(OIDplus::config()->getValue('uitweaks_menu_width'));
 		$rw = OIDplus::config()->getValue('uitweaks_menu_remember_width') 		== 1 ? 'true' : 'false';
 		$o  = OIDplus::config()->getValue('uitweaks_expand_objects_tree') 		== 1 ? 'true' : 'false';

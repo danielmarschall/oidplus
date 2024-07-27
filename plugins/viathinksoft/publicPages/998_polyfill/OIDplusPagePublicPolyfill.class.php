@@ -32,7 +32,7 @@ class OIDplusPagePublicPolyfill extends OIDplusPagePluginPublic {
 	 * @param string $html
 	 * @return void
 	 */
-	public function htmlPostprocess(string &$html) {
+	public function htmlPostprocess(string &$html): void {
 		$tmp = (OIDplus::insideSetup()) ? '?noBaseConfig=1' : '';
 		$scrTag = '<script src="'.htmlentities(OIDplus::webpath(__DIR__, OIDplus::PATH_RELATIVE)?:'').'polyfill.min.js.php'.$tmp.'"></script>';
 

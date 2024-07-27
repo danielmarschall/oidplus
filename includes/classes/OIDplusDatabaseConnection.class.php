@@ -27,27 +27,27 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	/**
 	 * @var bool
 	 */
-	protected /*bool*/ $connected = false;
+	protected bool $connected = false;
 
 	/**
 	 * @var bool|null
 	 */
-	protected /*?bool*/ $html = null;
+	protected ?bool $html = null;
 
 	/**
 	 * @var string|null
 	 */
-	protected /*?string*/ $last_query = null;
+	protected ?string $last_query = null;
 
 	/**
 	 * @var bool
 	 */
-	protected /*bool*/ $slangDetectionDone = false;
+	protected bool $slangDetectionDone = false;
 
 	/**
 	 * @var OIDplusSqlSlangPlugin
 	 */
-	private $slangCache = null;
+	private ?OIDplusSqlSlangPlugin $slangCache = null;
 
 	/**
 	 * @param string $sql
@@ -336,7 +336,7 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	 * @param bool $html
 	 * @return void
 	 */
-	public function init(bool $html = true): void {
+	public function init(bool $html=true): void {
 		$this->html = $html;
 	}
 

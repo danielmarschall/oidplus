@@ -43,7 +43,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 		OIDplus::config()->prepareConfigKey('resource_plugin_autoopen_level', 'Resource plugin: How many levels should be open in the treeview when OIDplus is loaded?', '1', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
 				throw new OIDplusException(_L('Please enter a valid value.'));
@@ -215,7 +215,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		if (explode('$',$id,2)[0] === 'oidplus:resources') {
 			$handled = true;
 
@@ -547,7 +547,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	 * @param array $out
 	 * @return void
 	 */
-	private function publicSitemap_rec(array $json, array &$out) {
+	private function publicSitemap_rec(array $json, array &$out): void {
 		foreach ($json as $x) {
 			if (isset($x['id']) && $x['id']) {
 				$out[] = $x['id'];
@@ -562,7 +562,7 @@ class OIDplusPagePublicResources extends OIDplusPagePluginPublic {
 	 * @param array $out
 	 * @return void
 	 */
-	public function publicSitemap(array &$out) {
+	public function publicSitemap(array &$out): void {
 		$json = array();
 		$this->tree($json, null/*RA EMail*/, false/*HTML tree algorithm*/, "*"/*display all*/);
 		$this->publicSitemap_rec($json, $out);

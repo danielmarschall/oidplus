@@ -114,7 +114,7 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function captchaVerify(array $params, ?string $fieldname=null) {
+	public function captchaVerify(array $params, ?string $fieldname=null): void {
 		$secret=OIDplus::baseConfig()->getValue('RECAPTCHA_PRIVATE', '');
 
 		if (is_null($fieldname)) $fieldname = 'oidplus-recaptcha-response'; // no individual AJAX field name (created by oidplus_captcha_response()) means that it is a plain POST event (e.g. by oobe.php)
@@ -161,7 +161,7 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin
 	 * @param array $http_headers
 	 * @return void
 	 */
-	function httpHeaderCheck(array &$http_headers) {
+	function httpHeaderCheck(array &$http_headers): void {
 		$http_headers["Content-Security-Policy"]["script-src"][] = "https://www.google.com/";
 		$http_headers["Content-Security-Policy"]["script-src"][] = "https://www.gstatic.com/";
 		$http_headers["Content-Security-Policy"]["img-src"][]    = "https://www.google.com/";

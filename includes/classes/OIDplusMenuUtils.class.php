@@ -91,7 +91,7 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 	 * @param array $json
 	 * @return void
 	 */
-	protected function addHrefIfRequired(array &$json) {
+	protected function addHrefIfRequired(array &$json): void {
 		foreach ($json as &$item) {
 			if (isset($item['id'])) {
 				if (!isset($item['conditionalselect']) || ($item['conditionalselect'] != 'false')) {

@@ -153,7 +153,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 		OIDplus::config()->prepareConfigKey('log_failed_ra_logins', 'Log failed RA logins', '0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || (($value != 0) && (($value != 1)))) {
 				throw new OIDplusException(_L('Valid values: 0 (off) or 1 (on).'));
@@ -173,7 +173,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		$ary = explode('$', $id);
 		$desired_ra = '';
 		if (isset($ary[1])) {
@@ -289,7 +289,7 @@ class OIDplusPagePublicLogin extends OIDplusPagePluginPublic {
 	 * @param array $out
 	 * @return void
 	 */
-	public function publicSitemap(array &$out) {
+	public function publicSitemap(array &$out): void {
 		$out[] = 'oidplus:login';
 	}
 

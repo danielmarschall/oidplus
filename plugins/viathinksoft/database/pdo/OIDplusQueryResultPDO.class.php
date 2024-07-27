@@ -70,7 +70,7 @@ class OIDplusQueryResultPDO extends OIDplusQueryResult {
 	/**
 	 * @return void
 	 */
-	public function prefetchAll() {
+	public function prefetchAll(): void {
 		if (!is_null($this->prefetchedArray)) return;
 		$this->prefetchedArray = $this->res->fetchAll();
 		foreach ($this->prefetchedArray as &$row) {

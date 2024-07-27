@@ -104,7 +104,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function raLogin(string $email) {
+	public function raLogin(string $email): void {
 		$acs = $this->getAuthContentStore();
 		if (is_null($acs)) return;
 		$acs->raLogin($email);
@@ -116,7 +116,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function raLogout(string $email) {
+	public function raLogout(string $email): void {
 		$acs = $this->getAuthContentStore();
 		if (is_null($acs)) return;
 		$acs->raLogout($email);
@@ -172,7 +172,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	public function isRaLoggedIn($ra): bool {
+	public function isRaLoggedIn(/*string|OIDplusRA*/ $ra): bool {
 		$email = $ra instanceof OIDplusRA ? $ra->raEmail() : $ra;
 		$acs = $this->getAuthContentStore();
 		if (is_null($acs)) return false;
@@ -188,7 +188,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function raLoginEx(string $email, string $origin='') {
+	public function raLoginEx(string $email, string $origin=''): void {
 		$loginfo = '';
 		$acs = $this->getAuthContentStore();
 		if (is_null($acs)) {
@@ -210,7 +210,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function raLogoutEx(string $email) {
+	public function raLogoutEx(string $email): void {
 		$loginfo = '';
 
 		$acs = $this->getAuthContentStore();
@@ -235,7 +235,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function adminLogin() {
+	public function adminLogin(): void {
 		$acs = $this->getAuthContentStore();
 		if (is_null($acs)) return;
 		$acs->adminLogin();
@@ -246,7 +246,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function adminLogout() {
+	public function adminLogout(): void {
 		$acs = $this->getAuthContentStore();
 		if (is_null($acs)) return;
 		$acs->adminLogout();
@@ -303,7 +303,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function adminLoginEx(string $origin='') {
+	public function adminLoginEx(string $origin=''): void {
 		$loginfo = '';
 		$acs = $this->getAuthContentStore();
 		if (is_null($acs)) {
@@ -324,7 +324,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function adminLogoutEx() {
+	public function adminLogoutEx(): void {
 		$loginfo = '';
 
 		$acs = $this->getAuthContentStore();
@@ -349,7 +349,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @return string
 	 * @throws OIDplusException
 	 */
-	public function makeSecret($data): string {
+	public function makeSecret(/*array|string*/ $data): string {
 		if (!is_array($data)) $data = [$data];
 		$data = json_encode($data); // due to backwards-compatibility, do not use JSON_UNESCAPED_SLASHES
 		return sha3_512_hmac($data, 'OIDplus:'.OIDplus::baseConfig()->getValue('SERVER_SECRET'), false);
@@ -360,7 +360,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @return string A string that need to be validated with validateAuthKey
 	 * @throws OIDplusException
 	 */
-	public function makeAuthKey($data): string {
+	public function makeAuthKey(/*array|string*/ $data): string {
 		if (!is_array($data)) $data = [$data];
 		$ts = time();
 		$data_ext = [$ts, $data];
@@ -375,7 +375,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @return bool True if the key is valid and not expired.
 	 * @throws OIDplusException
 	 */
-	public function validateAuthKey($data, string $auth_key, int $valid_secs=-1): bool {
+	public function validateAuthKey(/*array|string*/ $data, string $auth_key, int $valid_secs=-1): bool {
 		$auth_key_ary = explode('.', $auth_key, 2);
 		if (count($auth_key_ary) != 2) return false; // invalid auth key syntax
 		list($ts, $secret) = $auth_key_ary;
@@ -407,19 +407,22 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 
 	// CSRF functions
 
-	private $enable_csrf = true;
+	/**
+	 * @var bool
+	 */
+	private bool $enable_csrf = true;
 
 	/**
 	 * @return void
 	 */
-	public function enableCSRF() {
+	public function enableCSRF(): void {
 		$this->enable_csrf = true;
 	}
 
 	/**
 	 * @return void
 	 */
-	public function disableCSRF() {
+	public function disableCSRF(): void {
 		$this->enable_csrf = false;
 	}
 
@@ -435,7 +438,7 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function checkCSRF() {
+	public function checkCSRF(): void {
 		if (!$this->enable_csrf) return;
 
 		$request_token = $_REQUEST['csrf_token'] ?? '';

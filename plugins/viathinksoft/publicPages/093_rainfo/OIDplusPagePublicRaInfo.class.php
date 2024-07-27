@@ -35,7 +35,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 	 * @param bool $html
 	 * @return void
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 	}
 
 	/**
@@ -46,7 +46,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		if (explode('$',$id)[0] == 'oidplus:rainfo') {
 			$handled = true;
 
@@ -158,7 +158,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public function publicSitemap(array &$out) {
+	public function publicSitemap(array &$out): void {
 		if (OIDplus::db()->getSlang()->id() == 'mysql') {
 			$res = OIDplus::db()->query("select distinct BINARY(email) as distinct_email from ###ra"); // "binary" because we want to ensure that 'distinct' is case sensitive
 		} else {

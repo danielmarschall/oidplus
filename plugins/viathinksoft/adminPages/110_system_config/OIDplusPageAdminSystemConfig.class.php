@@ -83,7 +83,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 	 * @param bool $html
 	 * @return void
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 		// Nothing
 	}
 
@@ -94,7 +94,7 @@ class OIDplusPageAdminSystemConfig extends OIDplusPagePluginAdmin {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		if (explode('$',$id)[0] == 'oidplus:edit_config') {
 			$handled = true;
 			$out['title'] = _L('System configuration');

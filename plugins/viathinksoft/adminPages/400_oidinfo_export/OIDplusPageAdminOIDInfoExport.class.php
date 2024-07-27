@@ -198,7 +198,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 	 * @param bool $html
 	 * @return void
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 		// Nothing
 	}
 
@@ -209,7 +209,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		$ary = explode('$', $id);
 		if (isset($ary[1])) {
 			$id = $ary[0];

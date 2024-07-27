@@ -242,7 +242,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 		OIDplus::config()->prepareConfigKey('freeoid_root_oid', 'Root-OID of free OID service (a service where visitors can create their own OID using email verification)', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (($value != '') && !oid_valid_dotnotation($value,false,false,1)) {
 				throw new OIDplusException(_L('Please enter a valid OID in dot notation or nothing'));
@@ -257,7 +257,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		if (empty(self::getFreeRootOid(false))) return;
 
 		if (explode('$',$id)[0] == 'oidplus:com.viathinksoft.freeoid') {
@@ -358,7 +358,7 @@ class OIDplusPagePublicFreeOID extends OIDplusPagePluginPublic {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function publicSitemap(array &$out) {
+	public function publicSitemap(array &$out): void {
 		if (empty(self::getFreeRootOid(false))) return;
 		$out[] = 'oidplus:com.viathinksoft.freeoid';
 	}

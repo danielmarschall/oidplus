@@ -132,7 +132,7 @@ class OIDplusGui extends OIDplusBaseClass {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public static function html_exception_handler(\Throwable $exception) {
+	public static function html_exception_handler(\Throwable $exception): void {
 		// Note: This method must be static, because of its registration as Exception handler
 
 		if ($exception instanceof OIDplusException) {

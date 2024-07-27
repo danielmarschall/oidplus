@@ -31,12 +31,12 @@ class OIDplusException extends \Exception {
 	/**
 	 * @var string|null
 	 */
-	protected $title = null;
+	protected ?string $title = null;
 
 	/**
 	 * @var int
 	 */
-	protected $httpStatus = 500;
+	protected int $httpStatus = 500;
 
 	/**
 	 * @param string $message

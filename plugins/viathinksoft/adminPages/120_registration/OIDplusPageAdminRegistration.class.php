@@ -112,7 +112,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		if ($id === 'oidplus:srv_registration') {
 			$handled = true;
 			$out['title'] = _L('System registration settings');
@@ -473,7 +473,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 		if (OIDplus::getEditionInfo()['vendor'] != 'ViaThinkSoft') {
 			throw new OIDplusException(_L('This plugin is only available in the ViaThinkSoft edition of OIDplus'));
 		}

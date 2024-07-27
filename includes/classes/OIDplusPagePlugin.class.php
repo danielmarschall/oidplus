@@ -31,7 +31,7 @@ abstract class OIDplusPagePlugin extends OIDplusPlugin {
 	 * @param bool $handled
 	 * @return void
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {}
+	public function gui(string $id, array &$out, bool &$handled): void {}
 
 	/**
 	 * @param array $json
@@ -48,7 +48,7 @@ abstract class OIDplusPagePlugin extends OIDplusPlugin {
 	 * @param string $request
 	 * @return array|false
 	 */
-	public function tree_search(string $request) {
+	public function tree_search(string $request)/*: array|false*/ {
 		return false;
 	}
 

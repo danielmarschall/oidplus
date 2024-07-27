@@ -35,7 +35,7 @@ class OIDplusLogEvent extends OIDplusBaseClass {
 	/**
 	 * @var string
 	 */
-	private $message;
+	private string $message;
 
 	/**
 	 * @return string
@@ -48,14 +48,14 @@ class OIDplusLogEvent extends OIDplusBaseClass {
 	 * @param string $message
 	 * @return void
 	 */
-	public function setMessage(string $message) {
+	public function setMessage(string $message): void {
 		$this->message = $message;
 	}
 
 	/**
 	 * @var OIDplusLogTarget[]
 	 */
-	private $targets = [];
+	private array $targets = [];
 
 	/**
 	 * @return OIDplusLogTarget[]
@@ -68,7 +68,7 @@ class OIDplusLogEvent extends OIDplusBaseClass {
 	 * @param OIDplusLogTarget $target
 	 * @return void
 	 */
-	public function addTarget(OIDplusLogTarget $target) {
+	public function addTarget(OIDplusLogTarget $target): void {
 		$this->targets[] = $target;
 	}
 

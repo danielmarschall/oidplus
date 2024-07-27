@@ -44,7 +44,7 @@ class OIDplusPageAdminNostalgia extends OIDplusPagePluginAdmin
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		if ($id === 'oidplus:nostalgia') {
 			$handled = true;
 			$out['title'] = _L('Nostalgia');

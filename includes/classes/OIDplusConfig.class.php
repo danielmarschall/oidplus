@@ -47,32 +47,32 @@ class OIDplusConfig extends OIDplusBaseClass implements OIDplusGetterSetterInter
 	/**
 	 * @var bool
 	 */
-	protected $configTableReadOnce = false; // this ensures that all $values and $descriptions were read
+	protected bool $configTableReadOnce = false; // this ensures that all $values and $descriptions were read
 
 	/**
 	 * @var array
 	 */
-	protected $values = array();
+	protected array $values = array();
 
 	/**
 	 * @var array
 	 */
-	protected $descriptions = array();
+	protected array $descriptions = array();
 
 	/**
 	 * @var array
 	 */
-	protected $protectSettings = array();
+	protected array $protectSettings = array();
 
 	/**
 	 * @var array
 	 */
-	protected $visibleSettings = array();
+	protected array $visibleSettings = array();
 
 	/**
 	 * @var array
 	 */
-	protected $validateCallbacks = array();
+	protected array $validateCallbacks = array();
 
 	/**
 	 * @param string $name
@@ -83,7 +83,7 @@ class OIDplusConfig extends OIDplusBaseClass implements OIDplusGetterSetterInter
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function prepareConfigKey(string $name, string $description, string $init_value, int $protection, ?callable $validateCallback=null) {
+	public function prepareConfigKey(string $name, string $description, string $init_value, int $protection, ?callable $validateCallback=null): void {
 		// Check if the protection flag is valid
 		switch ($protection) {
 			case OIDplusConfig::PROTECTION_EDITABLE:

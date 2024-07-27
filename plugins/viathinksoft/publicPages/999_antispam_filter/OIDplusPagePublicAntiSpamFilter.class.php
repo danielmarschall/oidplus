@@ -32,7 +32,7 @@ class OIDplusPagePublicAntiSpamFilter extends OIDplusPagePluginPublic {
 	 * @param string $html
 	 * @return void
 	 */
-	public function htmlPostprocess(string &$html) {
+	public function htmlPostprocess(string &$html): void {
 		$html = preg_replace_callback(
 			'|<a\s([^>]*)href="mailto:([^"]+)"([^>]*)>([^<]*)</a>|imU',
 			function ($treffer) {

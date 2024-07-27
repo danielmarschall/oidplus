@@ -34,7 +34,7 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 	 * @param bool $html
 	 * @return void
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 	}
 
 	/**
@@ -54,7 +54,7 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		$parts = explode('$',$id,2);
 		if (!isset($parts[1])) $parts[1] = '';
 

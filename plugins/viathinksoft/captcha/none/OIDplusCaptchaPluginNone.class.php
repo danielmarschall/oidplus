@@ -60,10 +60,10 @@ class OIDplusCaptchaPluginNone extends OIDplusCaptchaPlugin {
 	/**
 	 * @param array $params
 	 * @param string|null $fieldname
-	 * @return bool
+	 * @return void
 	 */
-	public function captchaVerify(array $params, ?string $fieldname=null): bool {
-		return true;
+	public function captchaVerify(array $params, ?string $fieldname=null): void {
+		return;
 	}
 
 	/**

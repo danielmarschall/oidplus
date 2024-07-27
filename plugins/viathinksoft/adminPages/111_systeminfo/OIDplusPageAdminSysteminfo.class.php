@@ -45,7 +45,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 	 * @param bool $html
 	 * @return void
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 	}
 
 	/**
@@ -79,7 +79,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		if ($id === 'oidplus:phpinfo') {
 			$handled = true;
 			$out['title'] = _L('PHP information');

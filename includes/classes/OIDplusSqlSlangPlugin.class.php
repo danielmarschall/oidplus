@@ -127,7 +127,7 @@ abstract class OIDplusSqlSlangPlugin extends OIDplusPlugin {
 	 * @param array|null $prepared_args
 	 * @return void
 	 */
-	public function reviewResult(OIDplusQueryResult $res, string $sql, ?array $prepared_args=null) {
+	public function reviewResult(OIDplusQueryResult $res, string $sql, ?array $prepared_args=null): void {
 		// nothing here. Override it is you need it.
 	}
 

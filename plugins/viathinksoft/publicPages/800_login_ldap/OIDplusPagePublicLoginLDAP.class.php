@@ -248,7 +248,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic
 	 * @param bool $html
 	 * @return void
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 		// Nothing
 	}
 
@@ -259,7 +259,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		if ($id === 'oidplus:login_ldap') {
 			$handled = true;
 			$out['title'] = _L('Login using LDAP / ActiveDirectory');
@@ -333,7 +333,7 @@ class OIDplusPagePublicLoginLdap extends OIDplusPagePluginPublic
 	 * @param array $out
 	 * @return void
 	 */
-	public function publicSitemap(array &$out) {
+	public function publicSitemap(array &$out): void {
 		$out[] = 'oidplus:login_ldap';
 	}
 

@@ -31,16 +31,17 @@ class OIDplusHtmlException extends OIDplusException {
 	/**
 	 * @var string|null
 	 */
-	private $htmlTitle;
+	private ?string $htmlTitle;
 
 	/**
 	 * @var string
 	 */
-	private $htmlMessage;
+	private string $htmlMessage;
 
 	/**
 	 * @param string $message
 	 * @param string|null $title
+	 * @param int $httpStatus
 	 */
 	public function __construct(string $message, ?string $title=null, int $httpStatus=500) {
 		$this->htmlTitle = $title;

@@ -33,7 +33,7 @@ class OIDplusPagePublicForgotPasswordAdmin extends OIDplusPagePluginPublic {
 	 * @param bool $html
 	 * @return void
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 	}
 
 	/**
@@ -43,7 +43,7 @@ class OIDplusPagePublicForgotPasswordAdmin extends OIDplusPagePluginPublic {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		if (explode('$',$id)[0] == 'oidplus:forgot_password_admin') {
 			$handled = true;
 
@@ -69,7 +69,7 @@ class OIDplusPagePublicForgotPasswordAdmin extends OIDplusPagePluginPublic {
 	 * @param array $out
 	 * @return void
 	 */
-	public function publicSitemap(array &$out) {
+	public function publicSitemap(array &$out): void {
 		$out[] = 'oidplus:forgot_password_admin';
 	}
 

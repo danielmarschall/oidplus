@@ -26,94 +26,94 @@ namespace ViaThinkSoft\OIDplus\Core;
 class OIDplusPluginManifest extends OIDplusBaseClass {
 
 	/**
-	 * @var string
+	 * @var ?string
 	 */
-	private $manifestFile = null;
+	private ?string $manifestFile = null;
 
 	// --- All plugins ---
 
 	/**
 	 * @var string
 	 */
-	private $name = '';
+	private string $name = '';
 
 	/**
 	 * @var string
 	 */
-	private $author = '';
+	private string $author = '';
 
 	/**
 	 * @var string
 	 */
-	private $license = '';
+	private string $license = '';
 
 	/**
 	 * @var string
 	 */
-	private $version = '';
+	private string $version = '';
 
 	/**
 	 * @var string
 	 */
-	private $htmlDescription = '';
+	private string $htmlDescription = '';
 
 	/**
 	 * @var string
 	 */
-	private $oid = '';
+	private string $oid = '';
 
 	/**
 	 * @var string
 	 */
-	private $type = '';
+	private string $type = '';
 
 	/**
 	 * @var string
 	 */
-	private $phpMainClass = '';
+	private string $phpMainClass = '';
 
 	// --- Only page or design plugins ---
 
 	/**
 	 * @var array
 	 */
-	private $cssFiles = array();
+	private array $cssFiles = array();
 
 	// --- Only page plugins ---
 
 	/**
 	 * @var array
 	 */
-	private $jsFiles = array();
+	private array $jsFiles = array();
 
 	// --- Only database plugins ---
 
 	/**
 	 * @var array
 	 */
-	private $cssFilesSetup = array();
+	private array $cssFilesSetup = array();
 
 	/**
 	 * @var array
 	 */
-	private $jsFilesSetup = array();
+	private array $jsFilesSetup = array();
 
 	// --- Only language plugins ---
 
 	/**
 	 * @var string
 	 */
-	private $languageCode = '';
+	private string $languageCode = '';
 
 	/**
 	 * @var string
 	 */
-	private $languageFlag = '';
+	private string $languageFlag = '';
 
 	/**
 	 * @var string
 	 */
-	private $languageMessages = '';
+	private string $languageMessages = '';
 
 	# -------------
 
@@ -263,9 +263,12 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 	/**
 	 * @param string $filename
 	 * @return void
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 * @throws \JsonException
 	 */
 	public function loadManifest(string $filename): void {
-		if (!file_exists($filename)) throw new OIDplusException(_L("File %1 does not exist", $filename));;
+		if (!file_exists($filename)) throw new OIDplusException(_L("File %1 does not exist", $filename));
 		$cont = @file_get_contents($filename);
 		if ($cont === false) throw new OIDplusException(_L("Cannot read file %1", $filename));
 		$data = @json_decode($cont, false, 5, JSON_THROW_ON_ERROR);

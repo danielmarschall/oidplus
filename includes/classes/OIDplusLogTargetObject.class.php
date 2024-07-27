@@ -37,7 +37,7 @@ class OIDplusLogTargetObject extends OIDplusLogTarget {
 	/**
 	 * @var string
 	 */
-	private $object;
+	private string $object;
 
 	/**
 	 * @return string
@@ -50,7 +50,7 @@ class OIDplusLogTargetObject extends OIDplusLogTarget {
 	 * @param string $object
 	 * @return void
 	 */
-	public function setObject(string $object) {
+	public function setObject(string $object): void {
 		$this->object = $object;
 	}
 

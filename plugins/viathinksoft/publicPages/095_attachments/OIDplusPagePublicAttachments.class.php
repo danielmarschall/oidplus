@@ -348,7 +348,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function init(bool $html=true) {
+	public function init(bool $html=true): void {
 		OIDplus::config()->prepareConfigKey('attachments_block_extensions', 'Block file name extensions being used in file attachments (comma separated)', 'exe,scr,pif,bat,com,vbs,cmd', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			// TODO: check if a blacklist entry is also on the whitelist (which is not allowed)
 		});
@@ -383,7 +383,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	 * @param bool $handled
 	 * @return void
 	 */
-	public function gui(string $id, array &$out, bool &$handled) {
+	public function gui(string $id, array &$out, bool &$handled): void {
 		// Nothing
 	}
 
@@ -391,7 +391,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	 * @param array $out
 	 * @return void
 	 */
-	public function publicSitemap(array &$out) {
+	public function publicSitemap(array &$out): void {
 		// Nothing
 	}
 

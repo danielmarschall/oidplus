@@ -28,7 +28,7 @@ abstract class OIDplusLogTarget extends OIDplusBaseClass {
 	/**
 	 * @var int
 	 */
-	private $severity;
+	private int $severity;
 
 	/**
 	 * @return int
@@ -41,7 +41,7 @@ abstract class OIDplusLogTarget extends OIDplusBaseClass {
 	 * @param int $severity
 	 * @return void
 	 */
-	public function setSeverity(int $severity) {
+	public function setSeverity(int $severity): void {
 		$this->severity = $severity;
 	}
 

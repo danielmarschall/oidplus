@@ -48,7 +48,7 @@ abstract class OIDplusPlugin extends OIDplusBaseClass {
 	 * @param bool $html
 	 * @return void
 	 */
-	public function init(bool $html=true) {}
+	public function init(bool $html=true): void {}
 
 	/**
 	 * @param string $actionID
@@ -82,18 +82,18 @@ abstract class OIDplusPlugin extends OIDplusBaseClass {
 	 * @param string $html
 	 * @return void
 	 */
-	public function htmlPostprocess(string &$html) {}
+	public function htmlPostprocess(string &$html): void {}
 
 	/**
 	 * @param array $head_elems
 	 * @return void
 	 */
-	public function htmlHeaderUpdate(array &$head_elems) {}
+	public function htmlHeaderUpdate(array &$head_elems): void {}
 
 	/**
 	 * @param string[] $http_headers
 	 * @return void
 	 */
-	public function httpHeaderCheck(array &$http_headers) {}
+	public function httpHeaderCheck(array &$http_headers): void {}
 
 }

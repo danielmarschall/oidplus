@@ -77,6 +77,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 
 	/**
 	 * @return string
+	 * @throws OIDplusException
 	 */
 	public static function getAudIss(): string {
 		$oid = OIDplus::getSystemId(true);
@@ -286,7 +287,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	/**
 	 * @var array
 	 */
-	protected $content = array();
+	protected array $content = array();
 
 	/**
 	 * @param string $name
@@ -355,6 +356,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	 * @param bool $limit_ip Limit IP to the current IP address?
 	 * @param int $ttl How many seconds valid?
 	 * @return string JWT token
+	 * @throws OIDplusException
 	 */
 	public static function craftJWT(array $ra, bool $admin, int $gen, bool $limit_ip=false, int $ttl=10*365*24*60*60): string {
 		$authSimulation = new OIDplusAuthContentStoreJWT();
@@ -498,7 +500,10 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 		$loginfo = 'from JWT session';
 	}
 
-	private static $contentProvider = null;
+	/**
+	 * @var ?OIDplusAuthContentStoreJWT
+	 */
+	private static ?OIDplusAuthContentStoreJWT $contentProvider = null;
 
 	/**
 	 * @return OIDplusAuthContentStoreJWT|null
@@ -665,7 +670,6 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	 */
 	public function loadJWT(string $jwt): void {
 		\Firebase\JWT\JWT::$leeway = 60; // leeway in seconds
-		$cls_content = null;
 		if (OIDplus::getPkiStatus()) {
 			$pubKey = OIDplus::getSystemPublicKey();
 			$k = new \Firebase\JWT\Key($pubKey, 'RS256'); // RSA+SHA256 is hardcoded in getPkiStatus() generation
