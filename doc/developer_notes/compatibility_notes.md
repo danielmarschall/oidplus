@@ -36,6 +36,7 @@ Currently, OIDplus supports all PHP versions between 7.4.0 and 8.3.x.
 
 Once we accept PHP 8.0+, we can change the following:
 - More types can be used in method signatures, e.g. "A|B" syntax (union types)
+- Rename Namespace "ViaThinkSoft\OIDplus\Plugins\viathinksoft\design\_default" to "ViaThinkSoft\OIDplus\Plugins\viathinksoft\design\default", and remove "_default => default" code at the oidplus_autoloader.inc.php
 - More things to change or consider, see [the issue that handled the update "PHP 7.0 => 7.4"](https://github.com/danielmarschall/oidplus/issues/56)
 	* Change README.md, doc/developer_notes/compatibility_notes.md, oidplus webpage, and oidplus webpage backup (in svn/git)
 	* Change plugins/viathinksoft/adminPages/900_software_update/private generator to generate a check for the PHP check, to avoid that a system with an old PHP version will get bricked if it updates. The update must cancel if the old PHP version is used.
