@@ -1,7 +1,7 @@
 {
 	"$schema": "urn:oid:1.3.6.1.4.1.37476.2.5.2.5.2.1",
 	"manifest": {
-		"type": "ViaThinkSoft\\OIDplus\\OIDplusPagePluginAdmin",
+		"type": "ViaThinkSoft\\OIDplus\\Core\\OIDplusPagePluginAdmin",
 		"info": {
 			"name": "REST API",
 			"author": "ViaThinkSoft",
@@ -11,7 +11,7 @@
 			"oid": "1.3.6.1.4.1.37476.2.5.2.4.3.911"
 		},
 		"php": {
-			"mainclass": "ViaThinkSoft\\OIDplus\\OIDplusPageAdminRestApi"
+			"mainclass": "ViaThinkSoft\\OIDplus\\Plugins\\viathinksoft\\adminPages\\n911_rest_api\\OIDplusPageAdminRestApi"
 		},
 		"css": [],
 		"js": [

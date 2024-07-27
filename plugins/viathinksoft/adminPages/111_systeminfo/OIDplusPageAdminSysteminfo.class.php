@@ -17,7 +17,13 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus;
+namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n111_systeminfo;
+
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusConfigInitializationException;
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
+use ViaThinkSoft\OIDplus\Core\OIDplusHtmlException;
+use ViaThinkSoft\OIDplus\Core\OIDplusPagePluginAdmin;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;
@@ -105,7 +111,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 
 				// Make compatible for dark themes by removing all foreground and background colors
 				$cont = preg_replace('@(body) {.+}@ismU', '', $cont, 1);
-				$cont = preg_replace('@background-color:(.+)[\\};]@ismU', '', $cont);
+				$cont = preg_replace('@background-color:(.+)[};]@ismU', '', $cont);
 				$cont = '<span style="font-family: sans-serif;">'.$cont.'</span>';
 
 				// Prevent that dark-color scheme makes the font white in a non-dark-color OIDplus

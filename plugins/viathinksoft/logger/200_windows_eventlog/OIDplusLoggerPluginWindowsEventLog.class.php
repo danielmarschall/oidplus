@@ -17,7 +17,12 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus;
+namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\logger\n200_windows_eventlog;
+
+use ViaThinkSoft\OIDplus\Core\OIDplusLogEvent;
+use ViaThinkSoft\OIDplus\Core\OIDplusLoggerPlugin;
+use ViaThinkSoft\OIDplus\Core\OIDplusLogTargetObject;
+use ViaThinkSoft\OIDplus\Core\OIDplusLogTargetUser;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;

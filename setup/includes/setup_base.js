@@ -108,7 +108,7 @@ function doRebuild(admPwdHash, pwComment) {
 			'<i>// If you don\'t want to run setup again, you can also change most of the settings directly in this file.</i><br>' + // do not translate
 			'<i>// List of possible values: doc/config_values.md</i><br>' + // do not translate
 			'<br>' +
-			'use ViaThinkSoft\\OIDplus\\OIDplus;<br>' +
+			'use ViaThinkSoft\\OIDplus\\Core\\OIDplus;<br>' +
 			'<br>' +
 			'OIDplus::baseConfig()->setValue(\'CONFIG_VERSION\',    2.1);<br>' +
 			'<br>' +

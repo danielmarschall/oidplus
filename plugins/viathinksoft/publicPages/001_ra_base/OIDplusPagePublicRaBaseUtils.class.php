@@ -17,13 +17,19 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus;
+namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n001_ra_base;
 
-// TODO: should this be a different plugin type? A page without gui is weird!
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusConfig;
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
+use ViaThinkSoft\OIDplus\Core\OIDplusPagePluginPublic;
+use ViaThinkSoft\OIDplus\Core\OIDplusRA;
+
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
+// TODO: should this be a different plugin type? A page without gui is weird!
 class OIDplusPagePublicRaBaseUtils extends OIDplusPagePluginPublic {
 
 	/**

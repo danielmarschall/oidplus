@@ -17,11 +17,11 @@
  * limitations under the License.
  */
 
-use ViaThinkSoft\OIDplus\OIDplus;
-use ViaThinkSoft\OIDplus\OIDplusException;
-use ViaThinkSoft\OIDplus\OIDplusGui;
-use ViaThinkSoft\OIDplus\OIDplusHtmlException;
-use ViaThinkSoft\OIDplus\OIDplusPageAdminOIDInfoExport;
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
+use ViaThinkSoft\OIDplus\Core\OIDplusGui;
+use ViaThinkSoft\OIDplus\Core\OIDplusHtmlException;
+use ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n400_oidinfo_export\OIDplusPageAdminOIDInfoExport;
 
 require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 
@@ -31,7 +31,7 @@ header('Content-Type:text/html; charset=UTF-8');
 
 OIDplus::init(true);
 
-if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplusPageAdminOIDInfoExport', false)) {
+if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n400_oidinfo_export\OIDplusPageAdminOIDInfoExport', false)) {
 	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
 }
 

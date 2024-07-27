@@ -17,8 +17,8 @@
  * limitations under the License.
  */
 
-use ViaThinkSoft\OIDplus\OIDplus;
-use ViaThinkSoft\OIDplus\OIDplusGui;
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusGui;
 
 header('Content-Type:text/html; charset=UTF-8');
 

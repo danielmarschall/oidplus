@@ -17,10 +17,10 @@
  * limitations under the License.
  */
 
-use ViaThinkSoft\OIDplus\OIDplus;
-use ViaThinkSoft\OIDplus\OIDplusGui;
-use ViaThinkSoft\OIDplus\OIDplusException;
-use ViaThinkSoft\OIDplus\OIDplusRA;
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusGui;
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
+use ViaThinkSoft\OIDplus\Core\OIDplusRA;
 
 # More information about the OAuth2 implementation:
 # - https://developers.google.com/identity/protocols/oauth2/openid-connect
@@ -31,7 +31,7 @@ set_exception_handler(array(OIDplusGui::class, 'html_exception_handler'));
 
 OIDplus::init(true);
 
-if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplusPagePublicLoginGoogle', false)) {
+if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n810_login_google\OIDplusPagePublicLoginGoogle', false)) {
 	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
 }
 

@@ -17,13 +17,13 @@
  * limitations under the License.
  */
 
-use ViaThinkSoft\OIDplus\OIDplusDatabaseConnection;
+use ViaThinkSoft\OIDplus\Core\OIDplusDatabaseConnection;
 
 /**
  * This function will be called by OIDplusDatabaseConnection.class.php at method afterConnect().
  * @param OIDplusDatabaseConnection $db is the OIDplusDatabaseConnection class
  * @return int new version set
- * @throws \ViaThinkSoft\OIDplus\OIDplusException
+ * @throws \ViaThinkSoft\OIDplus\Core\OIDplusException
  */
 function oidplus_dbupdate_202(OIDplusDatabaseConnection $db): int {
 	if ($db->transaction_supported()) $db->transaction_begin();

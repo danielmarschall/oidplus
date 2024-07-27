@@ -286,10 +286,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		A full re-initialization is not possible if a version 2.0 config file (containing "defines") is used. Please update to a config 2.1 file by running setup again.
+		A full re-initialization is not possible if a version %1 config file (containing "defines") is used. Please update to a config %2 file by running setup again.
 		]]></source>
 		<target><![CDATA[
-		Eine Neu-Initialisierung ist nicht möglich, da eine Basiskonfigurations-Datei der Version 2.0 vorliegt (diese verwendet "define"-Anweisungen). Bitte durchlaufen Sie Setup erneut, um eine Datei mit Version 2.1 zu erzeugen.
+		Eine Neu-Initialisierung ist nicht möglich, da eine Basiskonfigurations-Datei der Version %1 vorliegt (diese verwendet "define"-Anweisungen). Bitte durchlaufen Sie Setup erneut, um eine Datei mit Version %2 zu erzeugen.
 		]]></target>
 	</message>
 	<message>

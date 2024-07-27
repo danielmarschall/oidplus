@@ -20,7 +20,13 @@
 // ATTENTION: If you change something, please make sure that the changes
 //            are synchronous with OIDplusPageRaAutomatedAJAXCalls
 
-namespace ViaThinkSoft\OIDplus;
+namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n910_automated_ajax_calls;
+
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusAuthContentStoreJWT;
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
+use ViaThinkSoft\OIDplus\Core\OIDplusHtmlException;
+use ViaThinkSoft\OIDplus\Core\OIDplusPagePluginAdmin;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;

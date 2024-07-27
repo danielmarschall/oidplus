@@ -17,7 +17,24 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus;
+namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n800_plugins;
+
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusAuthPlugin;
+use ViaThinkSoft\OIDplus\Core\OIDplusCaptchaPlugin;
+use ViaThinkSoft\OIDplus\Core\OIDplusConfigInitializationException;
+use ViaThinkSoft\OIDplus\Core\OIDplusDatabasePlugin;
+use ViaThinkSoft\OIDplus\Core\OIDplusDesignPlugin;
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
+use ViaThinkSoft\OIDplus\Core\OIDplusHtmlException;
+use ViaThinkSoft\OIDplus\Core\OIDplusLanguagePlugin;
+use ViaThinkSoft\OIDplus\Core\OIDplusLoggerPlugin;
+use ViaThinkSoft\OIDplus\Core\OIDplusObjectTypePlugin;
+use ViaThinkSoft\OIDplus\Core\OIDplusPagePluginAdmin;
+use ViaThinkSoft\OIDplus\Core\OIDplusPagePluginPublic;
+use ViaThinkSoft\OIDplus\Core\OIDplusPagePluginRa;
+use ViaThinkSoft\OIDplus\Core\OIDplusPlugin;
+use ViaThinkSoft\OIDplus\Core\OIDplusSqlSlangPlugin;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;

@@ -27,7 +27,7 @@ require_once $dir.'includes/classes/OIDplusLogger.class.php';
 
 const VERBOSE = false;
 
-use ViaThinkSoft\OIDplus\OIDplusLogger;
+use ViaThinkSoft\OIDplus\Core\OIDplusLogger;
 
 // ---
 

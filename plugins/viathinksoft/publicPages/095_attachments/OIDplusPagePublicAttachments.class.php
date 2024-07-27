@@ -17,7 +17,20 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus;
+namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n095_attachments;
+
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusConfig;
+use ViaThinkSoft\OIDplus\Core\OIDplusConfigInitializationException;
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
+use ViaThinkSoft\OIDplus\Core\OIDplusHtmlException;
+use ViaThinkSoft\OIDplus\Core\OIDplusObject;
+use ViaThinkSoft\OIDplus\Core\OIDplusPagePluginPublic;
+use ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n010_notifications\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8;
+use ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n010_notifications\OIDplusNotification;
+use ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n000_objects\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_2;
+use ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n000_objects\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3;
+use ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n100_whois\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;

@@ -17,12 +17,6 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus;
-
-// phpcs:disable PSR1.Files.SideEffects
-\defined('INSIDE_OIDPLUS') or die;
-// phpcs:enable PSR1.Files.SideEffects
-
 
 // The definition of INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8 is in adminPages/010_notifications !
 // (We cannot define the interface in raPages and adminPages, therefore, this file is empty)

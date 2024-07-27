@@ -20,7 +20,7 @@
 
 // This script will be called at the ViaThinkSoft server side
 
-use ViaThinkSoft\OIDplus\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplus;
 
 require_once __DIR__.'/funcs.inc.php';
 

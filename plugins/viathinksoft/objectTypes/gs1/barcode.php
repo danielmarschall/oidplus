@@ -22,13 +22,14 @@
 // ourselves) and also allows us to be conform with the GDPR, since the IP address / referrer is
 // not transferred to metafloor.com
 
-namespace ViaThinkSoft\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
 
 require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 
 _CheckParamExists($_GET, 'number');
 
-if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplusObjectTypePluginGs1', false)) {
+if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\gs1\OIDplusObjectTypePluginGs1', false)) {
 	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
 }
 
@@ -61,7 +62,6 @@ if ((file_exists($cache_file)) && (time()-filemtime($cache_file) <= OIDPLUS_BARC
 	}
 
 	@file_put_contents($cache_file, $out);
-
 }
 
 httpOutWithETag($out, 'image/png', "barcode_$number.png");

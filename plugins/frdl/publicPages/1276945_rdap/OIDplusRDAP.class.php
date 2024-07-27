@@ -19,13 +19,13 @@
  * limitations under the License.
  */
 
-namespace Frdlweb\OIDplus;
+namespace ViaThinkSoft\OIDplus\Plugins\frdl\publicPages\n1276945_rdap;
 
-use ViaThinkSoft\OIDplus\OIDplus;
-use ViaThinkSoft\OIDplus\OIDplusBaseClass;
-use ViaThinkSoft\OIDplus\OIDplusObject;
-use ViaThinkSoft\OIDplus\OIDplusOIDIP;
-use ViaThinkSoft\OIDplus\OIDplusPagePublicObjects;
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusBaseClass;
+use ViaThinkSoft\OIDplus\Core\OIDplusObject;
+use ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n000_objects\OIDplusPagePublicObjects;
+use ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n100_whois\OIDplusOIDIP;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;
@@ -54,7 +54,7 @@ class OIDplusRDAP extends OIDplusBaseClass {
 	protected $rdapCacheExpires;
 
 	/**
-	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
+	 * @throws \ViaThinkSoft\OIDplus\Core\OIDplusException
 	 */
 	public function __construct() {
 		$this->rdapBaseUri = OIDplus::baseConfig()->getValue('RDAP_BASE_URI', OIDplus::webpath() );
@@ -66,7 +66,7 @@ class OIDplusRDAP extends OIDplusBaseClass {
 	/**
 	 * @param string $query
 	 * @return array
-	 * @throws \ViaThinkSoft\OIDplus\OIDplusException
+	 * @throws \ViaThinkSoft\OIDplus\Core\OIDplusException
 	 */
 	public function rdapQuery(string $query): array {
 		$query = str_replace('oid:.', 'oid:', $query);

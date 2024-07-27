@@ -103,7 +103,7 @@
 		"components/jquery": "*",
 		"components/jqueryui": "*",
 		"matthiasmullie/minify": "*",
-		"firebase/php-jwt": "*",
+		"firebase/php-jwt": ">=6.0",
 		"tinymce/tinymce": "*",
 		"dcodeio/bcrypt.js": "*",
 		"danielmarschall/vnag": "*",

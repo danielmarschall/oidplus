@@ -17,8 +17,8 @@
  * limitations under the License.
  */
 
-use ViaThinkSoft\OIDplus\OIDplus;
-use ViaThinkSoft\OIDplus\OIDplusPagePluginPublic;
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusPagePluginPublic;
 
 require_once __DIR__ . '/includes/oidplus.inc.php';
 

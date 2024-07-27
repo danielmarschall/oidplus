@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus;
+namespace ViaThinkSoft\OIDplus\Core;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;
@@ -175,10 +175,10 @@ class OIDplus extends OIDplusBaseClass {
 
 					// We need to do this, because define() cannot be undone
 					// Note: This can only happen in very special cases (e.g. test cases) where you call init() twice
-					throw new OIDplusConfigInitializationException(_L('A full re-initialization is not possible if a version 2.0 config file (containing "defines") is used. Please update to a config 2.1 file by running setup again.'));
+					throw new OIDplusConfigInitializationException(_L('A full re-initialization is not possible if a version %1 config file (containing "defines") is used. Please update to a config %2 file by running setup again.','2.0','2.1'));
 				} else {
 					$tmp = file_get_contents($config_file);
-					$ns = "ViaThinkSoft\OIDplus\OIDplus";
+					$ns = "ViaThinkSoft\OIDplus\Core\OIDplus";
 					$uses = "use $ns;";
 					if ((strpos($tmp,'OIDplus::') !== false) && (strpos($tmp,$uses) === false)) {
 						// Migrate config file to namespace class names
@@ -196,8 +196,8 @@ class OIDplus extends OIDplusBaseClass {
 							'DISABLE_PLUGIN_Frdlweb\OIDplus\OIDplusPagePublicAltIds', $tmp);
 						$tmp = str_replace('DISABLE_PLUGIN_OIDplusPagePublicUITweaks',
 							'DISABLE_PLUGIN_TushevOrg\OIDplus\OIDplusPagePublicUITweaks', $tmp);
-						$tmp = str_replace('DISABLE_PLUGIN_OIDplus',
-							'DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplus', $tmp);
+						//$tmp = str_replace('DISABLE_PLUGIN_OIDplus',
+						//	'DISABLE_PLUGIN_ViaThinkSoft\OIDplus\Plugins\...\...\...\', $tmp); // TODO: In 2.0.2, we don't know the full path!!!
 
 						if (@file_put_contents($config_file, $tmp) === false) {
 							eval('?'.'>'.$tmp);
@@ -208,6 +208,7 @@ class OIDplus extends OIDplusBaseClass {
 						include $config_file;
 					}
 				}
+
 
 				// Backwards compatibility 2.0 => 2.1
 				if (defined('OIDPLUS_CONFIG_VERSION') && (OIDPLUS_CONFIG_VERSION == 2.0)) {
@@ -222,8 +223,8 @@ class OIDplus extends OIDplusBaseClass {
 							'DISABLE_PLUGIN_Frdlweb\OIDplus\OIDplusPagePublicAltIds', $name);
 						$name = str_replace('DISABLE_PLUGIN_OIDplusPagePublicUITweaks',
 							'DISABLE_PLUGIN_TushevOrg\OIDplus\OIDplusPagePublicUITweaks', $name);
-						$name = str_replace('DISABLE_PLUGIN_OIDplus',
-							'DISABLE_PLUGIN_ViaThinkSoft\OIDplus\OIDplus', $name);
+						//$name = str_replace('DISABLE_PLUGIN_OIDplus',
+						//	'DISABLE_PLUGIN_ViaThinkSoft\OIDplus\Plugins\...\...\...\', $name); // TODO: we cannot do this in 2.0.2, because we don't know the full path!
 						if ($name == 'CONFIG_VERSION') {
 							$value = 2.1;
 						} else if (($name == 'MYSQL_PASSWORD') || ($name == 'ODBC_PASSWORD') || ($name == 'PDO_PASSWORD') || ($name == 'PGSQL_PASSWORD')) {
@@ -1165,19 +1166,6 @@ class OIDplus extends OIDplusBaseClass {
 						continue; // Plugin is disabled
 					}
 
-					// The auto-loader of OIDplus currently does not accept PHP namespaces.
-					// Reason: The autoloader detects the classes inside plugins/*/*/*/*.class.php, but it cannot know
-					//         which namespace these files have, because their folder names do not reveal the namespace.
-					//         So it just ignores the namespace and loads all classes with the same name.
-					// TODO: Think about a solution; There was a discussion here https://github.com/frdl/frdl-oidplus-plugin-type-pen/issues/1
-					$tmp = explode('\\',$class_name);
-					$class_name_no_namespace = end($tmp);
-					if (in_array($class_name_no_namespace, $known_main_classes_no_namespace)) {
-						// Removed check for now, since everything should work correctly
-						// throw new OIDplusException(_L('More than one plugin has the PHP class name "%1". This is currently no supported, not even if they are in different namespaces.', $class_name_no_namespace));
-					}
-					$known_main_classes_no_namespace[] = $class_name_no_namespace;
-
 					// Do some basic checks on the plugin PHP main class
 					if (!class_exists($class_name)) {
 						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Manifest declares PHP main class as "%1", but it could not be found', $class_name));
@@ -1209,7 +1197,7 @@ class OIDplus extends OIDplusBaseClass {
 					$full_plugin_dir = substr($full_plugin_dir, strlen(OIDplus::localpath()));
 					$dir_is_viathinksoft = str_starts_with($full_plugin_dir, 'plugins/viathinksoft/') || str_starts_with($full_plugin_dir, 'plugins\\viathinksoft\\');
 					$oid_is_viathinksoft = str_starts_with($plugin_oid, '1.3.6.1.4.1.37476.2.5.2.4.'); // { iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 37476 products(2) oidplus(5) v2(2) plugins(4) }
-					$class_is_viathinksoft = str_starts_with($class_name, 'ViaThinkSoft\\');
+					$class_is_viathinksoft = str_starts_with($class_name, 'ViaThinkSoft\\OIDplus\\Plugins\\viathinksoft\\');
 					if ($oid_is_viathinksoft != $class_is_viathinksoft) {
 						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Third-party plugins must not use the ViaThinkSoft PHP namespace. Please use your own vendor namespace.'));
 					}

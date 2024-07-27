@@ -17,8 +17,8 @@
  * limitations under the License.
  */
 
-use ViaThinkSoft\OIDplus\OIDplusDatabaseConnection;
-use ViaThinkSoft\OIDplus\OIDplusException;
+use ViaThinkSoft\OIDplus\Core\OIDplusDatabaseConnection;
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
 
 /**
  * This function is internally called by oidplus_dbupdate_1002().
@@ -85,7 +85,7 @@ function vts_crypt_convert_from_old_oidplus(string $authkey, string $salt): stri
  * This function will be called by OIDplusDatabaseConnection.class.php at method afterConnect().
  * @param OIDplusDatabaseConnection $db is the OIDplusDatabaseConnection class
  * @return int new version set
- * @throws \ViaThinkSoft\OIDplus\OIDplusException
+ * @throws \ViaThinkSoft\OIDplus\Core\OIDplusException
  */
 function oidplus_dbupdate_1002(OIDplusDatabaseConnection $db): int {
 	if ($db->transaction_supported()) $db->transaction_begin();

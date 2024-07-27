@@ -17,7 +17,12 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus;
+namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n401_backup;
+
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
+use ViaThinkSoft\OIDplus\Core\OIDplusHtmlException;
+use ViaThinkSoft\OIDplus\Core\OIDplusPagePluginAdmin;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;
@@ -205,7 +210,7 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 	 * @param bool $export_pki
 	 * @return string
 	 * @throws OIDplusException
-	 * @throws \ViaThinkSoft\OIDplus\OIDplusConfigInitializationException
+	 * @throws \ViaThinkSoft\OIDplus\Core\OIDplusConfigInitializationException
 	 */
 	public static function createBackup(bool $showReport, bool $export_objects=true, bool $export_ra=true, bool $export_config=false, bool $export_log=false, bool $export_pki=false): string {
 		$num_rows = [
@@ -437,7 +442,7 @@ class OIDplusPageAdminDatabaseBackup extends OIDplusPagePluginAdmin
 	 * @param bool $import_pki
 	 * @return void
 	 * @throws OIDplusException
-	 * @throws \ViaThinkSoft\OIDplus\OIDplusConfigInitializationException
+	 * @throws \ViaThinkSoft\OIDplus\Core\OIDplusConfigInitializationException
 	 */
 	public static function restoreBackup(bool $showReport, string $cont, bool $import_objects=true, bool $import_ra=true, bool $import_config=false, bool $import_log=false, bool $import_pki=false): void {
 		$num_rows = [

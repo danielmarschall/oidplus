@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-use ViaThinkSoft\OIDplus\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplus;
 
 function ft_get_oid_data(string $oid) {
 	$url = OIDplus::baseConfig()->getValue('OIDINFO_API_URL') . '&oid='.urlencode($oid);

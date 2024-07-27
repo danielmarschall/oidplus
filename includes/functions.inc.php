@@ -17,8 +17,8 @@
  * limitations under the License.
  */
 
-use ViaThinkSoft\OIDplus\OIDplus;
-use ViaThinkSoft\OIDplus\OIDplusException;
+use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
 
 /**
  * @param string $privKey
@@ -218,8 +218,8 @@ function my_vsprintf(string $str, array $args): string {
  * @param string $str
  * @param mixed ...$sprintfArgs
  * @return string
- * @throws \ViaThinkSoft\OIDplus\OIDplusConfigInitializationException
- * @throws \ViaThinkSoft\OIDplus\OIDplusException
+ * @throws \ViaThinkSoft\OIDplus\Core\OIDplusConfigInitializationException
+ * @throws \ViaThinkSoft\OIDplus\Core\OIDplusException
  */
 function _L(string $str, ...$sprintfArgs): string {
 	static $translation_array = array();
@@ -244,8 +244,8 @@ function _L(string $str, ...$sprintfArgs): string {
  * @param array $params
  * @param string $key
  * @return void
- * @throws \ViaThinkSoft\OIDplus\OIDplusConfigInitializationException
- * @throws \ViaThinkSoft\OIDplus\OIDplusException
+ * @throws \ViaThinkSoft\OIDplus\Core\OIDplusConfigInitializationException
+ * @throws \ViaThinkSoft\OIDplus\Core\OIDplusException
  */
 function _CheckParamExists(array $params, string $key) {
 	if (class_exists(OIDplusException::class)) {
@@ -326,7 +326,7 @@ function sha3_512_pbkdf2(string $password, string $salt, int $iterations, int $l
  * @param string|null $reason
  * @return bool
  * @throws OIDplusException
- * @throws \ViaThinkSoft\OIDplus\OIDplusConfigInitializationException
+ * @throws \ViaThinkSoft\OIDplus\Core\OIDplusConfigInitializationException
  */
 function url_post_contents_available(bool $require_ssl=true, ?string &$reason=null): bool {
 	if (class_exists(OIDplus::class)) {
@@ -350,7 +350,7 @@ function url_post_contents_available(bool $require_ssl=true, ?string &$reason=nu
  * @param array $extraHeaders
  * @param string $userAgent
  * @return string|false
- * @throws \ViaThinkSoft\OIDplus\OIDplusException
+ * @throws \ViaThinkSoft\OIDplus\Core\OIDplusException
  */
 function url_post_contents(string $url, array $params=array(), array $extraHeaders=array(), string $userAgent='ViaThinkSoft-OIDplus/2.0') {
 	$require_ssl = str_starts_with(strtolower($url),'https:');
@@ -400,7 +400,7 @@ function url_post_contents(string $url, array $params=array(), array $extraHeade
  * @param string|null $reason
  * @return bool
  * @throws OIDplusException
- * @throws \ViaThinkSoft\OIDplus\OIDplusConfigInitializationException
+ * @throws \ViaThinkSoft\OIDplus\Core\OIDplusConfigInitializationException
  */
 function url_get_contents_available(bool $require_ssl=true, ?string &$reason=null): bool {
 	if (class_exists(OIDplus::class)) {
