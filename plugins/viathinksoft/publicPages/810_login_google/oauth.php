@@ -89,7 +89,20 @@ try {
 	}
 	$verification_certs = json_decode($certs, true);
 	\Firebase\JWT\JWT::$leeway = 60; // leeway in seconds
-	$cls_data = \Firebase\JWT\JWT::decode($id_token, $verification_certs, array('ES256', 'ES384', 'RS256', 'RS384', 'RS512'));
+
+	// JWT 5.0 Lib
+	//$cls_data = \Firebase\JWT\JWT::decode($id_token, $verification_certs, array('ES256', 'ES384', 'RS256', 'RS384', 'RS512'));
+
+	// JWT 6.0 lib (so complicated now!)
+	$alg = json_decode(base64_decode(explode('.',$id_token)[0]),true)['alg']??'';
+	if (!in_array($alg, array('ES256', 'ES384', 'RS256', 'RS384', 'RS512'))) throw new Exception(_L("Unexpected algorithm %1",$alg));
+	foreach ($verification_certs as $kid => &$k) {
+		$k = new \Firebase\JWT\Key($k, $alg);
+	}
+	unset($k);
+	$cls_data = \Firebase\JWT\JWT::decode($id_token, $verification_certs);
+
+	// Now continue
 	$data = json_decode(json_encode($cls_data)?:'{}', true); // convert stdClass to array
 	if (!isset($data['iss']) || ($data['iss'] !== 'https://accounts.google.com')) {
 		throw new OIDplusException(_L('JWT token could not be decoded'));
