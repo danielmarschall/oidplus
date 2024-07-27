@@ -29,7 +29,7 @@ require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 
 _CheckParamExists($_GET, 'number');
 
-if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\gs1\OIDplusObjectTypePluginGs1', false)) {
+if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_1.3.6.1.4.1.37476.2.5.2.4.8.2', false)) {
 	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
 }
 

@@ -178,9 +178,18 @@ class OIDplus extends OIDplusBaseClass {
 					throw new OIDplusConfigInitializationException(_L('A full re-initialization is not possible if a version %1 config file (containing "defines") is used. Please update to a config %2 file by running setup again.','2.0','2.1'));
 				} else {
 					$tmp = file_get_contents($config_file);
-					$ns = "ViaThinkSoft\OIDplus\Core\OIDplus";
-					$uses = "use $ns;";
-					if ((strpos($tmp,'OIDplus::') !== false) && (strpos($tmp,$uses) === false)) {
+					$old_class = "ViaThinkSoft\OIDplus\OIDplus";
+					$new_class = "ViaThinkSoft\OIDplus\Core\OIDplus";
+					$uses = "use $new_class;";
+					if (strpos($tmp,$old_class) !== false) {
+						$tmp = str_replace($old_class, $new_class, $tmp);
+						if (@file_put_contents($config_file, $tmp) === false) {
+							eval('?'.'>'.$tmp);
+						} else {
+							include $config_file;
+						}
+					}
+					else if ((strpos($tmp,'OIDplus::') !== false) && (strpos($tmp,$uses) === false)) {
 						// Migrate config file to namespace class names
 						// Note: Only config files version 2.1 are affected. Not 2.0 ones
 
@@ -189,15 +198,6 @@ class OIDplus extends OIDplusBaseClass {
 
 						$tmp = str_replace("\$ns\OIDplusCaptchaPluginRecaptcha::", "OIDplusCaptchaPluginRecaptcha::", $tmp);
 						$tmp = str_replace("OIDplusCaptchaPluginRecaptcha::", "\$ns\OIDplusCaptchaPluginRecaptcha::", $tmp);
-
-						$tmp = str_replace('DISABLE_PLUGIN_OIDplusPagePublicRdap',
-							'DISABLE_PLUGIN_Frdlweb\OIDplus\OIDplusPagePublicRdap', $tmp);
-						$tmp = str_replace('DISABLE_PLUGIN_OIDplusPagePublicAltIds',
-							'DISABLE_PLUGIN_Frdlweb\OIDplus\OIDplusPagePublicAltIds', $tmp);
-						$tmp = str_replace('DISABLE_PLUGIN_OIDplusPagePublicUITweaks',
-							'DISABLE_PLUGIN_TushevOrg\OIDplus\OIDplusPagePublicUITweaks', $tmp);
-						//$tmp = str_replace('DISABLE_PLUGIN_OIDplus',
-						//	'DISABLE_PLUGIN_ViaThinkSoft\OIDplus\Plugins\...\...\...\', $tmp); // TODO: In 2.0.2, we don't know the full path!!!
 
 						if (@file_put_contents($config_file, $tmp) === false) {
 							eval('?'.'>'.$tmp);
@@ -209,7 +209,6 @@ class OIDplus extends OIDplusBaseClass {
 					}
 				}
 
-
 				// Backwards compatibility 2.0 => 2.1
 				if (defined('OIDPLUS_CONFIG_VERSION') && (OIDPLUS_CONFIG_VERSION == 2.0)) {
 					self::$oldConfigFormatLoaded = true;
@@ -217,14 +216,6 @@ class OIDplus extends OIDplusBaseClass {
 						$name = str_replace('OIDPLUS_', '', $name);
 						if ($name == 'SESSION_SECRET') $name = 'SERVER_SECRET';
 						if ($name == 'MYSQL_QUERYLOG') $name = 'QUERY_LOGFILE';
-						$name = str_replace('DISABLE_PLUGIN_OIDplusPagePublicRdap',
-							'DISABLE_PLUGIN_Frdlweb\OIDplus\OIDplusPagePublicRdap', $name);
-						$name = str_replace('DISABLE_PLUGIN_OIDplusPagePublicAltIds',
-							'DISABLE_PLUGIN_Frdlweb\OIDplus\OIDplusPagePublicAltIds', $name);
-						$name = str_replace('DISABLE_PLUGIN_OIDplusPagePublicUITweaks',
-							'DISABLE_PLUGIN_TushevOrg\OIDplus\OIDplusPagePublicUITweaks', $name);
-						//$name = str_replace('DISABLE_PLUGIN_OIDplus',
-						//	'DISABLE_PLUGIN_ViaThinkSoft\OIDplus\Plugins\...\...\...\', $name); // TODO: we cannot do this in 2.0.2, because we don't know the full path!
 						if ($name == 'CONFIG_VERSION') {
 							$value = 2.1;
 						} else if (($name == 'MYSQL_PASSWORD') || ($name == 'ODBC_PASSWORD') || ($name == 'PDO_PASSWORD') || ($name == 'PGSQL_PASSWORD')) {
@@ -266,6 +257,14 @@ class OIDplus extends OIDplusBaseClass {
 				if (strpos($_SERVER['REQUEST_URI'], OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/') !== 0) {
 					$config_file = substr($config_file, strlen(OIDplus::localpath(NULL))); // "censor" the system local path
 					throw new OIDplusConfigInitializationException(_L("You must set a value for SERVER_SECRET in %1 for the system to operate secure.",$config_file));
+				}
+			}
+
+			foreach (self::$baseConfig->getAllKeys() as $key) {
+				if (str_starts_with($key, 'DISABLE_PLUGIN_')) {
+					if (!oid_valid_dotnotation(substr($key, strlen('DISABLE_PLUGIN_')))) {
+						throw new OIDplusConfigInitializationException(_L("File %1 contains an outdated setting %2. It must be a plugin OID instead of PHP class name.",$config_file,$key));
+					}
 				}
 			}
 		}
@@ -1044,23 +1043,8 @@ class OIDplus extends OIDplusBaseClass {
 	 * @return bool true if plugin is enabled, false if plugin is disabled
 	 * @throws OIDplusException if the class name or config file (disabled setting) does not contain a namespace
 	 */
-	private static function pluginCheckDisabled($class_name): bool {
-		$path = explode('\\', $class_name);
-
-		if (count($path) == 1) {
-			throw new OIDplusException(_L('Plugin "%1" is erroneous',$class_name).': '._L('The plugin uses no namespaces. The new version of OIDplus requires plugin class files to be in a namespace. Please notify your plugin author and ask for an update.'));
-		}
-
-		$class_end = end($path);
-		if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_'.$class_end, false)) {
-			throw new OIDplusConfigInitializationException(_L('Your base configuration file is outdated. Please change "%1" to "%2".','DISABLE_PLUGIN_'.$class_end,'DISABLE_PLUGIN_'.$class_name));
-		}
-
-		if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_'.$class_name, false)) {
-			return false;
-		}
-
-		return true;
+	private static function pluginIsDisabled($oid): bool {
+		return OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_'.$oid, false);
 	}
 
 	/**
@@ -1112,8 +1096,7 @@ class OIDplus extends OIDplusBaseClass {
 			$manifest = new OIDplusPluginManifest();
 			$manifest->loadManifest($ini);
 
-			$class_name = $manifest->getPhpMainClass();
-			if ($class_name && !self::pluginCheckDisabled($class_name)) continue;
+			if (self::pluginIsDisabled($manifest->getOid())) continue;
 
 			if ($flat) {
 				$out[] = $manifest;
@@ -1154,6 +1137,7 @@ class OIDplus extends OIDplusBaseClass {
 		foreach ($ary as $plugintype_folder => $bry) {
 			foreach ($bry as $vendor_folder => $cry) {
 				foreach ($cry as $pluginname_folder => $manifest) { /* @phpstan-ignore-line */
+					assert($manifest instanceof OIDplusPluginManifest);
 					$class_name = $manifest->getPhpMainClass();
 
 					// Before we load the plugin, we want to make some checks to confirm
@@ -1162,7 +1146,7 @@ class OIDplus extends OIDplusBaseClass {
 					if (!$class_name) {
 						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Manifest does not declare a PHP main class'));
 					}
-					if (!self::pluginCheckDisabled($class_name)) {
+					if (self::pluginIsDisabled($manifest->getOid())) {
 						continue; // Plugin is disabled
 					}
 

@@ -29,7 +29,7 @@ try {
 
 	OIDplus::init(true);
 
-	if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n095_attachments\OIDplusPagePublicAttachments', false)) {
+	if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_1.3.6.1.4.1.37476.2.5.2.4.1.95', false)) {
 		throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
 	}
 

@@ -35,7 +35,7 @@ ob_start();
 
 OIDplus::init(true);
 
-if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n401_backup\OIDplusPageAdminDatabaseBackup', false)) {
+if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_1.3.6.1.4.1.37476.2.5.2.4.3.401', false)) {
 	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
 }
 

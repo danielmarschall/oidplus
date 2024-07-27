@@ -26,7 +26,7 @@ define('SPACER_PNG', base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bK
 
 require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 
-if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n500_resources\OIDplusPagePublicResources', false)) {
+if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_1.3.6.1.4.1.37476.2.5.2.4.1.500', false)) {
 	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
 }
 
