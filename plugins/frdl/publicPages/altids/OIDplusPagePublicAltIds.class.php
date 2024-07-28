@@ -40,7 +40,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 	 * @param string $id
 	 * @return void
 	 */
-	public function beforeObjectDelete(string $id){
+	public function beforeObjectDelete(string $id): void {
 
 	}
 
@@ -49,7 +49,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 	 * @param string $id
 	 * @return void
 	 */
-	public function afterObjectDelete(string $id){
+	public function afterObjectDelete(string $id): void {
 		if (!$this->db_table_exists) return;
 		OIDplus::db()->query("DELETE FROM ###altids WHERE origin = ?", [$id]);
 	}
@@ -60,7 +60,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 	 * @param array $params
 	 * @return void
 	 */
-	public function beforeObjectUpdateSuperior(string $id, array &$params){
+	public function beforeObjectUpdateSuperior(string $id, array &$params): void {
 
 	}
 
@@ -70,7 +70,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 	 * @param array $params
 	 * @return void
 	 */
-	public function afterObjectUpdateSuperior(string $id, array &$params){
+	public function afterObjectUpdateSuperior(string $id, array &$params): void {
 		$this->saveAltIdsForQuery($id);
 	}
 
@@ -80,7 +80,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 	 * @param array $params
 	 * @return void
 	 */
-	public function beforeObjectUpdateSelf(string $id, array &$params){
+	public function beforeObjectUpdateSelf(string $id, array &$params): void {
 
 	}
 
@@ -90,7 +90,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 	 * @param array $params
 	 * @return void
 	 */
-	public function afterObjectUpdateSelf(string $id, array &$params){
+	public function afterObjectUpdateSelf(string $id, array &$params): void {
 		$this->saveAltIdsForQuery($id);
 	}
 
@@ -100,7 +100,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 	 * @param array $params
 	 * @return void
 	 */
-	public function beforeObjectInsert(string $id, array &$params){
+	public function beforeObjectInsert(string $id, array &$params): void {
 
 	}
 
@@ -110,7 +110,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 	 * @param array $params
 	 * @return void
 	 */
-	public function afterObjectInsert(string $id, array &$params){
+	public function afterObjectInsert(string $id, array &$params): void {
 		$this->saveAltIdsForQuery($id);
 	}
 
@@ -336,7 +336,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 	 * @return void
 	 * @throws \ViaThinkSoft\OIDplus\Core\OIDplusException
 	 */
-	public function whoisObjectAttributes(string $id, array &$out) {
+	public function whoisObjectAttributes(string $id, array &$out): void {
 		$xmlns = 'oidplus-frdlweb-altids-plugin';
 		$xmlschema = 'urn:oid:1.3.6.1.4.1.37553.8.1.8.8.53354196964.641310544.1714020422';
 		$xmlschemauri = OIDplus::webpath(__DIR__.'/altids.xsd',OIDplus::PATH_ABSOLUTE_CANONICAL);
@@ -412,7 +412,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 	 * @param array $out
 	 * @return void
 	 */
-	public function whoisRaAttributes(string $email, array &$out) {
+	public function whoisRaAttributes(string $email, array &$out): void {
 
 	}
 

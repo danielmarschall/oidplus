@@ -2766,6 +2766,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		File %1 contains an outdated setting %2. It must be a plugin OID instead of PHP class name.
+		]]></source>
+		<target><![CDATA[
+		Die Datei %1 enthält eine veraltete Einstellung %2. Es muss nun die Plugin-OID und nicht mehr der PHP-Klassenname verwendet werden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		File %1 does not exist
 		]]></source>
 		<target><![CDATA[
@@ -8046,14 +8054,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		The plugin uses no namespaces. The new version of OIDplus requires plugin class files to be in a namespace. Please notify your plugin author and ask for an update.
-		]]></source>
-		<target><![CDATA[
-		Das Plugin verwendet keinen PHP-Namensraum. Die neue Version von OIDplus erfordert dass alle Plugins Klassen-Namensräume verwenden. Bitte kontaktieren Sie den Author des Plugins, um ein Update zu erhalten.
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		The query according to OID Information Protocol is:
 		]]></source>
 		<target><![CDATA[
@@ -8562,6 +8562,14 @@
 		]]></source>
 		<target><![CDATA[
 		UUIDv8 basierend auf der System ID dieses OIDplus-Systems.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Unexpected algorithm %1
+		]]></source>
+		<target><![CDATA[
+		Unerwarteter Algorithmus %1
 		]]></target>
 	</message>
 	<message>
@@ -9418,14 +9426,6 @@
 		]]></source>
 		<target><![CDATA[
 		Ihre OIDplus-System-ID (abgeleitet vom öffentlichen Schlüssel) ist:
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Your base configuration file is outdated. Please change "%1" to "%2".
-		]]></source>
-		<target><![CDATA[
-		Die Basiskonfigurations-Datei ist veraltet. Bitte ändern Sie "%1" zu "%2".
 		]]></target>
 	</message>
 	<message>

@@ -31,7 +31,7 @@ interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9 {
 	 * @param array $json_in
 	 * @return array|false
 	 */
-	public function restApiCall(string $requestMethod, string $endpoint, array $json_in);
+	public function restApiCall(string $requestMethod, string $endpoint, array $json_in)/*: array|false*/;
 
 	/**
 	 * Outputs information about valid endpoints

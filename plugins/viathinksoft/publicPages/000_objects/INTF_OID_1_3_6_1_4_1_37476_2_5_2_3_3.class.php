@@ -29,54 +29,54 @@ interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3 {
 	 * @param string $id
 	 * @return void
 	 */
-	public function beforeObjectDelete(string $id);
+	public function beforeObjectDelete(string $id): void;
 
 	/**
 	 * @param string $id
 	 * @return void
 	 */
-	public function afterObjectDelete(string $id);
-
-	/**
-	 * @param string $id
-	 * @param array $params
-	 * @return void
-	 */
-	public function beforeObjectUpdateSuperior(string $id, array &$params);
+	public function afterObjectDelete(string $id): void;
 
 	/**
 	 * @param string $id
 	 * @param array $params
 	 * @return void
 	 */
-	public function afterObjectUpdateSuperior(string $id, array &$params);
+	public function beforeObjectUpdateSuperior(string $id, array &$params): void;
 
 	/**
 	 * @param string $id
 	 * @param array $params
 	 * @return void
 	 */
-	public function beforeObjectUpdateSelf(string $id, array &$params);
+	public function afterObjectUpdateSuperior(string $id, array &$params): void;
 
 	/**
 	 * @param string $id
 	 * @param array $params
 	 * @return void
 	 */
-	public function afterObjectUpdateSelf(string $id, array &$params);
+	public function beforeObjectUpdateSelf(string $id, array &$params): void;
 
 	/**
 	 * @param string $id
 	 * @param array $params
 	 * @return void
 	 */
-	public function beforeObjectInsert(string $id, array &$params);
+	public function afterObjectUpdateSelf(string $id, array &$params): void;
 
 	/**
 	 * @param string $id
 	 * @param array $params
 	 * @return void
 	 */
-	public function afterObjectInsert(string $id, array &$params);
+	public function beforeObjectInsert(string $id, array &$params): void;
+
+	/**
+	 * @param string $id
+	 * @param array $params
+	 * @return void
+	 */
+	public function afterObjectInsert(string $id, array &$params): void;
 
 }

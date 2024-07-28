@@ -71,7 +71,7 @@ class OIDplusPageRaObjectLog extends OIDplusPagePluginRa
 	 * @return void
 	 * @throws \ViaThinkSoft\OIDplus\Core\OIDplusException
 	 */
-	public function modifyContent(string $id, string &$title, string &$icon, string &$text) {
+	public function modifyContent(string $id, string &$title, string &$icon, string &$text): void {
 		$obj = OIDplusObject::parse($id);
 		if (!$obj) return;
 		if (!$obj->userHasWriteRights()) return;
