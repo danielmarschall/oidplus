@@ -432,7 +432,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public function modifyContent(string $id, string &$title, string &$icon, string &$text) {
+	public function modifyContent(string $id, string &$title, string &$icon, string &$text): void {
 		$output = '';
 		$doshow = false;
 
@@ -530,7 +530,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	 * @param string $id
 	 * @return void
 	 */
-	public function beforeObjectDelete(string $id) {}
+	public function beforeObjectDelete(string $id): void {}
 
 	/**
 	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3
@@ -538,7 +538,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function afterObjectDelete(string $id) {
+	public function afterObjectDelete(string $id): void {
 		// Delete the attachment folder including all files in it (note: Subfolders are not possible)
 		$uploaddir = self::getUploadDir($id);
 		if ($uploaddir != '') {
@@ -557,7 +557,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	 * @param array $params
 	 * @return void
 	 */
-	public function beforeObjectUpdateSuperior(string $id, array &$params) {}
+	public function beforeObjectUpdateSuperior(string $id, array &$params): void {}
 
 	/**
 	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3
@@ -565,7 +565,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	 * @param array $params
 	 * @return void
 	 */
-	public function afterObjectUpdateSuperior(string $id, array &$params) {}
+	public function afterObjectUpdateSuperior(string $id, array &$params): void {}
 
 	/**
 	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3
@@ -573,7 +573,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	 * @param array $params
 	 * @return void
 	 */
-	public function beforeObjectUpdateSelf(string $id, array &$params) {}
+	public function beforeObjectUpdateSelf(string $id, array &$params): void {}
 
 	/**
 	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3
@@ -581,7 +581,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	 * @param array $params
 	 * @return void
 	 */
-	public function afterObjectUpdateSelf(string $id, array &$params) {}
+	public function afterObjectUpdateSelf(string $id, array &$params): void {}
 
 	/**
 	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3
@@ -589,7 +589,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	 * @param array $params
 	 * @return void
 	 */
-	public function beforeObjectInsert(string $id, array &$params) {}
+	public function beforeObjectInsert(string $id, array &$params): void {}
 
 	/**
 	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3
@@ -597,7 +597,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	 * @param array $params
 	 * @return void
 	 */
-	public function afterObjectInsert(string $id, array &$params) {}
+	public function afterObjectInsert(string $id, array &$params): void {}
 
 	/**
 	 * @param string $request
@@ -614,7 +614,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function whoisObjectAttributes(string $id, array &$out) {
+	public function whoisObjectAttributes(string $id, array &$out): void {
 		$xmlns = 'oidplus-attachment-plugin';
 		$xmlschema = 'urn:oid:1.3.6.1.4.1.37476.2.5.2.4.1.95.1';
 		$xmlschemauri = OIDplus::webpath(__DIR__.'/attachments.xsd',OIDplus::PATH_ABSOLUTE_CANONICAL);
@@ -648,7 +648,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	 * @param array $out
 	 * @return void
 	 */
-	public function whoisRaAttributes(string $email, array &$out) {}
+	public function whoisRaAttributes(string $email, array &$out): void {}
 
 	/**
 	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8

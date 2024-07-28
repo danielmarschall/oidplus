@@ -30,13 +30,13 @@ interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4 {
 	 * @param array $out
 	 * @return void
 	 */
-	public function whoisObjectAttributes(string $id, array &$out);
+	public function whoisObjectAttributes(string $id, array &$out): void;
 
 	/**
 	 * @param string $email
 	 * @param array $out
 	 * @return void
 	 */
-	public function whoisRaAttributes(string $email, array &$out);
+	public function whoisRaAttributes(string $email, array &$out): void;
 
 }

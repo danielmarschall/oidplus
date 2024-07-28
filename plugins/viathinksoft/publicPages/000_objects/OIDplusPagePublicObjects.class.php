@@ -84,7 +84,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 * @return void
 	 * @throws \ViaThinkSoft\OIDplus\Core\OIDplusException
 	 */
-	public function modifyContent(string $id, string &$title, string &$icon, string &$text) {
+	public function modifyContent(string $id, string &$title, string &$icon, string &$text): void {
 		$payload = '<br /> <a href="'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL)
 			.'rest/v1/objects/'.htmlentities($id).'" class="gray_footer_font" target="_blank">'._L('REST API').'</a> '
 			.'(<a '.OIDplus::gui()->link('oidplus:rest_api_information_admin$endpoints:1.3.6.1.4.1.37476.2.5.2.4.1.0').' class="gray_footer_font">'._L('Documentation').'</a>)';
