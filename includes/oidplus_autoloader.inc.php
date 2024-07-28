@@ -46,12 +46,10 @@ spl_autoload_register(function ($fq_class_name) {
 		}
 	}
 	if (str_starts_with($fq_class_name, "ViaThinkSoft\\OIDplus\\Core\\")) {
-		require __DIR__ . "/classes/" . $path[3] . ".class.php";
-		return;
+		require __DIR__ . "/classes/" . implode("/",array_slice($path, 3)) . ".class.php";
 	}
-	if (str_starts_with($fq_class_name, "ViaThinkSoft\\OIDplus\\Plugins\\")) {
-		require __DIR__ . "/../plugins/" . $path[3] . "/" . $path[4] . "/" . $path[5] . "/" . $path[6] . ".class.php";
-		return;
+	else if (str_starts_with($fq_class_name, "ViaThinkSoft\\OIDplus\\Plugins\\")) {
+		require __DIR__ . "/../plugins/" . implode("/",array_slice($path, 3)) . ".class.php";
 	}
 });
 
@@ -61,25 +59,13 @@ spl_autoload_register(function ($fq_class_name) {
 spl_autoload_register(function ($fq_class_name) {
 	$path = explode('\\', $fq_class_name);
 	$classname_no_namespace = end($path);
-
-	$tmp = __DIR__ . '/../vendor/danielmarschall/fileformats/'.$classname_no_namespace.'.class.php';
-	if (file_exists($tmp)) {
+	if (
+		file_exists($tmp = __DIR__ . '/../vendor/danielmarschall/fileformats/'.$classname_no_namespace.'.class.php') ||
+		file_exists($tmp = __DIR__ . '/../vendor/danielmarschall/php_utils/'.$classname_no_namespace.'.class.php') ||
+		file_exists($tmp = __DIR__ . '/../vendor/danielmarschall/oidconverter/php/'.$classname_no_namespace.'.class.phps')
+	) {
 		require $tmp;
-		return;
 	}
-
-	$tmp = __DIR__ . '/../vendor/danielmarschall/php_utils/'.$classname_no_namespace.'.class.php';
-	if (file_exists($tmp)) {
-		require $tmp;
-		return;
-	}
-
-	$tmp = __DIR__ . '/../vendor/danielmarschall/oidconverter/php/'.$classname_no_namespace.'.class.phps';
-	if (file_exists($tmp)) {
-		require $tmp;
-		return;
-	}
-
 });
 
 /**
