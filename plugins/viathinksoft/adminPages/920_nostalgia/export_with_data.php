@@ -71,37 +71,37 @@ while ($row = $res->fetch_object()) {
 
 const RA_CMD_VERSION          = 'VERS';
 const RA_CMD_NAME             = 'NAME';
+const RA_CMD_SELF             = 'SELF';
+const RA_CMD_SUPR             = 'SUPR';
+const RA_CMD_CHLD             = 'CHLD';
 const RA_CMD_EMAIL            = 'MAIL';
 const RA_CMD_PHONE            = 'PHON';
 const RA_CMD_CREATE_DATE      = 'CDAT';
 const RA_CMD_UPDATE_DATE      = 'UDAT';
 
-$idxfile = '';
+$idxfile = make_line(RA_CMD_VERSION, '2024');
+$idxfile .= make_line(RA_CMD_SELF, '00000000');
+$idxfile .= make_line(RA_CMD_SUPR, '00000000');
 
 foreach ($ra_dos_ids as $ra_email => $dos_id) {
+	$idxfile .= make_line(RA_CMD_CHLD, $dos_id.$ra_email);
+
 	$cont = make_line(RA_CMD_VERSION, '2024');
-
-	$cont .= make_line(RA_CMD_NAME, $ra_name[$ra_email]);
-
-	$cont .= make_line(RA_CMD_EMAIL, $ra_email);
-
-	$cont .= make_line(RA_CMD_PHONE, $ra_phone[$ra_email]);
-
+	$cont .= make_line(RA_CMD_SELF, $dos_id.$ra_email);
+	$cont .= make_line(RA_CMD_SUPR, '00000000');
+	if ($ra_name[$ra_email]) $cont .= make_line(RA_CMD_NAME, $ra_name[$ra_email]);
+	if ($ra_email) $cont .= make_line(RA_CMD_EMAIL, $ra_email);
+	if ($ra_phone[$ra_email]) $cont .= make_line(RA_CMD_PHONE, $ra_phone[$ra_email]);
 	$cont .= make_line(RA_CMD_CREATE_DATE, $ra_cdat[$ra_email] ?? '1900-01-01');
-
 	$cont .= make_line(RA_CMD_UPDATE_DATE, $ra_udat[$ra_email] ?? '1900-01-01');
 
 	//echo "****$dos_id.RA_\r\n";
 	//echo "$cont\r\n";
-
 	$zip->addFromString("$dos_id.RA_", $cont);
-
-	$idxfile .= make_line($dos_id, $ra_email);
 }
 
 //echo "****00000000.RA_\r\n";
 //echo "$idxfile\r\n";
-
 $zip->addFromString("00000000.RA_", $idxfile);
 
 // ---------------------------- OIDS
@@ -232,7 +232,6 @@ foreach ($dos_ids as $oid => $dos_id) {
 
 	//echo "****$dos_id.OID\r\n";
 	//echo "$cont\r\n";
-
 	$zip->addFromString("$dos_id.OID", $cont);
 }
 
