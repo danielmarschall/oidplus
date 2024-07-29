@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2024 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,18 +58,17 @@ class OIDplusPageAdminNostalgia extends OIDplusPagePluginAdmin
 
 			if (class_exists('ZipArchive')) {
 				$out['text'] .= '<ul>';
-				$out['text'] .= '<li><a href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'export_dos.php">'._L('Download OIDplus for DOS').'</a>, '._L('including your database* (only OIDs)').'</li>';
+				$out['text'] .= '<li><a href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'export_with_data.php">'._L('Download OIDplus for DOS, Windows 3.11, or Windows 95 and later').'</a>, '._L('including your database* (only OIDs)').'</li>';
 				$out['text'] .= '<li><a href="https://www.viathinksoft.de/download/252/oidplus_dos.zip">'._L('Download OIDplus for DOS').'</a>, '._L('without data').'</li>';
-				$out['text'] .= '<li><a href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'export_win.php">'._L('Download OIDplus for Windows 3.11, 95, or later').'</a>, '._L('including your database* (only OIDs)').'</li>';
 				$out['text'] .= '<li><a href="https://www.viathinksoft.de/download/254/oidplus_win311.zip">'._L('Download OIDplus for Windows 3.11').'</a>, '._L('without data').'</li>';
-				$out['text'] .= '<li><a href="https://www.viathinksoft.de/download/253/oidplus_win95.zip">'._L('Download OIDplus for Windows 95 or later').'</a>, '._L('without data').'</li>';
+				$out['text'] .= '<li><a href="https://www.viathinksoft.de/download/253/oidplus_win95.zip">'._L('Download OIDplus for Windows 95 and later').'</a>, '._L('without data').'</li>';
 				$out['text'] .= '</ul>';
 				$out['text'] .= '<p>'._L('* Please note that the download might be delayed since your OID database is exported and added to the ZIP file.').'</p>';
 			} else {
 				$out['text'] .= '<ul>';
 				$out['text'] .= '<li><a href="https://www.viathinksoft.de/download/252/oidplus_dos.zip">'._L('Download OIDplus for DOS').'</a>, '._L('without data').'</li>';
 				$out['text'] .= '<li><a href="https://www.viathinksoft.de/download/254/oidplus_win311.zip">'._L('Download OIDplus for Windows 3.11').'</a>, '._L('without data').'</li>';
-				$out['text'] .= '<li><a href="https://www.viathinksoft.de/download/253/oidplus_win95.zip">'._L('Download OIDplus for Windows 95 or later').'</a>, '._L('without data').'</li>';
+				$out['text'] .= '<li><a href="https://www.viathinksoft.de/download/253/oidplus_win95.zip">'._L('Download OIDplus for Windows 95 and later').'</a>, '._L('without data').'</li>';
 				$out['text'] .= '</ul>';
 				$out['text'] .= '<p><font color="red">'._L('The PHP extension "ZipArchive" needs to be installed to create a ZIP archive with an included database. Otherwise, you can just download the plain program without data.').'</font></p>';
 			}
