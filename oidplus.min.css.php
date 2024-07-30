@@ -85,11 +85,7 @@ function process_file(string $filename): string {
 
 # ---
 
-// Third-party products
-$out .= process_file(__DIR__ . '/vendor/vakata/jstree/dist/themes/default/style.css');
-$out .= process_file(__DIR__ . '/vendor/components/jqueryui/themes/base/jquery-ui.css');
-$out .= process_file(__DIR__ . '/vendor/twbs/bootstrap/dist/css/bootstrap.css');
-$out .= process_file(__DIR__ . '/vendor/gedmarc/layout/dist/layout-default.css');
+// Loading animation CSS
 $out .= process_file(__DIR__ . '/includes/loading.css');
 
 // Find out base CSS

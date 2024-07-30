@@ -64,8 +64,8 @@ function process_file(string $filename): string {
 
 # ---
 
-// Third-party products
-// (None)
+// Loading animation CSS (currently not used in Setup)
+$out .= process_file(__DIR__ . '/../includes/loading.css');
 
 // OIDplus basic definitions
 if (file_exists($fil = OIDplus::getUserDataDir("styles").'setup_base.css')) {
