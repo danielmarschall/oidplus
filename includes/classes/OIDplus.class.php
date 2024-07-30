@@ -1143,25 +1143,6 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @return void
-	 * @throws OIDplusException
-	 */
-	private static function populateAutoloaderClassmap(): void {
-		static $classMapPopulatedfOnce = false;
-		if ($classMapPopulatedfOnce) return;
-		$classMapPopulatedfOnce = true;
-		$ary = self::getAllPluginManifests('*', true);
-		foreach ($ary as $manifest) {
-			if (self::pluginIsDisabled($manifest->getOid())) {
-				continue; // Plugin is disabled
-			}
-
-			global $oidplus_autoloader_folders;
-			$oidplus_autoloader_folders[$manifest->getPhpNamespace()] = dirname($manifest->getManifestFile());
-		}
-	}
-
-	/**
 	 * @param string|array $pluginDirName
 	 * @param string $expectedPluginClass
 	 * @param callable|null $registerCallback
@@ -1171,10 +1152,6 @@ class OIDplus extends OIDplusBaseClass {
 	 * @throws \ReflectionException
 	 */
 	public static function registerAllPlugins(/*string|array*/ $pluginDirName, string $expectedPluginClass, ?callable $registerCallback=null): array {
-		// We must call this first for all non-disabled plugins, because $oidplus_autoloader_folders must be complete before doing anything below
-		// (Since loading a class will also load the implemented interfaces which might be in a different plugin!)
-		self::populateAutoloaderClassmap();
-
 		$out = array();
 		if (is_array($pluginDirName)) {
 			$ary = array();
@@ -1182,7 +1159,7 @@ class OIDplus extends OIDplusBaseClass {
 				$ary = array_merge($ary, self::getAllPluginManifests($pluginDirName_, false));
 			}
 		} else {
-			$ary = self::getAllPluginManifests($pluginDirName, false);
+			$ary = self::getAllPluginManifests($pluginDirName, false); // note: does filter disabled plugins
 		}
 		$known_plugin_oids = array();
 		foreach ($ary as $plugintype_folder => $bry) {
@@ -1203,9 +1180,6 @@ class OIDplus extends OIDplusBaseClass {
 					}
 					if (!$php_class_name || str_contains($php_class_name, "\\")) {
 						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Manifest does not declare a PHP main class (without namespace)'));
-					}
-					if (self::pluginIsDisabled($manifest->getOid())) {
-						continue; // Plugin is disabled
 					}
 
 					// Do some basic checks on the plugin PHP main class
