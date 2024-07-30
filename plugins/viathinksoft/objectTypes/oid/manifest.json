@@ -11,7 +11,7 @@
 			"oid": "1.3.6.1.4.1.37476.2.5.2.4.8.7"
 		},
 		"php": {
-			"namespace": "ViaThinkSoft\\OIDplus\\Plugins\\viathinksoft\\objectTypes\\oid\\",
+			"namespace": "ViaThinkSoft\\OIDplus\\Plugins\\ObjectTypes\\OID\\",
 			"mainclass": "OIDplusObjectTypePluginOid"
 		},
 		"css": [],

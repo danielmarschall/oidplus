@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\logger\n200_windows_eventlog;
+namespace ViaThinkSoft\OIDplus\Plugins\Logger\WindowsEventLog;
 
 use ViaThinkSoft\OIDplus\Core\OIDplusLogEvent;
 use ViaThinkSoft\OIDplus\Core\OIDplusLoggerPlugin;

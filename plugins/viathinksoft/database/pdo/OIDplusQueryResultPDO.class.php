@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\database\pdo;
+namespace ViaThinkSoft\OIDplus\Plugins\Database\PDO;
 
 use ViaThinkSoft\OIDplus\Core\OIDplusQueryResult;
 

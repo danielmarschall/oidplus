@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\other;
+namespace ViaThinkSoft\OIDplus\Plugins\ObjectTypes\Other;
 
 use ViaThinkSoft\OIDplus\Core\OIDplusObjectTypePlugin;
 

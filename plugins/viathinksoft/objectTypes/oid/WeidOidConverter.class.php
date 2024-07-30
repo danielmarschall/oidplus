@@ -38,7 +38,7 @@
 //       The paddings do not count into the WeLuhn check digit.
 //
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\oid;
+namespace ViaThinkSoft\OIDplus\Plugins\ObjectTypes\OID;
 
 class WeidOidConverter {
 

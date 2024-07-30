@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n000_objects;
+namespace ViaThinkSoft\OIDplus\Plugins\PublicPages\Objects;
 
 use ViaThinkSoft\OIDplus\Core\OIDplusObject;
 

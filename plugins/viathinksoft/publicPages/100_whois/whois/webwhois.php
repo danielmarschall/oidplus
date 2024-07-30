@@ -20,7 +20,7 @@
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusGui;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;
-use ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n100_whois\OIDplusOIDIP;
+use ViaThinkSoft\OIDplus\Plugins\PublicPages\Whois\OIDplusOIDIP;
 
 require_once __DIR__ . '/../../../../../includes/oidplus.inc.php';
 

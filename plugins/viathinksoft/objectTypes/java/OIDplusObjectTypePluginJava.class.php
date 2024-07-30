@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\java;
+namespace ViaThinkSoft\OIDplus\Plugins\ObjectTypes\Java;
 
 use ViaThinkSoft\OIDplus\Core\OIDplusObjectTypePlugin;
 

@@ -11,7 +11,7 @@
 			"oid": "1.3.6.1.4.1.37476.2.5.2.4.1.200"
 		},
 		"php": {
-			"namespace": "ViaThinkSoft\\OIDplus\\Plugins\\viathinksoft\\publicPages\\n200_viathinksoft_freeoid\\",
+			"namespace": "ViaThinkSoft\\OIDplus\\Plugins\\PublicPages\\FreeOID\\",
 			"mainclass": "OIDplusPagePublicFreeOID"
 		},
 		"css": [],

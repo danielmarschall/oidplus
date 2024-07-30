@@ -20,14 +20,14 @@
 // ATTENTION: If you change something, please make sure that the changes
 //            are synchronous with OIDplusPageAdminRestApi
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\raPages\n911_rest_api;
+namespace ViaThinkSoft\OIDplus\Plugins\RaPages\RestApi;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusAuthContentStoreJWT;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;
 use ViaThinkSoft\OIDplus\Core\OIDplusHtmlException;
 use ViaThinkSoft\OIDplus\Core\OIDplusPagePluginRa;
-use ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n002_rest_api\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9;
+use ViaThinkSoft\OIDplus\Plugins\PublicPages\RestApi\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;

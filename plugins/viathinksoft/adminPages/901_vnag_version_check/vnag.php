@@ -20,7 +20,7 @@
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;
 use ViaThinkSoft\OIDplus\Core\OIDplusGui;
-use ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n901_vnag_version_check\OIDplusPageAdminVNagVersionCheck;
+use ViaThinkSoft\OIDplus\Plugins\AdminPages\VNagVersionCheck\OIDplusPageAdminVNagVersionCheck;
 
 include __DIR__ . '/../../../../vendor/danielmarschall/vnag/src/framework/vnag_framework.inc.php';
 include __DIR__ . '/../../../../includes/oidplus.inc.php';

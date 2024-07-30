@@ -11,7 +11,7 @@
 			"oid": "1.3.6.1.4.1.37476.2.5.2.4.3.50"
 		},
 		"php": {
-			"namespace": "ViaThinkSoft\\OIDplus\\Plugins\\viathinksoft\\adminPages\\n050_oobe\\",
+			"namespace": "ViaThinkSoft\\OIDplus\\Plugins\\AdminPages\\OOBE\\",
 			"mainclass": "OIDplusPageAdminOOBE"
 		},
 		"css": [],

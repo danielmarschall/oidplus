@@ -17,7 +17,7 @@
 * limitations under the License.
 */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n050_oobe;
+namespace ViaThinkSoft\OIDplus\Plugins\AdminPages\OOBE;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;

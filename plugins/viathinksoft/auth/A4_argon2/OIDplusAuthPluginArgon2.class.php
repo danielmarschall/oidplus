@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\auth\A4_argon2;
+namespace ViaThinkSoft\OIDplus\Plugins\Auth\Argon2;
 
 use ViaThinkSoft\OIDplus\Core\OIDplusAuthPlugin;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;

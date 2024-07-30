@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\design\ironbase;
+namespace ViaThinkSoft\OIDplus\Plugins\Design\IronBase;
 
 use ViaThinkSoft\OIDplus\Core\OIDplusDesignPlugin;
 

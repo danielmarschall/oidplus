@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\auth\A6_crypt;
+namespace ViaThinkSoft\OIDplus\Plugins\Auth\Crypt;
 
 use ViaThinkSoft\OIDplus\Core\OIDplusAuthPlugin;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;

@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\language\dede;
+namespace ViaThinkSoft\OIDplus\Plugins\Language\German;
 
 use ViaThinkSoft\OIDplus\Core\OIDplusLanguagePlugin;
 

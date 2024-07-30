@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\logger\n300_userdata_logfile;
+namespace ViaThinkSoft\OIDplus\Plugins\Logger\UserdataLogFile;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusLogEvent;

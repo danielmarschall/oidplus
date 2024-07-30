@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\language\enus;
+namespace ViaThinkSoft\OIDplus\Plugins\Language\EnglishUSA;
 
 use ViaThinkSoft\OIDplus\Core\OIDplusLanguagePlugin;
 

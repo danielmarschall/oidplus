@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\ipv4;
+namespace ViaThinkSoft\OIDplus\Plugins\ObjectTypes\IPv4;
 
 use ViaThinkSoft\OIDplus\Core\OIDplusObjectTypePlugin;
 

@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\captcha\none;
+namespace ViaThinkSoft\OIDplus\Plugins\Captcha\None;
 
 use ViaThinkSoft\OIDplus\Core\OIDplusCaptchaPlugin;
 
