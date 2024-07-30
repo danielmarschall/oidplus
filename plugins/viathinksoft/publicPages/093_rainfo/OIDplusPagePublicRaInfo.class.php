@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n093_rainfo;
+namespace ViaThinkSoft\OIDplus\Plugins\PublicPages\RaInfo;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusConfigInitializationException;

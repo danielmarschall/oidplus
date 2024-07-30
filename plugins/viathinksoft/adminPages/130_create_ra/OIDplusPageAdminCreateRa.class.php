@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n130_create_ra;
+namespace ViaThinkSoft\OIDplus\Plugins\AdminPages\CreateRA;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;

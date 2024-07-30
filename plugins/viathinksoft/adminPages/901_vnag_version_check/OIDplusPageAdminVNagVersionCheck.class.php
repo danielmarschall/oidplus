@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n901_vnag_version_check;
+namespace ViaThinkSoft\OIDplus\Plugins\AdminPages\VNagVersionCheck;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusConfig;

@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\database\oci;
+namespace ViaThinkSoft\OIDplus\Plugins\Database\OCI;
 
 use ViaThinkSoft\OIDplus\Core\OIDplusQueryResult;
 

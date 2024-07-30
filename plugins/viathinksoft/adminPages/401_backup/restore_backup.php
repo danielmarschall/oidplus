@@ -21,7 +21,7 @@ use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;
 use ViaThinkSoft\OIDplus\Core\OIDplusGui;
 use ViaThinkSoft\OIDplus\Core\OIDplusHtmlException;
-use ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n401_backup\OIDplusPageAdminDatabaseBackup;
+use ViaThinkSoft\OIDplus\Plugins\AdminPages\Backup\OIDplusPageAdminDatabaseBackup;
 
 require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 

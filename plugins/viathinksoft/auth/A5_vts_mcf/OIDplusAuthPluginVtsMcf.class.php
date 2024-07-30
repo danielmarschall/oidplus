@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\auth\A5_vts_mcf;
+namespace ViaThinkSoft\OIDplus\Plugins\Auth\VtsMcf;
 
 use ViaThinkSoft\OIDplus\Core\OIDplusAuthPlugin;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;

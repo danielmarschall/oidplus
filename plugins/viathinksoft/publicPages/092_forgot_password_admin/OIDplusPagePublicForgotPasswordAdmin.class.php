@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n092_forgot_password_admin;
+namespace ViaThinkSoft\OIDplus\Plugins\PublicPages\ForgotPasswordAdmin;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;

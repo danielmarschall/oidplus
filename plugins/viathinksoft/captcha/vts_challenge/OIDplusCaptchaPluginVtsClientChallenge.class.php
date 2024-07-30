@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\captcha\vts_challenge;
+namespace ViaThinkSoft\OIDplus\Plugins\Captcha\VtsChallenge;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusCaptchaPlugin;

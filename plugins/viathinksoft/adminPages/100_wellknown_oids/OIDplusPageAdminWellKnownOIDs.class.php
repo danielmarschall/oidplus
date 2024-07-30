@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n100_wellknown_oids;
+namespace ViaThinkSoft\OIDplus\Plugins\AdminPages\WellKnownOIDs;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;

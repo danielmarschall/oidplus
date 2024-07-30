@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n998_polyfill;
+namespace ViaThinkSoft\OIDplus\Plugins\PublicPages\Polyfill;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;

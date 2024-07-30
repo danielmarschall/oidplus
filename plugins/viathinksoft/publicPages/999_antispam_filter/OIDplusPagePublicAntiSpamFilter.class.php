@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n999_antispam_filter;
+namespace ViaThinkSoft\OIDplus\Plugins\PublicPages\AntiSpamFilter;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusPagePluginPublic;

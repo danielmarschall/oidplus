@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n800_plugins;
+namespace ViaThinkSoft\OIDplus\Plugins\AdminPages\Plugins;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusAuthPlugin;

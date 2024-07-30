@@ -17,13 +17,13 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\captcha\recaptcha;
+namespace ViaThinkSoft\OIDplus\Plugins\Captcha\ReCaptcha;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusCaptchaPlugin;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;
-use ViaThinkSoft\OIDplus\Plugins\ViaThinkSoft\AdminPages\Notifications\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8;
-use ViaThinkSoft\OIDplus\Plugins\ViaThinkSoft\AdminPages\Notifications\OIDplusNotification;
+use ViaThinkSoft\OIDplus\Plugins\AdminPages\Notifications\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8;
+use ViaThinkSoft\OIDplus\Plugins\AdminPages\Notifications\OIDplusNotification;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;
@@ -146,7 +146,7 @@ class OIDplusCaptchaPluginRecaptcha extends OIDplusCaptchaPlugin
 		return '<div id="CAPTCHAPLUGIN_PARAMS_RECAPTCHA">'.
 		       '<p>(<a href="https://developers.google.com/recaptcha/intro" target="_blank">'._L('more information and obtain key').'</a>)</p>'.
 		       '<p>'._L('reCAPTCHA Version').'<br><select id="recaptcha_version">'.
-		       // Note: JavaScript will add "\ViaThinkSoft\OIDplus\Plugins\viathinksoft\captcha\recaptcha\OIDplusCaptchaPluginRecaptcha::" in front of the name
+		       // Note: JavaScript will add "\ViaThinkSoft\OIDplus\Plugins\Captcha\ReCaptcha\OIDplusCaptchaPluginRecaptcha::" in front of the name
 		       '    <option name="RECAPTCHA_V2_CHECKBOX">reCAPTCHA V2 Checkbox</option>'.
 		       '    <option name="RECAPTCHA_V2_INVISIBLE">reCAPTCHA V2 Invisible</option>'.
 		       '    <option name="RECAPTCHA_V3">reCAPTCHA V3</option>'.

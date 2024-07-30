@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n050_oobe;
+namespace ViaThinkSoft\OIDplus\Plugins\AdminPages\OOBE;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusConfig;

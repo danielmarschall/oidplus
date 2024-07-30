@@ -17,16 +17,16 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n800_login_ldap;
+namespace ViaThinkSoft\OIDplus\Plugins\PublicPages\LoginLDAP;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusConfigInitializationException;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;
 use ViaThinkSoft\OIDplus\Core\OIDplusPagePluginPublic;
 use ViaThinkSoft\OIDplus\Core\OIDplusRA;
-use ViaThinkSoft\OIDplus\Plugins\ViaThinkSoft\AdminPages\Notifications\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8;
-use ViaThinkSoft\OIDplus\Plugins\ViaThinkSoft\AdminPages\Notifications\OIDplusNotification;
-use ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n090_login\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_5;
+use ViaThinkSoft\OIDplus\Plugins\AdminPages\Notifications\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8;
+use ViaThinkSoft\OIDplus\Plugins\AdminPages\Notifications\OIDplusNotification;
+use ViaThinkSoft\OIDplus\Plugins\PublicPages\Login\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_5;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;

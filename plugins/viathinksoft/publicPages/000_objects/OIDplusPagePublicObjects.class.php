@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n000_objects;
+namespace ViaThinkSoft\OIDplus\Plugins\PublicPages\Objects;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusAltId;
@@ -27,13 +27,13 @@ use ViaThinkSoft\OIDplus\Core\OIDplusException;
 use ViaThinkSoft\OIDplus\Core\OIDplusHtmlException;
 use ViaThinkSoft\OIDplus\Core\OIDplusObject;
 use ViaThinkSoft\OIDplus\Core\OIDplusPagePluginPublic;
-use ViaThinkSoft\OIDplus\Plugins\ViaThinkSoft\AdminPages\Notifications\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8;
-use ViaThinkSoft\OIDplus\Plugins\ViaThinkSoft\AdminPages\Notifications\OIDplusNotification;
-use ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n050_oobe\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1;
-use ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\oid\OIDplusOid;
-use ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\oid\WeidOidConverter;
-use ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n002_rest_api\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9;
-use ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n093_rainfo\OIDplusPagePublicRaInfo;
+use ViaThinkSoft\OIDplus\Plugins\AdminPages\Notifications\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8;
+use ViaThinkSoft\OIDplus\Plugins\AdminPages\Notifications\OIDplusNotification;
+use ViaThinkSoft\OIDplus\Plugins\AdminPages\OOBE\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1;
+use ViaThinkSoft\OIDplus\Plugins\ObjectTypes\OID\OIDplusOid;
+use ViaThinkSoft\OIDplus\Plugins\ObjectTypes\OID\WeidOidConverter;
+use ViaThinkSoft\OIDplus\Plugins\PublicPages\RestApi\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9;
+use ViaThinkSoft\OIDplus\Plugins\PublicPages\RaInfo\OIDplusPagePublicRaInfo;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;
@@ -522,7 +522,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 		// First, do a simulation for ASN.1 IDs and IRIs to check if there are any problems (then an Exception will be thrown)
 		if ($obj::ns() == 'oid') {
-			assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\oid\OIDplusOid");
+			assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\Plugins\ObjectTypes\OID\OIDplusOid");
 			if (!$obj->isWellKnown()) {
 				if (isset($params['iris'])) {
 					$ids = ($params['iris'] == '') ? array() : (is_array($params['iris']) ? $params['iris'] : explode(',',$params['iris']));
@@ -543,7 +543,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			// Validate RA email address
 			$new_ra = $params['ra_email'] ?? '';
 			if ($obj::ns() == 'oid') {
-				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\oid\OIDplusOid");
+				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\Plugins\ObjectTypes\OID\OIDplusOid");
 				if ($obj->isWellKnown()) {
 					$new_ra = '';
 				}
@@ -575,7 +575,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 		// Replace ASN.1 IDs und IRIs
 		if ($obj::ns() == 'oid') {
-			assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\oid\OIDplusOid");
+			assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\Plugins\ObjectTypes\OID\OIDplusOid");
 			if (!$obj->isWellKnown()) {
 				if (isset($params['iris'])) {
 					$ids = ($params['iris'] == '') ? array() : (is_array($params['iris']) ? $params['iris'] : explode(',',$params['iris']));
@@ -634,7 +634,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		}
 
 		if ($obj::ns() == 'oid') {
-			assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\oid\OIDplusOid");
+			assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\Plugins\ObjectTypes\OID\OIDplusOid");
 			if ($obj->isWellKnown()) {
 				$status += 4;
 			}
@@ -684,7 +684,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 		// For the root objects, let the user also enter a WEID
 		if ($objParent::ns() == 'oid') {
-			assert($objParent instanceof OIDplusOid); //assert(get_class($objParent) === "ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\oid\OIDplusOid");
+			assert($objParent instanceof OIDplusOid); //assert(get_class($objParent) === "ViaThinkSoft\OIDplus\Plugins\ObjectTypes\OID\OIDplusOid");
 			if (strtolower(substr(trim($params['id']),0,5)) === 'weid:') {
 				if ($objParent->isRoot()) {
 					$params['id'] = WeidOidConverter::weid2oid($params['id']);
@@ -728,7 +728,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 		// First simulate if there are any problems of ASN.1 IDs und IRIs
 		if ($obj::ns() == 'oid') {
-			assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\oid\OIDplusOid");
+			assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\Plugins\ObjectTypes\OID\OIDplusOid");
 			if (!$obj->isWellKnown()) {
 				if (isset($params['iris'])) {
 					$ids = ($params['iris'] == '') ? array() : (is_array($params['iris']) ? $params['iris'] : explode(',',$params['iris']));
@@ -748,7 +748,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		$parent = $params['parent'];
 		$ra_email = $params['ra_email'] ?? '';
 		if ($obj::ns() == 'oid') {
-			assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\oid\OIDplusOid");
+			assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\Plugins\ObjectTypes\OID\OIDplusOid");
 			if ($obj->isWellKnown()) {
 				$ra_email = '';
 			}
@@ -781,7 +781,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 		// Set ASN.1 IDs und IRIs
 		if ($obj::ns() == 'oid') {
-			assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\oid\OIDplusOid");
+			assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\Plugins\ObjectTypes\OID\OIDplusOid");
 			if (!$obj->isWellKnown()) {
 				if (isset($params['iris'])) {
 					$ids = ($params['iris'] == '') ? array() : (is_array($params['iris']) ? $params['iris'] : explode(',',$params['iris']));
@@ -807,7 +807,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		}
 
 		if ($obj::ns() == 'oid') {
-			assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\oid\OIDplusOid");
+			assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\Plugins\ObjectTypes\OID\OIDplusOid");
 			if ($obj->isWellKnown()) {
 				$status += 4;
 			}
@@ -1062,7 +1062,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				} else {
 					$parent_title = $objParent->getTitle();
 					if (empty($parent_title) && ($objParent->ns() == 'oid')) {
-						assert($objParent instanceof OIDplusOid); //assert(get_class($objParent) === "ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\oid\OIDplusOid");
+						assert($objParent instanceof OIDplusOid); //assert(get_class($objParent) === "ViaThinkSoft\OIDplus\Plugins\ObjectTypes\OID\OIDplusOid");
 						// If not title is available, then use an ASN.1 identifier
 						$res_asn = OIDplus::db()->query("select name from ###asn1id where oid = ?", array($objParent->nodeId()));
 						if ($res_asn->any()) {
@@ -1548,12 +1548,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			$output .= '     <td><a href="?goto='.urlencode($row->id).'" onclick="openAndSelectNode('.js_escape($row->id).', '.js_escape($parent).'); return false;">'.htmlentities($show_id).'</a>';
 			if ($enable_weid_presentation && ($parentNS == 'oid') && $objParent->isRoot()) {
 				// To save space horizontal space, the WEIDs were written below the OIDs
-				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\oid\OIDplusOid");
+				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\Plugins\ObjectTypes\OID\OIDplusOid");
 				$output .= '<br>'.$obj->getWeidNotation(true);
 			}
 			$output .= '</td>';
 			if ($enable_weid_presentation && ($parentNS == 'oid') && !$objParent->isRoot()) {
-				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\oid\OIDplusOid");
+				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\Plugins\ObjectTypes\OID\OIDplusOid");
 				$output .= '	<td>'.htmlentities($obj->weidArc()).'</td>';
 			}
 			if ($objParent->userHasWriteRights()) {

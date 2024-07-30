@@ -24,8 +24,8 @@ namespace Frdlweb\OIDplus\Plugins\RDAP;
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusBaseClass;
 use ViaThinkSoft\OIDplus\Core\OIDplusObject;
-use ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n000_objects\OIDplusPagePublicObjects;
-use ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n100_whois\OIDplusOIDIP;
+use ViaThinkSoft\OIDplus\Plugins\PublicPages\Objects\OIDplusPagePublicObjects;
+use ViaThinkSoft\OIDplus\Plugins\PublicPages\Whois\OIDplusOIDIP;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;

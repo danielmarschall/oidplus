@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\sqlSlang\sqlite;
+namespace ViaThinkSoft\OIDplus\Plugins\SqlSlang\SQLite;
 
 use ViaThinkSoft\OIDplus\Core\OIDplusDatabaseConnection;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;

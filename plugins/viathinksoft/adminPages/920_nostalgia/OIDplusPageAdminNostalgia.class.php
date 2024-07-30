@@ -20,14 +20,14 @@
 // ATTENTION: If you change something, please make sure that the changes
 //            are synchronous with OIDplusPageRaAutomatedAJAXCalls
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n920_nostalgia;
+namespace ViaThinkSoft\OIDplus\Plugins\AdminPages\Nostalgia;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;
 use ViaThinkSoft\OIDplus\Core\OIDplusHtmlException;
 use ViaThinkSoft\OIDplus\Core\OIDplusPagePluginAdmin;
-use ViaThinkSoft\OIDplus\Plugins\ViaThinkSoft\AdminPages\Notifications\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8;
-use ViaThinkSoft\OIDplus\Plugins\ViaThinkSoft\AdminPages\Notifications\OIDplusNotification;
+use ViaThinkSoft\OIDplus\Plugins\AdminPages\Notifications\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8;
+use ViaThinkSoft\OIDplus\Plugins\AdminPages\Notifications\OIDplusNotification;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;

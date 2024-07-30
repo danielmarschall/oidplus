@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\database\ado;
+namespace ViaThinkSoft\OIDplus\Plugins\Database\ADO;
 
 use ViaThinkSoft\OIDplus\Core\OIDplusDatabasePlugin;
 use ViaThinkSoft\OIDplus\Core\OIDplusDatabaseConnection;

@@ -17,14 +17,14 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n900_software_update;
+namespace ViaThinkSoft\OIDplus\Plugins\AdminPages\SoftwareUpdate;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;
 use ViaThinkSoft\OIDplus\Core\OIDplusHtmlException;
 use ViaThinkSoft\OIDplus\Core\OIDplusPagePluginAdmin;
-use ViaThinkSoft\OIDplus\Plugins\ViaThinkSoft\AdminPages\Notifications\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8;
-use ViaThinkSoft\OIDplus\Plugins\ViaThinkSoft\AdminPages\Notifications\OIDplusNotification;
+use ViaThinkSoft\OIDplus\Plugins\AdminPages\Notifications\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8;
+use ViaThinkSoft\OIDplus\Plugins\AdminPages\Notifications\OIDplusNotification;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;

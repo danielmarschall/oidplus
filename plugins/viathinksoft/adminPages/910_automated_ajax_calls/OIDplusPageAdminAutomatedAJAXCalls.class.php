@@ -20,7 +20,7 @@
 // ATTENTION: If you change something, please make sure that the changes
 //            are synchronous with OIDplusPageRaAutomatedAJAXCalls
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n910_automated_ajax_calls;
+namespace ViaThinkSoft\OIDplus\Plugins\AdminPages\AutomatedAjaxCalls;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusAuthContentStoreJWT;

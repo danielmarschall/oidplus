@@ -21,7 +21,7 @@ use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;
 use ViaThinkSoft\OIDplus\Core\OIDplusGui;
 use ViaThinkSoft\OIDplus\Core\OIDplusHtmlException;
-use ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n400_oidinfo_export\OIDplusPageAdminOIDInfoExport;
+use ViaThinkSoft\OIDplus\Plugins\AdminPages\OidInfoExport\OIDplusPageAdminOIDInfoExport;
 
 require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 

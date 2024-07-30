@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\sqlSlang\access;
+namespace ViaThinkSoft\OIDplus\Plugins\SqlSlang\Access;
 
 use ViaThinkSoft\OIDplus\Core\OIDplusDatabaseConnection;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;

@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\auth\A3_bcrypt;
+namespace ViaThinkSoft\OIDplus\Plugins\Auth\BCrypt;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusAuthPlugin;

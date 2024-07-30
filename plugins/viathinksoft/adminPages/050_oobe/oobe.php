@@ -20,7 +20,7 @@
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusGui;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;
-use ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n050_oobe\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1;
+use ViaThinkSoft\OIDplus\Plugins\AdminPages\OOBE\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1;
 
 require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
 

@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\logger\n100_linux_syslog;
+namespace ViaThinkSoft\OIDplus\Plugins\Logger\SysLog;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusLogEvent;

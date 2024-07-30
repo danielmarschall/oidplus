@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\objectTypes\x500dn;
+namespace ViaThinkSoft\OIDplus\Plugins\ObjectTypes\X500DN;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusAltId;

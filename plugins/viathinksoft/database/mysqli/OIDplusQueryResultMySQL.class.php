@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\database\mysqli;
+namespace ViaThinkSoft\OIDplus\Plugins\Database\MySQLi;
 
 use ViaThinkSoft\OIDplus\Core\OIDplusQueryResult;
 
