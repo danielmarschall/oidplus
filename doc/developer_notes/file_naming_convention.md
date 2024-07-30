@@ -25,6 +25,17 @@ They should not execute code, since they are not intended to
 be executed standalone. (Remember, only *.php is meant to be executed in the web browser).
 
 `*.sh`, `*.phps`, or without filename extension:
-If these files begin with "#!/usr/bin/php" or "#!/usr/bin/env php",
+If these files begin with `#!/usr/bin/php` or `#!/usr/bin/env php`,
 then they should be executed in CLI only.
 Their source code can be viewed in a web browser.
+
+## Overview
+
+| Extension          | Shebang |   | Source visible | Code outside classes | Classes/Interfaces   |   | Usage example                                                     |
+|--------------------|---------|---|----------------|----------------------|----------------------|---|-------------------------------------------------------------------|
+| .php               | No      |   | No             | Yes (must)           | Optional             |   | Pages which the browser should open (e.g. index page, OOBE, etc.) |
+| .phps              | No      |   | Yes            | Yes (must)           | Optional             |   | Public code, e.g. code example                                    |
+| .class.php         | No      |   | No             | No (must not)        | Mandatory, exactly 1 |   | Contains exactly one class or interface, usually autoloaded       |
+| .class.phps        | No      |   | Yes            | No (must not)        | Mandatory, exactly 1 |   | Contains exactly one class or interface, usually autoloaded       |
+| .inc.php           | No      |   | No             | No (should not)      | Optional             |   | Usually contains methods (without OOP)                            |
+| .sh, .phps or none | Yes     |   | Yes            | Yes (must)           | Optional             |   | Executable shell script                                           |

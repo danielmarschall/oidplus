@@ -58,6 +58,7 @@ spl_autoload_register(function ($fq_class_name) {
 
 	static $oidplus_autoloader_folders = null;
 	if (is_null($oidplus_autoloader_folders)) {
+		$oidplus_autoloader_folders = [];
 		$ary = OIDplus::getAllPluginManifests('*', true); // note: does filter disabled plugins
 		foreach ($ary as $manifest) {
 			$oidplus_autoloader_folders[$manifest->getPhpNamespace()] = dirname($manifest->getManifestFile());
