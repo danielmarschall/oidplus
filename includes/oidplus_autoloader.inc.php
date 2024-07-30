@@ -17,39 +17,33 @@
  * limitations under the License.
  */
 
+$oidplus_autoloader_folders = [];
+
 /**
- * This classloader includes plugins/... and includes/classes/...
+ * Autoloader for OIDplus Plugins >= 2.0.2 (Namespace=>Folder mapping via manifest.json)
+ */
+spl_autoload_register(function ($fq_class_name) {
+	$path = explode('\\', $fq_class_name);
+	$classname_no_namespace = array_pop($path);
+	$namespace = implode('\\', $path).'\\';
+
+	global $oidplus_autoloader_folders;
+	if (isset($oidplus_autoloader_folders[$namespace])) {
+		$candidate = $oidplus_autoloader_folders[$namespace].'/'.$classname_no_namespace.'.class.php';
+		if (file_exists($candidate)) {
+			include $candidate;
+		}
+	}
+});
+
+/**
+ * This classloader includes includes/classes/... (namespace: ViaThinkSoft\OIDplus\Core\)
  */
 spl_autoload_register(function ($fq_class_name) {
 	$path = explode('\\', $fq_class_name);
 	$classname_no_namespace = end($path);
-
-	// Convert "Namespace" to "Folder"
-	foreach ($path as &$x) {
-		if ((substr($x, 0, 1) == 'n') && (is_numeric(substr($x, 1, 1)))) {
-			// Namespaces cannot start with numbers, so we prepend a "n" in front of it.
-			// Example:
-			// - File       ..................../plugins/viathinksoft/adminPages/101_notifications/*.class.php
-			// - Namespace  ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n101_notifications/*
-			$x = substr($x, 1);
-		} else {
-			// "Keywords" in namespaces are only allowed in PHP 8.0, so we prepend a "_" in front of it
-			// Example:
-			// - File       ..................../plugins/viathinksoft/design/default/*.class.php
-			// - Namespace  ViaThinkSoft\OIDplus\Plugins\viathinksoft\design\_default
-			$keywords = array('__halt_compiler', 'abstract', 'and', 'array', 'as', 'break', 'callable', 'case', 'catch', 'class', 'clone', 'const', 'continue', 'declare', 'default', 'die', 'do', 'echo', 'else', 'elseif', 'empty', 'enddeclare', 'endfor', 'endforeach', 'endif', 'endswitch', 'endwhile', 'eval', 'exit', 'extends', 'final', 'fn', 'for', 'foreach', 'function', 'global', 'goto', 'if', 'implements', 'include', 'include_once', 'instanceof', 'insteadof', 'interface', 'isset', 'list', 'namespace', 'new', 'or', 'print', 'private', 'protected', 'public', 'require', 'require_once', 'return', 'static', 'switch', 'throw', 'trait', 'try', 'unset', 'use', 'var', 'while', 'xor');
-			foreach ($keywords as $keyword) {
-				if ($x == '_'.$keyword) {
-					$x = $keyword;
-				}
-			}
-		}
-	}
 	if (str_starts_with($fq_class_name, "ViaThinkSoft\\OIDplus\\Core\\")) {
 		require __DIR__ . "/classes/" . implode("/",array_slice($path, 3)) . ".class.php";
-	}
-	else if (str_starts_with($fq_class_name, "ViaThinkSoft\\OIDplus\\Plugins\\")) {
-		require __DIR__ . "/../plugins/" . implode("/",array_slice($path, 3)) . ".class.php";
 	}
 });
 
@@ -79,21 +73,21 @@ spl_autoload_register(function ($fq_class_name) {
  */
 spl_autoload_register(function ($fq_class_name) {
 	$path = explode('\\',$fq_class_name);
-	$class_name = array_pop($path);
+	$classname_no_namespace = array_pop($path);
 	$namespace = implode('\\',$path);
 
-	if (str_starts_with($class_name, "INTF_OID_")) {
-		if (($namespace != "ViaThinkSoft\\OIDplus\\Plugins\\viathinksoft") && str_starts_with($class_name, "INTF_OID_1_3_6_1_4_1_37476_")) {
+	if (str_starts_with($classname_no_namespace, "INTF_OID_")) {
+		if (!str_starts_with($namespace, "ViaThinkSoft\\") && str_starts_with($classname_no_namespace, "INTF_OID_1_3_6_1_4_1_37476_")) {
 			throw new Exception(_L('Third-party plugin tries to access a ViaThinkSoft-INTF_OID interface "%1", but is not in the ViaThinkSoft\\OIDplus namespace', $fq_class_name));
 		}
 
-		if (($namespace == "ViaThinkSoft\\OIDplus\\Plugins\\viathinksoft") && !str_starts_with($class_name, "INTF_OID_1_3_6_1_4_1_37476_")) {
+		if (str_starts_with($namespace, "ViaThinkSoft\\") && !str_starts_with($classname_no_namespace, "INTF_OID_1_3_6_1_4_1_37476_")) {
 			throw new Exception(_L('ViaThinkSoft plugin tries to access a Third-Party-INTF_OID interface "%1", but is not in the third-party namespace', $fq_class_name));
 		}
 
 		$fake_content = "";
 		if ($namespace) $fake_content .= "namespace $namespace;\n\n";
-		$fake_content .= "interface $class_name { }\n\n";
+		$fake_content .= "interface $classname_no_namespace { }\n\n";
 		eval($fake_content);
 	}
 });

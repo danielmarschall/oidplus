@@ -70,6 +70,11 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 	/**
 	 * @var string
 	 */
+	private string $phpNamespace = '';
+
+	/**
+	 * @var string
+	 */
 	private string $phpMainClass = '';
 
 	// --- Only page or design plugins ---
@@ -179,7 +184,14 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @return string
+	 * @return string The PHP namespace that maps to the plugin directory containing .class.php files
+	 */
+	public function getPhpNamespace(): string {
+		return $this->phpNamespace;
+	}
+
+	/**
+	 * @return string The main PHP class of the plugin, without namespace
 	 */
 	public function getPhpMainClass(): string {
 		return $this->phpMainClass;
@@ -255,7 +267,8 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 			$this->getCSSFilesSetup()
 		);
 		$files[] = $this->getManifestFile();
-		$files[] = (new \ReflectionClass($this->getPhpMainClass()))->getFileName();
+		$fq_class = $this->getPhpNamespace().$this->getPhpMainClass();
+		$files[] = (new \ReflectionClass($fq_class))->getFileName();
 		sort($files);
 		return $files;
 	}
@@ -288,6 +301,7 @@ class OIDplusPluginManifest extends OIDplusBaseClass {
 		$this->htmlDescription = (string)$data->manifest->info->descriptionHTML;
 		$this->oid = (string)$data->manifest->info->oid;
 
+		$this->phpNamespace = $data->manifest->php->namespace ?? "\\";
 		$this->phpMainClass = $data->manifest->php->mainclass ?? "";
 
 		// The following functionalities are only available for page or design plugins

@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n010_notifications;
+namespace ViaThinkSoft\OIDplus\Plugins\ViaThinkSoft\AdminPages\Notifications;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;

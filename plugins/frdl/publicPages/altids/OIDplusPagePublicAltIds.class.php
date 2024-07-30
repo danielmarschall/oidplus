@@ -7,13 +7,13 @@
  * Licensed under the MIT License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\frdl\publicPages\altids;
+namespace Frdlweb\OIDplus\Plugins\AltIds;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusObject;
 use ViaThinkSoft\OIDplus\Core\OIDplusPagePluginPublic;
-use ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n010_notifications\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8;
-use ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n010_notifications\OIDplusNotification;
+use ViaThinkSoft\OIDplus\Plugins\ViaThinkSoft\AdminPages\Notifications\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8;
+use ViaThinkSoft\OIDplus\Plugins\ViaThinkSoft\AdminPages\Notifications\OIDplusNotification;
 use ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n000_objects\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3;
 use ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n000_objects\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_7;
 use ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n100_whois\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4;

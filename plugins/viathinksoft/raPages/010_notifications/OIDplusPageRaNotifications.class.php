@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\raPages\n010_notifications;
+namespace ViaThinkSoft\OIDplus\Plugins\ViaThinkSoft\RaPages\Notifications;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;

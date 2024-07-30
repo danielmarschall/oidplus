@@ -1143,6 +1143,25 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	/**
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	private static function populateAutoloaderClassmap(): void {
+		static $classMapPopulatedfOnce = false;
+		if ($classMapPopulatedfOnce) return;
+		$classMapPopulatedfOnce = true;
+		$ary = self::getAllPluginManifests('*', true);
+		foreach ($ary as $manifest) {
+			if (self::pluginIsDisabled($manifest->getOid())) {
+				continue; // Plugin is disabled
+			}
+
+			global $oidplus_autoloader_folders;
+			$oidplus_autoloader_folders[$manifest->getPhpNamespace()] = dirname($manifest->getManifestFile());
+		}
+	}
+
+	/**
 	 * @param string|array $pluginDirName
 	 * @param string $expectedPluginClass
 	 * @param callable|null $registerCallback
@@ -1152,6 +1171,10 @@ class OIDplus extends OIDplusBaseClass {
 	 * @throws \ReflectionException
 	 */
 	public static function registerAllPlugins(/*string|array*/ $pluginDirName, string $expectedPluginClass, ?callable $registerCallback=null): array {
+		// We must call this first for all non-disabled plugins, because $oidplus_autoloader_folders must be complete before doing anything below
+		// (Since loading a class will also load the implemented interfaces which might be in a different plugin!)
+		self::populateAutoloaderClassmap();
+
 		$out = array();
 		if (is_array($pluginDirName)) {
 			$ary = array();
@@ -1162,32 +1185,38 @@ class OIDplus extends OIDplusBaseClass {
 			$ary = self::getAllPluginManifests($pluginDirName, false);
 		}
 		$known_plugin_oids = array();
-		$known_main_classes_no_namespace = array();
 		foreach ($ary as $plugintype_folder => $bry) {
 			foreach ($bry as $vendor_folder => $cry) {
 				foreach ($cry as $pluginname_folder => $manifest) { /* @phpstan-ignore-line */
 					assert($manifest instanceof OIDplusPluginManifest);
-					$class_name = $manifest->getPhpMainClass();
+					$php_namespace = $manifest->getPhpNamespace();
+					$php_class_name = $manifest->getPhpMainClass();
+					$fq_classname = $php_namespace . $php_class_name;
+					$full_plugin_dir = dirname($manifest->getManifestFile());
+					$full_plugin_dir_rel = substr($full_plugin_dir, strlen(OIDplus::localpath()));
 
 					// Before we load the plugin, we want to make some checks to confirm
 					// that the plugin is working correctly.
 
-					if (!$class_name) {
-						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Manifest does not declare a PHP main class'));
+					if (!$php_namespace || str_starts_with($php_namespace, "\\") || !str_ends_with($php_namespace, "\\")) {
+						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Manifest does not declare a PHP namespace include trailing backslash but no beginning backslash'));
+					}
+					if (!$php_class_name || str_contains($php_class_name, "\\")) {
+						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Manifest does not declare a PHP main class (without namespace)'));
 					}
 					if (self::pluginIsDisabled($manifest->getOid())) {
 						continue; // Plugin is disabled
 					}
 
 					// Do some basic checks on the plugin PHP main class
-					if (!class_exists($class_name)) {
-						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Manifest declares PHP main class as "%1", but it could not be found', $class_name));
+					if (!class_exists($fq_classname)) {
+						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Manifest declares PHP main class as "%1", but it could not be found', $fq_classname));
 					}
-					if (!is_subclass_of($class_name, $expectedPluginClass)) {
-						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Plugin main class "%1" is expected to be a subclass of "%2"', $class_name, $expectedPluginClass));
+					if (!is_subclass_of($fq_classname, $expectedPluginClass)) {
+						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Plugin main class "%1" is expected to be a subclass of "%2"', $fq_classname, $expectedPluginClass));
 					}
-					if (($class_name != $manifest->getTypeClass()) && (!is_subclass_of($class_name, $manifest->getTypeClass()))) {
-						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Plugin main class "%1" is expected to be a subclass of "%2", according to type declared in manifest', $class_name, $manifest->getTypeClass()));
+					if (($fq_classname != $manifest->getTypeClass()) && (!is_subclass_of($fq_classname, $manifest->getTypeClass()))) {
+						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Plugin main class "%1" is expected to be a subclass of "%2", according to type declared in manifest', $fq_classname, $manifest->getTypeClass()));
 					}
 					if (($manifest->getTypeClass() != $expectedPluginClass) && (!is_subclass_of($manifest->getTypeClass(), $expectedPluginClass))) {
 						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Class declared in manifest is "%1" does not fit expected class for this plugin type "%2"', $manifest->getTypeClass(), $expectedPluginClass));
@@ -1206,11 +1235,9 @@ class OIDplus extends OIDplusBaseClass {
 					}
 
 					// Additional check: Are third-party plugins using ViaThinkSoft plugin folders, OIDs or class namespaces?
-					$full_plugin_dir = dirname($manifest->getManifestFile());
-					$full_plugin_dir = substr($full_plugin_dir, strlen(OIDplus::localpath()));
-					$dir_is_viathinksoft = str_starts_with($full_plugin_dir, 'plugins/viathinksoft/') || str_starts_with($full_plugin_dir, 'plugins\\viathinksoft\\');
+					$dir_is_viathinksoft = str_starts_with($full_plugin_dir_rel, 'plugins/viathinksoft/') || str_starts_with($full_plugin_dir_rel, 'plugins\\viathinksoft\\');
 					$oid_is_viathinksoft = str_starts_with($plugin_oid, '1.3.6.1.4.1.37476.2.5.2.4.'); // { iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 37476 products(2) oidplus(5) v2(2) plugins(4) }
-					$class_is_viathinksoft = str_starts_with($class_name, 'ViaThinkSoft\\OIDplus\\Plugins\\viathinksoft\\');
+					$class_is_viathinksoft = str_starts_with($fq_classname, 'ViaThinkSoft\\');
 					if ($oid_is_viathinksoft != $class_is_viathinksoft) {
 						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Third-party plugins must not use the ViaThinkSoft PHP namespace. Please use your own vendor namespace.'));
 					}
@@ -1252,11 +1279,11 @@ class OIDplus extends OIDplusBaseClass {
 					}
 
 					// For the next check, we need an instance of the object
-					$obj = new $class_name();
+					$obj = new $fq_classname();
 
 					// Now we can continue
 					$known_plugin_oids[$plugin_oid] = $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder;
-					$out[] = $class_name;
+					$out[] = $fq_classname;
 					if (!is_null($registerCallback)) {
 						call_user_func($registerCallback, $obj);
 

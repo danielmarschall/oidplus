@@ -22,8 +22,8 @@ namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n810_login_googl
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;
 use ViaThinkSoft\OIDplus\Core\OIDplusPagePluginPublic;
-use ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n010_notifications\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8;
-use ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n010_notifications\OIDplusNotification;
+use ViaThinkSoft\OIDplus\Plugins\ViaThinkSoft\AdminPages\Notifications\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8;
+use ViaThinkSoft\OIDplus\Plugins\ViaThinkSoft\AdminPages\Notifications\OIDplusNotification;
 use ViaThinkSoft\OIDplus\Plugins\viathinksoft\publicPages\n090_login\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_5;
 
 // phpcs:disable PSR1.Files.SideEffects

@@ -6,7 +6,7 @@ File naming convention for OIDplus
 These are files that can (and should) be opened by the web browser.
 
 `*.phps`:
-These are files that MUST NOT be executed by the web browser.
+These are files that MUST NOT be executed by the web server.
 The source is visible to the public, e.g. if you want to demonstrate a code example.
 It can also be used for scripts that should only be executed in the shell,
 of course only if the script content is not confidential.

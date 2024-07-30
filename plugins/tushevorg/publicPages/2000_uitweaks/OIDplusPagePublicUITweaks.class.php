@@ -24,7 +24,7 @@
 * SOFTWARE.
 */
 
-namespace ViaThinkSoft\OIDplus\Plugins\tushevorg\publicPages\n2000_uitweaks;
+namespace TushevOrg\OIDplus\Plugins\UiTweaks;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusConfig;

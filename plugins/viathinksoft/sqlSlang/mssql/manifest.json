@@ -11,7 +11,8 @@
 			"oid": "1.3.6.1.4.1.37476.2.5.2.4.6.1"
 		},
 		"php": {
-			"mainclass": "ViaThinkSoft\\OIDplus\\Plugins\\viathinksoft\\sqlSlang\\mssql\\OIDplusSqlSlangPluginMsSQL"
+			"namespace": "ViaThinkSoft\\OIDplus\\Plugins\\viathinksoft\\sqlSlang\\mssql\\",
+			"mainclass": "OIDplusSqlSlangPluginMsSQL"
 		}
 	}
 }

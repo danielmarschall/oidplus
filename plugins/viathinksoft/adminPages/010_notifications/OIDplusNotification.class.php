@@ -17,7 +17,7 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\viathinksoft\adminPages\n010_notifications;
+namespace ViaThinkSoft\OIDplus\Plugins\ViaThinkSoft\AdminPages\Notifications;
 
 use ViaThinkSoft\OIDplus\Core\OIDplusBaseClass;
 use ViaThinkSoft\OIDplus\Core\OIDplusConfigInitializationException;
