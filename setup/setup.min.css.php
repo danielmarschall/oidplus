@@ -22,6 +22,7 @@ use ViaThinkSoft\OIDplus\Core\OIDplus;
 
 require_once __DIR__ . '/../includes/oidplus.inc.php';
 
+// TODO: baseConfig() does not work in this file, because OIDplus.class.php checks for insideSetup() in order to avoid endless loops
 error_reporting(OIDplus::baseConfig()->getValue('DEBUG') ? E_ALL : 0);
 @ini_set('display_errors', OIDplus::baseConfig()->getValue('DEBUG') ? '1' : '0');
 

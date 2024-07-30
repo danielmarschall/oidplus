@@ -493,19 +493,19 @@ function oidplus_create_changescript($outdir_old, $outdir_new, $outfile, $prev_v
 	$outscript .= "\n";
 	/*
 	if (version_compare($version,"2.0.999.999") >= 0) {
-		... once we require PHP 7.1, we add the requirement here
+		... once we require PHP 8.0, we add the requirement here
 		... also if we require fancy new PHP modules, we must add it here
 		... the checks avoid that someone breaks their OIDplus installation if they update
 	} else */
 	if (version_compare($version,"2.0.2.0") >= 0) {
 		// OIDplus 2.0.2.0 requires PHP 7.4
 		$outscript .= "if (version_compare(PHP_VERSION, '7.4.0') < 0) {\n";
-		$outscript .= "\terr('You need PHP Version 7.4 to update to this version');\n";
+		$outscript .= "\terr('You need at least PHP Version 7.4 to update to this version');\n";
 		$outscript .= "}\n";
 	} else if (version_compare($version,"2.0.0.2") >= 0) {
 		// OIDplus 2.0.0.2 requires PHP 7.0.0
 		$outscript .= "if (version_compare(PHP_VERSION, '7.0.0') < 0) {\n";
-		$outscript .= "\terr('You need PHP Version 7.0 to update to this version');\n";
+		$outscript .= "\terr('You need at least PHP Version 7.0 to update to this version');\n";
 		$outscript .= "}\n";
 	}
 	$outscript .= "\n";

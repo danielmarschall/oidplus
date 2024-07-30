@@ -6,12 +6,13 @@
 			"name": "UITweaks",
 			"author": "tushev.org",
 			"license": "MIT",
-			"version": "1.1+viathinksoft20240727",
+			"version": "1.1+viathinksoft20240730",
 			"descriptionHTML": "<a href=\"https://github.com/tushev/uitweaks-oidplus-plugin\" target=\"_blank\">UITweaks plugin for OIDplus 2.0</a>:\n\t\t<ul>\n\t\t<li>Fully expand Objects tree on page reload</li>\n\t\t<li>Collapse Login tree on page reload</li>\n\t\t<li>Collapse Documents &amp; Resources tree on page reload</li>\n\t\t<li>Change default tree pane width</li>\n\t\t<li>Remember tree pane width in <code>browser.localStorage</code> across page reloads</li>\n\t\t<li>Prefer \"Admin login\" tab at login page</li>\n\t\t</ul>",
 			"oid": "1.3.6.1.4.1.37476.9000.146.2.109.2000"
 		},
 		"php": {
-			"mainclass": "ViaThinkSoft\\OIDplus\\Plugins\\tushevorg\\publicPages\\n2000_uitweaks\\OIDplusPagePublicUITweaks"
+			"namespace": "TushevOrg\\OIDplus\\Plugins\\UiTweaks\\",
+			"mainclass": "OIDplusPagePublicUITweaks"
 		},
 		"css": [],
 		"js": [

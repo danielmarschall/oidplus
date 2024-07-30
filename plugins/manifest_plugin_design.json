@@ -43,11 +43,15 @@
 				"php": {
 					"type": "object",
 					"properties": {
+						"namespace": {
+							"type": "string"
+						},
 						"mainclass": {
 							"type": "string"
 						}
 					},
 					"required": [
+						"namespace",
 						"mainclass"
 					]
 				},

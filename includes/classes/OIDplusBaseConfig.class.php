@@ -47,9 +47,14 @@ class OIDplusBaseConfig extends OIDplusBaseClass implements OIDplusGetterSetterI
 	 * @return mixed|null
 	 */
 	public function getValue(string $name, $default=null) {
+		if (str_starts_with($name, 'DISABLE_PLUGIN_') && !oid_valid_dotnotation(substr($name, strlen('DISABLE_PLUGIN_')))) {
+			$caller_file = debug_backtrace()[0]['file'] ?? '???'; // TODO: for some reason, here I need index 0, and for class I need index 1... is this correct???
+			throw new OIDplusException(_L("File %1 contains an outdated setting %2. It must be a plugin OID instead of PHP class name.",$caller_file,$name));
+		}
+
 		if ($name == 'SERVER_SECRET') {
-			$caller_class = debug_backtrace()[1]['class'];
-			if (!str_starts_with($caller_class, 'ViaThinkSoft\\OIDplus\\')) {
+			$caller_class = debug_backtrace()[1]['class'] ?? '???'; // TODO: for some reason, here I need index 1, and for file I need index 0... is this correct???
+			if (!str_starts_with($caller_class, 'ViaThinkSoft\\OIDplus\\Core\\')) { // TODO: should also check if standalone-scripts (no class) are located in plugins/viathinksoft/
 				throw new OIDplusException(_L('Outdated plugin: Calling %1 from a plugin is deprecated. Please use %2 instead', $name, 'OIDplus::authUtils()->makeSecret()'));
 			}
 		}
