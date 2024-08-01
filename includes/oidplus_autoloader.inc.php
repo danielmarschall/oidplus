@@ -18,6 +18,7 @@
  */
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
 
 spl_autoload_register(function ($fq_class_name) {
 	$path = explode('\\',$fq_class_name);
@@ -30,16 +31,16 @@ spl_autoload_register(function ($fq_class_name) {
 
 	if (str_starts_with($classname_no_namespace, "INTF_OID_")) {
 		if (!str_starts_with($namespace, "ViaThinkSoft\\") && str_starts_with($classname_no_namespace, "INTF_OID_1_3_6_1_4_1_37476_")) {
-			throw new Exception(_L('Third-party plugin tries to access a ViaThinkSoft-INTF_OID interface "%1", but is not in the ViaThinkSoft\\OIDplus namespace', $fq_class_name));
+			throw new OIDplusException(_L('Third-party plugin tries to access a ViaThinkSoft-INTF_OID interface "%1", but is not in the ViaThinkSoft\\OIDplus namespace', $fq_class_name));
 		}
 
 		if (str_starts_with($namespace, "ViaThinkSoft\\") && !str_starts_with($classname_no_namespace, "INTF_OID_1_3_6_1_4_1_37476_")) {
-			throw new Exception(_L('ViaThinkSoft plugin tries to access a Third-Party-INTF_OID interface "%1", but is not in the third-party namespace', $fq_class_name));
+			throw new OIDplusException(_L('ViaThinkSoft plugin tries to access a Third-Party-INTF_OID interface "%1", but is not in the third-party namespace', $fq_class_name));
 		}
 
 		$oid = str_replace('_', '.', substr($classname_no_namespace, strlen("INTF_OID_")));
 		if (!oid_valid_dotnotation($oid)) {
-			throw new Exception(_L('%1 does not contain a valid OID in its name (expected, e.g. %2)', $fq_class_name, "INTF_OID_2_999"));
+			throw new OIDplusException(_L('%1 does not contain a valid OID in its name (expected, e.g. %2)', $fq_class_name, "INTF_OID_2_999"));
 		}
 	}
 
@@ -62,6 +63,19 @@ spl_autoload_register(function ($fq_class_name) {
 		foreach ($ary as $manifest) {
 			$oidplus_autoloader_folders[$manifest->getPhpNamespace()] = dirname($manifest->getManifestFile());
 		}
+		// Check if it is prefix-free
+		$tmp_folders = array_keys($oidplus_autoloader_folders);
+	    for ($i = 0; $i < count($tmp_folders) - 1; $i++) {
+	        $current = $tmp_folders[$i];
+	        $next = $tmp_folders[$i + 1];
+	        // Check if $current is a prefix of $next
+	        if (strpos($next, $current) === 0) {
+				throw new OIDplusException(_L("Plugin namespaces are wrong. Each plugin must have an unique namespace which is prefix-free! Collission between %1 and %2 detected!", $current, $next));
+	        }
+			unset($current);
+			unset($next);
+	    }
+		unset($tmp_folders);
 	}
 
 	$parts = explode("\\", $fq_class_name);
