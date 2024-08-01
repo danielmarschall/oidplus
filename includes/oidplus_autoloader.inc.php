@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2024 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,6 @@
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 
 spl_autoload_register(function ($fq_class_name) {
-	//global $oidplus_autoloader_folders;
-
 	$path = explode('\\',$fq_class_name);
 	$tmp = $path;
 	$classname_no_namespace = array_pop($tmp);
@@ -54,10 +52,11 @@ spl_autoload_register(function ($fq_class_name) {
 		}
 	}
 
-	// --- Populate classmap for plugins
+	// --- Loading classes of plugins for OIDplus >= 2.0.2
 
 	static $oidplus_autoloader_folders = null;
 	if (is_null($oidplus_autoloader_folders)) {
+		// Populate the class map
 		$oidplus_autoloader_folders = [];
 		$ary = OIDplus::getAllPluginManifests('*', true); // note: does filter disabled plugins
 		foreach ($ary as $manifest) {
@@ -65,15 +64,23 @@ spl_autoload_register(function ($fq_class_name) {
 		}
 	}
 
-	// --- Loading classes of plugins for OIDplus >= 2.0.2
-
-	if (isset($oidplus_autoloader_folders[$namespace])) {
-		$candidate = $oidplus_autoloader_folders[$namespace].DIRECTORY_SEPARATOR.$classname_no_namespace.'.class.php';
-		if (file_exists($candidate)) {
-			include $candidate;
-			return;
+	$parts = explode("\\", $fq_class_name);
+	for ($i = 1; $i < count($parts); $i++) {
+		// For class A\B\C\D: [$a,$b] will be tuples of [A,B\C\D], [A\B,C\D], [A\B\C,D]
+		// this allows plugins having sub-namespaces in folders;
+		// and it works because plugins need an unique and prefix-free namespace.
+	    $a = implode("\\", array_slice($parts, 0, $i));
+	    $b = implode("\\", array_slice($parts, $i));
+		if (isset($oidplus_autoloader_folders[$a."\\"])) {
+			$candidate = $oidplus_autoloader_folders[$a."\\"].DIRECTORY_SEPARATOR.str_replace('\\',DIRECTORY_SEPARATOR,$b).'.class.php';
+			if (file_exists($candidate)) {
+				include $candidate;
+				return;
+			}
+			break;
 		}
 	}
+	unset($parts);
 
 	// --- include vendor/danielmarschall/...
 
