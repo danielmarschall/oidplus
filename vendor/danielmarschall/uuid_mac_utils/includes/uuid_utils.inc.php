@@ -3,7 +3,7 @@
 /*
  * UUID utils for PHP
  * Copyright 2011 - 2024 Daniel Marschall, ViaThinkSoft
- * Version 2024-04-16
+ * Version 2024-08-01
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1615,10 +1615,10 @@ function gen_uuid_v8_namebased($hash_algo, $namespace_uuid, $name) {
  * PHP implementation: https://github.com/danielmarschall/uuid_mac_utils/blob/master/includes/uuid_utils.inc.php
  *
  * @param int      $hickelUuidVersion (optional)
- * @param DateTime $dt                (optional)
+ * @param DateTime|null $dt                (optional)
  * @return string The UUID
  */
-function gen_uuid_v8_sqlserver_sortable(int $hickelUuidVersion = 2, DateTime $dt = null): string {
+function gen_uuid_v8_sqlserver_sortable(int $hickelUuidVersion = 2, ?DateTime $dt = null): string {
 	// The sorting in SQL Server is like this:
 
 	if ($dt == null) $dt = new DateTime();
@@ -1732,4 +1732,3 @@ function getDateFromDay(int $year, int $dayOfYear): \DateTime {
 	$date = \DateTime::createFromFormat('Y z', strval($year) . ' ' . strval($dayOfYear-1));
 	return $date;
 }
-
