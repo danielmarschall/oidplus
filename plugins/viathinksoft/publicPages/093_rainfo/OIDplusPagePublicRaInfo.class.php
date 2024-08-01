@@ -186,7 +186,7 @@ class OIDplusPagePublicRaInfo extends OIDplusPagePluginPublic {
 	 * @return string
 	 * @throws OIDplusException
 	 */
-	public static function showRAInfo(?string $email, OIDplusObject $oid=null): string {
+	public static function showRAInfo(?string $email, ?OIDplusObject $oid=null): string {
 		$out = '';
 
 		if (empty($email)) {

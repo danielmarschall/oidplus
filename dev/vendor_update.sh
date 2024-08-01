@@ -112,7 +112,16 @@ composer update --no-dev -d plugins/viathinksoft/publicPages/100_whois/whois/jso
 composer license -d plugins/viathinksoft/publicPages/100_whois/whois/json/ > plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/licenses
 remove_vendor_rubbish plugins/viathinksoft/publicPages/100_whois/whois/json/
 
+# Get latest version of WEID converter
+curl https://raw.githubusercontent.com/frdl/weid/gh-pages/WeidOidConverter.js > plugins/viathinksoft/objectTypes/oid/WeidOidConverter.js
+curl https://raw.githubusercontent.com/frdl/weid/gh-pages/WeidOidConverter.php > plugins/viathinksoft/objectTypes/oid/WeidOidConverter.class.php
+sed -i 's@namespace Frdl\\Weid;@namespace ViaThinkSoft\\OIDplus\\Plugins\\ObjectTypes\\OID;@g' plugins/viathinksoft/objectTypes/oid/WeidOidConverter.class.php
+sed -i 's@\\Frdl\\Weid\\WeidOidConverter::@WeidOidConverter::@g' plugins/viathinksoft/objectTypes/oid/WeidOidConverter.class.php
+
+# Various hotfixes
+
 # !!! Great tool for escaping these hotfixes: https://dwaves.de/tools/escape/ !!!
+# Then insert into   sed -i 's@...@...@g' filename
 
 # Apply hotfix: https://github.com/aywan/php-json-canonicalization/issues/1
 sed -i 's@\$formatted = rtrim(\$formatted, \x27\.0\x27);@\$formatted = rtrim(\$formatted, \x270\x27);\$formatted = rtrim(\$formatted, \x27\.\x27); \/\/Hotfix: https:\/\/github\.com\/aywan\/php-json-canonicalization\/issues\/1@g' plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/aywan/php-json-canonicalization/src/Utils.php
@@ -123,6 +132,14 @@ sed -i 's@\$parts\[0\] = rtrim(\$parts\[0\], \x27\.0\x27);@\$parts\[0\] = rtrim(
 # see https://github.com/symfony/polyfill-mbstring/pull/11
 sed -i 's@if (\\is_array(\$fromEncoding) || false !== strpos(\$fromEncoding, \x27,\x27)) {@if (\\is_array(\$fromEncoding) || (null !== \$fromEncoding \&\& false !== strpos(\$fromEncoding, \x27,\x27))) {@g' vendor/symfony/polyfill-mbstring/Mbstring.php
 
-# Get latest version of WEID converter
-curl https://raw.githubusercontent.com/frdl/weid/gh-pages/WeidOidConverter.js > plugins/viathinksoft/objectTypes/oid/WeidOidConverter.js
-curl https://raw.githubusercontent.com/frdl/weid/gh-pages/WeidOidConverter.php > plugins/viathinksoft/objectTypes/oid/WeidOidConverter.class.php
+# Fix https://github.com/firebase/php-jwt/pull/573 (also for older PHP 7.4 versions of the lib)
+sed -i 's@int \$expiresAfter = null,@?int \$expiresAfter = null,@g' vendor/firebase/php-jwt/src/CachedKeySet.php
+sed -i 's@string \$defaultAlg = null@?string \$defaultAlg = null@g' vendor/firebase/php-jwt/src/CachedKeySet.php
+sed -i 's@public static function parseKeySet(array \$jwks, string \$defaultAlg = null): array@public static function parseKeySet(array \$jwks, ?string \$defaultAlg = null): array@g' vendor/firebase/php-jwt/src/JWK.php
+sed -i 's@public static function parseKey(array \$jwk, string \$defaultAlg = null): ?Key@public static function parseKey(array \$jwk, ?string \$defaultAlg = null): ?Key@g' vendor/firebase/php-jwt/src/JWK.php
+sed -i 's@stdClass &$headers = null@?stdClass &$headers = null@g' vendor/firebase/php-jwt/src/JWT.php
+sed -i 's@string \$keyId = null,@?string \$keyId = null,@g' vendor/firebase/php-jwt/src/JWT.php
+sed -i 's@array \$head = null@?array \$head = null@g' vendor/firebase/php-jwt/src/JWT.php
+
+# Fix https://github.com/SergeyBrook/php-jws/pull/3 (also for older PHP 7.4 versions of the lib)
+sed -i 's@public function __construct(\$message, \$code = 0, Exception \$previous = null) {@public function __construct(\$message, \$code = 0, ?Exception \$previous = null) {@g' plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/sergeybrook/php-jws/src/JWS/Exception/JwsException.php

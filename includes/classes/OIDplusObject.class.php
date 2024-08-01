@@ -828,7 +828,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		self::$object_info_cache = null;
 	}
 
-	public const CACHE_ID = 'id'; /*@phpstan-ignore-line*/
+	public const CACHE_ID = 'id';
 	public const CACHE_PARENT = 'parent';
 	public const CACHE_TITLE = 'title';
 	public const CACHE_DESCRIPTION = 'description';
