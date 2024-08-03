@@ -179,15 +179,7 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 
 		$query_logfile = OIDplus::baseConfig()->getValue('QUERY_LOGFILE', '');
 		if (!empty($query_logfile)) {
-			$ts = explode(" ",microtime());
-			$ts = date("Y-m-d H:i:s",intval($ts[1])).substr((string)$ts[0],1,4);
-			static $log_session_id = "";
-			if (empty($log_session_id)) {
-				$log_session_id = rand(10000,99999);
-			}
-			$file = isset($_SERVER['REQUEST_URI']) ? ' | '.$_SERVER['REQUEST_URI'] : '';
-			// file_put_contents($query_logfile, "$ts <$log_session_id$file> $sql ".print_r($prepared_args,true)."\n", FILE_APPEND);
-			file_put_contents($query_logfile, "$ts <$log_session_id$file> $sql\n", FILE_APPEND);
+			$start = microtime(true);
 		}
 
 		$this->last_query = $sql;
@@ -202,6 +194,20 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 
 		$res = $this->doQuery($sql, $prepared_args);
 		if ($this->slangDetectionDone) $this->getSlang()->reviewResult($res, $sql, $prepared_args);
+
+		if (!empty($query_logfile)) {
+			$end = microtime(true);
+			$ts = explode(" ",microtime());
+			$ts = date("Y-m-d H:i:s",intval($ts[1])).substr((string)$ts[0],1,4);
+			static $log_session_id = "";
+			if (empty($log_session_id)) {
+				$log_session_id = rand(10000,99999);
+			}
+			$file = isset($_SERVER['REQUEST_URI']) ? ' | '.$_SERVER['REQUEST_URI'] : '';
+			// file_put_contents($query_logfile, "$ts <$log_session_id$file> [".($end-$start)." sec] $sql ".print_r($prepared_args,true)."\n", FILE_APPEND);
+			file_put_contents($query_logfile, "$ts <$log_session_id$file> [".($end-$start)." sec] $sql\n", FILE_APPEND);
+		}
+
 		return $res;
 	}
 

@@ -16,6 +16,7 @@ Important things:
 	plugins/frdl/publicPages/altids/OIDplusPagePublicAltIds.class.php (hardcoded to ignore children of 1.3.6.1.4.1.37476.1.2.3.1)
 	plugins/viathinksoft/publicPages/000_objects/OIDplusPagePublicObjects.class.php (do not show ANY children if there are more than 1000)
 	includes/classes/OIDplusMenuUtils.class.php (do not show ANY children if there are more than 1000)
+	plugins/viathinksoft/adminPages/920_nostalgia/export_with_data.php: (hardcoded to ignore children of 1.3.6.1.4.1.37476.1.2.3.1)
 
 Logging pages: ra_log and admin_log pages (RA / Admin) as wells as OIDplusPageRaObjectLog (Objects):
 - correctly implement ra_log (not show the system's pages, but the user's pages). Note that this is a hard task (see TODO entry)

@@ -266,9 +266,9 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 					// $this->_oidip_attr('lang', ...); // not implemented (since we don't know the language of the texts written by the page operator)
 
 					if ($obj) {
-						$out[] = $this->_oidip_attr('name', $obj->getTitle()); // DO NOT TRANSLATE!
+						$out[] = $this->_oidip_attr('name', $obj->getTitle() ?? ''); // DO NOT TRANSLATE!
 
-						$cont = $obj->getDescription();
+						$cont = $obj->getDescription() ?? '';
 						$cont = preg_replace('@<a[^>]+href\s*=\s*["\']([^\'"]+)["\'][^>]*>(.+)<\s*/\s*a\s*>@ismU', '\2 (\1)', $cont);
 						$cont = preg_replace('@<br.*>@', "\n", $cont);
 						$cont = preg_replace('@\\n+@', "\n", $cont);
