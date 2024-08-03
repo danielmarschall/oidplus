@@ -278,15 +278,15 @@ class OIDplusGui extends OIDplusBaseClass {
 		$tmp = (OIDplus::insideSetup()) ? '?noBaseConfig=1' : '';
 
 		// CSS/JS used by the bundled plugins. If third partys plugin need other CSS/JS, they must include them by implementing htmlHeaderUpdate()
-		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/components/jquery/jquery.min.js" type="text/javascript"></script>';
-		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/twbs/bootstrap/dist/js/bootstrap.min.js" type="text/javascript"></script>';
-		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/vakata/jstree/dist/jstree.min.js" type="text/javascript"></script>';
-		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/tinymce/tinymce/tinymce.min.js" type="text/javascript"></script>';
-		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/components/jqueryui/jquery-ui.min.js" type="text/javascript"></script>';
-		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/gedmarc/layout/dist/jquery.layout_and_plugins.min.js" type="text/javascript"></script>';
-		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/spamspan/spamspan/spamspan.js" type="text/javascript"></script>';
-		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/emn178/js-sha3/src/sha3.js" type="text/javascript"></script>';
-		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/script47/bs5-utils/dist/js/Bs5Utils.js" type="text/javascript"></script>';
+		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/components/jquery/jquery.min.js"></script>';
+		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/twbs/bootstrap/dist/js/bootstrap.min.js"></script>';
+		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/vakata/jstree/dist/jstree.min.js"></script>';
+		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/tinymce/tinymce/tinymce.min.js"></script>';
+		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/components/jqueryui/jquery-ui.min.js"></script>';
+		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/gedmarc/layout/dist/jquery.layout_and_plugins.min.js"></script>';
+		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/spamspan/spamspan/spamspan.min.js"></script>';
+		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/emn178/js-sha3/src/sha3.min.js"></script>';
+		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/script47/bs5-utils/dist/js/Bs5Utils.min.js"></script>';
 		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.js.php'.$tmp.'"></script>';
 
 		$head_elems[] = '<link rel="stylesheet" href="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/vakata/jstree/dist/themes/default/style.css">';
