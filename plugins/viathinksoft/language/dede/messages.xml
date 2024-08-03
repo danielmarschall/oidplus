@@ -78,6 +78,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		%1 does not contain a valid OID in its name (expected, e.g. %2)
+		]]></source>
+		<target><![CDATA[
+		%1 enthält keine gültige OID im Namen (erwartet z.B. %2)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		%1 failed
 		]]></source>
 		<target><![CDATA[
@@ -4350,10 +4358,18 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Manifest does not declare a PHP main class
+		Manifest does not declare a PHP main class (without namespace)
 		]]></source>
 		<target><![CDATA[
-		Manifest deklariert keine PHP-Hauptklasse
+		Manifest deklariert keine PHP-Hauptklasse (ohne Namespace)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Manifest does not declare a PHP namespace include trailing backslash but no beginning backslash
+		]]></source>
+		<target><![CDATA[
+		Manifest deklariert keinen PHP-Namespace. Erforderlich: Backslash vorne, aber nicht hinten.
 		]]></target>
 	</message>
 	<message>
@@ -6314,6 +6330,14 @@
 		]]></source>
 		<target><![CDATA[
 		Plugin-Name
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Plugin namespaces are wrong. Each plugin must have an unique namespace which is prefix-free! Collission between %1 and %2 detected!
+		]]></source>
+		<target><![CDATA[
+		Die Plugin-Namensräume sind falsch! Jedes Plugin muss genau einen einzigartien PHP-Namespace haben, der Präfixfrei von allen anderen ist. Kollission zwischen %1 und %2 festgestellt.
 		]]></target>
 	</message>
 	<message>

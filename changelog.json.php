@@ -3,6 +3,17 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.2.0",
+		"date": "2024-08-03 23:30:00 +0200",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"!!! Minimum required PHP version raised from PHP 7.0 to PHP 7.4 !!!",
+			"Support for PHP 8.4",
+			"!!! Large tech update: New class autoloader for plugins. Custom plugins require an update, see more information here https://github.com/danielmarschall/oidplus/blob/master/doc/developer_notes/plugin_202_migration.md !!!",
+			"Updated Nostalgia versions: Win95, Win311, DOS now with an uniform file format that can be shared between Windows and DOS"
+		]
+	},
+	{
 		"version": "2.0.1.28",
 		"date": "2024-07-21 10:55:00 +0200",
 		"author": "Daniel Marschall (ViaThinkSoft)",
