@@ -21,8 +21,10 @@
 
 namespace Frdlweb\OIDplus\Plugins\RDAP;
 
+use ViaThinkSoft\OIDplus\Core\OIDplusObject;
+
 interface INTF_OID_1_3_6_1_4_1_37553_8_1_8_8_53354196964_1276945 {
 
-	public function rdapExtensions(array $out, string $namespace, string $id, $obj, string $query) : array;
+	public function rdapExtensions(array $out, string $namespace, string $id, OIDplusObject $obj, string $query) : array;
 
 }
