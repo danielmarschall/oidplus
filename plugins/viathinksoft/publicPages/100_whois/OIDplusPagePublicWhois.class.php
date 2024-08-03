@@ -19,6 +19,7 @@
 
 namespace ViaThinkSoft\OIDplus\Plugins\PublicPages\Whois;
 
+use Frdlweb\OIDplus\Plugins\RDAP\INTF_OID_1_3_6_1_4_1_37553_8_1_8_8_53354196964_1276945;
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusConfig;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;
@@ -31,7 +32,8 @@ use ViaThinkSoft\OIDplus\Plugins\PublicPages\Objects\INTF_OID_1_3_6_1_4_1_37476_
 // phpcs:enable PSR1.Files.SideEffects
 
 class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
-	implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_2 /* modifyContent */
+	implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_2, /* modifyContent */
+	           INTF_OID_1_3_6_1_4_1_37553_8_1_8_8_53354196964_1276945 /*rdapExtensions*/
 {
 	/**
 	 * @param bool $html
@@ -80,6 +82,70 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 			$out[] = $part;
 		}
 		return implode(',',$out);
+	}
+
+	/**
+	 * Implements interface INTF_OID_1_3_6_1_4_1_37553_8_1_8_8_53354196964_1276945.
+	 *
+	 * @param array $out
+	 * @param string $namespace
+	 * @param string $id
+	 * @param $obj
+	 * @param string $query
+	 * @return array
+	 * @throws OIDplusException
+	 */
+	public function rdapExtensions(array $out, string $namespace, string $id, $obj, string $query): array {
+		$ns = $namespace;
+		$n = [
+			$namespace,
+			$id,
+		];
+
+		//$oidIPUrl = OIDplus::webpath().'plugins/viathinksoft/publicPages/100_whois/whois/webwhois.php?query='.urlencode($query).'$format=';
+		$oidIPUrl = OIDplus::webpath().'oidip/'.urlencode($namespace).'/'.$id.'/';
+
+		$oidip_generator = new OIDplusOIDIP();
+
+		$out['remarks'][] = [
+			"title" => "OID-IP Result",
+			"description" => [
+				sprintf("Additional %s %s was added.", 'OID-IP Result info from RDAP-plugin', "1.3.6.1.4.1.37476.2.5.2.4.1.100"),
+			],
+			"links" => [
+				[
+					"href"=> $oidIPUrl.'text',
+					"type"=> "text/plain",
+					"title"=> sprintf("OIDIP Result for the %s %s (Plaintext)", $ns, $n[1]),
+					"value"=> $oidIPUrl.'text',
+					"rel"=> "alternate"
+				],
+				[
+					"href"=> $oidIPUrl.'json',
+					"type"=> "application/json",
+					"title"=> sprintf("OIDIP Result for the %s %s (JSON)", $ns, $n[1]),
+					"value"=> $oidIPUrl.'json',
+					"rel"=> "alternate"
+				],
+				[
+					"href"=> $oidIPUrl.'xml',
+					"type"=> "application/xml",
+					"title"=> sprintf("OIDIP Result for the %s %s (XML)", $ns, $n[1]),
+					"value"=> $oidIPUrl.'xml',
+					"rel"=> "alternate"
+				]
+			]
+		];
+
+		list($oidIPJSON, $dummy_content_type) = $oidip_generator->oidipQuery("$query\$format=json");
+		$out['oidplus_oidip'] = json_decode($oidIPJSON);
+		$out['rdapConformance'][]='oidplus_oidip';
+		$out['oidplus_oidip_properties'] = [
+			"\$schema" ,
+			"oidip",
+		];
+
+		return $out;
 	}
 
 	/**
@@ -295,7 +361,11 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 	 * @throws OIDplusException
 	 */
 	public function modifyContent(string $id, string &$title, string &$icon, string &$text): void {
-		$payload = '<br><img src="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/page_pictogram.png" height="15" alt=""> <a href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/webwhois.php?query='.urlencode($id).'" class="gray_footer_font" target="_blank">'._L('Whois').'</a>';
+		//$oidipUrl = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/webwhois.php?query='.urlencode($id);
+		list($ns, $id_no_ns) = explode(':', $id, 2);
+		$oidipUrl = OIDplus::webpath().'oidip/'.urlencode($ns).'/'.$id_no_ns.'/text';
+		$payload = '<br><img src="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/page_pictogram.png" height="15" alt=""> <a href="'.$oidipUrl.'" class="gray_footer_font" target="_blank">'._L('Whois').'</a>';
+
 		$obj = OIDplusObject::parse($id);
 		if ($obj && $obj->userHasParentalWriteRights()) {
 			$payload .= '<br><span class="gray_footer_font">'._L('OID-IP Auth Token for displaying full object information: %1 (only applies if the this or superior objects are marked confidential)','<b>'.self::genWhoisAuthToken($id).'</b>').'</span>';

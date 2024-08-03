@@ -6,7 +6,7 @@
 			"name": "RDAP",
 			"author": "Frdlweb",
 			"license": "MIT",
-			"version": "0.3.2+viathinksoft20240730",
+			"version": "0.3.2+viathinksoft20240802",
 			"descriptionHTML": "<a href=\"https://github.com/frdl/oidplus-frdlweb-rdap\" target=\"_blank\">RDAP plugin for OIDplus 2.0</a>",
 			"oid": "1.3.6.1.4.1.37476.9000.108.1276945"
 		},
