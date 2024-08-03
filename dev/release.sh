@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # OIDplus 2.0
-# Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
+# Copyright 2019 - 2024 Daniel Marschall, ViaThinkSoft
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -28,9 +28,9 @@ DIR=$( dirname "$0" )
 
 # 0. Search for SPONGE (Marker invented by Terry A Davis)
 echo "0. Checking for forgotten sponges"
-grep -r "SPONGE" | grep -v "\.svn/pristine" | grep -v "dev/release.sh"
+grep -r "SPONGE" | grep -v "\.svn/pristine" | grep -v "dev/release.sh" | grep -v "doc/developer_notes/oidplus_codestyle.md"
 if [ $? -eq 0 ]; then
-	echo "STOP! There are missing files. Please fix this problem (remove them from the SVN)"
+	echo "STOP! You have forgotten some sponges in your code!"
 	exit 1
 fi
 
