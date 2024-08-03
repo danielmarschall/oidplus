@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0 RDAP
- * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2024 Daniel Marschall, ViaThinkSoft
  * Authors               Daniel Marschall, ViaThinkSoft
  *                       Till Wehowski, Frdlweb
  *
@@ -61,6 +61,23 @@ class OIDplusRDAP extends OIDplusBaseClass {
 		$this->useCache = OIDplus::baseConfig()->getValue('RDAP_CACHE_ENABLED', false );
 		$this->rdapCacheDir = OIDplus::baseConfig()->getValue('RDAP_CACHE_DIRECTORY', OIDplus::getUserDataDir("cache"));
 		$this->rdapCacheExpires = OIDplus::baseConfig()->getValue('RDAP_CACHE_EXPIRES', 60 * 3 );
+	}
+
+	/**
+	 * @param array $out
+	 * @param string $namespace
+	 * @param string $id
+	 * @param $obj
+	 * @param string $query
+	 * @return array
+	 */
+	public function callRdapExtensions(array $out, string $namespace, string $id, $obj, string $query): array {
+		foreach(OIDplus::getAllPlugins() as $plugin){
+			if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37553_8_1_8_8_53354196964_1276945) {
+				$out = $plugin->rdapExtensions($out, $namespace, $id, $obj, $query);
+			}
+		}
+		return $out;
 	}
 
 	/**
@@ -186,44 +203,7 @@ class OIDplusRDAP extends OIDplusBaseClass {
 
 		];
 
-		if (!is_null(OIDplus::getPluginByOid("1.3.6.1.4.1.37476.2.5.2.4.1.100"))) { // OIDplusPagePublicWhois
-			$oidIPUrl = OIDplus::webpath().'plugins/viathinksoft/publicPages/100_whois/whois/webwhois.php?query='.urlencode($query);
-
-			$oidip_generator = new OIDplusOIDIP();
-
-			list($oidIP, $dummy_content_type) = $oidip_generator->oidipQuery($query);
-
-			$out['remarks'][] = [
-				"title" => "OID-IP Result",
-				"description" => $oidIP,
-				"links" => [
-						[
-							"href"=> $oidIPUrl,
-							"type"=> "text/plain",
-							"title"=> sprintf("OIDIP Result for the %s %s (Plaintext)", $ns, $n[1]),
-							"value"=> $oidIPUrl,
-							"rel"=> "alternate"
-						],
-						[
-							"href"=> "$oidIPUrl\$format=json",
-							"type"=> "application/json",
-							"title"=> sprintf("OIDIP Result for the %s %s (JSON)", $ns, $n[1]),
-							"value"=> "$oidIPUrl\$format=json",
-							"rel"=> "alternate"
-						],
-						[
-							"href"=> "$oidIPUrl\$format=xml",
-							"type"=> "application/xml",
-							"title"=> sprintf("OIDIP Result for the %s %s (XML)", $ns, $n[1]),
-							"value"=> "$oidIPUrl\$format=xml",
-							"rel"=> "alternate"
-						]
-					]
-				];
-
-			list($oidIPJSON, $dummy_content_type) = $oidip_generator->oidipQuery("$query\$format=json");
-			$out['oidplus_oidip'] = json_decode($oidIPJSON);
-		}
+		$out = $this->callRdapExtensions($out, $obj::ns(), $obj->nodeId(false), $obj, $query);
 
 		$out['notices']=[
 			 [
