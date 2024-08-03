@@ -219,6 +219,15 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 		// Try to extend DSN with charset
 		// Note: For MySQL, must be utf8mb4 or utf8, and not UTF-8
 		if (stripos($dsn,"charset=") === false) {
+			// ODBC with SQL Server is just garbage!
+			// The following things were tested with PHP 8.4Alpha3, SQL Server 2022 and Windows 10.
+			// Without SQL_CUR_USE_ODBC:
+			// - VERY SLOW query+fetchall "select * from oidplus_objects where id like '...'" (4-5 seconds)
+			// With SQL_CUR_USE_ODBC:
+			// - Query+FetchAll is now faster, but still not very nice (1-2 seconds)
+			// - select query with exactly one ntext column fails; reported here: https://github.com/php/php-src/issues/15219
+			// - Complex OIDplus modules like OID-IP crash Apache2 with error "zend_mm_heap corrupted"
+			// - "odbc php HSTMT bindings may not be changed while a cursor is open." error if you cache prepared statements
 			$this->conn = odbc_connect("$dsn;charset=utf8mb4", $username, $password);
 			if (!$this->conn) $this->conn = odbc_connect("$dsn;charset=utf8", $username, $password);
 			if (!$this->conn) $this->conn = odbc_connect("$dsn;charset=UTF-8", $username, $password);

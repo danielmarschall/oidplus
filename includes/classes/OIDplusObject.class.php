@@ -643,7 +643,8 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 */
 	public function getDescription(): ?string {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
-			$res = OIDplus::db()->query("select description from ###objects where id = ?", array($this->nodeId()));
+			// Also included a non-ntext field in the query, see https://bugs.php.net/bug.php?id=72503
+			$res = OIDplus::db()->query("select id, description from ###objects where id = ?", array($this->nodeId()));
 			if (!$res->any()) return null;
 			$row = $res->fetch_array();
 			return $row['description'];

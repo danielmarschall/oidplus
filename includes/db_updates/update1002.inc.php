@@ -134,7 +134,8 @@ function oidplus_dbupdate_1002(OIDplusDatabaseConnection $db): int {
 
 		// Auth plugins A1 and A2 have been replaced with A5
 		// Note that you cannot use `value` in the where clause on MSSQL, because "text and varchar" are incompatible...
-		$res = $db->query("SELECT value from ###config where name = 'default_ra_auth_method'");
+		// Also included a non-ntext field in the query, see https://bugs.php.net/bug.php?id=72503
+		$res = $db->query("SELECT name, value from ###config where name = 'default_ra_auth_method'");
 		if ($row = $res->fetch_array()) {
 			if (($row['value'] == 'A1_phpgeneric_salted_hex') || ($row['value'] == 'A2_sha3_salted_base64')) {
 				$db->query("UPDATE ###config SET value = 'A5_vts_mcf' WHERE name = 'default_ra_auth_method'");

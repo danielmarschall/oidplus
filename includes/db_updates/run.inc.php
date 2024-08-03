@@ -28,7 +28,8 @@ use ViaThinkSoft\OIDplus\Core\OIDplusException;
  */
 function oidplus_dbupdate(OIDplusDatabaseConnection $db) {
 	// Detect database version
-	$res = $db->query("SELECT value FROM ###config WHERE name = 'database_version'");
+	// Also included a non-ntext field in the query, see https://bugs.php.net/bug.php?id=72503
+	$res = $db->query("SELECT name, value FROM ###config WHERE name = 'database_version'");
 	$row = $res->fetch_array();
 	if ($row == null) {
 		// Note: The config setting "database_version" is inserted in plugins/*/sqlSlang/*/sql/struct.sql, not in the OIDplus core init

@@ -44,7 +44,7 @@ if (!class_exists('ZipArchive')) {
 	throw new OIDplusException(_L('The PHP extension "ZipArchive" needs to be installed to create a ZIP archive with an included database. Otherwise, you can just download the plain program without data.'));
 }
 
-$tmp_file = OIDplus::getUserDataDir("cache").'oidplus_ancient.zip';
+$tmp_file = OIDplus::getUserDataDir("cache").'oidplus_ancient_'.generateRandomString(10).'.zip';
 
 $zip = new ZipArchive();
 if ($zip->open($tmp_file, ZipArchive::CREATE)!== true) {
@@ -122,7 +122,7 @@ $udat[''] = '1900-01-01';
 $ra[''] = '';
 
 // Now check all OIDs
-$res = OIDplus::db()->query("select * from ###objects where id like 'oid:%'");
+$res = OIDplus::db()->query("select * from ###objects where id not like 'oid:1.3.6.1.4.1.37476.1.2.3.1.%' and id like 'oid:%'");
 $res->naturalSortByField('id');
 while ($row = $res->fetch_object()) {
 	$oid = substr($row->id, strlen('oid:'));
@@ -149,11 +149,11 @@ while ($row = $res->fetch_object()) {
 			fill_iri($real_parent, $iri); // well-known OIDs?
 			$title[$real_parent] = '';
 			$description[$real_parent] = '';
-			$cdat[$real_parent] = '';
-			$udat[$real_parent] = '';
+			$cdat[$real_parent] = null;
+			$udat[$real_parent] = null;
 			$ra[$real_parent] = '';
 
-			$res2 = OIDplus::db()->query("select * from ###objects where id = ?", ["oid:$real_parent"]);
+			$res2 = OIDplus::db()->query("select * from ###objects where id not like 'oid:1.3.6.1.4.1.37476.1.2.3.1.%' and id = ?", ["oid:$real_parent"]);
 			while ($row2 = $res2->fetch_object()) {
 				$title[$real_parent] = vts_utf8_decode($row2->title);
 				$description[$real_parent] = vts_utf8_decode($row2->description);
@@ -266,7 +266,7 @@ if (!headers_sent()) {
 	readfile($tmp_file);
 }
 
-unlink($tmp_file);
+@unlink($tmp_file);
 
 OIDplus::invoke_shutdown();
 
@@ -305,7 +305,7 @@ function fill_iri(string $oid, array &$iri): void {
  * @return array
  */
 function handleDesc_dos(string $desc): array {
-	$desc = preg_replace('/\<br(\s*)?\/?\>/i', "\n", $desc); // br2nl
+	$desc = preg_replace('/<br(\s*)?\/?>/i', "\n", $desc); // br2nl
 	$desc = strip_tags($desc);
 	$desc = str_replace('&nbsp;', ' ', $desc);
 	$desc = html_entity_decode($desc);
@@ -319,10 +319,10 @@ function handleDesc_dos(string $desc): array {
 }
 
 /**
- * @param mixed|string|null $datetime
- * @return mixed|string|null
+ * @param string|null $datetime
+ * @return string|null
  */
-function fix_datetime_for_output($datetime) {
+function fix_datetime_for_output(?string $datetime): ?string {
 	if ($datetime === "0000-00-00") $datetime = null; // MySQL might use this as default instead of NULL... But SQL Server cannot read this.
 
 	if (is_string($datetime) && (substr($datetime,4,1) !== '-')) {
@@ -336,7 +336,7 @@ function fix_datetime_for_output($datetime) {
 		}
 	}
 
-	return explode(' ', $datetime)[0]; // only date, not time
+	return $datetime ? explode(' ', $datetime)[0] : null; // only date, not time
 }
 
 /**
