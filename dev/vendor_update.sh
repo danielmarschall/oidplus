@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # OIDplus 2.0
-# Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
+# Copyright 2019 - 2024 Daniel Marschall, ViaThinkSoft
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -137,9 +137,16 @@ sed -i 's@int \$expiresAfter = null,@?int \$expiresAfter = null,@g' vendor/fireb
 sed -i 's@string \$defaultAlg = null@?string \$defaultAlg = null@g' vendor/firebase/php-jwt/src/CachedKeySet.php
 sed -i 's@public static function parseKeySet(array \$jwks, string \$defaultAlg = null): array@public static function parseKeySet(array \$jwks, ?string \$defaultAlg = null): array@g' vendor/firebase/php-jwt/src/JWK.php
 sed -i 's@public static function parseKey(array \$jwk, string \$defaultAlg = null): ?Key@public static function parseKey(array \$jwk, ?string \$defaultAlg = null): ?Key@g' vendor/firebase/php-jwt/src/JWK.php
-sed -i 's@stdClass &$headers = null@?stdClass &$headers = null@g' vendor/firebase/php-jwt/src/JWT.php
+sed -i 's@stdClass \&\$headers = null@?stdClass \&\$headers = null@g' vendor/firebase/php-jwt/src/JWT.php
 sed -i 's@string \$keyId = null,@?string \$keyId = null,@g' vendor/firebase/php-jwt/src/JWT.php
 sed -i 's@array \$head = null@?array \$head = null@g' vendor/firebase/php-jwt/src/JWT.php
 
 # Fix https://github.com/SergeyBrook/php-jws/pull/3 (also for older PHP 7.4 versions of the lib)
 sed -i 's@public function __construct(\$message, \$code = 0, Exception \$previous = null) {@public function __construct(\$message, \$code = 0, ?Exception \$previous = null) {@g' plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/sergeybrook/php-jws/src/JWS/Exception/JwsException.php
+
+# Minify JS which have not been minified by the vendor
+chmod +x dev/minify_js.sh
+dev/minify_js.sh vendor/spamspan/spamspan/spamspan.js > vendor/spamspan/spamspan/spamspan.min.js
+dev/minify_js.sh vendor/emn178/js-sha3/src/sha3.js > vendor/emn178/js-sha3/src/sha3.min.js
+dev/minify_js.sh vendor/script47/bs5-utils/dist/js/Bs5Utils.js > vendor/script47/bs5-utils/dist/js/Bs5Utils.min.js
+

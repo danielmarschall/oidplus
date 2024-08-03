@@ -65,16 +65,16 @@ spl_autoload_register(function ($fq_class_name) {
 		}
 		// Check if it is prefix-free
 		$tmp_folders = array_keys($oidplus_autoloader_folders);
-	    for ($i = 0; $i < count($tmp_folders) - 1; $i++) {
-	        $current = $tmp_folders[$i];
-	        $next = $tmp_folders[$i + 1];
-	        // Check if $current is a prefix of $next
-	        if (strpos($next, $current) === 0) {
+		for ($i = 0; $i < count($tmp_folders) - 1; $i++) {
+			$current = $tmp_folders[$i];
+			$next = $tmp_folders[$i + 1];
+			// Check if $current is a prefix of $next
+			if (strpos($next, $current) === 0) {
 				throw new OIDplusException(_L("Plugin namespaces are wrong. Each plugin must have an unique namespace which is prefix-free! Collission between %1 and %2 detected!", $current, $next));
-	        }
+			}
 			unset($current);
 			unset($next);
-	    }
+		}
 		unset($tmp_folders);
 	}
 
@@ -83,8 +83,8 @@ spl_autoload_register(function ($fq_class_name) {
 		// For class A\B\C\D: [$a,$b] will be tuples of [A,B\C\D], [A\B,C\D], [A\B\C,D]
 		// this allows plugins having sub-namespaces in folders;
 		// and it works because plugins need an unique and prefix-free namespace.
-	    $a = implode("\\", array_slice($parts, 0, $i));
-	    $b = implode("\\", array_slice($parts, $i));
+		$a = implode("\\", array_slice($parts, 0, $i));
+		$b = implode("\\", array_slice($parts, $i));
 		if (isset($oidplus_autoloader_folders[$a."\\"])) {
 			$candidate = $oidplus_autoloader_folders[$a."\\"].DIRECTORY_SEPARATOR.str_replace('\\',DIRECTORY_SEPARATOR,$b).'.class.php';
 			if (file_exists($candidate)) {

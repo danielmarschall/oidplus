@@ -1732,3 +1732,4 @@ function getDateFromDay(int $year, int $dayOfYear): \DateTime {
 	$date = \DateTime::createFromFormat('Y z', strval($year) . ' ' . strval($dayOfYear-1));
 	return $date;
 }
+
