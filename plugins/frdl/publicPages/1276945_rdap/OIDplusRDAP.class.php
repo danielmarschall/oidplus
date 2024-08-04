@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-namespace Frdlweb\OIDplus\Plugins\RDAP;
+namespace Frdlweb\OIDplus\Plugins\PublicPages\RDAP;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusBaseClass;
