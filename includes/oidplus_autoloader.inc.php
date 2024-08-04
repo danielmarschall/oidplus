@@ -120,6 +120,11 @@ spl_autoload_register(function ($fq_class_name) {
 	 */
 
 	if (str_starts_with($classname_no_namespace, "INTF_OID_")) {
+
+		if (OIDplus::baseConfig()->getValue("DEBUG")) {
+			throw new OIDplusException(_L('Optional interface "%1" was not found. This is a fatal error since the debug mode is enabled.', $fq_class_name));
+		}
+
 		$fake_content = "";
 		if ($namespace) $fake_content .= "namespace ".substr($namespace, 0, -1).";\n\n";
 		$fake_content .= "interface $classname_no_namespace { }\n\n";

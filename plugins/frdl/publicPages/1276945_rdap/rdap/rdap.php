@@ -19,7 +19,7 @@
  * limitations under the License.
  */
 
-use Frdlweb\OIDplus\Plugins\RDAP\OIDplusRDAP;
+use Frdlweb\OIDplus\Plugins\PublicPages\RDAP\OIDplusRDAP;
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusGui;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;

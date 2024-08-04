@@ -11,7 +11,7 @@
 			"oid": "1.3.6.1.4.1.37476.9000.108.1276945"
 		},
 		"php": {
-			"namespace": "Frdlweb\\OIDplus\\Plugins\\RDAP\\",
+			"namespace": "Frdlweb\\OIDplus\\Plugins\\PublicPages\\RDAP\\",
 			"mainclass": "OIDplusPagePublicRdap"
 		},
 		"css": [],

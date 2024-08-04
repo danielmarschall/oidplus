@@ -19,7 +19,7 @@
 
 namespace ViaThinkSoft\OIDplus\Plugins\PublicPages\Whois;
 
-use Frdlweb\OIDplus\Plugins\RDAP\INTF_OID_1_3_6_1_4_1_37553_8_1_8_8_53354196964_1276945;
+use Frdlweb\OIDplus\Plugins\PublicPages\RDAP\INTF_OID_1_3_6_1_4_1_37553_8_1_8_8_53354196964_1276945;
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusConfig;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;
