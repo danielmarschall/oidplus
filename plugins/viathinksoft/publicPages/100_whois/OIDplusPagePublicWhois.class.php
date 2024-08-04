@@ -41,18 +41,18 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 	 * @throws OIDplusException
 	 */
 	public function init(bool $html=true): void {
-		OIDplus::config()->prepareConfigKey('whois_auth_token',                       'OID-over-WHOIS authentication token to display confidential data', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+		OIDplus::config()->prepareConfigKey('whois_auth_token',                       'OID-IP authentication token to display confidential data', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			$test_value = preg_replace('@[0-9a-zA-Z]*@', '', $value);
 			if ($test_value != '') {
 				throw new OIDplusException(_L('Only characters and numbers are allowed as authentication token.'));
 			}
 		});
-		OIDplus::config()->prepareConfigKey('webwhois_output_format_spacer',          'WebWHOIS: Spacer', '2', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+		OIDplus::config()->prepareConfigKey('webwhois_output_format_spacer',          'OID-IP Text format: Spacer', '2', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
 				throw new OIDplusException(_L('Please enter a valid value.'));
 			}
 		});
-		OIDplus::config()->prepareConfigKey('webwhois_output_format_max_line_length', 'WebWHOIS: Max line length', '80', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+		OIDplus::config()->prepareConfigKey('webwhois_output_format_max_line_length', 'OID-IP Text format: Max line length', '80', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (!is_numeric($value) || ($value < 0)) {
 				throw new OIDplusException(_L('Please enter a valid value.'));
 			}
@@ -95,7 +95,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 	 * @return array
 	 * @throws OIDplusException
 	 */
-	public function rdapExtensions(array $out, string $namespace, string $id, $obj, string $query): array {
+	public function rdapExtensions(array $out, string $namespace, string $id, OIDplusObject $obj, string $query): array {
 		$ns = $namespace;
 		$n = [
 			$namespace,
