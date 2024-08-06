@@ -120,6 +120,7 @@ $description[''] = 'Exported by OIDplus 2.0';
 $cdat[''] = '1900-01-01';
 $udat[''] = '1900-01-01';
 $ra[''] = '';
+$hide[''] = false;
 
 // Now check all OIDs
 $res = OIDplus::db()->query("select * from ###objects where id not like 'oid:1.3.6.1.4.1.37476.1.2.3.1.%' and id like 'oid:%'");
@@ -136,6 +137,7 @@ while ($row = $res->fetch_object()) {
 	$cdat[$oid] = fix_datetime_for_output($row->created);
 	$udat[$oid] = fix_datetime_for_output($row->updated);
 	$ra[$oid] = $row->ra_email;
+	$hide[$oid] = $row->confidential;
 
 	if ((oid_len($oid) > 1) && ($parent_oid == '')) {
 		do {
@@ -152,6 +154,7 @@ while ($row = $res->fetch_object()) {
 			$cdat[$real_parent] = null;
 			$udat[$real_parent] = null;
 			$ra[$real_parent] = '';
+			$hide[$real_parent] = false;
 
 			$res2 = OIDplus::db()->query("select * from ###objects where id not like 'oid:1.3.6.1.4.1.37476.1.2.3.1.%' and id = ?", ["oid:$real_parent"]);
 			while ($row2 = $res2->fetch_object()) {
@@ -160,6 +163,7 @@ while ($row = $res->fetch_object()) {
 				$cdat[$real_parent] = fix_datetime_for_output($row2->created);
 				$udat[$real_parent] = fix_datetime_for_output($row2->updated);
 				$ra[$real_parent] = $row2->ra_email;
+				$hide[$real_parent] = $row2->confidential;
 			}
 
 			// next
@@ -184,6 +188,7 @@ const OID_CMD_DESCRIPTION     = 'DESC';
 const OID_CMD_CREATE_DATE     = 'CDAT';
 const OID_CMD_UPDATE_DATE     = 'UDAT';
 const OID_CMD_DRAFT           = 'DRFT';
+const OID_CMD_HIDE            = 'HIDE';
 const OID_CMD_RA              = 'RA__';
 
 foreach ($dos_ids as $oid => $dos_id) {
@@ -226,9 +231,11 @@ foreach ($dos_ids as $oid => $dos_id) {
 
 	$cont .= make_line(OID_CMD_UPDATE_DATE, $udat[$oid] ?? '1900-01-01');
 
-	$cont .= make_line(OID_CMD_DRAFT, '0'); // this attribute does not exist in OIDplus 2.0
+	$cont .= make_line(OID_CMD_DRAFT, (str_contains($title[$oid],'(Draft)')||str_contains($title[$oid],'[Draft]')) ? '1' : '0');
 
 	$cont .= make_line(OID_CMD_RA, $ra[$oid]);
+
+	$cont .= make_line(OID_CMD_HIDE, $hide[$oid] ? '1' : '0');
 
 	//echo "****$dos_id.OID\r\n";
 	//echo "$cont\r\n";
