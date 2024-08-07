@@ -3,7 +3,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2024 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,7 +22,7 @@
 // Example: The automatic publishing of OIDs will then be done by this script
 // and not by a random visitor.
 
-use ViaThinkSoft\OIDplus\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplus;
 
 $errors = 0;
 
