@@ -185,11 +185,15 @@ class OIDplus extends OIDplusBaseClass {
 					throw new OIDplusConfigInitializationException(_L('A full re-initialization is not possible if a version %1 config file (containing "defines") is used. Please update to a config %2 file by running setup again.','2.0','2.1'));
 				} else {
 					$tmp = file_get_contents($config_file);
-					$old_class = "ViaThinkSoft\OIDplus\OIDplus";
-					$new_class = "ViaThinkSoft\OIDplus\Core\OIDplus";
-					$uses = "use $new_class;";
-					if (strpos($tmp,$old_class) !== false) {
-						$tmp = str_replace($old_class, $new_class, $tmp);
+					$old_class1 = "ViaThinkSoft\OIDplus\OIDplus";
+					$new_class1 = "ViaThinkSoft\OIDplus\Core\OIDplus";
+					$uses = "use $new_class1;";
+					$old_class2 = "ViaThinkSoft\OIDplus\OIDplusCaptchaPluginRecaptcha";
+					$new_class2 = "ViaThinkSoft\OIDplus\Plugins\Captcha\ReCaptcha\OIDplusCaptchaPluginRecaptcha";
+					if ((strpos($tmp,$old_class1) !== false) || (strpos($tmp,$old_class2) !== false)) {
+						// Migrate from old namespace class names to new namespace class names (OIDplus 2.0.2.x)
+						$tmp = str_replace($old_class1, $new_class1, $tmp);
+						$tmp = str_replace($old_class2, $new_class2, $tmp);
 						if (@file_put_contents($config_file, $tmp) === false) {
 							eval('?'.'>'.$tmp);
 						} else {

@@ -191,12 +191,12 @@ Please note that the value is case-sensitive.
 
 ### RECAPTCHA_VERSION
 
-    OIDplus::baseConfig()->setValue('RECAPTCHA_VERSION',        \ViaThinkSoft\OIDplus\OIDplusCaptchaPluginRecaptcha::RECAPTCHA_V2_CHECKBOX);
+    OIDplus::baseConfig()->setValue('RECAPTCHA_VERSION',        \ViaThinkSoft\OIDplus\Plugins\Captcha\ReCaptcha\OIDplusCaptchaPluginRecaptcha::RECAPTCHA_V2_CHECKBOX);
 
 Possible values:
-- `\ViaThinkSoft\OIDplus\OIDplusCaptchaPluginRecaptcha::RECAPTCHA_V2_CHECKBOX`
-- `\ViaThinkSoft\OIDplus\OIDplusCaptchaPluginRecaptcha::RECAPTCHA_V2_INVISIBLE`
-- `\ViaThinkSoft\OIDplus\OIDplusCaptchaPluginRecaptcha::RECAPTCHA_V3`
+- `\ViaThinkSoft\OIDplus\Plugins\Captcha\ReCaptcha\OIDplusCaptchaPluginRecaptcha::RECAPTCHA_V2_CHECKBOX`
+- `\ViaThinkSoft\OIDplus\Plugins\Captcha\ReCaptcha\OIDplusCaptchaPluginRecaptcha::RECAPTCHA_V2_INVISIBLE`
+- `\ViaThinkSoft\OIDplus\Plugins\Captcha\ReCaptcha\OIDplusCaptchaPluginRecaptcha::RECAPTCHA_V3`
 
 ### RECAPTCHA_ENABLED
 
