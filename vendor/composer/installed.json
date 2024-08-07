@@ -297,19 +297,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/php_utils.git",
-                "reference": "32d3ea80c33d14a57b676b519a948cc564f22b86"
+                "reference": "f2024b766693fbd5a014bdeaeb89ee43c04fbbd1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/32d3ea80c33d14a57b676b519a948cc564f22b86",
-                "reference": "32d3ea80c33d14a57b676b519a948cc564f22b86",
+                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/f2024b766693fbd5a014bdeaeb89ee43c04fbbd1",
+                "reference": "f2024b766693fbd5a014bdeaeb89ee43c04fbbd1",
                 "shasum": ""
             },
             "require": {
                 "ext-zlib": "*",
                 "php": ">=7.0"
             },
-            "time": "2024-05-26T21:26:51+00:00",
+            "time": "2024-08-07T22:08:38+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -791,12 +791,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "42ecb344301d19b82483c8527614f4070b1e1988"
+                "reference": "47895e28515f99c0f7db6d5c848005d9fd48faaa"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/42ecb344301d19b82483c8527614f4070b1e1988",
-                "reference": "42ecb344301d19b82483c8527614f4070b1e1988",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/47895e28515f99c0f7db6d5c848005d9fd48faaa",
+                "reference": "47895e28515f99c0f7db6d5c848005d9fd48faaa",
                 "shasum": ""
             },
             "require": {
@@ -814,7 +814,7 @@
                 "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
                 "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
             },
-            "time": "2024-08-03T16:47:18+00:00",
+            "time": "2024-08-05T15:59:09+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -1081,15 +1081,15 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "db05d34dd0964dd241045cfc319c3a1bd45773e8"
+                "reference": "e92ab7adaa3db1752639361ded41a7abb2d28996"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/db05d34dd0964dd241045cfc319c3a1bd45773e8",
-                "reference": "db05d34dd0964dd241045cfc319c3a1bd45773e8",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/e92ab7adaa3db1752639361ded41a7abb2d28996",
+                "reference": "e92ab7adaa3db1752639361ded41a7abb2d28996",
                 "shasum": ""
             },
-            "time": "2024-07-03T05:25:26+00:00",
+            "time": "2024-08-07T06:30:33+00:00",
             "default-branch": true,
             "type": "component",
             "extra": {
@@ -1133,7 +1133,7 @@
                 "wysiwyg"
             ],
             "support": {
-                "source": "https://github.com/tinymce/tinymce-dist/tree/7.2.1"
+                "source": "https://github.com/tinymce/tinymce-dist/tree/7.3.0"
             },
             "install-path": "../tinymce/tinymce"
         },
@@ -1144,18 +1144,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "ac831aa4df8e817883c1510f74604ea67e26f179"
+                "reference": "3083596e87146c1c5a61de7238cb69e1dab5ae8b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/ac831aa4df8e817883c1510f74604ea67e26f179",
-                "reference": "ac831aa4df8e817883c1510f74604ea67e26f179",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/3083596e87146c1c5a61de7238cb69e1dab5ae8b",
+                "reference": "3083596e87146c1c5a61de7238cb69e1dab5ae8b",
                 "shasum": ""
             },
             "replace": {
                 "twitter/bootstrap": "self.version"
             },
-            "time": "2024-08-02T08:18:29+00:00",
+            "time": "2024-08-07T10:11:06+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
