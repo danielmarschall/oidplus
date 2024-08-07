@@ -584,8 +584,6 @@ function iri_arc_valid($arc, $allow_numeric=true) {
 	$m = array();
 	if ($allow_numeric && preg_match('@^(\\d+)$@', $arc, $m)) return true; # numeric arc
 
-	// Question: Should we strip RTL/LTR characters?
-
 	if (mb_substr($arc, 2, 2) == '--') return false; // see Rec. ITU-T X.660, clause 7.5.4
 
 	$array = array();

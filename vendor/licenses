@@ -14,8 +14,8 @@ danielmarschall/glip             0.1.3.x-dev 681871b GPL-2.0-or-later
 danielmarschall/glip             dev-master 681871b  GPL-2.0-or-later      
 danielmarschall/oidconverter     dev-master cd036ff  Apache-2.0            
 danielmarschall/oidconverter     9999999-dev cd036ff Apache-2.0            
-danielmarschall/php_utils        9999999-dev 32d3ea8 Apache-2.0            
-danielmarschall/php_utils        dev-master 32d3ea8  Apache-2.0            
+danielmarschall/php_utils        9999999-dev f2024b7 Apache-2.0            
+danielmarschall/php_utils        dev-master f2024b7  Apache-2.0            
 danielmarschall/uuid_mac_utils   9999999-dev fce4654 Apache-2.0            
 danielmarschall/uuid_mac_utils   dev-master fce4654  Apache-2.0            
 danielmarschall/vnag             9999999-dev 55902e8 Apache-2.0            
@@ -29,16 +29,16 @@ matthiasmullie/minify            dev-master cb7a929  MIT
 matthiasmullie/path-converter    1.1.3               MIT                   
 paragonie/constant_time_encoding v2.x-dev 52a0d99    MIT                   
 paragonie/random_compat          v9.99.100           MIT                   
-phpseclib/phpseclib              3.0.x-dev 42ecb34   MIT                   
+phpseclib/phpseclib              3.0.x-dev 47895e2   MIT                   
 script47/bs5-utils               master master       MIT                   
 spamspan/spamspan                master              GPL-2.0-only          
 spomky-labs/php-punycode         dev-master d12fe5c  MIT                   
 spomky-labs/php-punycode         9999999-dev d12fe5c MIT                   
 symfony/polyfill-mbstring        1.x-dev 8740a07     MIT                   
-tinymce/tinymce                  9999999-dev db05d34 GPL-2.0-or-later      
-tinymce/tinymce                  dev-master db05d34  GPL-2.0-or-later      
-twbs/bootstrap                   9999999-dev ac831aa MIT                   
-twbs/bootstrap                   dev-main ac831aa    MIT                   
+tinymce/tinymce                  9999999-dev e92ab7a GPL-2.0-or-later      
+tinymce/tinymce                  dev-master e92ab7a  GPL-2.0-or-later      
+twbs/bootstrap                   9999999-dev 3083596 MIT                   
+twbs/bootstrap                   dev-main 3083596    MIT                   
 tweeb/tinymce-i18n               9999999-dev 058da08 MIT                   
 tweeb/tinymce-i18n               dev-master 058da08  MIT                   
 vakata/jstree                    9999999-dev b3135cf MIT                   

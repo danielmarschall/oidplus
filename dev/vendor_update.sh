@@ -132,10 +132,12 @@ sed -i 's@\$parts\[0\] = rtrim(\$parts\[0\], \x27\.0\x27);@\$parts\[0\] = rtrim(
 # see https://github.com/symfony/polyfill-mbstring/pull/11
 sed -i 's@if (\\is_array(\$fromEncoding) || false !== strpos(\$fromEncoding, \x27,\x27)) {@if (\\is_array(\$fromEncoding) || (null !== \$fromEncoding \&\& false !== strpos(\$fromEncoding, \x27,\x27))) {@g' vendor/symfony/polyfill-mbstring/Mbstring.php
 
-# Fix https://github.com/firebase/php-jwt/pull/573 (also for older PHP 7.4 versions of the lib)
+# Fix https://github.com/firebase/php-jwt/pull/572 (also for older PHP 7.4 versions of the lib)
 sed -i 's@int \$expiresAfter = null,@?int \$expiresAfter = null,@g' vendor/firebase/php-jwt/src/CachedKeySet.php
 sed -i 's@string \$defaultAlg = null@?string \$defaultAlg = null@g' vendor/firebase/php-jwt/src/CachedKeySet.php
+sed -i 's@sprintf(@\\sprintf(@g' vendor/firebase/php-jwt/src/CachedKeySet.php
 sed -i 's@public static function parseKeySet(array \$jwks, string \$defaultAlg = null): array@public static function parseKeySet(array \$jwks, ?string \$defaultAlg = null): array@g' vendor/firebase/php-jwt/src/JWK.php
+sed -i 's@sprintf(@\\sprintf(@g' vendor/firebase/php-jwt/src/JWK.php
 sed -i 's@public static function parseKey(array \$jwk, string \$defaultAlg = null): ?Key@public static function parseKey(array \$jwk, ?string \$defaultAlg = null): ?Key@g' vendor/firebase/php-jwt/src/JWK.php
 sed -i 's@stdClass \&\$headers = null@?stdClass \&\$headers = null@g' vendor/firebase/php-jwt/src/JWT.php
 sed -i 's@string \$keyId = null,@?string \$keyId = null,@g' vendor/firebase/php-jwt/src/JWT.php
