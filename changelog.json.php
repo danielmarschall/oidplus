@@ -3,6 +3,14 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.2.1",
+		"date": "2024-08-08 00:20:00 +0200",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"Nostalgia plugin: Download URLs changed and 64-Bit Windows version added."
+		]
+	},
+	{
 		"version": "2.0.2.0",
 		"date": "2024-08-03 23:30:00 +0200",
 		"author": "Daniel Marschall (ViaThinkSoft)",
