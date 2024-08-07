@@ -2286,6 +2286,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Download OIDplus for 64-bit Windows
+		]]></source>
+		<target><![CDATA[
+		OIDplus für 64-Bit Windows herunterladen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Download OIDplus for DOS
 		]]></source>
 		<target><![CDATA[
@@ -5474,6 +5482,14 @@
 		]]></source>
 		<target><![CDATA[
 		Optionale PIX erlaubt, ohne Präfix
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Optional interface "%1" was not found. This is a fatal error since the debug mode is enabled.
+		]]></source>
+		<target><![CDATA[
+		Das optionale Interface "%1" wurde nicht gefunden. Das System bleibt nun stehen, da der Debug-Modus aktiviert ist.
 		]]></target>
 	</message>
 	<message>

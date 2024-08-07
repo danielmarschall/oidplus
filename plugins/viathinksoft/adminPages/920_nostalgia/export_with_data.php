@@ -244,26 +244,22 @@ foreach ($dos_ids as $oid => $dos_id) {
 
 // ---------------------------- EXE
 
-$exe_url = 'https://github.com/danielmarschall/oidplus_dos/raw/master/OIDPLUS.EXE';
-$exe = url_get_contents($exe_url);
-if ($exe === false) {
-	throw new OIDplusException(_L("Cannot download the binary file from GitHub (%1)", $exe_url));
-}
-$zip->addFromString('OIDDBDOS.EXE', $exe);
+$files_to_download = [
+	"https://github.com/danielmarschall/oidplus_nostalgia/raw/master/DOS/OIDPLUS.EXE" => "OIDDBDOS.EXE",
+	"https://github.com/danielmarschall/oidplus_nostalgia/raw/master/Win311/OIDPLUS.EXE" => "OIDDB_16.EXE",
+	"https://github.com/danielmarschall/oidplus_nostalgia/raw/master/Win95/OIDPLUS.EXE" => "OIDDB_32.EXE",
+	"https://github.com/danielmarschall/oidplus_nostalgia/raw/master/Win64/OIDPLUS.EXE" => "OIDDB_64.EXE"
+];
 
-$exe_url = 'https://github.com/danielmarschall/oidplus_win95/raw/master/OIDPLUS.exe';
-$exe = url_get_contents($exe_url);
-if ($exe === false) {
-	throw new OIDplusException(_L("Cannot download the binary file from GitHub (%1)", $exe_url));
+foreach ($files_to_download as $exe_url => $new_name) {
+	$exe_cont = url_get_contents($exe_url);
+	if ($exe_cont === false) {
+		throw new OIDplusException(_L("Cannot download the binary file from GitHub (%1)", $exe_url));
+	}
+	$zip->addFromString($new_name, $exe_cont);
 }
-$zip->addFromString('OIDDB_32.EXE', $exe);
 
-$exe_url = 'https://github.com/danielmarschall/oidplus_win311/raw/master/OIDPLUS.exe';
-$exe = url_get_contents($exe_url);
-if ($exe === false) {
-	throw new OIDplusException(_L("Cannot download the binary file from GitHub (%1)", $exe_url));
-}
-$zip->addFromString('OIDDB_16.EXE', $exe);
+// ---------------------------- Done
 
 $zip->close();
 
