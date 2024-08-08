@@ -33,11 +33,11 @@ $files = array();
 $req_file = ($_REQUEST["file"] ?: "base");
 if ($req_file != "base") {
 	$do_minify = false;
-	$req_file = realpath(__DIR__ . DIRECTORY_SEPARATOR . $req_file);
-	if (!str_starts_with($req_file, __DIR__ . DIRECTORY_SEPARATOR) || !str_ends_with($req_file, ".css")) {
+	$inc_file = realpath(__DIR__ . DIRECTORY_SEPARATOR . $req_file);
+	if (!str_starts_with($inc_file, __DIR__ . DIRECTORY_SEPARATOR) || !str_ends_with($inc_file, ".css")) {
 		http_response_code(404);
 	} else {
-		$files[] = $req_file;
+		$files[] = $inc_file;
 	}
 } else {
 	$do_minify = OIDplus::baseConfig()->getValue('MINIFY_CSS', true);
@@ -114,7 +114,7 @@ if (OIDplus::baseConfig()->getValue('DEBUG')) {
 	header('Content-Type:text/css');
 	echo $out;
 } else {
-	httpOutWithETag($out, 'text/css', 'oidplus.css');
+	httpOutWithETag($out, 'text/css', 'oidplus_'.sha1($req_file).'.css');
 }
 
 # ---
