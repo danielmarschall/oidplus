@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2024 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -26,11 +26,98 @@ require_once __DIR__ . '/includes/oidplus.inc.php';
 error_reporting(OIDplus::baseConfig()->getValue('DEBUG') ? E_ALL : 0);
 @ini_set('display_errors', OIDplus::baseConfig()->getValue('DEBUG') ? '1' : '0');
 
-$out = '';
+$files = array();
 
 # ---
 
-$do_minify = OIDplus::baseConfig()->getValue('MINIFY_CSS', true);
+$req_file = ($_REQUEST["file"] ?: "base");
+if ($req_file != "base") {
+	$do_minify = false;
+	$req_file = realpath(__DIR__ . DIRECTORY_SEPARATOR . $req_file);
+	if (!str_starts_with($req_file, __DIR__ . DIRECTORY_SEPARATOR) || !str_ends_with($req_file, ".css")) {
+		http_response_code(404);
+	} else {
+		$files[] = $req_file;
+	}
+} else {
+	$do_minify = OIDplus::baseConfig()->getValue('MINIFY_CSS', true);
+
+	// Loading animation CSS
+	$files[] = __DIR__ . '/includes/loading.css';
+
+	// Find out base CSS
+	if (isset($_GET['theme'])) {
+		$theme = $_GET['theme'];
+		if (strpos($theme,'/') !== false) $theme = 'default';
+		if (strpos($theme,'\\') !== false) $theme = 'default';
+		if (strpos($theme,'..') !== false) $theme = 'default';
+	} else {
+		$theme = 'default';
+	}
+
+	if (file_exists($fil = OIDplus::getUserDataDir("styles").'oidplus_base.css')) {
+		// There is a user defined CSS (not recommended, use design plugins instead!)
+		$files[] = $fil;
+	} else {
+		// Use CSS of the design plugin
+		OIDplus::registerAllPlugins('design', OIDplusDesignPlugin::class, array(OIDplus::class,'registerDesignPlugin'));
+		$plugins = OIDplus::getDesignPlugins();
+		foreach ($plugins as $plugin) {
+			if ($plugin->id() == $theme) {
+				$manifest = $plugin->getManifest();
+				foreach ($manifest->getCSSFiles() as $css_file) {
+					$files[] = $css_file;
+				}
+			}
+		}
+	}
+
+	// Then plugins
+	$manifests = OIDplus::getAllPluginManifests(implode(',',OIDplus::INTERACTIVE_PLUGIN_TYPES), true); // due to interface gridGeneratorLinks (INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_6) this plugin type can also have CSS
+	foreach ($manifests as $manifest) {
+		foreach ($manifest->getCSSFiles() as $css_file) {
+			$files[] = $css_file;
+		}
+	}
+
+	// Now user-defined (additional) definitions
+	if (file_exists($fil = OIDplus::getUserDataDir("styles").'oidplus_add.css')) {
+		$files[] = $fil;
+	}
+}
+
+# ---
+
+$out = "";
+
+foreach ($files as $file) {
+	$out .= process_file($file);
+}
+
+$inv = $_GET['invert'] ?? 0;
+if ($inv != 0) {
+	$out = invertColorsOfCSS($out);
+}
+
+$hs = $_GET['h_shift'] ?? 0;
+$ss = $_GET['s_shift'] ?? 0;
+$vs = $_GET['v_shift'] ?? 0;
+if (($hs != 0) ||($ss != 0) || ($vs != 0)) {
+	$out = changeHueOfCSS($out, $hs, $ss, $vs);
+}
+
+# ---
+
+if (OIDplus::baseConfig()->getValue('DEBUG')) {
+	// In debug mode, we might get PHP error messages (see "error_reporting" above),
+	// so it would be severe if we would allow ETAG! (since $out does not contain the PHP error messages!)
+	header('Content-Type:text/css');
+	echo $out;
+} else {
+	httpOutWithETag($out, 'text/css', 'oidplus.css');
+}
+
+# ---
 
 /**
 * @param string $filename
@@ -81,74 +168,4 @@ function process_file(string $filename): string {
 	$cont = str_ireplace("url(", "url###(".$dir.'/', $cont);
 	$cont = str_ireplace("url###(", "url(", $cont);
 	return $cont."\n\n";
-}
-
-# ---
-
-// Loading animation CSS
-$out .= process_file(__DIR__ . '/includes/loading.css');
-
-// Find out base CSS
-if (isset($_GET['theme'])) {
-	$theme = $_GET['theme'];
-	if (strpos($theme,'/') !== false) $theme = 'default';
-	if (strpos($theme,'\\') !== false) $theme = 'default';
-	if (strpos($theme,'..') !== false) $theme = 'default';
-} else {
-	$theme = 'default';
-}
-
-if (file_exists($fil = OIDplus::getUserDataDir("styles").'oidplus_base.css')) {
-	// There is a user defined CSS (not recommended, use design plugins instead!)
-	$out .= process_file($fil);
-} else {
-	// Use CSS of the design plugin
-	OIDplus::registerAllPlugins('design', OIDplusDesignPlugin::class, array(OIDplus::class,'registerDesignPlugin'));
-	$plugins = OIDplus::getDesignPlugins();
-	foreach ($plugins as $plugin) {
-		if ($plugin->id() == $theme) {
-			$manifest = $plugin->getManifest();
-			foreach ($manifest->getCSSFiles() as $css_file) {
-				$out .= process_file($css_file);
-			}
-		}
-	}
-}
-
-// Then plugins
-$manifests = OIDplus::getAllPluginManifests(implode(',',OIDplus::INTERACTIVE_PLUGIN_TYPES), true); // due to interface gridGeneratorLinks (INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_6) this plugin type can also have CSS
-foreach ($manifests as $manifest) {
-	foreach ($manifest->getCSSFiles() as $css_file) {
-		$out .= process_file($css_file);
-	}
-}
-
-// Now user-defined (additional) definitions
-if (file_exists($fil = OIDplus::getUserDataDir("styles").'oidplus_add.css')) {
-	$out .= process_file($fil);
-}
-
-# ---
-
-$inv = $_GET['invert'] ?? 0;
-if ($inv != 0) {
-	$out = invertColorsOfCSS($out);
-}
-
-$hs = $_GET['h_shift'] ?? 0;
-$ss = $_GET['s_shift'] ?? 0;
-$vs = $_GET['v_shift'] ?? 0;
-if (($hs != 0) ||($ss != 0) || ($vs != 0)) {
-	$out = changeHueOfCSS($out, $hs, $ss, $vs);
-}
-
-# ---
-
-if (OIDplus::baseConfig()->getValue('DEBUG')) {
-	// In debug mode, we might get PHP error messages (see "error_reporting" above),
-	// so it would be severe if we would allow ETAG! (since $out does not contain the PHP error messages!)
-	header('Content-Type:text/css');
-	echo $out;
-} else {
-	httpOutWithETag($out, 'text/css', 'oidplus.css');
 }

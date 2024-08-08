@@ -92,33 +92,61 @@ var OIDplusPageAdminColors = {
 		$("#icolor").attr('checked',OIDplusPageAdminColors.invcolors ? true : false);
 	},
 
+	url_change_param(url, desired_key, desired_value) {
+		var baseUrl = url.split('?')[0];
+		var queryString = url.split('?')[1];
+
+		var params = new URLSearchParams(queryString);
+
+		var output = {};
+
+		params.forEach((value, key) => {
+			if (key == desired_key) {
+				output[key] = desired_value;
+			} else {
+				output[key] = value;
+			}
+		});
+
+		if (!output.hasOwnProperty(desired_key)) {
+			output[desired_key] = desired_value
+		}
+
+		var params = new URLSearchParams(output);
+
+		var finalUrl = baseUrl;
+		if (params.toString() != "") finalUrl += "?" + params.toString();
+
+		return finalUrl;
+	},
+
 	test_color_theme: function() {
 		OIDplusPageAdminColors.hue_shift = $("#hshift").val();
 		OIDplusPageAdminColors.sat_shift = $("#sshift").val();
 		OIDplusPageAdminColors.val_shift = $("#vshift").val();
 		OIDplusPageAdminColors.invcolors = $("#icolor").is(':checked') ? 1 : 0;
 		OIDplusPageAdminColors.activetheme = $("#theme").val();
-		OIDplusPageAdminColors.changeCSS('oidplus.min.css.php'+
-		                                 '?theme='+encodeURIComponent($("#theme").val())+
-		                                 '&invert='+encodeURIComponent($("#icolor").is(':checked') ? 1 : 0)+
-		                                 '&h_shift='+encodeURIComponent($("#hshift").val()/360)+
-		                                 '&s_shift='+encodeURIComponent($("#sshift" ).val()/100)+
-		                                 '&v_shift='+encodeURIComponent($("#vshift" ).val()/100),
-		                                 OIDplusPageAdminColors.findLinkIndex('oidplus.min.css.php'));
-	},
 
-	findLinkIndex: function(searchString) {
 		var links = $("head link");
 
 		for (i=0; i<links.length; i++) {
-			if (links[i].href.includes(searchString)) return i;
+			if (links[i].href.includes('oidplus.min.css.php')) {
+
+				var url = links[i].href;
+
+				console.log("Prev: " + url);
+
+				url = OIDplusPageAdminColors.url_change_param(url, "theme", $("#theme").val());
+				url = OIDplusPageAdminColors.url_change_param(url, "invert", $("#icolor").is(':checked') ? 1 : 0);
+				url = OIDplusPageAdminColors.url_change_param(url, "h_shift", $("#hshift").val()/360);
+				url = OIDplusPageAdminColors.url_change_param(url, "s_shift", $("#sshift").val()/100);
+				url = OIDplusPageAdminColors.url_change_param(url, "v_shift", $("#vshift").val()/100);
+
+				console.log("New: " + url);
+
+				$("head link")[i].href = url;
+			}
 		}
-
-		return -1;
-	},
-
-	changeCSS: function(cssFile, cssLinkIndex) {
-		$("head link")[cssLinkIndex].href = cssFile;
 	},
 
 	crudActionColorUpdate: function(name) {
