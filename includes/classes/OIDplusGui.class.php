@@ -275,25 +275,25 @@ class OIDplusGui extends OIDplusBaseClass {
 		}
 		$head_elems[] = '<meta name="viewport" content="width=device-width, initial-scale=1.0">';
 		$head_elems[] = '<title>'.htmlentities($title).'</title>';
-		$tmp = (OIDplus::insideSetup()) ? '?noBaseConfig=1' : '';
+		$nbc = OIDplus::insideSetup() ? '1' : '0';
 
 		// CSS/JS used by the bundled plugins. If third partys plugin need other CSS/JS, they must include them by implementing htmlHeaderUpdate()
-		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/components/jquery/jquery.min.js"></script>';
-		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/twbs/bootstrap/dist/js/bootstrap.min.js"></script>';
-		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/vakata/jstree/dist/jstree.min.js"></script>';
-		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/tinymce/tinymce/tinymce.min.js"></script>';
-		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/components/jqueryui/jquery-ui.min.js"></script>';
-		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/gedmarc/layout/dist/jquery.layout_and_plugins.min.js"></script>';
-		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/spamspan/spamspan/spamspan.min.js"></script>';
-		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/emn178/js-sha3/src/sha3.min.js"></script>';
-		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/script47/bs5-utils/dist/js/Bs5Utils.min.js"></script>';
-		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.js.php'.$tmp.'"></script>';
+		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.js.php?noBaseConfig='.$nbc.'&file=vendor/components/jquery/jquery.min.js"></script>';
+		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.js.php?noBaseConfig='.$nbc.'&file=vendor/twbs/bootstrap/dist/js/bootstrap.min.js"></script>';
+		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.js.php?noBaseConfig='.$nbc.'&file=vendor/vakata/jstree/dist/jstree.min.js"></script>';
+		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.js.php?noBaseConfig='.$nbc.'&file=vendor/tinymce/tinymce/tinymce.min.js"></script>';
+		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.js.php?noBaseConfig='.$nbc.'&file=vendor/components/jqueryui/jquery-ui.min.js"></script>';
+		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.js.php?noBaseConfig='.$nbc.'&file=vendor/gedmarc/layout/dist/jquery.layout_and_plugins.min.js"></script>';
+		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.js.php?noBaseConfig='.$nbc.'&file=vendor/spamspan/spamspan/spamspan.min.js"></script>';
+		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.js.php?noBaseConfig='.$nbc.'&file=vendor/emn178/js-sha3/src/sha3.min.js"></script>';
+		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.js.php?noBaseConfig='.$nbc.'&file=vendor/script47/bs5-utils/dist/js/Bs5Utils.min.js"></script>';
+		$head_elems[] = '<script src="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.js.php?noBaseConfig='.$nbc.'&file=base"></script>';
 
-		$head_elems[] = '<link rel="stylesheet" href="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/vakata/jstree/dist/themes/default/style.min.css">';
-		$head_elems[] = '<link rel="stylesheet" href="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/components/jqueryui/themes/base/jquery-ui.min.css">';
-		$head_elems[] = '<link rel="stylesheet" href="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/twbs/bootstrap/dist/css/bootstrap.min.css">';
-		$head_elems[] = '<link rel="stylesheet" href="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'vendor/gedmarc/layout/dist/layout-default.min.css">';
-		$head_elems[] = '<link rel="stylesheet" href="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.css.php'.$tmp.'">';
+		$head_elems[] = '<link rel="stylesheet" href="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.css.php?noBaseConfig='.$nbc.'&file=vendor/vakata/jstree/dist/themes/default/style.min.css">';
+		$head_elems[] = '<link rel="stylesheet" href="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.css.php?noBaseConfig='.$nbc.'&file=vendor/components/jqueryui/themes/base/jquery-ui.min.css">';
+		$head_elems[] = '<link rel="stylesheet" href="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.css.php?noBaseConfig='.$nbc.'&file=vendor/twbs/bootstrap/dist/css/bootstrap.min.css">';
+		$head_elems[] = '<link rel="stylesheet" href="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.css.php?noBaseConfig='.$nbc.'&file=vendor/gedmarc/layout/dist/layout-default.min.css">';
+		$head_elems[] = '<link rel="stylesheet" href="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'oidplus.min.css.php?noBaseConfig='.$nbc.'&file=base">';
 
 		$head_elems[] = '<link rel="icon" type="image/png" href="'.htmlentities(OIDplus::webpath(null, OIDplus::PATH_RELATIVE)).'favicon.png.php">';
 		if (OIDplus::baseConfig()->exists('CANONICAL_SYSTEM_URL')) {
