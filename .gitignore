@@ -33,7 +33,8 @@ userdata/attachments/*
 !userdata/attachments/info.txt
 !userdata/attachments/oidplus_upload.dir
 
-userdata/baseconfig/config.inc.php
+userdata/baseconfig/*
+!userdata/baseconfig/info.txt
 
 userdata/cache/*
 !userdata/cache/info.txt
@@ -41,9 +42,14 @@ userdata/cache/*
 userdata/database/*
 !userdata/database/info.txt
 
-userdata/favicon/favicon.*
+userdata/favicon/*
+!userdata/favicon/info.txt
 
-userdata/logs/*.log*
+userdata/logs/*
+!userdata/logs/info.txt
+
+userdata/private/*
+!userdata/private/info.txt
 
 userdata/resources/*
 !userdata/resources/info.txt
@@ -51,4 +57,11 @@ userdata/resources/*
 userdata/secret/*
 !userdata/secret/info.txt
 
+userdata/styles/*
+!userdata/styles/info.txt
+
+userdata/tenant/*
+!userdata/tenant/info.txt
+
 userdata/welcome/welcome.html
+!userdata/welcome/info.txt

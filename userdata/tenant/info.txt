@@ -1,0 +1,22 @@
+
+About the folder "userdata/tenant"
+----------------------------------
+
+A tenant uses the same files as the base system,
+but it has its own userdata/ and userdata_pub/
+environment. Hence, the tenant can have a completely
+different page, because it can use different
+designs and database tables due to the individual
+base config.
+
+If you want to use tenants, then you create
+a directory for each tenant in this directory.
+
+The subdirectory name needs to be like this:
+Example: https://hosted.oidplus.com/abcdef/
+becomes: userdata/tenant/hosted.oidplus.com__abcdef
+
+This means: If the visitor vitis the page https://hosted.oidplus.com/abcdef/
+and the directory userdata/tenant/hosted.oidplus.com__abcdef/ exists,
+then this userdata directory will be chosen instead of userdata/.
+If the visitor visits any other URL, then userdata/ will be chosen.
