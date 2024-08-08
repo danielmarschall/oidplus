@@ -101,16 +101,9 @@ var OIDplusPageAdminColors = {
 		var output = {};
 
 		params.forEach((value, key) => {
-			if (key == desired_key) {
-				output[key] = desired_value;
-			} else {
-				output[key] = value;
-			}
+			output[key] = value;
 		});
-
-		if (!output.hasOwnProperty(desired_key)) {
-			output[desired_key] = desired_value
-		}
+		output[desired_key] = desired_value
 
 		var params = new URLSearchParams(output);
 
@@ -131,18 +124,13 @@ var OIDplusPageAdminColors = {
 
 		for (i=0; i<links.length; i++) {
 			if (links[i].href.includes('oidplus.min.css.php')) {
-
 				var url = links[i].href;
-
-				console.log("Prev: " + url);
 
 				url = OIDplusPageAdminColors.url_change_param(url, "theme", $("#theme").val());
 				url = OIDplusPageAdminColors.url_change_param(url, "invert", $("#icolor").is(':checked') ? 1 : 0);
 				url = OIDplusPageAdminColors.url_change_param(url, "h_shift", $("#hshift").val()/360);
 				url = OIDplusPageAdminColors.url_change_param(url, "s_shift", $("#sshift").val()/100);
 				url = OIDplusPageAdminColors.url_change_param(url, "v_shift", $("#vshift").val()/100);
-
-				console.log("New: " + url);
 
 				$("head link")[i].href = url;
 			}
