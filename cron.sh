@@ -37,8 +37,8 @@ try {
 	// echo "\n\n******************** Base ...\n";
 	ob_start();
 	OIDplus::init(false, false);
-	OIDplus::invoke_shutdown();
 	assert(!OIDplus::isTenant());
+	OIDplus::invoke_shutdown();
 	ob_end_clean();
 } catch (Exception $e) {
 	fwrite(STDERR, "Base system: ".$e->getMessage()."\n");
@@ -47,14 +47,15 @@ try {
 
 $tenants = glob(__DIR__.'/userdata/tenant/*');
 foreach ($tenants as $tenant) {
+	if (!is_dir($tenant)) continue; // ignore info.txt et. al.
 	$tenant = basename($tenant);
 	try {
 		// echo "\n\n******************** Tenant $tenant ...\n";
 		OIDplus::forceTenantSubDirName($tenant);
 		ob_start();
 		OIDplus::init(false, false);
-		OIDplus::invoke_shutdown();
 		assert(OIDplus::isTenant());
+		OIDplus::invoke_shutdown();
 		ob_end_clean();
 	} catch (Exception $e) {
 		fwrite(STDERR, "Tenant $tenant: ".$e->getMessage()."\n");
