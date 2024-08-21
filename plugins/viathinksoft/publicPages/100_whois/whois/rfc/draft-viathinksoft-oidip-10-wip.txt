@@ -3443,7 +3443,7 @@ Acknowledgements
      https://regex101.com/
 
    - IDNITS
-     https://www6.ietf.org/tools/idnits
+     https://author-tools.ietf.org/idnits
 
    - Title Case Converter
      https://titlecaseconverter.com/
