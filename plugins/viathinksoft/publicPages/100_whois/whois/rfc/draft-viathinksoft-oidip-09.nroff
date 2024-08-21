@@ -34,11 +34,11 @@
 .\" Left header text
 .ds LH INTERNET DRAFT
 .\" Right header text
-.ds RH 20 July 2024
+.ds RH 21 August 2024
 .\" Center header text
 .ds CH OID Information Protocol
 .\" Center footer text
-.ds CF Expires 21 January 2025
+.ds CF Expires 22 February 2025
 .\" Hyphenation mode set to 0
 .hy 0
 .\" Disable hyphenation
@@ -51,7 +51,7 @@
 .nf
 .tl 'INTERNET-DRAFT''D. Marschall'
 .tl 'Intended Status: Informational''ViaThinkSoft'
-.tl 'Expires: 21 January 2025''20 July 2024'
+.tl 'Expires: 22 February 2025''21 August 2024'
 .fi
 
 .\" Note. The ".tl" directive is used to generate the leading header 
@@ -94,7 +94,7 @@ and may be updated, replaced, or obsoleted by other documents at any
 time.  It is inappropriate to use Internet-Drafts as reference
 material or to cite them other than as "work in progress."
 
-This Internet-Draft will expire on 21 January 2025.
+This Internet-Draft will expire on 22 February 2025.
 
 .ti 0
 Copyright Notice
