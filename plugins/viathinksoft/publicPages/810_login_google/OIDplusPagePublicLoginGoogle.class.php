@@ -70,6 +70,8 @@ class OIDplusPagePublicLoginGoogle extends OIDplusPagePluginPublic
 				throw new OIDplusException(_L('Google OAuth authentication is disabled on this system.'), $out['title']);
 			}
 
+			_CheckParamExists($_COOKIE, 'csrf_token_weak');
+
 			$out['text']  = '<p>'._L('Please wait...').'</p>';
 			$out['text'] .= '<noscript>';
 			$out['text'] .= '<p><font color="red">'._L('You need to enable JavaScript to use this feature.').'</font></p>';
