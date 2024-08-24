@@ -44,7 +44,7 @@ if (!class_exists('ZipArchive')) {
 	throw new OIDplusException(_L('The PHP extension "ZipArchive" needs to be installed to create a ZIP archive with an included database. Otherwise, you can just download the plain program without data.'));
 }
 
-$tmp_file = OIDplus::getUserDataDir("cache").'oidplus_ancient_'.generateRandomString(10).'.zip';
+$tmp_file = OIDplus::getUserDataDir("cache").'oidplus_nostalgia_'.generateRandomString(10).'.zip';
 
 $zip = new ZipArchive();
 if ($zip->open($tmp_file, ZipArchive::CREATE)!== true) {
@@ -265,7 +265,7 @@ $zip->close();
 
 if (!headers_sent()) {
 	header('Content-Type: application/zip');
-	header('Content-Disposition: attachment; filename=oidplus_ancient.zip');
+	header('Content-Disposition: attachment; filename=oidplus_nostalgia.zip');
 	readfile($tmp_file);
 }
 
