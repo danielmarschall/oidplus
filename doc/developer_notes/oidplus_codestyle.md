@@ -2,7 +2,10 @@
 
 by Daniel Marschall
 
-## Rule: Do not put opening curly brackets on a new line.
+## Rule: Use "The One True Brace Style" (1TBS / OTBS)
+
+Do not put opening curly brackets on a new line.
+Instead, put the opening curly bracket at the end of the line.
 
 Explanation: This makes the code more compact.
 
@@ -38,7 +41,8 @@ There are many reasons why I dislike indentation by whitespaces.
    This leads to inconsistent indentation. With tabs, you cannot do that, you cannot ident
    with a "half tab".
 
-The following mistake of indentation can only happen if you indent with whitespaces. It is impossible to happen if you indent with tabs:
+The following mistake of indentation can only happen if you indent with whitespaces.
+Such a formatting error cannot happen if you indent with tabs, becaus there are no "half tab":
 
 ```php
 if (true) {
