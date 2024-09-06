@@ -262,10 +262,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 
 			$out['text']  = '<p>'._L('With the OID Information Protocol (OID-IP), you can query object information in a format that is human-readable and machine-readable.').'</p>';
 
-			// Use this if webwhois.php matches the currently uploaded Internet Draft:
-			$out['text'] .= '<p>'._L('RFC Internet Draft').': <a target="_blank" href="https://datatracker.ietf.org/doc/draft-viathinksoft-oidip/">draft-viathinksoft-oidip-10</a></p>';
-			// Use this if webwhois.php implements something which is not yet uploaded to IETF:
-			//$out['text'] .= '<p>'._L('RFC Internet Draft').': <a href="'.OIDplus::webpath(__DIR__.'/whois/rfc/draft-viathinksoft-oidip-10.txt', true).'" target="_blank">draft-viathinksoft-oidip-10</a></p>';
+			$out['text'] .= '<p>'._L('Specification').': <a target="_blank" href="https://github.com/ViaThinkSoft/standards/blob/main/viathinksoft-std-0002-oidip.txt">ViaThinkSoft/Webfan Standard #2</a></p>';
 			# ---
 			$out['text'] .= '<noscript>';
 			$out['text'] .= '<p><font color="red">'._L('You need to enable JavaScript to use this feature.').'</font></p>';
@@ -280,19 +277,19 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 			# ---
 			$out['text'] .= _L('Output format').':<br><fieldset id="whois_format">';
 			$out['text'] .= '    <input type="radio" id="text" name="format" value="text" checked onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
-			$out['text'] .= '    <label for="text"><code>$format=text</code> '._L('Text format').'</label><br>';
+			$out['text'] .= '    <label for="text">'._L('Text format').'</label><br>';
 			$out['text'] .= '    <input type="radio" id="json" name="format" value="json" onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
-			$out['text'] .= '    <label for="json"><code>$format=json</code>  '._L('JSON format').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/draft-viathinksoft-oidip-10.json">'._L('Schema').'</a>)<br>';
+			$out['text'] .= '    <label for="json">'._L('JSON format').'</label> (<a target="_blank" href="https://github.com/ViaThinkSoft/standards/blob/main/viathinksoft-std-0002-oidip.json">'._L('Schema').'</a>)<br>';
 			$out['text'] .= '    <input type="radio" id="xml" name="format" value="xml" onclick="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
-			$out['text'] .= '    <label for="xml"><code>$format=xml</code>  '._L('XML format').'</label> (<a target="_blank" href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/draft-viathinksoft-oidip-10.xsd">'._L('Schema').'</a>)<br>';
+			$out['text'] .= '    <label for="xml">'._L('XML format').'</label> (<a target="_blank" href="https://github.com/ViaThinkSoft/standards/blob/main/viathinksoft-std-0002-oidip.xsd">'._L('Schema').'</a>)<br>';
 			$out['text'] .= '</fieldset><br>';
 			# ---
 			$out['text'] .= _L('Authentication token(s), comma separated (optional)').':<br>';
-			$out['text'] .= '<code>$auth = </code><input type="text" id="whois_auth" name="auth" value="" onkeyup="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
+			$out['text'] .= '<input type="text" id="whois_auth" name="auth" value="" onkeyup="OIDplusPagePublicWhois.refresh_whois_url_bar()">';
 			$out['text'] .= '&nbsp;<span id="whois_auth_invalid" style="display:none"><font color="red"><b>('._L('Invalid').')</b></font></span>';
-			$out['text'] .= '<br>';
+			$out['text'] .= '<br><br>';
 			# ---
-			$out['text'] .= '<h2>'._L('Access via OID Information Protocol').'</h2>';
+			$out['text'] .= '<p><b><u>'._L('Access via WHOIS Protocol').'</u></b></p>';
 			$out['text'] .= '<p>'._L('The query according to OID Information Protocol is:').'</p>';
 			$out['text'] .= '	<p><pre id="whois_query_bar"></pre></p>';
 			$out['text'] .= '	<p><input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(whois_query_bar)"></p>';
@@ -302,7 +299,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 				$out['text'] .= '<p><pre>'.htmlentities($whois_server).'</pre></p>';
 			}
 			# ---
-			$out['text'] .= '<h2>'._L('Access via web-browser').'</h2>';
+			$out['text'] .= '<p><b><u>'._L('Access via HTTP Protocol').'</u></b></p>';
 			$out['text'] .= '<p>'._L('The URL for the Web Service is:').'</p>';
 			$out['text'] .= '	<p><pre id="whois_url_bar"></pre></p>';
 			$out['text'] .= '	<p>';
