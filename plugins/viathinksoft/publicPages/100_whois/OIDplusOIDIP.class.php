@@ -60,10 +60,11 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 		// NOTES:
 		// - XML_SCHEMA_URN must be equal to the string in the .xsd file!
 		// - the schema URLs are also written in OIDplusPagePublicWhois.class.php
-		$this->XML_SCHEMA_URN  = 'urn:viathinksoft.de:std:0002:2024-09-02:json-schema';
-		$this->XML_SCHEMA_URL  = 'https://raw.githubusercontent.com/ViaThinkSoft/standards/main/viathinksoft-std-0002-oidip.xsd';
-		$this->JSON_SCHEMA_URN = 'urn:viathinksoft.de:std:0002:2024-09-02:xml-schema';
-		$this->JSON_SCHEMA_URL = 'https://raw.githubusercontent.com/ViaThinkSoft/standards/main/viathinksoft-std-0002-oidip.json';
+		// - The URN "-x" prefix stands for experimental, not registered at IANA: https://www.rfc-editor.org/rfc/rfc3406#section-3.1
+		$this->XML_SCHEMA_URN  = 'urn:x-viathinksoft:std:0002:2024-09-02:json-schema';
+		$this->XML_SCHEMA_URL  = 'https://raw.githubusercontent.com/viathinksoft/standards/main/viathinksoft-std-0002-oidip.xsd';
+		$this->JSON_SCHEMA_URN = 'urn:x-viathinksoft:std:0002:2024-09-02:xml-schema';
+		$this->JSON_SCHEMA_URL = 'https://raw.githubusercontent.com/viathinksoft/standards/main/viathinksoft-std-0002-oidip.json';
 	}
 
 	/**

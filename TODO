@@ -1,8 +1,7 @@
 Sep 2024 in discussion:
-- OIDplus plugins also in userdata/ and userdata/tenant/xyz ?
 - quota for attachments (#65)
 - WTF wordpress like plugin test bundle (#67)
-- urn object type (#69)
+- urn object type (#69), see also syntax here https://datatracker.ietf.org/doc/html/rfc2141
 
 May 2023 planned:
 - Don't send "information object OIDs" (= Non-OIDs mapped to OID) OIDs or OID-AltIds to oid-info.com anymore
