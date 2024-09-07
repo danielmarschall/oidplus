@@ -1355,19 +1355,58 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				$goto_path = null;
 			}
 
+			$ot_children = array();
+
 			$objTypesChildren = array();
 			foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 				$icon = $this->get_treeicon_root($ot);
-
+				$children = OIDplus::menuUtils()->tree_populate($ot::root(), $goto_path);
+				$ot_children[$ot::ns()] = $children;
 				$child = array('id' => $ot::root(),
 				               'text' => $ot::objectTypeTitle(),
 				               'state' => array("opened" => true),
 				               'icon' => $icon,
-				               'children' => OIDplus::menuUtils()->tree_populate($ot::root(), $goto_path)
+				               'children' => $children
 				               );
 				if ($child['icon'] && !file_exists($child['icon'])) $child['icon'] = null; // default icon (folder)
 				$objTypesChildren[] = $child;
 			}
+
+			// Start URN Feature
+
+			$urn_children = array();
+
+			foreach (OIDplus::getObjectTypePluginsEnabled() as $otp) {
+				$ot = $otp->getObjectTypeClassName();
+
+				foreach ($ot::urnNs() as $urn_ns) {
+					$tmp = $ot_children[$ot::ns()];
+					OIDplus::menuUtils()::replaceIdInJsonData($tmp, $ot::ns().':', 'urn:'.$urn_ns.':');
+					$urn_child = array(
+						'id' => 'urn:'.$urn_ns.':',
+						'text' => 'urn:'.$urn_ns.': ('.$ot::objectTypeTitle().')',
+						'state' => array(),
+						'icon' => null,
+						'children' => $tmp
+					);
+					if ($urn_child['icon'] && !file_exists($urn_child['icon'])) $urn_child['icon'] = null; // default icon (folder)
+					$urn_children[] = $urn_child;
+				}
+			}
+
+			// TODO: Also allow users to add their own URNs via an URN object type!
+			// For now, this is a node which has no page, no icon and cannot be selected
+			$child = array('id' => 'urn:',
+			               'text' => _L('Uniform Resource Name (URN)'),
+			               'state' => array("opened" => true),
+			               'icon' => null,
+			               'conditionalselect' => 'false',
+			               'children' => $urn_children
+			               );
+			if ($child['icon'] && !file_exists($child['icon'])) $child['icon'] = null; // default icon (folder)
+			$objTypesChildren[] = $child;
+
+			// End URN Feature
 
 			$json[] = array(
 				'id' => "oidplus:system",
@@ -1597,7 +1636,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			$prefix = $objParent->crudInsertPrefix();
 
 			$suffix = $objParent->crudInsertSuffix();
-			foreach (OIDplus::getObjectTypePlugins() as $plugin) {
+			foreach (OIDplus::getObjectTypePluginsEnabled() as $plugin) {
 				if (($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_6) && ($plugin::getObjectTypeClassName()::ns() == $parentNS)) {
 					$suffix .= $plugin->gridGeneratorLinks($objParent);
 				}

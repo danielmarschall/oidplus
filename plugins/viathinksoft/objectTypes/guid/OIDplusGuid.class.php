@@ -77,6 +77,13 @@ class OIDplusGuid extends OIDplusObject {
 	}
 
 	/**
+	 * @return array
+	 */
+	public static function urnNs(): array {
+		return array('uuid'); // 'uuid' means 'urn:uuid:'
+	}
+
+	/**
 	 * @return string
 	 */
 	public static function root(): string {

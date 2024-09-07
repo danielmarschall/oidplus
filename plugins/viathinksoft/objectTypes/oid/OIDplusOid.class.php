@@ -87,6 +87,13 @@ class OIDplusOid extends OIDplusObject {
 	}
 
 	/**
+	 * @return array
+	 */
+	public static function urnNs(): array {
+		return array('oid'); // 'oid' means 'urn:oid:'
+	}
+
+	/**
 	 * @return string
 	 */
 	public static function root(): string {

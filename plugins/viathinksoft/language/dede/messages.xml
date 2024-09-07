@@ -398,18 +398,18 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Access via OID Information Protocol
+		Access via HTTP Protocol
 		]]></source>
 		<target><![CDATA[
-		Zugriff über OID Information Protocol
+		Zugriff über das HTTP-Protokoll
 		]]></target>
 	</message>
 	<message>
 		<source><![CDATA[
-		Access via web-browser
+		Access via WHOIS Protocol
 		]]></source>
 		<target><![CDATA[
-		Zugriff über Web-Browser
+		Zugriff über das WHOIS-Protokoll
 		]]></target>
 	</message>
 	<message>
@@ -6598,14 +6598,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		RFC Internet Draft
-		]]></source>
-		<target><![CDATA[
-		RFC Internet Draft
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Random hexadecimal string, but second nibble must be %1
 		]]></source>
 		<target><![CDATA[
@@ -7338,6 +7330,14 @@
 		]]></source>
 		<target><![CDATA[
 		Software-Update
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Specification
+		]]></source>
+		<target><![CDATA[
+		Spezifikation
 		]]></target>
 	</message>
 	<message>
@@ -8650,6 +8650,14 @@
 		]]></source>
 		<target><![CDATA[
 		Unicode-Label "%1" ist zu lang (Maximale Länge: %2)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Uniform Resource Name (URN)
+		]]></source>
+		<target><![CDATA[
+		Uniform Resource Name (URN)
 		]]></target>
 	</message>
 	<message>

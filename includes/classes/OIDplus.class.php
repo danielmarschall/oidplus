@@ -1368,7 +1368,7 @@ class OIDplus extends OIDplusBaseClass {
 		foreach (OIDplus::getLoggerPlugins() as $plugin) {
 			$plugin->init($html);
 		}
-		foreach (OIDplus::getObjectTypePlugins() as $plugin) {
+		foreach (OIDplus::getObjectTypePluginsEnabled() as $plugin) {
 			$plugin->init($html);
 		}
 		foreach (OIDplus::getLanguagePlugins() as $plugin) {
@@ -2595,6 +2595,13 @@ class OIDplus extends OIDplusBaseClass {
 
 		// Ask plugins if they want to change the node id
 		foreach (OIDplus::getObjectTypePluginsEnabled() as $plugin) {
+
+			foreach ($plugin->getObjectTypeClassName()::urnNs() as $urn_ns) {
+				// Convert URN to OID+
+				// Replace 'urn:uuid:' with 'guid:' and 'urn:oid:' with 'oid:'
+				$static_node_id = str_replace('urn:'.$urn_ns.':', $plugin->getObjectTypeClassName()::ns().':', $static_node_id);
+			}
+
 			$static_node_id = $plugin->prefilterQuery($static_node_id, $throw_exception);
 		}
 
