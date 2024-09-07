@@ -22,8 +22,16 @@ use ViaThinkSoft\OIDplus\Core\OIDplusException;
 use ViaThinkSoft\OIDplus\Core\OIDplusGui;
 use ViaThinkSoft\OIDplus\Plugins\AdminPages\VNagVersionCheck\OIDplusPageAdminVNagVersionCheck;
 
-include __DIR__ . '/../../../../vendor/danielmarschall/vnag/src/framework/vnag_framework.inc.php';
-include __DIR__ . '/../../../../includes/oidplus.inc.php';
+for ($sysdir_depth=4; $sysdir_depth<=7; $sysdir_depth++) {
+	// The plugin directory can be in plugins (i=4), userdata_pub/plugins (i=5), or userdata_pub/tenant/.../plugins/ (i=7)
+	$candidate = __DIR__. str_repeat('/..', $sysdir_depth) . '/includes/oidplus.inc.php';
+	if (file_exists($candidate)) {
+		require_once $candidate;
+		$candidate = __DIR__. str_repeat('/..', $sysdir_depth) . '/vendor/danielmarschall/vnag/src/framework/vnag_framework.inc.php';
+		require_once $candidate;
+		break;
+	}
+}
 
 const OIDPLUS_VNAG_MAX_CACHE_AGE = 60; // seconds (TODO: in base config?)
 

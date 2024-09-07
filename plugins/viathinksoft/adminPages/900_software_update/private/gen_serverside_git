@@ -24,8 +24,14 @@ use ViaThinkSoft\OIDplus\Core\OIDplus;
 
 require_once __DIR__.'/funcs.inc.php';
 
-include __DIR__.'/../../../../../includes/oidplus.inc.php';
-
+for ($sysdir_depth=5; $sysdir_depth<=8; $sysdir_depth++) {
+	// The plugin directory can be in plugins (i=5), userdata_pub/plugins (i=6), or userdata_pub/tenant/.../plugins/ (i=8)
+	$candidate = __DIR__. str_repeat('/..', $sysdir_depth) . '/includes/oidplus.inc.php';
+	if (file_exists($candidate)) {
+		require_once $candidate;
+		break;
+	}
+}
 
 // Generate keypair with:
 //	openssl genpkey -algorithm RSA -out private.pem -pkeyopt rsa_keygen_bits:8192

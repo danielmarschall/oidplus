@@ -22,7 +22,14 @@ use ViaThinkSoft\OIDplus\Core\OIDplusException;
 use ViaThinkSoft\OIDplus\Core\OIDplusGui;
 use ViaThinkSoft\OIDplus\Plugins\PublicPages\Attachments\OIDplusPagePublicAttachments;
 
-require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
+for ($sysdir_depth=4; $sysdir_depth<=7; $sysdir_depth++) {
+	// The plugin directory can be in plugins (i=4), userdata_pub/plugins (i=5), or userdata_pub/tenant/.../plugins/ (i=7)
+	$candidate = __DIR__. str_repeat('/..', $sysdir_depth) . '/includes/oidplus.inc.php';
+	if (file_exists($candidate)) {
+		require_once $candidate;
+		break;
+	}
+}
 
 try {
 	set_exception_handler(array(OIDplusGui::class, 'html_exception_handler'));

@@ -1,0 +1,8 @@
+
+About the folder "userdata_pub/plugins"
+---------------------------------------
+
+As alternative to the plugins/ folder,
+you can place plugins in
+"userdata_pub/plugins" or
+"userdata_pub/tenant/.../plugins".

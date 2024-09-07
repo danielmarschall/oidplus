@@ -374,7 +374,7 @@ class OIDplus extends OIDplusBaseClass {
 			self::$config->prepareConfigKey('last_known_version', 'Last known OIDplus Version', '', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
 				// Nothing here yet
 			});
-			self::$config->prepareConfigKey('default_ra_auth_method', 'Default auth method used for generating password of RAs (must exist in plugins/[vendorname]/auth/)? Empty = OIDplus decides.', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			self::$config->prepareConfigKey('default_ra_auth_method', 'Default auth method used for generating password of RAs (must exist in [userdata_pub/]plugins/[vendorname]/auth/)? Empty = OIDplus decides.', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 				if (trim($value) === '') return; // OIDplus decides
 
 				$good = true;
@@ -699,10 +699,9 @@ class OIDplus extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	private static function checkRaAuthPluginAvailable(string $plugin_id, bool $must_hash): void {
-		// if (!wildcard_is_dir(OIDplus::localpath().'plugins/'.'*'.'/auth/'.$plugin_foldername)) {
 		$plugin = OIDplus::getAuthPluginById($plugin_id);
 		if (is_null($plugin)) {
-			throw new OIDplusException(_L('The auth plugin "%1" does not exist in plugin directory %2',$plugin_id,'plugins/[vendorname]/auth/'));
+			throw new OIDplusException(_L('The auth plugin "%1" does not exist in plugin directory %2',$plugin_id,'[userdata_pub/]plugins/[vendorname]/auth/'));
 		}
 
 		$reason = '';
@@ -1091,7 +1090,10 @@ class OIDplus extends OIDplusBaseClass {
 		//       So you just need to use a numeric plugin directory prefix (padded).
 		$ary = array();
 		foreach (explode(',',$pluginFolderMasks) as $pluginFolderMask) {
-			$ary = array_merge($ary,glob(OIDplus::localpath().'plugins/'.'*'.'/'.$pluginFolderMask.'/'.'*'.'/manifest.json'));
+			$ary = array_merge($ary,
+				glob(OIDplus::localpath().'plugins/'.'*'.'/'.$pluginFolderMask.'/'.'*'.'/manifest.json'),
+				glob(OIDplus::getUserDataDir("plugins", true).'*'.'/'.$pluginFolderMask.'/'.'*'.'/manifest.json')
+			);
 		}
 
 		// Sort the plugins by their type and name, as if they would be in a single vendor-folder!
@@ -1212,15 +1214,20 @@ class OIDplus extends OIDplusBaseClass {
 					}
 
 					// Additional check: Are third-party plugins using ViaThinkSoft plugin folders, OIDs or class namespaces?
-					$dir_is_viathinksoft = str_starts_with($full_plugin_dir_rel, 'plugins/viathinksoft/') || str_starts_with($full_plugin_dir_rel, 'plugins\\viathinksoft\\');
+					$dir_is_viathinksoft =
+						   str_starts_with($full_plugin_dir_rel, 'plugins/viathinksoft/')
+						|| str_starts_with(strtolower($full_plugin_dir_rel), strtolower('plugins\\viathinksoft\\'))
+						// TODO: hier auch tenant dir berücksichtigen! OIDplus::getUserDataDir("plugins", true)
+						|| str_starts_with($full_plugin_dir_rel, 'userdata_pub/plugins/viathinksoft/')
+						|| str_starts_with(strtolower($full_plugin_dir_rel), strtolower('userdata_pub\\plugins\\viathinksoft\\'));
 					$oid_is_viathinksoft = str_starts_with($plugin_oid, '1.3.6.1.4.1.37476.2.5.2.4.'); // { iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 37476 products(2) oidplus(5) v2(2) plugins(4) }
 					$class_is_viathinksoft = str_starts_with($fq_classname, 'ViaThinkSoft\\');
 					if ($oid_is_viathinksoft != $class_is_viathinksoft) {
-						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Third-party plugins must not use the ViaThinkSoft PHP namespace. Please use your own vendor namespace.'));
+						throw new OIDplusException(_L('Plugin "%1" is erroneous', $full_plugin_dir_rel) . ': ' . _L('Third-party plugins must not use the ViaThinkSoft PHP namespace. Please use your own vendor namespace.'));
 					}
 					$plugin_is_viathinksoft = $oid_is_viathinksoft && $class_is_viathinksoft;
 					if ($dir_is_viathinksoft != $plugin_is_viathinksoft) {
-						throw new OIDplusException(_L('Plugin "%1" is misplaced', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('The plugin is in the wrong folder. The folder %1 can only be used by official ViaThinkSoft plugins', 'plugins/viathinksoft/'));
+						throw new OIDplusException(_L('Plugin "%1" is misplaced', $full_plugin_dir_rel) . ': ' . _L('The plugin is in the wrong folder. The folder %1 can only be used by official ViaThinkSoft plugins', '[userdata_pub/]plugins/viathinksoft/'));
 					}
 
 					// Additional check: does the plugin define JS/CSS although it is not an interactive plugin type?
@@ -2481,7 +2488,10 @@ class OIDplus extends OIDplusBaseClass {
 				if (strpos($wildcard,'\\') !== false) continue; // just to be sure
 				if (strpos($wildcard,'..') !== false) continue; // just to be sure
 
-				$translation_files = glob(__DIR__.'/../../plugins/'.'*'.'/language/'.$lang.'/'.$wildcard);
+				$translation_files = array_merge(
+					glob(__DIR__.'/../../plugins/'.'*'.'/language/'.$lang.'/'.$wildcard),
+					glob(OIDplus::getUserDataDir("plugins", true).'*'.'/language/'.$lang.'/'.$wildcard)
+				);
 				sort($translation_files);
 				foreach ($translation_files as $translation_file) {
 					if (!file_exists($translation_file)) continue;
