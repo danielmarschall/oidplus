@@ -25,7 +25,14 @@ use ViaThinkSoft\OIDplus\Core\OIDplusRA;
 # More information about the OAuth2 implementation:
 # - https://developers.google.com/identity/protocols/oauth2/openid-connect
 
-require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
+for ($sysdir_depth=4; $sysdir_depth<=7; $sysdir_depth++) {
+	// The plugin directory can be in plugins (i=4), userdata_pub/plugins (i=5), or userdata_pub/tenant/.../plugins/ (i=7)
+	$candidate = __DIR__. str_repeat('/..', $sysdir_depth) . '/includes/oidplus.inc.php';
+	if (file_exists($candidate)) {
+		require_once $candidate;
+		break;
+	}
+}
 
 set_exception_handler(array(OIDplusGui::class, 'html_exception_handler'));
 

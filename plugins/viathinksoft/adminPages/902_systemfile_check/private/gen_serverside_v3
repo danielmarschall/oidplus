@@ -22,7 +22,14 @@
 
 namespace ViaThinkSoft\OIDplus\Plugins\AdminPages\SystemFileCheck;
 
-include __DIR__.'/../../../../../includes/oidplus.inc.php';
+for ($sysdir_depth=5; $sysdir_depth<=8; $sysdir_depth++) {
+	// The plugin directory can be in plugins (i=5), userdata_pub/plugins (i=6), or userdata_pub/tenant/.../plugins/ (i=8)
+	$candidate = __DIR__. str_repeat('/..', $sysdir_depth) . '/includes/oidplus.inc.php';
+	if (file_exists($candidate)) {
+		require_once $candidate;
+		break;
+	}
+}
 
 $argc = $_SERVER['argc']; // to please Eclipse for PHP
 $argv = $_SERVER['argv']; // to please Eclipse for PHP
@@ -36,7 +43,7 @@ if ($argc != 1) {
 	exit(2);
 }
 
-$outdir = realpath(__DIR__.'/../../../../../');
+$outdir = realpath(__DIR__.str_repeat('/..', $sysdir_depth).'/');
 $exclude = [
 	// Please keep in-sync with OIDplusPageAdminSystemFileCheck.class.php
 	// TODO: !!! Exclude "unversioned" GIT/SVN files to avoid that development files slip get leaked

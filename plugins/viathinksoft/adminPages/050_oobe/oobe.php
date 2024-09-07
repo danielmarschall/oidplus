@@ -22,7 +22,14 @@ use ViaThinkSoft\OIDplus\Core\OIDplusGui;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;
 use ViaThinkSoft\OIDplus\Plugins\AdminPages\OOBE\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1;
 
-require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
+for ($sysdir_depth=4; $sysdir_depth<=7; $sysdir_depth++) {
+	// The plugin directory can be in plugins (i=4), userdata_pub/plugins (i=5), or userdata_pub/tenant/.../plugins/ (i=7)
+	$candidate = __DIR__. str_repeat('/..', $sysdir_depth) . '/includes/oidplus.inc.php';
+	if (file_exists($candidate)) {
+		require_once $candidate;
+		break;
+	}
+}
 
 set_exception_handler(array(OIDplusGui::class, 'html_exception_handler'));
 
@@ -206,7 +213,7 @@ ob_end_clean();
 if ($do_edits && !$errors_happened)  {
 	OIDplus::config()->setValue('oobe_main_done', '1');
 	OIDplus::invoke_shutdown();
-	header('Location:../../../../');
+	header('Location:'.str_repeat('../', $sysdir_depth));
 } else {
 	$page_title_1 = _L('OIDplus Setup');
 	$page_title_2 = _L('Initial settings');

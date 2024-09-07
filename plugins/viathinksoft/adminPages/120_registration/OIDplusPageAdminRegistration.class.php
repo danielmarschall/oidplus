@@ -687,7 +687,8 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 		if (!empty($htmlmsg)) echo ' <font color="red"><b>'.$htmlmsg.'</b></font>';
 
 		echo '<p>'._L('<i>Privacy information:</i> This setting can always be changed in the administrator login / control panel.').'<br>';
-		echo _L('<a %1>Click here</a> for more information about privacy related topics.','href="../../../../res/OIDplus/privacy_documentation.html" target="_blank"');
+		// TODO: This link is dead, since the res/ directory is locked by htaccess!
+		echo _L('<a %1>Click here</a> for more information about privacy related topics.','href="'.OIDplus::webpath(null).'res/OIDplus/privacy_documentation.html'.'" target="_blank"');
 		echo '</p>';
 	}
 

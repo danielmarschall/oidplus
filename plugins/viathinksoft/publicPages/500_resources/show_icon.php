@@ -24,7 +24,14 @@ define('SPACER_PNG', base64_decode('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABAQMAAAAl21bK
 
 // TODO: should we also check security.ini ?
 
-require_once __DIR__ . '/../../../../includes/oidplus.inc.php';
+for ($sysdir_depth=4; $sysdir_depth<=7; $sysdir_depth++) {
+	// The plugin directory can be in plugins (i=4), userdata_pub/plugins (i=5), or userdata_pub/tenant/.../plugins/ (i=7)
+	$candidate = __DIR__. str_repeat('/..', $sysdir_depth) . '/includes/oidplus.inc.php';
+	if (file_exists($candidate)) {
+		require_once $candidate;
+		break;
+	}
+}
 
 if (OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_1.3.6.1.4.1.37476.2.5.2.4.1.500', false)) {
 	throw new OIDplusException(_L('This plugin was disabled by the system administrator!'));
@@ -53,7 +60,7 @@ if (!isset($_REQUEST['lang'])) {
 }
 
 $candidate1 = OIDplus::getUserDataDir("resources") . $file;
-$candidate2 = __DIR__ . '/../../../../res/' . $file;
+$candidate2 = __DIR__. str_repeat('/..', $sysdir_depth) . '/res/' . $file;
 
 if (file_exists($candidate1) || is_dir($candidate1)) {
 	// It is a file inside userdata/ (or it is overwritten by userdata)
