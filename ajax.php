@@ -129,8 +129,22 @@ try {
 			// Parameters: id; goto (optional)
 			// Outputs:    JSON
 			_CheckParamExists($_REQUEST, 'id');
+
+			$was_urn = str_starts_with($_REQUEST['id'],'urn:');
+
 			$_REQUEST['id'] = OIDplus::prefilterQuery($_REQUEST['id'], false);
 			$json_out = OIDplus::menuUtils()->json_tree($_REQUEST['id'], $_REQUEST['goto'] ?? '');
+
+			if ($was_urn) {
+				foreach (OIDplus::getObjectTypePluginsEnabled() as $ot) {
+					$cn = $ot::getObjectTypeClassName();
+					$urn_nss = $cn::urnNs();
+					foreach ($urn_nss as $urn_ns) {
+						// Replace all "guid:" with "urn:uuid:"
+						OIDplus::menuUtils()::replaceIdInJsonData($json_out, $cn::ns().':', 'urn:'.$urn_ns.':');
+					}
+				}
+			}
 		} else {
 			throw new OIDplusException(_L('Invalid action ID'));
 		}

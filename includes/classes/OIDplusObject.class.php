@@ -188,6 +188,14 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	public abstract static function ns(): string;
 
 	/**
+	 * If the plugin has a commonly known URN namespace, then return it, e.g. "uuid" which means "urn:uuid:"
+	 * @return array
+	 */
+	public static function urnNs(): array {
+		return [];
+	}
+
+	/**
 	 * @return string
 	 */
 	public abstract static function root(): string;

@@ -199,4 +199,13 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 
 		return $children;
 	}
+
+	public static function replaceIdInJsonData(&$node, $search, $replace) {
+		foreach ($node as &$n) {
+			$n['id'] = str_ireplace($search, $replace, $n['id']);
+			if (isset($n['a_attr']['href'])) $n['a_attr']['href'] = str_ireplace(urlencode($search), urlencode($replace), $n['a_attr']['href']);
+			if (isset($n['children']) && is_array($n['children'])) self::replaceIdInJsonData($n['children'], $search, $replace);
+		}
+	}
+
 }

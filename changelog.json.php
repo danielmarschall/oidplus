@@ -3,6 +3,15 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.2.4",
+		"date": "2024-09-07 22:05:00 +0200",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"Added URN Pseudo-Object-Type (currently dynamic clone of OID, UUID, DOI)",
+			"Bug fixes"
+		]
+	},
+	{
 		"version": "2.0.2.3",
 		"date": "2024-08-08 15:20:00 +0200",
 		"author": "Daniel Marschall (ViaThinkSoft)",

@@ -73,6 +73,13 @@ class OIDplusDoi extends OIDplusObject {
 	}
 
 	/**
+	 * @return array
+	 */
+	public static function urnNs(): array {
+		return array('doi'); // 'doi' means 'urn:doi:'
+	}
+
+	/**
 	 * @return string
 	 */
 	public static function root(): string {

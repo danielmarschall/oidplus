@@ -353,7 +353,7 @@ $(document).ready(function () {
 					return { "id" : node.id };
 				}
 			},
-			"multiple": false
+			"multiple": false /* do not allow multiple selections */
 		},
 		'conditionalselect' : function (node) {
 			if (node.original.conditionalselect !== undefined) {
