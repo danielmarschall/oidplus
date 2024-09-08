@@ -582,7 +582,7 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 			}
 
 			// Good JSON schema validator here: https://www.jsonschemavalidator.net
-			$out_type = 'application/json; charset=UTF-8';
+			$out_type = 'application/vnd.viathinksoft.oidip+json; charset=UTF-8';
 			$out_content .= $json;
 		}
 
@@ -664,7 +664,7 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 				}
 			}
 
-			$out_type = 'application/xml; charset=UTF-8';
+			$out_type = 'application/vnd.viathinksoft.oidip+xml; charset=UTF-8';
 			$out_content .= $xml;
 		}
 
