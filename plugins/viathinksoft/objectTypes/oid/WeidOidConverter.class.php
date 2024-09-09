@@ -3,7 +3,7 @@
 /**
  * WEID<=>OID Converter
  * (c) Webfan.de, ViaThinkSoft
- * Revision 2023-08-11
+ * Revision 2024-09-09
  **/
 
 // What is a WEID?
@@ -240,6 +240,22 @@ class WeidOidConverter {
 		}
 
 		return $namespace . ($weidstr == '' ? $checksum : $weidstr . '-' . $checksum);
+	}
+
+	/**
+	 * @param string $base10
+	 * @return string
+	 */
+	public static function encodeSingleArc(string $base10): string {
+		return self::base_convert_bigint($base10, 10, 36);
+	}
+
+	/**
+	 * @param string $base36
+	 * @return string
+	 */
+	public static function decodeSingleArc(string $base36): string {
+		return self::base_convert_bigint($base36, 36, 10);
 	}
 
 	/**

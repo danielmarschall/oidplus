@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2024 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -1357,56 +1357,99 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 			$ot_children = array();
 
+
+			$urn_view_enabled = false;
+			foreach (OIDplus::getEnabledObjectTypes() as $ot) {
+				if ($ot::ns() == 'urn') {
+					$urn_view_enabled = true;
+					break;
+				}
+			}
+
 			$objTypesChildren = array();
 			foreach (OIDplus::getEnabledObjectTypes() as $ot) {
-				$icon = $this->get_treeicon_root($ot);
 				$children = OIDplus::menuUtils()->tree_populate($ot::root(), $goto_path);
-				$ot_children[$ot::ns()] = $children;
-				$child = array('id' => $ot::root(),
-				               'text' => $ot::objectTypeTitle(),
+				if ($urn_view_enabled) {
+					$ot_children[$ot::ns()] = $children;
+				} else {
+					$icon = $this->get_treeicon_root($ot);
+					$child = array('id' => $ot::root(),
+					               'text' => $ot::objectTypeTitle(),
+					               'state' => array("opened" => true),
+					               'icon' => $icon,
+					               'children' => $children
+					               );
+					if ($child['icon'] && !file_exists($child['icon'])) $child['icon'] = null; // default icon (folder)
+					$objTypesChildren[] = $child;
+
+					// Special feature: Make a WEID tree that is a cloned OID tree!
+					if ($ot::ns() == 'oid') {
+						$tmp = $children;
+						OIDplus::menuUtils()::replaceOidWithWeid($tmp);
+						$child = array(
+							'id' => 'weid:',
+							'text' => $ot::objectTypeTitle().' / '._L('WEID notation'),
+							'state' => array("opened" => true),
+						        'conditionalselect' => 'false',
+							'icon' => $icon,
+							'children' => $tmp
+						);
+						if ($child['icon'] && !file_exists($child['icon'])) $child['icon'] = null; // default icon (folder)
+						$objTypesChildren[] = $child;
+					}
+				}
+			}
+
+			if ($urn_view_enabled) {
+				$urn_children = array();
+				foreach (OIDplus::getEnabledObjectTypes() as $ot) {
+					if ($ot::ns() == 'urn') continue;
+					$icon = $this->get_treeicon_root($ot);
+					$urn_nss = $ot::urnNs();
+					if (count($urn_nss) == 0) $urn_nss = ['x-oidplus:'.$ot::ns()]; // create a pseudo URN
+
+					foreach ($urn_nss as $urn_ns) {
+						$tmp = $ot_children[$ot::ns()];
+						$urn_child = array(
+							'id' => $ot::ns().':', // It is important that this is NS: and not UrnNS:, because "Tree search" relies on NS rather than UrnNS
+							'text' => 'urn:'.$urn_ns.' -- <b>'.$ot::objectTypeTitle().'</b>',
+							'state' => array("opened" => true),
+							'icon' => $icon,
+							'children' => $tmp
+						);
+						if ($urn_child['icon'] && !file_exists($urn_child['icon'])) $urn_child['icon'] = null; // default icon (folder)
+						$urn_children[] = $urn_child;
+
+						// Special feature: Make a WEID tree that is a cloned OID tree!
+						if ($urn_ns == 'oid') {
+							$urn_ns = 'x-weid';
+							$tmp = $ot_children[$ot::ns()];
+							OIDplus::menuUtils()::replaceOidWithWeid($tmp);
+							$urn_child = array(
+								'id' => 'urn:'.$urn_ns.':',
+								'text' => 'urn:'.$urn_ns.' -- <b>'.$ot::objectTypeTitle().' / '._L('WEID notation').'</b>',
+								'state' => array("opened" => true),
+							        'conditionalselect' => 'false',
+								'icon' => $icon,
+								'children' => $tmp
+							);
+							if ($urn_child['icon'] && !file_exists($urn_child['icon'])) $urn_child['icon'] = null; // default icon (folder)
+							$urn_children[] = $urn_child;
+						}
+					}
+				}
+
+				$urn_children = array_merge($urn_children, $ot_children['urn']);
+
+				$child = array('id' => 'urn:',
+				               'text' => _L('Uniform Resource Name (URN)'),
 				               'state' => array("opened" => true),
-				               'icon' => $icon,
-				               'children' => $children
+				               'icon' => null,
+				               'children' => $urn_children
 				               );
 				if ($child['icon'] && !file_exists($child['icon'])) $child['icon'] = null; // default icon (folder)
 				$objTypesChildren[] = $child;
 			}
-
-			// Start URN Feature
-
-			$urn_children = array();
-
-			foreach (OIDplus::getObjectTypePluginsEnabled() as $otp) {
-				$ot = $otp->getObjectTypeClassName();
-
-				foreach ($ot::urnNs() as $urn_ns) {
-					$tmp = $ot_children[$ot::ns()];
-					OIDplus::menuUtils()::replaceIdInJsonData($tmp, $ot::ns().':', 'urn:'.$urn_ns.':');
-					$urn_child = array(
-						'id' => 'urn:'.$urn_ns.':',
-						'text' => 'urn:'.$urn_ns.': ('.$ot::objectTypeTitle().')',
-						'state' => array(),
-						'icon' => null,
-						'children' => $tmp
-					);
-					if ($urn_child['icon'] && !file_exists($urn_child['icon'])) $urn_child['icon'] = null; // default icon (folder)
-					$urn_children[] = $urn_child;
-				}
-			}
-
-			// TODO: Also allow users to add their own URNs via an URN object type!
-			// For now, this is a node which has no page, no icon and cannot be selected
-			$child = array('id' => 'urn:',
-			               'text' => _L('Uniform Resource Name (URN)'),
-			               'state' => array("opened" => true),
-			               'icon' => null,
-			               'conditionalselect' => 'false',
-			               'children' => $urn_children
-			               );
-			if ($child['icon'] && !file_exists($child['icon'])) $child['icon'] = null; // default icon (folder)
-			$objTypesChildren[] = $child;
-
-			// End URN Feature
 
 			$json[] = array(
 				'id' => "oidplus:system",

@@ -3,6 +3,18 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.2.5",
+		"date": "2024-09-10 01:25:00 +0200",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"Plugins can now be in userdata_pub/plugins or userdata_pub/tenant/.../plugins",
+			"New Object Type:  Custom Uniform Resource Names (URN)",
+			"If URN Plugin is enabled, then all Object Types are inside this new URN type (in addition with custom URN types)",
+			"Separate WEID-OID tree that is a clone of the OID tree, but with WEID identifiers.",
+			"OID-IP now returns the new MIME Media Types application/vnd.viathinksoft.oidip+xml (XML), application/vnd.viathinksoft.oidip+json (JSON) and text/vnd.viathinksoft.oidip (TEXT)"
+		]
+	},
+	{
 		"version": "2.0.2.4",
 		"date": "2024-09-07 22:05:00 +0200",
 		"author": "Daniel Marschall (ViaThinkSoft)",

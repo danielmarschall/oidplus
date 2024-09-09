@@ -460,7 +460,7 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 		// Step 2: Format output
 
 		if ($format == 'text') {
-			$out_type = 'text/plain; charset=UTF-8';
+			$out_type = 'text/vnd.viathinksoft.oidip; charset=UTF-8';
 
 			$longest_key = 0;
 			foreach ($out as $data) {
