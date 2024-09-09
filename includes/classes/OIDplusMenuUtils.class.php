@@ -19,6 +19,8 @@
 
 namespace ViaThinkSoft\OIDplus\Core;
 
+use ViaThinkSoft\OIDplus\Plugins\ObjectTypes\OID\WeidOidConverter;
+
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
@@ -205,6 +207,28 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 			$n['id'] = str_ireplace($search, $replace, $n['id']);
 			if (isset($n['a_attr']['href'])) $n['a_attr']['href'] = str_ireplace(urlencode($search), urlencode($replace), $n['a_attr']['href']);
 			if (isset($n['children']) && is_array($n['children'])) self::replaceIdInJsonData($n['children'], $search, $replace);
+		}
+	}
+
+	private static function str_replace_first(string $search, string $replace, string $subject): string {
+		$search = '/'.preg_quote($search, '/').'/';
+		return preg_replace($search, $replace, $subject, 1);
+	}
+
+	public static function replaceOidWithWeid(&$node) {
+		foreach ($node as &$n) {
+			$oid = str_replace('oid:', '', $n['id']);
+			$weid = WeidOidConverter::oid2weid($oid); // already includes 'weid:' prefix
+			if (strpos($n['text'],$oid) !== false) {
+				$n['text'] = self::str_replace_first($oid, substr($weid,strlen('weid:')), $n['text']);
+			} else {
+				$bry = explode('.', $n['id']);
+				$base10 = $bry[count($bry)-1];
+				$n['text'] = self::str_replace_first($base10, WeidOidConverter::encodeSingleArc($base10), $n['text']);
+			}
+			$n['id'] = $weid;
+			if (isset($n['a_attr']['href'])) $n['a_attr']['href'] = str_replace(urlencode($oid), urlencode($weid), $n['a_attr']['href']);
+			if (isset($n['children']) && is_array($n['children'])) self::replaceOidWithWeid($n['children']);
 		}
 	}
 

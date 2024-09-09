@@ -1054,6 +1054,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Built-in URN types
+		]]></source>
+		<target><![CDATA[
+		Standard URN Typen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Buy an OUI or CID from IEEE
 		]]></source>
 		<target><![CDATA[
@@ -1846,6 +1854,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Currently, no custom URN are registered in the system.
+		]]></source>
+		<target><![CDATA[
+		Derzeit sind keine individuellen URN angelegt.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Currently, no misc. objects are registered in the system.
 		]]></source>
 		<target><![CDATA[
@@ -1866,6 +1882,14 @@
 		]]></source>
 		<target><![CDATA[
 		Derzeit gibt es keine Dokumentation über die AJAX-Schnittstelle. Sie können jedoch die <b>script.js</b> Dateien in den Plugins anschauen, um dort die Feld-Namen abzulesen. Sie können auch mittels Netzwerk-Analyse im Browser-Entwicklungsmodus (F12) sehen, welche Daten an <b>ajax.php</b> gesendet werden.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Custom URN types
+		]]></source>
+		<target><![CDATA[
+		Selbstdefinierte URN Typen
 		]]></target>
 	</message>
 	<message>
@@ -4322,6 +4346,14 @@
 		]]></source>
 		<target><![CDATA[
 		Stellen Sie bitte sicher, dass der Befehl <code>%1</code> als der Benutzer ausgeführt wird, der die PHP-Scripte ausführt, oder führen Sie nach dem Update (<code>%2</code>) noch ein <code>%1</code> durch.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Manage custom URN
+		]]></source>
+		<target><![CDATA[
+		Selbstdefinierte URN verwalten
 		]]></target>
 	</message>
 	<message>
@@ -8562,6 +8594,14 @@
 		]]></source>
 		<target><![CDATA[
 		URL für mehr Informationen über Ihr(e) Projekt(e) (optional)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		URN
+		]]></source>
+		<target><![CDATA[
+		URN
 		]]></target>
 	</message>
 	<message>
