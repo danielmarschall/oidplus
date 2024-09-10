@@ -3,6 +3,15 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.2.6",
+		"date": "2024-09-11 01:05:00 +0200",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"Improvements of the custom URN object type",
+			"A lot of small fixes to the 'WEID tree' feature"
+		]
+	},
+	{
 		"version": "2.0.2.5",
 		"date": "2024-09-10 01:25:00 +0200",
 		"author": "Daniel Marschall (ViaThinkSoft)",
