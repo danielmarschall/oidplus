@@ -23,12 +23,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/SergeyBrook/php-jws.git",
-                "reference": "3e594ba1ca367466e251382e68580c9943a824e9"
+                "reference": "164aac5b6cd209ac4316f2eb7ed0ef088da4ad84"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/SergeyBrook/php-jws/zipball/3e594ba1ca367466e251382e68580c9943a824e9",
-                "reference": "3e594ba1ca367466e251382e68580c9943a824e9",
+                "url": "https://api.github.com/repos/SergeyBrook/php-jws/zipball/164aac5b6cd209ac4316f2eb7ed0ef088da4ad84",
+                "reference": "164aac5b6cd209ac4316f2eb7ed0ef088da4ad84",
                 "shasum": ""
             },
             "require": {
@@ -36,7 +36,7 @@
                 "ext-openssl": "*",
                 "php": ">=7.0"
             },
-            "time": "2024-03-14T07:27:51+00:00",
+            "time": "2024-08-21T05:38:42+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",

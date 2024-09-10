@@ -31,7 +31,7 @@
         'sergeybrook/php-jws' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '3e594ba1ca367466e251382e68580c9943a824e9',
+            'reference' => '164aac5b6cd209ac4316f2eb7ed0ef088da4ad84',
             'type' => 'library',
             'install_path' => __DIR__ . '/../sergeybrook/php-jws',
             'aliases' => array(

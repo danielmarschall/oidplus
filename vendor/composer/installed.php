@@ -77,7 +77,7 @@
         'danielmarschall/php_utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'f2024b766693fbd5a014bdeaeb89ee43c04fbbd1',
+            'reference' => '5dce3a6a2b2a6337b7b3806cdac71d53f88c5cad',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/php_utils',
             'aliases' => array(
@@ -184,7 +184,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => '47895e28515f99c0f7db6d5c848005d9fd48faaa',
+            'reference' => 'a5316b71f57c74d48d064be72ad91b0a2497f641',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),
@@ -222,7 +222,7 @@
         'symfony/polyfill-mbstring' => array(
             'pretty_version' => '1.x-dev',
             'version' => '1.9999999.9999999.9999999-dev',
-            'reference' => '8740a072b86292957feb42703edde77fcfca84fb',
+            'reference' => '2369cb908b33d7b7518cce042615de430142497f',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/polyfill-mbstring',
             'aliases' => array(),
@@ -242,7 +242,7 @@
         'twbs/bootstrap' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '3083596e87146c1c5a61de7238cb69e1dab5ae8b',
+            'reference' => 'dcec1df61f107e2b449486aafefbb1d14abe0333',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twbs/bootstrap',
             'aliases' => array(
@@ -271,7 +271,7 @@
         'vakata/jstree' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'b3135cfc65eba90d4c670e6959273ef92cd1b447',
+            'reference' => '6256df013ebd98aea138402d8ac96db3efe0c0da',
             'type' => 'component',
             'install_path' => __DIR__ . '/../vakata/jstree',
             'aliases' => array(
