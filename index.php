@@ -46,7 +46,7 @@ if (isset($_REQUEST['h404'])) {
 }
 
 $static_node_id_original = $static_node_id;
-$static_node_id = OIDplus::prefilterQuery($static_node_id, false);
+//$static_node_id = OIDplus::prefilterQuery($static_node_id, false);
 if ($static_node_id_original !== $static_node_id) {
 	// Redirect to the corrected query
 	// TODO: Is canonical host OK? Because we might have a login cookie on this domain!

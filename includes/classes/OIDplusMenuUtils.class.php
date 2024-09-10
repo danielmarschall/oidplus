@@ -114,17 +114,19 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 
 	/**
 	 * @param string $parent
-	 * @param array|true|null $goto_path
+	 * @param array|true|null $goto_path array [X,Y,Z] to open node X,Y,Z. true to open everything, null to open nothing.
 	 * @return array
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
 	public function tree_populate(string $parent, /*array|true|null*/ $goto_path=null): array {
 
-// TODO: WEID
-$was_weid = str_starts_with(strtolower($parent), 'weid:');
-if ($was_weid) $parent = 'oid:'.substr($parent,strlen('weid:'));
-
+		$was_weid = str_starts_with(strtolower($parent), 'weid:');
+		if ($was_weid) {
+$parent = 'oid:'.substr($parent,strlen('weid:'));
+//			$parent = 'oid:'.WeidOidConverter::weid2oid($parent);
+//			foreach ($goto_path as &$g) $g = 'oid:'.WeidOidConverter::weid2oid($g);
+		}
 
 		$children = array();
 
@@ -152,22 +154,19 @@ if ($was_weid) $parent = 'oid:'.substr($parent,strlen('weid:'));
 			$child['id'] = $was_weid ? WeidOidConverter::oid2weid(substr($row['id'],strlen('oid:'))) : $row['id'];
 
 			// Determine display name (relative OID)
-if ($was_weid) {
-
-if ($parent == 'oid:') {
-$weid = $child['id'];
-$weid_last_arc = substr($weid,strlen('weid:')/*remove prefix*/,-2/*remove checksum*/);
-} else {
-$bry = explode('.', $row['id']);
-$last_arc = $bry[count($bry)-1];
-$weid_last_arc = WeidOidConverter::encodeSingleArc($last_arc);
-}
-
-
-$child['text'] = $parentObj ? $weid_last_arc : '';
-} else {
-$child['text'] = $parentObj ? $obj->jsTreeNodeName($parentObj) : '';
-}
+			if ($was_weid) {
+				if ($parent == 'oid:') {
+					$weid = $child['id'];
+					$weid_last_arc = substr($weid,strlen('weid:')/*remove prefix*/,-2/*remove checksum*/);
+				} else {
+					$bry = explode('.', $row['id']);
+					$last_arc = $bry[count($bry)-1];
+					$weid_last_arc = WeidOidConverter::encodeSingleArc($last_arc);
+				}
+				$child['text'] = $parentObj ? $weid_last_arc : '';
+			} else {
+				$child['text'] = $parentObj ? $obj->jsTreeNodeName($parentObj) : '';
+			}
 			$child['text'] .= empty($row['title']) ? /*' -- <i>'.htmlentities('Title missing').'</i>'*/ '' : ' -- <b>' . htmlentities($row['title']) . '</b>';
 
 			// Check if node is confidential, or if one of its parent was confidential
@@ -180,7 +179,7 @@ $child['text'] = $parentObj ? $obj->jsTreeNodeName($parentObj) : '';
 			$child['icon'] = $obj->getIcon($row);
 
 			// Check if there are more sub OIDs
-$tmp = $was_weid ? 'weid:'.substr($row['id'],strlen('oid:')) : $row['id'];
+			$tmp = $was_weid ? 'weid:'.substr($row['id'],strlen('oid:')) : $row['id'];
 			if ($goto_path === true) {
 				$child['children'] = $this->tree_populate($tmp, $goto_path);
 				$child['state'] = array("opened" => true);

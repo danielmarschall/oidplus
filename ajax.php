@@ -20,6 +20,7 @@
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;
 use ViaThinkSoft\OIDplus\Core\OIDplusAuthContentStoreJWT;
+use ViaThinkSoft\OIDplus\Plugins\ObjectTypes\OID\WeidOidConverter;
 
 require_once __DIR__ . '/includes/oidplus.inc.php';
 
@@ -130,12 +131,16 @@ try {
 			// Outputs:    JSON
 			_CheckParamExists($_REQUEST, 'id');
 
-			$was_urn = str_starts_with($_REQUEST['id'],'urn:');
 			$was_weid = str_starts_with($_REQUEST['id'],'weid:');
 
 			$_REQUEST['id'] = OIDplus::prefilterQuery($_REQUEST['id'], false);
 
-if ($was_weid) $_REQUEST['id'] = 'weid:'.substr($_REQUEST['id'],strlen('oid:'));
+			if ($was_weid) {
+				$_REQUEST['id'] = 'weid:'.substr($_REQUEST['id'],strlen('oid:'));
+
+//$_REQUEST['id'] = WeidOidConverter::oid2weid(substr($_REQUEST['id'],strlen('oid:')));
+//echo "X=".$_REQUEST['id'];
+			}
 
 			$json_out = OIDplus::menuUtils()->json_tree($_REQUEST['id'], $_REQUEST['goto'] ?? '');
 		} else {
