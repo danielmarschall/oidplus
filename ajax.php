@@ -112,6 +112,8 @@ try {
 			// Outputs:    JSON
 			_CheckParamExists($_REQUEST, 'search');
 
+			$was_weid = str_starts_with(strtolower($_REQUEST['search']),'weid:');
+
 			$found = false;
 			foreach (OIDplus::getPagePlugins() as $plugin) {
 				$json_out = $plugin->tree_search($_REQUEST['search']);
@@ -119,6 +121,10 @@ try {
 					$found = true;
 					break;
 				}
+			}
+
+			if ($was_weid) {
+				foreach ($json_out as &$o) $o = ($o == 'oid:') ? 'weid:' : WeidOidConverter::oid2weid(substr($o,strlen('oid:')));
 			}
 
 			if (!$found) {
@@ -131,15 +137,12 @@ try {
 			// Outputs:    JSON
 			_CheckParamExists($_REQUEST, 'id');
 
-			$was_weid = str_starts_with($_REQUEST['id'],'weid:');
+			$was_weid = str_starts_with(strtolower($_REQUEST['id']),'weid:');
 
 			$_REQUEST['id'] = OIDplus::prefilterQuery($_REQUEST['id'], false);
 
 			if ($was_weid) {
-				$_REQUEST['id'] = 'weid:'.substr($_REQUEST['id'],strlen('oid:'));
-
-//$_REQUEST['id'] = WeidOidConverter::oid2weid(substr($_REQUEST['id'],strlen('oid:')));
-//echo "X=".$_REQUEST['id'];
+				$_REQUEST['id'] = 'weid:'.substr($_REQUEST['id'],strlen('oid:')); // TODO: convert???!!!
 			}
 
 			$json_out = OIDplus::menuUtils()->json_tree($_REQUEST['id'], $_REQUEST['goto'] ?? '');

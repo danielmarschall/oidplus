@@ -1343,7 +1343,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				$path = array();
 				while (true) {
 					$tmp = $goto;
-					if (str_starts_with($goto,'weid:')) $tmp = 'oid:'.WeidOidConverter::weid2oid($tmp);
+					if (str_starts_with(strtolower($goto),'weid:')) $tmp = 'oid:'.WeidOidConverter::weid2oid($tmp);
 					$path[] = $tmp;
 					$objGoto = OIDplusObject::findFitting($tmp);
 					if (!$objGoto) break;
@@ -1425,9 +1425,6 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 						// Special feature: Make a WEID tree that is a cloned OID tree!
 						if (($urn_ns == 'oid') && ($first_nss)) {
-#foreach ($goto_path as &$g) $g = WeidOidConverter::oid2weid(substr($g,strlen('oid:')));
-#foreach ($goto_path as &$g) $g = WeidOidConverter::weid2oid($g);
-#var_dump($goto_path);
 							$children = OIDplus::menuUtils()->tree_populate('weid:', $goto_path);
 							$icon = $this->get_treeicon_root($ot); // TODO: WEID ICON!
 							$urn_ns = 'x-weid';
