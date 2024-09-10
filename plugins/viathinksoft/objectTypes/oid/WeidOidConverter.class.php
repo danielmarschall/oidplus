@@ -3,7 +3,7 @@
 /**
  * WEID<=>OID Converter
  * (c) Webfan.de, ViaThinkSoft
- * Revision 2024-09-09
+ * Revision 2024-09-10
  **/
 
 // What is a WEID?
@@ -132,7 +132,7 @@ class WeidOidConverter {
 
 		$namespace = strtolower($namespace); // namespace is case insensitive
 
-		if (str_starts_with($namespace, 'weid:')) {
+		if (str_starts_with(strtolower($namespace), 'weid:')) {
 			$domainpart = explode('.', explode(':',$weid)[1]);
 			if (count($domainpart) > 1) {
 				// Spec Change 10: Class D / Domain-WEID ( https://github.com/frdl/weid/issues/3 )
@@ -143,16 +143,16 @@ class WeidOidConverter {
 			}
 		}
 
-		if (str_starts_with($namespace, 'weid:x-')) {
+		if (str_starts_with(strtolower($namespace), 'weid:x-')) {
 			// Spec Change 11: Proprietary Namespaces ( https://github.com/frdl/weid/issues/4 )
 			return "[Proprietary WEID Namespace]";
-		} else if ($namespace == 'weid:') {
+		} else if (strtolower($namespace) == 'weid:') {
 			// Class C
 			$base = '1-3-6-1-4-1-SZ5-8';
-		} else if ($namespace == 'weid:pen:') {
+		} else if (strtolower($namespace) == 'weid:pen:') {
 			// Class B
 			$base = '1-3-6-1-4-1';
-		} else if ($namespace == 'weid:root:') {
+		} else if (strtolower($namespace) == 'weid:root:') {
 			// Class A
 			$base = '';
 		} else {

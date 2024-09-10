@@ -185,7 +185,7 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 						break;
 					}
 
-					if (substr($query,0,4) === 'oid:') {
+					if (strtolower(substr($query,0,4)) === 'oid:') {
 						$query_prev = $query;
 						$query = 'oid:'.oid_up(explode(':',$query,2)[1]);
 						if ($query == $query_prev) break;
@@ -212,7 +212,7 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 					}
 				}
 
-				if ((substr($query,0,4) === 'oid:') && (!$obj)) {
+				if ((strtolower(substr($query,0,4)) === 'oid:') && (!$obj)) {
 					$query = $init_query;
 					$distance = 0;
 					while (true) {
@@ -279,7 +279,7 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 					// $this->_oidip_attr('information', ...); Not used. Contains additional information, e.g. Management Information Base (MIB) definitions.
 
 					if ($only_wellknown_ids_found) {
-						if (substr($query,0,4) === 'oid:') {
+						if (strtolower(substr($query,0,4)) === 'oid:') {
 							// Since it is well-known, oid-info.com will most likely have it described
 							$out[] = $this->_oidip_attr('url', 'http://oid-info.com/get/'.$obj->nodeId(false));
 						}
@@ -287,7 +287,7 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 						$out[] = $this->_oidip_attr('url', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'?goto='.urlencode($obj->nodeId(true)));
 					}
 
-					if (substr($query,0,4) === 'oid:') {
+					if (strtolower(substr($query,0,4)) === 'oid:') {
 						assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\Plugins\ObjectTypes\OID\OIDplusOid");
 
 						$out[] = $this->_oidip_attr('asn1-notation', $obj->getAsn1Notation(false)); // DO NOT TRANSLATE!
@@ -334,7 +334,7 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 						$out[] = $this->_oidip_attr('attribute', 'confidential'); // DO NOT TRANSLATE!
 					}
 
-					if (substr($query,0,4) === 'oid:') {
+					if (strtolower(substr($query,0,4)) === 'oid:') {
 						$sParent = 'oid:'.oid_up(explode(':',$query,2)[1]);
 
 						$objTest = OIDplusObject::parse($sParent);
@@ -677,7 +677,7 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	protected function show_asn1_appendix(string $id): string {
-		if (substr($id,0,4) === 'oid:') {
+		if (strtolower(substr($id,0,4)) === 'oid:') {
 			$appendix_asn1ids = array();
 			$res_asn = OIDplus::db()->query("select * from ###asn1id where oid = ?", array($id));
 			while ($row_asn = $res_asn->fetch_object()) {
