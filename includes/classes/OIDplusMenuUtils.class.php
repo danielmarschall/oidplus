@@ -220,7 +220,7 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 			$oid = str_replace('oid:', '', $n['id']);
 			$weid = WeidOidConverter::oid2weid($oid); // already includes 'weid:' prefix
 			if (strpos($n['text'],$oid) !== false) {
-				$n['text'] = self::str_replace_first($oid, substr($weid,strlen('weid:')), $n['text']);
+				$n['text'] = self::str_replace_first($oid, substr($weid,strlen('weid:')/*remove prefix*/,-2/*remove checksum*/), $n['text']);
 			} else {
 				$bry = explode('.', $n['id']);
 				$base10 = $bry[count($bry)-1];
