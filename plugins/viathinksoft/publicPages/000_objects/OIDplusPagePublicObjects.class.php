@@ -1342,8 +1342,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				$goto = $req_goto;
 				$path = array();
 				while (true) {
-					$path[] = $goto;
-					$objGoto = OIDplusObject::findFitting($goto);
+					$tmp = $goto;
+					if (str_starts_with($goto,'weid:')) $tmp = 'oid:'.WeidOidConverter::weid2oid($tmp);
+					$path[] = $tmp;
+					$objGoto = OIDplusObject::findFitting($tmp);
 					if (!$objGoto) break;
 					$objGotoParent = $objGoto->getParent();
 					$goto = $objGotoParent ? $objGotoParent->nodeId() : '';
@@ -1423,6 +1425,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 						// Special feature: Make a WEID tree that is a cloned OID tree!
 						if (($urn_ns == 'oid') && ($first_nss)) {
+#foreach ($goto_path as &$g) $g = WeidOidConverter::oid2weid(substr($g,strlen('oid:')));
+#foreach ($goto_path as &$g) $g = WeidOidConverter::weid2oid($g);
+#var_dump($goto_path);
 							$children = OIDplus::menuUtils()->tree_populate('weid:', $goto_path);
 							$icon = $this->get_treeicon_root($ot); // TODO: WEID ICON!
 							$urn_ns = 'x-weid';
@@ -1460,7 +1465,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					"opened" => true,
 					// "selected" => true)  // "selected" is buggy:
 					// 1) The select-event will not be triggered upon loading
-					// 2) The nodes directly blow cannot be opened (loading infinite time)
+					// 2) The nodes directly below cannot be opened (loading infinite time)
 				),
 				'icon' => OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon16.png',
 				'children' => $objTypesChildren

@@ -809,6 +809,7 @@ class OIDplusOid extends OIDplusObject {
 	 * @return string
 	 */
 	public static function treeIconFilename(string $mode): string {
+		// TODO: Class C WEID should have a different icon!
 		return 'img/'.$mode.'_icon16.png';
 	}
 }
