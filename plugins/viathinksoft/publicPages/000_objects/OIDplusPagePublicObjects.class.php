@@ -1252,6 +1252,18 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	}
 
 	/**
+	 * @return bool
+	 */
+	public static function urnViewEnabled(): bool {
+		foreach (OIDplus::getEnabledObjectTypes() as $ot) {
+			if ($ot::ns() == 'urn') {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * @param array $json
 	 * @param string|null $ra_email
 	 * @param bool $nonjs
@@ -1359,14 +1371,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 			$ot_children = array();
 
-
-			$urn_view_enabled = false;
-			foreach (OIDplus::getEnabledObjectTypes() as $ot) {
-				if ($ot::ns() == 'urn') {
-					$urn_view_enabled = true;
-					break;
-				}
-			}
+			$urn_view_enabled = self::urnViewEnabled();
 
 			$objTypesChildren = array();
 			foreach (OIDplus::getEnabledObjectTypes() as $ot) {
