@@ -15,7 +15,7 @@
 //
 // The full specification can be found here: https://weid.info/spec.html
 //
-// This converter supports WEID as of Spec Change #11
+// This converter supports WEID as of Spec Change #12
 //
 // A few short notes:
 //     - There are several classes of WEIDs which have different OID bases:
@@ -37,6 +37,7 @@
 //     - The namespace (weid:, weid:pen:, weid:root:) is case insensitive.
 //     - Padding with '0' characters is valid (e.g. weid:000EXAMPLE-3)
 //       The paddings do not count into the WeLuhn check digit.
+//     - URN Notation "urn:x-weid:..." is equal to "weid:..."
 //
 
 var WeidOidConverter = {
@@ -127,6 +128,9 @@ var WeidOidConverter = {
 		var rest = weid.substr(p+1);
 
 		var base = null;
+
+		namespace = namespace.replace(/^urn:x-weid:/, 'weid:');
+		
 		namespace = namespace.toLowerCase(); // namespace is case insensitive
 
 		if (namespace.startsWith("weid:")) {
@@ -140,16 +144,16 @@ var WeidOidConverter = {
 			}
 		}
 
-		if (namespace.toLowerCase().startsWith('weid:x-')) {
+		if (namespace.startsWith('weid:x-')) {
 			// Spec Change 11: Proprietary Namespaces ( https://github.com/frdl/weid/issues/4 )
 			return { "weid": weid, "oid" : "[Proprietary WEID Namespace]" };
-		} else if (namespace.toLowerCase() == 'weid:') {
+		} else if (namespace == 'weid:') {
 			// Class C
 			base = '1-3-6-1-4-1-SZ5-8';
-		} else if (namespace.toLowerCase() == 'weid:pen:') {
+		} else if (namespace == 'weid:pen:') {
 			// Class B
 			base = '1-3-6-1-4-1';
-		} else if (namespace.toLowerCase() == 'weid:root:') {
+		} else if (namespace == 'weid:root:') {
 			// Class A
 			base = '';
 		} else {

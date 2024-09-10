@@ -104,6 +104,7 @@ class SSH2
     const MASK_LOGIN_REQ     = 0x00000004;
     const MASK_LOGIN         = 0x00000008;
     const MASK_SHELL         = 0x00000010;
+    const MASK_DISCONNECT    = 0x00000020;
 
     /*
      * Channel constants
@@ -898,7 +899,7 @@ class SSH2
      * @see self::isTimeout()
      * @var bool
      */
-    private $is_timeout = false;
+    protected $is_timeout = false;
 
     /**
      * Log Boundary
@@ -1348,8 +1349,6 @@ class SSH2
 
         $this->curTimeout = $this->timeout;
 
-        $this->last_packet = microtime(true);
-
         if (!is_resource($this->fsock)) {
             $start = microtime(true);
             // with stream_select a timeout of 0 means that no timeout takes place;
@@ -1368,12 +1367,21 @@ class SSH2
                     throw new \RuntimeException('Connection timed out whilst attempting to open socket connection');
                 }
             }
+
+            if (defined('NET_SSH2_LOGGING')) {
+                $this->append_log('(fsockopen took ' . round($elapsed, 4) . 's)', '');
+            }
         }
 
         $this->identifier = $this->generate_identifier();
 
         if ($this->send_id_string_first) {
+            $start = microtime(true);
             fputs($this->fsock, $this->identifier . "\r\n");
+            $elapsed = round(microtime(true) - $start, 4);
+            if (defined('NET_SSH2_LOGGING')) {
+                $this->append_log("-> (network: $elapsed)", $this->identifier . "\r\n");
+            }
         }
 
         /* According to the SSH2 specs,
@@ -1384,6 +1392,7 @@ class SSH2
            in ISO-10646 UTF-8 [RFC3629] (language is not specified).  Clients
            MUST be able to process such lines." */
         $data = '';
+        $totalElapsed = 0;
         while (!feof($this->fsock) && !preg_match('#(.*)^(SSH-(\d\.\d+).*)#ms', $data, $matches)) {
             $line = '';
             while (true) {
@@ -1400,6 +1409,7 @@ class SSH2
                         throw new \RuntimeException('Connection timed out whilst receiving server identification string');
                     }
                     $elapsed = microtime(true) - $start;
+                    $totalElapsed += $elapsed;
                     $this->curTimeout -= $elapsed;
                 }
 
@@ -1407,26 +1417,22 @@ class SSH2
                 if ($temp === false) {
                     throw new \RuntimeException('Error reading from socket');
                 }
+
+                $line .= $temp;
                 if (strlen($temp) == 255) {
                     continue;
                 }
 
-                $line .= "$temp\n";
-
-                // quoting RFC4253, "Implementers who wish to maintain
-                // compatibility with older, undocumented versions of this protocol may
-                // want to process the identification string without expecting the
-                // presence of the carriage return character for reasons described in
-                // Section 5 of this document."
-
-                //if (substr($line, -2) == "\r\n") {
-                //    break;
-                //}
+                $line .= "\n";
 
                 break;
             }
 
             $data .= $line;
+        }
+
+        if (defined('NET_SSH2_LOGGING')) {
+            $this->append_log('<- (network: ' . round($totalElapsed, 4) . ')', $line);
         }
 
         if (feof($this->fsock)) {
@@ -1436,12 +1442,7 @@ class SSH2
 
         $extra = $matches[1];
 
-        if (defined('NET_SSH2_LOGGING')) {
-            $this->append_log('<-', $matches[0]);
-            $this->append_log('->', $this->identifier . "\r\n");
-        }
-
-        $this->server_identifier = trim($temp, "\r\n");
+        $this->server_identifier = trim($data, "\r\n");
         if (strlen($extra)) {
             $this->errors[] = $data;
         }
@@ -1464,8 +1465,15 @@ class SSH2
         $this->errorOnMultipleChannels = $match;
 
         if (!$this->send_id_string_first) {
+            $start = microtime(true);
             fputs($this->fsock, $this->identifier . "\r\n");
+            $elapsed = round(microtime(true) - $start, 4);
+            if (defined('NET_SSH2_LOGGING')) {
+                $this->append_log("-> (network: $elapsed)", $this->identifier . "\r\n");
+            }
         }
+
+        $this->last_packet = microtime(true);
 
         if (!$this->send_kex_first) {
             $response = $this->get_binary_packet_or_close(NET_SSH2_MSG_KEXINIT);
@@ -4014,9 +4022,6 @@ class SSH2
             try {
                 $response = $this->get_binary_packet();
             } catch (TimeoutException $e) {
-                if ($client_channel == self::CHANNEL_EXEC && !$this->request_pty) {
-                    $this->close_channel($client_channel);
-                }
                 return true;
             }
             list($type) = Strings::unpackSSH2('C', $response);
@@ -4596,7 +4601,12 @@ class SSH2
      */
     protected function disconnect_helper($reason)
     {
-        if ($this->bitmap & self::MASK_CONNECTED) {
+        if ($this->bitmap & self::MASK_DISCONNECT) {
+            // Disregard subsequent disconnect requests
+            return false;
+        }
+        $this->bitmap |= self::MASK_DISCONNECT;
+        if ($this->isConnected()) {
             $data = Strings::packSSH2('CNss', NET_SSH2_MSG_DISCONNECT, $reason, '', '');
             try {
                 $this->send_binary_packet($data);
@@ -4667,9 +4677,12 @@ class SSH2
     {
         $output = '';
         for ($i = 0; $i < count($message_log); $i++) {
-            $output .= $message_number_log[$i] . "\r\n";
+            $output .= $message_number_log[$i];
             $current_log = $message_log[$i];
             $j = 0;
+            if (strlen($current_log)) {
+                $output .= "\r\n";
+            }
             do {
                 if (strlen($current_log)) {
                     $output .= str_pad(dechex($j), 7, '0', STR_PAD_LEFT) . '0  ';
@@ -4980,22 +4993,24 @@ class SSH2
         return [
             'hmac-sha2-256-etm@openssh.com',
             'hmac-sha2-512-etm@openssh.com',
-            'umac-64-etm@openssh.com',
-            'umac-128-etm@openssh.com',
             'hmac-sha1-etm@openssh.com',
 
             // from <http://www.ietf.org/rfc/rfc6668.txt>:
             'hmac-sha2-256',// RECOMMENDED     HMAC-SHA256 (digest length = key length = 32)
             'hmac-sha2-512',// OPTIONAL        HMAC-SHA512 (digest length = key length = 64)
 
-            // from <https://tools.ietf.org/html/draft-miller-secsh-umac-01>:
-            'umac-64@openssh.com',
-            'umac-128@openssh.com',
-
             'hmac-sha1-96', // RECOMMENDED     first 96 bits of HMAC-SHA1 (digest length = 12, key length = 20)
             'hmac-sha1',    // REQUIRED        HMAC-SHA1 (digest length = key length = 20)
             'hmac-md5-96',  // OPTIONAL        first 96 bits of HMAC-MD5 (digest length = 12, key length = 16)
             'hmac-md5',     // OPTIONAL        HMAC-MD5 (digest length = key length = 16)
+
+            'umac-64-etm@openssh.com',
+            'umac-128-etm@openssh.com',
+
+            // from <https://tools.ietf.org/html/draft-miller-secsh-umac-01>:
+            'umac-64@openssh.com',
+            'umac-128@openssh.com',
+
             //'none'          // OPTIONAL        no MAC; NOT RECOMMENDED
         ];
     }
@@ -5078,14 +5093,14 @@ class SSH2
 
         if (isset($preferred['kex'])) {
             $preferred['kex'] = array_intersect(
-                $preferred['kex'],
+                is_string($preferred['kex']) ? [$preferred['kex']] : $preferred['kex'],
                 static::getSupportedKEXAlgorithms()
             );
         }
 
         if (isset($preferred['hostkey'])) {
             $preferred['hostkey'] = array_intersect(
-                $preferred['hostkey'],
+                is_string($preferred['hostkey']) ? [$preferred['hostkey']] : $preferred['hostkey'],
                 static::getSupportedHostKeyAlgorithms()
             );
         }
@@ -5096,19 +5111,19 @@ class SSH2
                 $a = &$preferred[$key];
                 if (isset($a['crypt'])) {
                     $a['crypt'] = array_intersect(
-                        $a['crypt'],
+                        is_string($a['crypt']) ? [$a['crypt']] : $a['crypt'],
                         static::getSupportedEncryptionAlgorithms()
                     );
                 }
                 if (isset($a['comp'])) {
                     $a['comp'] = array_intersect(
-                        $a['comp'],
+                        is_string($a['comp']) ? [$a['comp']] : $a['comp'],
                         static::getSupportedCompressionAlgorithms()
                     );
                 }
                 if (isset($a['mac'])) {
                     $a['mac'] = array_intersect(
-                        $a['mac'],
+                        is_string($a['mac']) ? [$a['mac']] : $a['mac'],
                         static::getSupportedMACAlgorithms()
                     );
                 }

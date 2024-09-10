@@ -14,7 +14,7 @@
 //
 // The full specification can be found here: https://weid.info/spec.html
 //
-// This converter supports WEID as of Spec Change #11
+// This converter supports WEID as of Spec Change #12
 //
 // A few short notes:
 //     - There are several classes of WEIDs which have different OID bases:
@@ -36,6 +36,7 @@
 //     - The namespace (weid:, weid:pen:, weid:root:) is case insensitive.
 //     - Padding with '0' characters is valid (e.g. weid:000EXAMPLE-3)
 //       The paddings do not count into the WeLuhn check digit.
+//     - URN Notation "urn:x-weid:..." is equal to "weid:..."
 //
 
 namespace ViaThinkSoft\OIDplus\Plugins\ObjectTypes\OID;
@@ -130,9 +131,11 @@ class WeidOidConverter {
 		$namespace = substr($weid, 0, $p+1);
 		$rest = substr($weid, $p+1);
 
+		$weid = preg_replace('@^urn:x-weid:@', 'weid:', $weid);
+
 		$namespace = strtolower($namespace); // namespace is case insensitive
 
-		if (str_starts_with(strtolower($namespace), 'weid:')) {
+		if (str_starts_with($namespace, 'weid:')) {
 			$domainpart = explode('.', explode(':',$weid)[1]);
 			if (count($domainpart) > 1) {
 				// Spec Change 10: Class D / Domain-WEID ( https://github.com/frdl/weid/issues/3 )
@@ -143,16 +146,16 @@ class WeidOidConverter {
 			}
 		}
 
-		if (str_starts_with(strtolower($namespace), 'weid:x-')) {
+		if (str_starts_with($namespace, 'weid:x-')) {
 			// Spec Change 11: Proprietary Namespaces ( https://github.com/frdl/weid/issues/4 )
 			return "[Proprietary WEID Namespace]";
-		} else if (strtolower($namespace) == 'weid:') {
+		} else if ($namespace == 'weid:') {
 			// Class C
 			$base = '1-3-6-1-4-1-SZ5-8';
-		} else if (strtolower($namespace) == 'weid:pen:') {
+		} else if ($namespace == 'weid:pen:') {
 			// Class B
 			$base = '1-3-6-1-4-1';
-		} else if (strtolower($namespace) == 'weid:root:') {
+		} else if ($namespace == 'weid:root:') {
 			// Class A
 			$base = '';
 		} else {

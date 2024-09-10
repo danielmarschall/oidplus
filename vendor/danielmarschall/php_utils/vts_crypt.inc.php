@@ -2,8 +2,8 @@
 
 /*
  * ViaThinkSoft Modular Crypt Format 1.0 and vts_password_*() functions
- * Copyright 2023 Daniel Marschall, ViaThinkSoft
- * Revision 2023-03-03
+ * Copyright 2023-2024 Daniel Marschall, ViaThinkSoft
+ * Revision 2024-09-04
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,15 +20,43 @@
 
 /*
 
-The function vts_password_hash() replaces password_hash()
-and adds the ViaThinkSoft Modular Crypt Format 1.0 hash as well as
-all hashes from password_hash() and crypt().
+Usage of vts_crypt.inc.php
+==========================
+
+The function vts_password_hash() replaces password_hash().
+It contains all algorithms from password_hash() and
+adds ViaThinkSoft Modular Crypt Format 1.0 (vts_mcf1_hash()),
+adds ViaThinkSoft MHA1 (deprecated), MHA2 (deprecated), MHA3 (deprecated),
+NTLM, apr1 (htdigest), as well as all hashes from crypt().
 
 The function vts_password_verify() replaces password_verify().
+It combines the normal password_verify(), which is also compatible with crypt(),
+and adds support for ViaThinkSoft Modular Crypt Format 1.0 (vts_mcf1_verify()),
+MHA1 (deprecated), MHA2 (deprecated), and MHA3 (deprecated).
+
+Furthermore, use:
+- vts_password_algos() instead of password_algos()
+- vts_password_get_info() instead of password_get_info()
+- vts_password_needs_rehash() instead of password_needs_rehash()
+
+
+About ViaThinkSoft Modular Crypt Format 1.0 (VTS MCF1)
+======================================================
 
 ViaThinkSoft Modular Crypt Format 1.0 performs a simple hash or HMAC operation.
 No key derivation function or iterations are performed.
-Format:
+
+ViaThinkSoft MCF was invented to allow old passwords (e.g. MD5 with salt) can be easily converted
+to a MCF notation ($...$...$) so that these old passwords can be stored
+in the same data structure as newer crypt passwords, until they get upgraded to a newer
+hash. But it can also be used to encapsulate modern hash algorithms like SHA3/512 into
+a MCF format, so that they can be stored together with other MCF passwords such as bcrypt.
+
+Another innovation is to use Object Identifiers (OIDs) as MCF algorithm identifier.
+Algorithm identifiers such as $1$, $2$, ... are nice to remember and short, but
+can quickly lead to conflicts, and soon you run out of short identifiers.
+
+Format of VTS MCF1:
 	$1.3.6.1.4.1.37476.3.0.1.1$a=<algo>,m=<mode>[,i=<iterations>]$<salt>$<hash>
 where <algo> is any valid hash algorithm (name scheme of PHP hash_algos() preferred), e.g.
 	sha3-512
@@ -43,7 +71,7 @@ where <algo> is any valid hash algorithm (name scheme of PHP hash_algos() prefer
 	sha224
 	sha1
 	md5
-Not supported are these hashes (because they have a special salt-handling and output their own crypt format):
+Not possible with MCF1 are these hashes (because they have a special salt-handling and output their own crypt format):
 	bcrypt [Standardized crypt identifier 2, 2a, 2x, 2y]
 	argon2i [Crypt identifier argon2i, not standardized]
 	argon2id [Crypt identifier argon2i, not standardized]
@@ -51,9 +79,12 @@ Valid <mode> :
 	sp = salt + password
 	ps = password + salt
 	sps = salt + password + salt
+	shp = salt + Hash(password)
+	hps = Hash(password) + salt
+	shps = salt + Hash(password) + salt
 	hmac = HMAC (salt is the key)
 	pbkdf2 = PBKDF2-HMAC (Additional param i= contains the number of iterations)
-<iterations> can be omitted if 0. It is required for mode=pbkdf2. For sp/ps/sps/hmac, it is optional.
+<iterations> can be omitted if 0. It is required for mode=pbkdf2. For sp/ps/sps/shp/hps/shps/hmac, it is optional.
 Like most Crypt-hashes, <salt> and <hash> are Radix64 coded
 with alphabet './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz' and no padding.
 Link to the online specification:
@@ -66,15 +97,24 @@ Reference implementation in PHP:
 require_once __DIR__ . '/misc_functions.inc.php';
 
 define('OID_MCF_VTS_V1',     '1.3.6.1.4.1.37476.3.0.1.1'); // { iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 37476 specifications(3) misc(0) modular-crypt-format(1) vts-crypt-v1(1) }
+define('OID_MHA_VTS_V1',     '1.3.6.1.4.1.37476.3.2.1.1'); // { iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 37476 specifications(3) algorithm(2) hash(1) mha1(1) }
+define('OID_MHA_VTS_V2',     '1.3.6.1.4.1.37476.3.2.1.2'); // { iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 37476 specifications(3) algorithm(2) hash(1) mha2(2) }
+define('OID_MHA_VTS_V3',     '1.3.6.1.4.1.37476.3.2.1.3'); // { iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 37476 specifications(3) algorithm(2) hash(1) mha3(3) }
 
-// Valid algorithms for vts_password_hash():
+// Valid algorithms for vts_password_hash(), in addition to the PASSWORD_* contants included in PHP:
+// TODO: Implement more algorithms which are not implemented by PHP, e.g. YESCRYPT, APR1, etc.
 define('PASSWORD_STD_DES',   'std-des');       // Algorithm from crypt()
 define('PASSWORD_EXT_DES',   'ext-des');       // Algorithm from crypt()
 define('PASSWORD_MD5',       'md5');           // Algorithm from crypt()
 define('PASSWORD_BLOWFISH',  'blowfish');      // Algorithm from crypt()
 define('PASSWORD_SHA256',    'sha256');        // Algorithm from crypt()
 define('PASSWORD_SHA512',    'sha512');        // Algorithm from crypt()
+define('PASSWORD_NTLM',      'ntlm');          // Algorithm manually implemented
+define('PASSWORD_APR_MD5',   'apr_md5');       // Algorithm manually implemented
 define('PASSWORD_VTS_MCF1',  OID_MCF_VTS_V1);  // Algorithm by ViaThinkSoft
+define('PASSWORD_VTS_MHA1',  OID_MHA_VTS_V1);  // Algorithm by ViaThinkSoft (DEPRECATED!)
+define('PASSWORD_VTS_MHA2',  OID_MHA_VTS_V2);  // Algorithm by ViaThinkSoft (DEPRECATED!)
+define('PASSWORD_VTS_MHA3',  OID_MHA_VTS_V3);  // Algorithm by ViaThinkSoft (DEPRECATED!)
 // Other valid values (already defined in PHP):
 // - PASSWORD_DEFAULT
 // - PASSWORD_BCRYPT
@@ -84,6 +124,9 @@ define('PASSWORD_VTS_MCF1',  OID_MCF_VTS_V1);  // Algorithm by ViaThinkSoft
 define('PASSWORD_VTS_MCF1_MODE_SP',             'sp');     // Salt+Password
 define('PASSWORD_VTS_MCF1_MODE_PS',             'ps');     // Password+Salt
 define('PASSWORD_VTS_MCF1_MODE_SPS',            'sps');    // Salt+Password+Salt
+define('PASSWORD_VTS_MCF1_MODE_SHP',            'shp');    // Salt+Hash(Password)
+define('PASSWORD_VTS_MCF1_MODE_HPS',            'hps');    // Hash(Password)+Salt
+define('PASSWORD_VTS_MCF1_MODE_SHPS',           'shps');   // Salt+Hash(Password)+Salt
 define('PASSWORD_VTS_MCF1_MODE_HMAC',           'hmac');   // HMAC
 define('PASSWORD_VTS_MCF1_MODE_PBKDF2',         'pbkdf2'); // PBKDF2-HMAC
 
@@ -94,6 +137,11 @@ define('PASSWORD_SHA512_DEFAULT_ROUNDS',        5000);
 define('PASSWORD_VTS_MCF1_DEFAULT_ALGO',        'sha3-512'); // any value in hash_algos(), NOT vts_hash_algos()
 define('PASSWORD_VTS_MCF1_DEFAULT_MODE',        PASSWORD_VTS_MCF1_MODE_PS);
 define('PASSWORD_VTS_MCF1_DEFAULT_ITERATIONS',  0); // For PBKDF2, iterations=0 means: Default, depending on the algo
+define('PASSWORD_VTS_MHA1_DEFAULT_ITERATIONS',  1987);
+define('PASSWORD_VTS_MHA2_DEFAULT_ITERATIONS',  1987);
+define('PASSWORD_VTS_MHA3_DEFAULT_ITERATIONS',  500);
+define('PASSWORD_VTS_MHA3_DEFAULT_LENGTH',      32);
+define('PASSWORD_VTS_MHA3_DEFAULT_BASE_ALGO',   'sha1');
 
 // --- Part 1: Modular Crypt Format encode/decode
 
@@ -151,93 +199,324 @@ function crypt_modular_format_decode($mcf) {
 	             'params' => $params);
 }
 
-// --- Part 2: ViaThinkSoft Modular Crypt Format 1.0
+// --- Part 2: ViaThinkSoft hashes (do not use these methods directly!)
 
-function vts_crypt_version($hash) {
-	if (str_starts_with($hash, '$'.OID_MCF_VTS_V1.'$')) {
-		return '1';
-	} else {
-		return '0';
-	}
-}
-
-function vts_crypt_hash($algo, $str_password, $str_salt, $ver='1', $mode=PASSWORD_VTS_MCF1_DEFAULT_MODE, $iterations=PASSWORD_VTS_MCF1_DEFAULT_ITERATIONS) {
-	if ($ver == '1') {
-		if ($mode == PASSWORD_VTS_MCF1_MODE_SP) {
-			$bin_hash = hash_ex($algo, $str_salt.$str_password, true);
-			for ($i=0; $i<$iterations; $i++) {
-				$bin_hash = hash_ex($algo, $str_salt.$bin_hash.$i, true);
-			}
-		} else if ($mode == PASSWORD_VTS_MCF1_MODE_PS) {
-			$bin_hash = hash_ex($algo, $str_password.$str_salt, true);
-			for ($i=0; $i<$iterations; $i++) {
-				$bin_hash = hash_ex($algo, $bin_hash.$i.$str_salt, true);
-			}
-		} else if ($mode == PASSWORD_VTS_MCF1_MODE_SPS) {
-			$bin_hash = hash_ex($algo, $str_salt.$str_password.$str_salt, true);
-			for ($i=0; $i<$iterations; $i++) {
-				$bin_hash = hash_ex($algo, $str_salt.$bin_hash.$i.$str_salt, true);
-			}
-		} else if ($mode == PASSWORD_VTS_MCF1_MODE_HMAC) {
-			$bin_hash = hash_hmac_ex($algo, $str_password, $str_salt, true);
-			for ($i=0; $i<$iterations; $i++) {
-				// https://security.stackexchange.com/questions/149299/rounds-in-a-hashing-function
-				$bin_hash = hash_hmac_ex($algo, $str_password, $bin_hash.$i, true);
-			}
-		} else if ($mode == PASSWORD_VTS_MCF1_MODE_PBKDF2) {
-			// Note: If $iterations=0, then hash_pbkdf2_ex() will correct it to the best value depending on $algo, see _vts_password_default_iterations().
-			$bin_hash = hash_pbkdf2_ex($algo, $str_password, $str_salt, $iterations, 0, true);
-		} else {
-			throw new Exception("Invalid VTS crypt version 1 mode. Expect sp, ps, sps, hmac, or pbkdf2.");
+function vts_mcf1_hash($algo, $str_password, $str_salt, $mode=PASSWORD_VTS_MCF1_DEFAULT_MODE, $iterations=PASSWORD_VTS_MCF1_DEFAULT_ITERATIONS) {
+	if ($mode == PASSWORD_VTS_MCF1_MODE_SP) {
+		$bin_hash = hash_ex($algo, $str_salt.$str_password, true);
+		for ($i=0; $i<$iterations; $i++) {
+			$bin_hash = hash_ex($algo, $str_salt.$bin_hash.$i, true);
 		}
-		$bin_salt = $str_salt;
-		$params = array();
-		$params['a'] = $algo;
-		$params['m'] = $mode;
-		if ($iterations != 0) $params['i'] = $iterations; // i can be omitted if it is 0.
-		return crypt_modular_format_encode(OID_MCF_VTS_V1, $bin_salt, $bin_hash, $params);
-	} else {
-		throw new Exception("Invalid VTS crypt version, expect 1.");
-	}
-}
-
-function vts_crypt_verify($password, $hash): bool {
-	$ver = vts_crypt_version($hash);
-	if ($ver == '1') {
-		// Decode the MCF hash parameters
-		$data = crypt_modular_format_decode($hash);
-		if ($data === false) throw new Exception('Invalid auth key');
-		$id = $data['id'];
-		$bin_salt = $data['salt'];
-		$bin_hash = $data['hash'];
-		$params = $data['params'];
-
-		if (!isset($params['a'])) throw new Exception('Param "a" (algo) missing');
-		$algo = $params['a'];
-
-		if (!isset($params['m'])) throw new Exception('Param "m" (mode) missing');
-		$mode = $params['m'];
-
-		if ($mode == PASSWORD_VTS_MCF1_MODE_PBKDF2) {
-			if (!isset($params['i'])) throw new Exception('Param "i" (iterations) missing');
-			$iterations = $params['i'];
-		} else {
-			$iterations = isset($params['i']) ? $params['i'] : 0;
+	} else if ($mode == PASSWORD_VTS_MCF1_MODE_PS) {
+		$bin_hash = hash_ex($algo, $str_password.$str_salt, true);
+		for ($i=0; $i<$iterations; $i++) {
+			$bin_hash = hash_ex($algo, $bin_hash.$i.$str_salt, true);
 		}
-
-		// Create a VTS MCF 1.0 hash based on the parameters of $hash and the password $password
-		$calc_authkey_1 = vts_crypt_hash($algo, $password, $bin_salt, $ver, $mode, $iterations);
-
-		// We re-encode the MCF to make sure that it can be compared with the VTS MCF 1.0 (correct sorting of params etc.)
-		$calc_authkey_2 = crypt_modular_format_encode($id, $bin_salt, $bin_hash, $params);
-
-		return hash_equals($calc_authkey_2, $calc_authkey_1);
+	} else if ($mode == PASSWORD_VTS_MCF1_MODE_SPS) {
+		$bin_hash = hash_ex($algo, $str_salt.$str_password.$str_salt, true);
+		for ($i=0; $i<$iterations; $i++) {
+			$bin_hash = hash_ex($algo, $str_salt.$bin_hash.$i.$str_salt, true);
+		}
+	} else if ($mode == PASSWORD_VTS_MCF1_MODE_SHP) {
+		$bin_hash = hash_ex($algo, $str_salt.hash_ex($algo,$str_password,true), true);
+		for ($i=0; $i<$iterations; $i++) {
+			$bin_hash = hash_ex($algo, $str_salt.$bin_hash.$i, true);
+		}
+	} else if ($mode == PASSWORD_VTS_MCF1_MODE_HPS) {
+		$bin_hash = hash_ex($algo, hash_ex($algo,$str_password,true).$str_salt, true);
+		for ($i=0; $i<$iterations; $i++) {
+			$bin_hash = hash_ex($algo, $bin_hash.$i.$str_salt, true);
+		}
+	} else if ($mode == PASSWORD_VTS_MCF1_MODE_SHPS) {
+		$bin_hash = hash_ex($algo, $str_salt.hash_ex($algo,$str_password,true).$str_salt, true);
+		for ($i=0; $i<$iterations; $i++) {
+			$bin_hash = hash_ex($algo, $str_salt.$bin_hash.$i.$str_salt, true);
+		}
+	} else if ($mode == PASSWORD_VTS_MCF1_MODE_HMAC) {
+		$bin_hash = hash_hmac_ex($algo, $str_password, $str_salt, true);
+		for ($i=0; $i<$iterations; $i++) {
+			// https://security.stackexchange.com/questions/149299/rounds-in-a-hashing-function
+			$bin_hash = hash_hmac_ex($algo, $str_password, $bin_hash.$i, true);
+		}
+	} else if ($mode == PASSWORD_VTS_MCF1_MODE_PBKDF2) {
+		// Note: If $iterations=0, then hash_pbkdf2_ex() will correct it to the best value depending on $algo, see _vts_password_default_iterations().
+		$bin_hash = hash_pbkdf2_ex($algo, $str_password, $str_salt, $iterations, 0, true);
 	} else {
-		throw new Exception("Invalid VTS crypt version, expect 1.");
+		throw new Exception("Invalid VTS crypt version 1 mode. Expect sp, ps, sps, hmac, or pbkdf2.");
 	}
+	$bin_salt = $str_salt;
+	$params = array();
+	$params['a'] = $algo;
+	$params['m'] = $mode;
+	if ($iterations != 0) $params['i'] = $iterations; // i can be omitted if it is 0.
+	return crypt_modular_format_encode(OID_MCF_VTS_V1, $bin_salt, $bin_hash, $params);
 }
 
-// --- Part 3: Replacement of vts_password_*() functions
+function vts_mcf1_verify($password, $hash): bool {
+	if (!str_starts_with($hash, '$'.OID_MCF_VTS_V1.'$')) {
+		throw new Exception("This is not a VTS MCF1 hash.");
+	}
+
+	// Decode the MCF hash parameters
+	$data = crypt_modular_format_decode($hash);
+	if ($data === false) throw new Exception('Invalid auth key');
+	$id = $data['id'];
+	$bin_salt = $data['salt'];
+	$bin_hash = $data['hash'];
+	$params = $data['params'];
+
+	if (!isset($params['a'])) throw new Exception('Param "a" (algo) missing');
+	$algo = $params['a'];
+
+	if (!isset($params['m'])) throw new Exception('Param "m" (mode) missing');
+	$mode = $params['m'];
+
+	if ($mode == PASSWORD_VTS_MCF1_MODE_PBKDF2) {
+		if (!isset($params['i'])) throw new Exception('Param "i" (iterations) missing');
+		$iterations = $params['i'];
+	} else {
+		$iterations = isset($params['i']) ? $params['i'] : 0;
+	}
+
+	// Create a VTS MCF 1.0 hash based on the parameters of $hash and the password $password
+	$calc_authkey_1 = vts_mcf1_hash($algo, $password, $bin_salt, $mode, $iterations);
+
+	// We re-encode the MCF to make sure that it can be compared with the VTS MCF 1.0 (correct sorting of params etc.)
+	$calc_authkey_2 = crypt_modular_format_encode($id, $bin_salt, $bin_hash, $params);
+
+	return hash_equals($calc_authkey_2, $calc_authkey_1);
+}
+
+function vts_mha1_hash($data, $iteratedSalt='', $iterations=1987, $base_algo='sha1') {
+	if (!is_numeric($iterations) || ($iterations<1)) {
+		trigger_error('at function ' . __FUNCTION__ . ': $iterations has to be greater or equal 1', E_USER_ERROR);
+		return false;
+	}
+	$m = $data;
+	for ($i=1; $i<=$iterations; $i++) {
+		$m = hash($base_algo, $iteratedSalt.$m.$iteratedSalt, true); // SHA1 with binary output
+	}
+	$bin_hash = $m;
+	$bin_salt = $iteratedSalt;
+	$params = [ "a" => $base_algo, "i" => $iterations ];
+	return crypt_modular_format_encode(OID_MHA_VTS_V1, $bin_salt, $bin_hash, $params);
+}
+
+function vts_mha1_verify($password, $hash): bool {
+	if (!str_starts_with($hash, '$'.OID_MHA_VTS_V1.'$')) {
+		throw new Exception("This is not a VTS MHA1 hash.");
+	}
+
+	// Decode the MCF hash parameters
+	$data = crypt_modular_format_decode($hash);
+	if ($data === false) throw new Exception('Invalid auth key');
+	$id = $data['id'];
+	$bin_salt = $data['salt'];
+	$bin_hash = $data['hash'];
+	$params = $data['params'];
+
+	if (!isset($params['a'])) throw new Exception('Param "a" (algo) missing');
+	$base_algo = $params['a'];
+
+	if (!isset($params['i'])) throw new Exception('Param "i" (iterations) missing');
+	$iterations = $params['i'];
+
+	// Create a VTS MHA 1.0 hash based on the parameters of $hash and the password $password
+	$calc_authkey_1 = vts_mha1_hash($password, $bin_salt, $iterations, $base_algo);
+
+	// We re-encode the MCF to make sure that it can be compared with the VTS MHA 1.0 (correct sorting of params etc.)
+	$calc_authkey_2 = crypt_modular_format_encode($id, $bin_salt, $bin_hash, $params);
+
+	return hash_equals($calc_authkey_2, $calc_authkey_1);
+}
+
+function vts_mha2_hash($data, $salt='', $iterations=1987, $base_algo='sha1') {
+	if (!is_numeric($iterations) || ($iterations<0)) {
+		trigger_error('at function ' . __FUNCTION__ . ': $iterations has to be greater or equal 0', E_USER_ERROR);
+		return false;
+	}
+	$MHA2_K = chr(0x24).chr(0x12).chr(0x19).chr(0x87);
+	$MHA2_P = chr(0x12).chr(0x24).chr(0x19).chr(0x87);
+	$MHA2_Q = chr(0x19).chr(0x87).chr(0x12).chr(0x24);
+	$a = '';
+	$b = '';
+	$c = '';
+	for ($i=0; $i<=$iterations; $i++) { // run $iterations+1 times
+		$a  = hash($base_algo, $MHA2_P.$a.$data.$salt.$MHA2_Q, true);
+		$b  = hash($base_algo, $MHA2_Q.$salt.$data.$b.$MHA2_P, true);
+		$c .= $MHA2_K.$data.$salt;
+	}
+	$c = hash($base_algo, $c, true);
+	$bin_hash = ($a ^ $b ^ $c);
+	$bin_salt = $salt;
+	$params = [ "a" => $base_algo, "i" => $iterations ];
+	return crypt_modular_format_encode(OID_MHA_VTS_V2, $bin_salt, $bin_hash, $params);
+}
+
+function vts_mha2_verify($password, $hash): bool {
+	if (!str_starts_with($hash, '$'.OID_MHA_VTS_V2.'$')) {
+		throw new Exception("This is not a VTS MHA2 hash.");
+	}
+
+	// Decode the MCF hash parameters
+	$data = crypt_modular_format_decode($hash);
+	if ($data === false) throw new Exception('Invalid auth key');
+	$id = $data['id'];
+	$bin_salt = $data['salt'];
+	$bin_hash = $data['hash'];
+	$base_algo = $data['algo'];
+	$params = $data['params'];
+
+	if (!isset($params['a'])) throw new Exception('Param "a" (algo) missing');
+	$base_algo = $params['a'];
+
+	if (!isset($params['i'])) throw new Exception('Param "i" (iterations) missing');
+	$iterations = $params['i'];
+
+	// Create a VTS MHA 2.0 hash based on the parameters of $hash and the password $password
+	$calc_authkey_1 = vts_mha2_hash($password, $bin_salt, $iterations, $base_algo);
+
+	// We re-encode the MCF to make sure that it can be compared with the VTS MHA 2.0 (correct sorting of params etc.)
+	$calc_authkey_2 = crypt_modular_format_encode($id, $bin_salt, $bin_hash, $params);
+
+	return hash_equals($calc_authkey_2, $calc_authkey_1);
+}
+
+function vts_mha3_hash($data, $length=32, $iterations=500, $base_algo='sha1') {
+	if (!is_numeric($iterations) || ($iterations<1)) {
+		trigger_error('at function ' . __FUNCTION__ . ': $iterations has to be greater or equal 1', E_USER_ERROR);
+		return false;
+	}
+	$ary = array();
+	for ($l=0; $l<$length; $l++) {
+		$ary[$l] = 0;
+	}
+	for ($i=0; $i<$iterations; $i++) {
+		for ($l=0; $l<$length; $l++) {
+			$n = $i*$length + $l;
+			$salt = str_repeat(chr(1), $n);
+
+			$x = hash($base_algo, $data.$salt, true);
+			$bytesum_mod256 = 0;
+			for ($j=0; $j<strlen($x); $j++) $bytesum_mod256 = ($bytesum_mod256 + ord($x[$j])) % 256;
+
+			$ary[$l] ^= $bytesum_mod256;;
+		}
+	}
+	$out = '';
+	for ($i = 0; $i < count($ary); $i++) {
+		$out .= chr($ary[$i]);
+	}
+	$bin_hash = $out;
+	$bin_salt = '';
+	$params = [ "a" => $base_algo, "i" => $iterations, "l" => $length ];
+	return crypt_modular_format_encode(OID_MHA_VTS_V3, $bin_salt, $bin_hash, $params);
+}
+
+function vts_mha3_verify($password, $hash): bool {
+	if (!str_starts_with($hash, '$'.OID_MHA_VTS_V3.'$')) {
+		throw new Exception("This is not a VTS MHA3 hash.");
+	}
+
+	// Decode the MCF hash parameters
+	$data = crypt_modular_format_decode($hash);
+	if ($data === false) throw new Exception('Invalid auth key');
+	$id = $data['id'];
+	$bin_salt = $data['salt'];
+	$bin_hash = $data['hash'];
+	$params = $data['params'];
+
+	if ($bin_salt != '') throw new Exception('MHA3 does not support salt');
+
+	if (!isset($params['a'])) throw new Exception('Param "a" (base algo) missing');
+	$base_algo = $params['a'];
+
+	if (!isset($params['l'])) throw new Exception('Param "l" (length) missing');
+	$length = $params['l'];
+
+	if (!isset($params['i'])) throw new Exception('Param "i" (iterations) missing');
+	$iterations = $params['i'];
+
+	// Create a VTS MHA 3.0 hash based on the parameters of $hash and the password $password
+	$calc_authkey_1 = vts_mha3_hash($password, $length, $iterations, $base_algo);
+
+	// We re-encode the MCF to make sure that it can be compared with the VTS MHA 3.0 (correct sorting of params etc.)
+	$calc_authkey_2 = crypt_modular_format_encode($id, $bin_salt, $bin_hash, $params);
+
+	return hash_equals($calc_authkey_2, $calc_authkey_1);
+}
+
+function ntlm_hash($password) {
+	return '$3$$'.strtolower(hash('md4',iconv('UTF-8','UTF-16LE',$password)));
+}
+
+function ntlm_verify($password, $hash): bool {
+	if (!str_starts_with($hash, '$3$')) {
+		throw new Exception("This is not a NTLM hash.");
+	}
+	return hash_equals($hash, ntlm_hash($password));
+}
+
+function apr1_hash($mdp, $salt = null) {
+        // Source/References for core algorithm:
+        // http://www.cryptologie.net/article/126/bruteforce-apr1-hashes/
+        // http://svn.apache.org/viewvc/apr/apr-util/branches/1.3.x/crypto/apr_md5.c?view=co
+        // http://www.php.net/manual/en/function.crypt.php#73619
+        // http://httpd.apache.org/docs/2.2/misc/password_encryptions.html
+        // Wikipedia
+        $BASE64_ALPHABET = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+        $APRMD5_ALPHABET = './0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+        if (is_null($salt)) {
+            $salt = '';
+            for($i=0; $i<8; $i++) {
+                $offset = hexdec(bin2hex(openssl_random_pseudo_bytes(1))) % 64;
+                $salt .= $APRMD5_ALPHABET[$offset];
+            }
+        } else {
+                // TODO: Only if salt is binary!
+                $salt = crypt_radix64_encode($salt);
+        }
+        $salt = substr($salt, 0, 8);
+        $max = strlen($mdp);
+        $context = $mdp.'$apr1$'.$salt;
+        $binary = pack('H32', md5($mdp.$salt.$mdp));
+        for($i=$max; $i>0; $i-=16)
+            $context .= substr($binary, 0, min(16, $i));
+        for($i=$max; $i>0; $i>>=1)
+            $context .= ($i & 1) ? chr(0) : $mdp[0];
+        $binary = pack('H32', md5($context));
+        for($i=0; $i<1000; $i++) {
+            $new = ($i & 1) ? $mdp : $binary;
+            if($i % 3) $new .= $salt;
+            if($i % 7) $new .= $mdp;
+            $new .= ($i & 1) ? $binary : $mdp;
+            $binary = pack('H32', md5($new));
+        }
+        $hash = '';
+        for ($i = 0; $i < 5; $i++) {
+            $k = $i+6;
+            $j = $i+12;
+            if($j == 16) $j = 5;
+            $hash = $binary[$i].$binary[$k].$binary[$j].$hash;
+        }
+        $hash = chr(0).chr(0).$binary[11].$hash;
+        $hash = strtr(
+            strrev(substr(base64_encode($hash), 2)),
+            $BASE64_ALPHABET,
+            $APRMD5_ALPHABET
+        );
+        return '$apr1$'.$salt.'$'.$hash;
+}
+
+function apr1_verify($password, $hash): bool {
+	if (!str_starts_with($hash, '$apr1$')) {
+		throw new Exception("This is not a APR MD5 hash.");
+	}
+	$data = crypt_modular_format_decode($hash);
+	return hash_equals($hash, apr1_hash($password,$data['salt']));
+}
+
+// --- Part 3: vts_password_*() replacement functions
 
 /**
  * This function replaces password_algos() by extending it with
@@ -245,25 +524,32 @@ function vts_crypt_verify($password, $hash): bool {
  * @return array of hashes that can be used in vts_password_hash().
  */
 function vts_password_algos() {
-	$hashes = password_algos();
+	$hashes = password_algos();     // Algorithm from password_*()
 	$hashes[] = PASSWORD_STD_DES;   // Algorithm from crypt()
 	$hashes[] = PASSWORD_EXT_DES;   // Algorithm from crypt()
 	$hashes[] = PASSWORD_MD5;       // Algorithm from crypt()
 	$hashes[] = PASSWORD_BLOWFISH;  // Algorithm from crypt()
 	$hashes[] = PASSWORD_SHA256;    // Algorithm from crypt()
 	$hashes[] = PASSWORD_SHA512;    // Algorithm from crypt()
+	$hashes[] = PASSWORD_NTLM;      // Algorithm manually implemented
+	$hashes[] = PASSWORD_APR_MD5;   // Algorithm manually implemented
 	$hashes[] = PASSWORD_VTS_MCF1;  // Algorithm by ViaThinkSoft
+	$hashes[] = PASSWORD_VTS_MHA1;  // Algorithm by ViaThinkSoft (DEPRECATED!)
+	$hashes[] = PASSWORD_VTS_MHA2;  // Algorithm by ViaThinkSoft (DEPRECATED!)
+	$hashes[] = PASSWORD_VTS_MHA3;  // Algorithm by ViaThinkSoft (DEPREACTED!)
 	return $hashes;
 }
 
-/** vts_password_get_info() is the same as password_get_info(),
+/**
+ * vts_password_get_info() is the same as password_get_info(),
  * but it adds the crypt() and ViaThinkSoft MCF 1.0 algos which can be
  * produced by vts_password_hash()
  * @param string $hash Hash created by vts_password_hash(), password_hash(), or crypt().
  * @return array Same output like password_get_info().
  */
 function vts_password_get_info($hash) {
-	if (vts_crypt_version($hash) == '1') {
+	$options = array();
+	if (str_starts_with($hash, '$'.OID_MCF_VTS_V1.'$')) {
 		// OID_MCF_VTS_V1
 		$mcf = crypt_modular_format_decode($hash);
 
@@ -285,6 +571,78 @@ function vts_password_get_info($hash) {
 		return array(
 			"algo" => PASSWORD_VTS_MCF1,
 			"algoName" => "vts-mcf-v1",
+			"options" => $options
+		);
+	} else if (str_starts_with($hash, '$'.OID_MHA_VTS_V1.'$')) {
+		// OID_MHA_VTS_V1
+		$mcf = crypt_modular_format_decode($hash);
+
+		//$options['salt_length'] = strlen($mcf['salt']);  // Note: salt_length is not an MCF option! It's just a hint for vts_password_hash()
+
+		if (!isset($mcf['params']['a'])) throw new Exception('Param "a" (algo) missing');
+		$options['algo'] = $mcf['params']['a'];
+
+		if (!isset($mcf['params']['i'])) throw new Exception('Param "i" (iterations) missing');
+		$options['iterations'] = (int)$mcf['params']['i'];
+
+		return array(
+			"algo" => PASSWORD_VTS_MHA1,
+			"algoName" => "vts-mha-v1",
+			"options" => $options
+		);
+	} else if (str_starts_with($hash, '$'.OID_MHA_VTS_V2.'$')) {
+		// OID_MHA_VTS_V2
+		$mcf = crypt_modular_format_decode($hash);
+
+		//$options['salt_length'] = strlen($mcf['salt']);  // Note: salt_length is not an MCF option! It's just a hint for vts_password_hash()
+
+		if (!isset($mcf['params']['a'])) throw new Exception('Param "a" (algo) missing');
+		$options['algo'] = $mcf['params']['a'];
+
+		if (!isset($mcf['params']['i'])) throw new Exception('Param "i" (iterations) missing');
+		$options['iterations'] = (int)$mcf['params']['i'];
+
+		return array(
+			"algo" => PASSWORD_VTS_MHA2,
+			"algoName" => "vts-mha-v2",
+			"options" => $options
+		);
+	} else if (str_starts_with($hash, '$'.OID_MHA_VTS_V3.'$')) {
+		// OID_MHA_VTS_V3
+		$mcf = crypt_modular_format_decode($hash);
+
+		//$options['salt_length'] = strlen($mcf['salt']);  // Note: salt_length is not an MCF option! It's just a hint for vts_password_hash()
+
+		if (!isset($mcf['params']['a'])) throw new Exception('Param "a" (algo) missing');
+		$options['algo'] = $mcf['params']['a'];
+
+		if (!isset($mcf['params']['l'])) throw new Exception('Param "l" (length) missing');
+		$options['length'] = $mcf['params']['l'];
+
+		if (!isset($mcf['params']['i'])) throw new Exception('Param "i" (iterations) missing');
+		$options['iterations'] = (int)$mcf['params']['i'];
+
+		return array(
+			"algo" => PASSWORD_VTS_MHA3,
+			"algoName" => "vts-mha-v3",
+			"options" => $options
+		);
+	} else if (str_starts_with($hash, '$3$')) {
+		// NTLM
+		$mcf = crypt_modular_format_decode($hash);
+
+		return array(
+			"algo" => PASSWORD_NTLM,
+			"algoName" => "ntlm",
+			"options" => $options
+		);
+	} else if (str_starts_with($hash, '$apr1$')) {
+		// APR MD5
+		$mcf = crypt_modular_format_decode($hash);
+
+		return array(
+			"algo" => PASSWORD_APR_MD5,
+			"algoName" => "apr1",
 			"options" => $options
 		);
 	} else if (!str_starts_with($hash, '$') && (strlen($hash) == 13)) {
@@ -351,8 +709,9 @@ function vts_password_get_info($hash) {
 	}
 }
 
-/** This function extends password_hash() with the algorithms supported by crypt().
- * It also adds vts_crypt_hash() which implements the ViaThinkSoft Modular Crypt Format 1.0.
+/**
+ * This function extends password_hash() with the algorithms supported by crypt().
+ * It also adds vts_mcf1_hash() which implements the ViaThinkSoft Modular Crypt Format 1.0.
  * The result can be verified using vts_password_verify().
  * @param string $password to be hashed
  * @param mixed $algo algorithm
@@ -402,13 +761,38 @@ function vts_password_hash($password, $algo, $options=array()): string {
 		return $out;
 	} else if ($algo === PASSWORD_VTS_MCF1) {
 		// Algorithms: PASSWORD_VTS_MCF1
-		$ver  = '1';
 		$algo = $options['algo'];
 		$mode = $options['mode'];
 		$iterations = $options['iterations'];
 		$salt_len = isset($options['salt_length']) ? $options['salt_length'] : 32; // Note: salt_length is not an MCF option! It's just a hint for vts_password_hash()
 		$salt = random_bytes_ex($salt_len, true, true);
-		return vts_crypt_hash($algo, $password, $salt, $ver, $mode, $iterations);
+		return vts_mcf1_hash($algo, $password, $salt, $mode, $iterations);
+	} else if ($algo === PASSWORD_VTS_MHA1) {
+		// Algorithms: PASSWORD_VTS_MHA1
+		$base_algo = $options['algo'];
+		$iterations = $options['iterations'];
+		$salt_len = isset($options['salt_length']) ? $options['salt_length'] : 32; // Note: salt_length is not an MCF option! It's just a hint for vts_password_hash()
+		$salt = random_bytes_ex($salt_len, true, true);
+		return vts_mha1_hash($password, $salt, $iterations, $base_algo);
+	} else if ($algo === PASSWORD_VTS_MHA2) {
+		// Algorithms: PASSWORD_VTS_MHA2
+		$base_algo = $options['algo'];
+		$iterations = $options['iterations'];
+		$salt_len = isset($options['salt_length']) ? $options['salt_length'] : 32; // Note: salt_length is not an MCF option! It's just a hint for vts_password_hash()
+		$salt = random_bytes_ex($salt_len, true, true);
+		return vts_mha2_hash($password, $salt, $iterations, $base_algo);
+	} else if ($algo === PASSWORD_VTS_MHA3) {
+		// Algorithms: PASSWORD_VTS_MHA3
+		$base_algo = $options['algo'];
+		$iterations = $options['iterations'];
+		$length = $options['length'];
+		return vts_mha3_hash($password, $length, $iterations, $base_algo);
+	} else if ($algo === PASSWORD_NTLM) {
+		// Algorithms: PASSWORD_NTLM
+		return ntlm_hash($password);
+	} else if ($algo === PASSWORD_APR_MD5) {
+		// Algorithms: PASSWORD_APR_MD5
+		return apr1_hash($password);
 	} else {
 		// Algorithms: PASSWORD_DEFAULT
 		//             PASSWORD_BCRYPT
@@ -418,7 +802,8 @@ function vts_password_hash($password, $algo, $options=array()): string {
 	}
 }
 
-/** This function replaces password_needs_rehash() by adding additional algorithms
+/**
+ * This function replaces password_needs_rehash() by adding additional algorithms
  * supported by vts_password_hash().
  * @param string $hash The current hash
  * @param string|int|null $algo Desired new default algo
@@ -435,7 +820,7 @@ function vts_password_needs_rehash($hash, $algo, $options=array()) {
 	// Check if algorithm matches
 	if ($algo !== $algo2) return true;
 
-	if (vts_crypt_version($hash) == '1') {
+	if (str_starts_with($hash, '$'.OID_MCF_VTS_V1.'$')) {
 		if (isset($options['salt_length'])) {
 			// For VTS MCF 1.0, salt_length is a valid option for vts_password_hash(),
 			// but it is not a valid option inside the MCF options
@@ -449,6 +834,28 @@ function vts_password_needs_rehash($hash, $algo, $options=array()) {
 			$userland = !hash_pbkdf2_supported_natively($algo) && str_starts_with($algo, 'sha3-') && method_exists('\bb\Sha3\Sha3', 'hash_pbkdf2');
 			$options['iterations'] = _vts_password_default_iterations($algo, $userland);
 		}
+	} else if (str_starts_with($hash, '$'.OID_MHA_VTS_V1.'$')) {
+		if (isset($options['salt_length'])) {
+			// For VTS MHA 1.0, salt_length is a valid option for vts_password_hash(),
+			// but it is not a valid option inside the MCF options
+			// and it is not a valid option for vts_password_get_info().
+			unset($options['salt_length']);
+		}
+	} else if (str_starts_with($hash, '$'.OID_MHA_VTS_V2.'$')) {
+		if (isset($options['salt_length'])) {
+			// For VTS MHA 1.0, salt_length is a valid option for vts_password_hash(),
+			// but it is not a valid option inside the MCF options
+			// and it is not a valid option for vts_password_get_info().
+			unset($options['salt_length']);
+		}
+	} else if (str_starts_with($hash, '$'.OID_MHA_VTS_V3.'$')) {
+		// MHA3 has no salt, hence no salt length option which needs to be removed
+	} else if (str_starts_with($hash, '$3$')) {
+		// NTLM has no parameters, so it does not need a rehash
+		return false;
+	} else if (str_starts_with($hash, '$apr1$')) {
+		// APR MD5 has no parameters, so it does not need a rehash
+		return false;
 	}
 
 	// Check if options match
@@ -459,15 +866,31 @@ function vts_password_needs_rehash($hash, $algo, $options=array()) {
 	return false;
 }
 
-/** This function extends password_verify() by adding ViaThinkSoft Modular Crypt Format 1.0.
+/**
+ * This function extends password_verify() by adding ViaThinkSoft Modular Crypt Format 1.0.
  * @param string $password to be checked
  * @param string $hash Hash created by crypt(), password_hash(), or vts_password_hash().
  * @return bool true if password is valid
  */
 function vts_password_verify($password, $hash): bool {
-	if (vts_crypt_version($hash) != '0') {
-		// Hash created by vts_password_hash(), or vts_crypt_hash()
-		return vts_crypt_verify($password, $hash);
+	if (str_starts_with($hash, '$'.OID_MCF_VTS_V1.'$')) {
+		// Hash created by vts_password_hash(), or vts_mcf1_hash()
+		return vts_mcf1_verify($password, $hash);
+	} else if (str_starts_with($hash, '$'.OID_MHA_VTS_V1.'$')) {
+		// Hash created by vts_password_hash(), or vts_mha1_hash()
+		return vts_mha1_verify($password, $hash);
+	} else if (str_starts_with($hash, '$'.OID_MHA_VTS_V2.'$')) {
+		// Hash created by vts_password_hash(), or vts_mha2_hash()
+		return vts_mha2_verify($password, $hash);
+	} else if (str_starts_with($hash, '$'.OID_MHA_VTS_V3.'$')) {
+		// Hash created by vts_password_hash(), or vts_mha3_hash()
+		return vts_mha3_verify($password, $hash);
+	} else if (str_starts_with($hash, '$3$')) {
+		// Hash created by vts_password_hash()
+		return ntlm_verify($password, $hash);
+	} else if (str_starts_with($hash, '$apr1$')) {
+		// Hash created by vts_password_hash()
+		return apr1_verify($password, $hash);
 	} else {
 		// Hash created by vts_password_hash(), password_hash(), or crypt()
 		return password_verify($password, $hash);
@@ -623,6 +1046,24 @@ function vts_password_fill_default_options($algo, $options) {
 		} else {
 			$options['iterations'] = isset($options['iterations']) ? $options['iterations'] : 0;
 		}
+	} else if ($algo === PASSWORD_VTS_MHA1) {
+		if (!isset($options['iterations'])) {
+			$options['iterations'] = PASSWORD_VTS_MHA1_DEFAULT_ITERATIONS;
+		}
+	} else if ($algo === PASSWORD_VTS_MHA2) {
+		if (!isset($options['iterations'])) {
+			$options['iterations'] = PASSWORD_VTS_MHA2_DEFAULT_ITERATIONS;
+		}
+	} else if ($algo === PASSWORD_VTS_MHA3) {
+		if (!isset($options['iterations'])) {
+			$options['iterations'] = PASSWORD_VTS_MHA3_DEFAULT_ITERATIONS;
+		}
+		if (!isset($options['length'])) {
+			$options['length'] = PASSWORD_VTS_MHA3_DEFAULT_LENGTH;
+		}
+		if (!isset($options['algo'])) {
+			$options['algo'] = PASSWORD_VTS_MHA3_DEFAULT_BASE_ALGO;
+		}
 	}
 	return $options;
 }
@@ -637,13 +1078,13 @@ function _vts_password_default_iterations($algo, $userland) {
 		else if ($algo == 'sha3-384')    return  100000;
 		else if ($algo == 'sha3-256')    return  100000;
 		else if ($algo == 'sha3-224')    return  100000;
-		else if ($algo == 'sha512')      return  210000; // value by owasp.org cheatcheat (28 February 2023)
-		else if ($algo == 'sha512/256')  return  210000; // value by owasp.org cheatcheat (28 February 2023)
-		else if ($algo == 'sha512/224')  return  210000; // value by owasp.org cheatcheat (28 February 2023)
+		else if ($algo == 'sha512')      return  210000; // value by owasp.org cheatsheet (28 February 2023)
+		else if ($algo == 'sha512/256')  return  210000; // value by owasp.org cheatsheet (28 February 2023)
+		else if ($algo == 'sha512/224')  return  210000; // value by owasp.org cheatsheet (28 February 2023)
 		else if ($algo == 'sha384')      return  600000;
-		else if ($algo == 'sha256')      return  600000; // value by owasp.org cheatcheat (28 February 2023)
+		else if ($algo == 'sha256')      return  600000; // value by owasp.org cheatsheet (28 February 2023)
 		else if ($algo == 'sha224')      return  600000;
-		else if ($algo == 'sha1')        return 1300000; // value by owasp.org cheatcheat (28 February 2023)
+		else if ($algo == 'sha1')        return 1300000; // value by owasp.org cheatsheet (28 February 2023)
 		else if ($algo == 'md5')         return 5000000;
 		else                             return    5000;
 	}
@@ -744,4 +1185,26 @@ assert(true===vts_password_needs_rehash($dummy,PASSWORD_VTS_MCF1,array(
 	'mode' => 'hmac',
 	'iterations' => 2
 )));
+// MHA 1
+$hash = vts_password_hash('hello world', PASSWORD_VTS_MHA1, ['salt_length'=>0]);
+assert(vts_password_verify('hello world', $hash));
+assert(!vts_password_verify('hello world!', $hash));
+// MHA 2
+$hash = vts_password_hash('hello world', PASSWORD_VTS_MHA2, ['algo'=>'sha1', 'salt_length'=>0]);
+assert(vts_password_verify('hello world', $hash));
+assert(!vts_password_verify('hello world!', $hash));
+// MHA 3
+$hash = vts_password_hash('hello world', PASSWORD_VTS_MHA3);
+assert(vts_password_verify('hello world', $hash));
+assert(!vts_password_verify('hello world!', $hash));
+// NTLM
+$hash = vts_password_hash('hello world', PASSWORD_NTLM);
+echo "$hash\n";
+assert(vts_password_verify('hello world', $hash));
+assert(!vts_password_verify('hello world!', $hash));
+// htdigest
+$hash = vts_password_hash('hello world', PASSWORD_APR_MD5);
+echo "$hash\n";
+assert(vts_password_verify('hello world', $hash));
+assert(!vts_password_verify('hello world!', $hash));
 */

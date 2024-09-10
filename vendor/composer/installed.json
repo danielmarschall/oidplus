@@ -297,19 +297,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/php_utils.git",
-                "reference": "f2024b766693fbd5a014bdeaeb89ee43c04fbbd1"
+                "reference": "5dce3a6a2b2a6337b7b3806cdac71d53f88c5cad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/f2024b766693fbd5a014bdeaeb89ee43c04fbbd1",
-                "reference": "f2024b766693fbd5a014bdeaeb89ee43c04fbbd1",
+                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/5dce3a6a2b2a6337b7b3806cdac71d53f88c5cad",
+                "reference": "5dce3a6a2b2a6337b7b3806cdac71d53f88c5cad",
                 "shasum": ""
             },
             "require": {
                 "ext-zlib": "*",
                 "php": ">=7.0"
             },
-            "time": "2024-08-07T22:08:38+00:00",
+            "time": "2024-09-04T19:42:48+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -791,12 +791,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "47895e28515f99c0f7db6d5c848005d9fd48faaa"
+                "reference": "a5316b71f57c74d48d064be72ad91b0a2497f641"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/47895e28515f99c0f7db6d5c848005d9fd48faaa",
-                "reference": "47895e28515f99c0f7db6d5c848005d9fd48faaa",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/a5316b71f57c74d48d064be72ad91b0a2497f641",
+                "reference": "a5316b71f57c74d48d064be72ad91b0a2497f641",
                 "shasum": ""
             },
             "require": {
@@ -814,7 +814,7 @@
                 "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
                 "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
             },
-            "time": "2024-08-05T15:59:09+00:00",
+            "time": "2024-09-08T12:58:18+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -997,16 +997,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "8740a072b86292957feb42703edde77fcfca84fb"
+                "reference": "2369cb908b33d7b7518cce042615de430142497f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/8740a072b86292957feb42703edde77fcfca84fb",
-                "reference": "8740a072b86292957feb42703edde77fcfca84fb",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/2369cb908b33d7b7518cce042615de430142497f",
+                "reference": "2369cb908b33d7b7518cce042615de430142497f",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.1"
+                "php": ">=7.2"
             },
             "provide": {
                 "ext-mbstring": "*"
@@ -1014,7 +1014,7 @@
             "suggest": {
                 "ext-mbstring": "For best performance"
             },
-            "time": "2024-06-20T08:18:00+00:00",
+            "time": "2024-09-10T14:38:51+00:00",
             "default-branch": true,
             "type": "library",
             "extra": {
@@ -1144,18 +1144,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "3083596e87146c1c5a61de7238cb69e1dab5ae8b"
+                "reference": "dcec1df61f107e2b449486aafefbb1d14abe0333"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/3083596e87146c1c5a61de7238cb69e1dab5ae8b",
-                "reference": "3083596e87146c1c5a61de7238cb69e1dab5ae8b",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/dcec1df61f107e2b449486aafefbb1d14abe0333",
+                "reference": "dcec1df61f107e2b449486aafefbb1d14abe0333",
                 "shasum": ""
             },
             "replace": {
                 "twitter/bootstrap": "self.version"
             },
-            "time": "2024-08-07T10:11:06+00:00",
+            "time": "2024-09-10T14:07:45+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -1238,12 +1238,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/vakata/jstree.git",
-                "reference": "b3135cfc65eba90d4c670e6959273ef92cd1b447"
+                "reference": "6256df013ebd98aea138402d8ac96db3efe0c0da"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/vakata/jstree/zipball/b3135cfc65eba90d4c670e6959273ef92cd1b447",
-                "reference": "b3135cfc65eba90d4c670e6959273ef92cd1b447",
+                "url": "https://api.github.com/repos/vakata/jstree/zipball/6256df013ebd98aea138402d8ac96db3efe0c0da",
+                "reference": "6256df013ebd98aea138402d8ac96db3efe0c0da",
                 "shasum": ""
             },
             "require": {
@@ -1252,7 +1252,7 @@
             "suggest": {
                 "robloach/component-installer": "Allows installation of Components via Composer"
             },
-            "time": "2023-09-19T10:32:25+00:00",
+            "time": "2024-09-03T07:13:38+00:00",
             "default-branch": true,
             "type": "component",
             "extra": {
