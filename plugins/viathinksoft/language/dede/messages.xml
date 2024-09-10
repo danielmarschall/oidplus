@@ -2734,6 +2734,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Experimental (RFC 3406)
+		]]></source>
+		<target><![CDATA[
+		Experimentell (RFC 3406)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Export
 		]]></source>
 		<target><![CDATA[
@@ -2938,6 +2946,14 @@
 		]]></source>
 		<target><![CDATA[
 		Passwort vergessen?
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Formal (RFC 8141)
+		]]></source>
+		<target><![CDATA[
+		Formell (RFC 8141)
 		]]></target>
 	</message>
 	<message>
@@ -3526,10 +3542,26 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Illegal (too short)
+		]]></source>
+		<target><![CDATA[
+		Ungültig (zu kurz)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Illegal file name
 		]]></source>
 		<target><![CDATA[
 		Ungültiger Dateiname
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Illegal informal
+		]]></source>
+		<target><![CDATA[
+		Ungültig informell
 		]]></target>
 	</message>
 	<message>
@@ -3602,6 +3634,14 @@
 		]]></source>
 		<target><![CDATA[
 		Wenn OIDs automatisch nach oid-info.com veröffentlicht werden, werden wohlbekannte OIDs nicht zu Ihren Wurzel-OIDs mitgezählt (da es sehr unwahrscheinlich ist, dass Sie eine wohlbekannte OID besitzen), sodass stattdessen die darunterliegenden OIDs als Ihre eigenen Wurzel-OIDs anerkannt werden. Beispiel: Sie haben einen "2.25" UUID Wurzelknoten in OIDplus, und darunter liegen Ihre UUID OIDs. In diesem Fall sind Sie Besitzer der UUID OIDs, aber nicht Besitzer von "2.25".
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Informal (RFC 8141)
+		]]></source>
+		<target><![CDATA[
+		Informell (RFC 8141)
 		]]></target>
 	</message>
 	<message>
@@ -6846,6 +6886,22 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Reserved for country code usage (ISO 3166-1)
+		]]></source>
+		<target><![CDATA[
+		Reserviert für Ländercode-Verwendung (ISO 3166-1)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Reserved for country code usage (Punycode)
+		]]></source>
+		<target><![CDATA[
+		Reserviert für Ländercode-Verwendung (Punycode)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Reset admin password
 		]]></source>
 		<target><![CDATA[
@@ -8574,6 +8630,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Type
+		]]></source>
+		<target><![CDATA[
+		Typ
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Type of %1 unknown
 		]]></source>
 		<target><![CDATA[
@@ -8602,6 +8666,14 @@
 		]]></source>
 		<target><![CDATA[
 		URN
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		URN notation
+		]]></source>
+		<target><![CDATA[
+		URN-Notation
 		]]></target>
 	</message>
 	<message>
