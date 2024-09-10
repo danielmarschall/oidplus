@@ -123,9 +123,7 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 
 		$was_weid = str_starts_with(strtolower($parent), 'weid:');
 		if ($was_weid) {
-$parent = 'oid:'.substr($parent,strlen('weid:'));
-//			$parent = 'oid:'.WeidOidConverter::weid2oid($parent);
-//			foreach ($goto_path as &$g) $g = 'oid:'.WeidOidConverter::weid2oid($g);
+			$parent = 'oid:'.substr($parent,strlen('weid:')); // TODO: convert???!!!
 		}
 
 		$children = array();
@@ -179,7 +177,7 @@ $parent = 'oid:'.substr($parent,strlen('weid:'));
 			$child['icon'] = $obj->getIcon($row);
 
 			// Check if there are more sub OIDs
-			$tmp = $was_weid ? 'weid:'.substr($row['id'],strlen('oid:')) : $row['id'];
+			$tmp = $was_weid ? 'weid:'.substr($row['id'],strlen('oid:')) : $row['id']; // TODO: convert???!!!
 			if ($goto_path === true) {
 				$child['children'] = $this->tree_populate($tmp, $goto_path);
 				$child['state'] = array("opened" => true);

@@ -19,6 +19,7 @@
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusGui;
+use ViaThinkSoft\OIDplus\Plugins\ObjectTypes\OID\WeidOidConverter;
 
 header('Content-Type:text/html; charset=UTF-8');
 
@@ -46,7 +47,12 @@ if (isset($_REQUEST['h404'])) {
 }
 
 $static_node_id_original = $static_node_id;
-//$static_node_id = OIDplus::prefilterQuery($static_node_id, false);
+
+$was_weid = str_starts_with(strtolower($static_node_id), 'weid:');
+$static_node_id = OIDplus::prefilterQuery($static_node_id, false);
+if ($was_weid) {
+	$static_node_id = WeidOidConverter::oid2weid(substr($static_node_id,strlen('oid:')));
+}
 if ($static_node_id_original !== $static_node_id) {
 	// Redirect to the corrected query
 	// TODO: Is canonical host OK? Because we might have a login cookie on this domain!
