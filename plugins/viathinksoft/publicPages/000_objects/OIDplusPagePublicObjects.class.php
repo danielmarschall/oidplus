@@ -1392,7 +1392,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					// Special feature: Make a WEID tree that is a cloned OID tree!
 					if ($ot::ns() == 'oid') {
 						$children2 = OIDplus::menuUtils()->tree_populate('weid:', $goto_path);
-						$icon = $this->get_treeicon_root($ot); // TODO: WEID ICON!
+						$icon = $this->get_treeicon_root($ot); // TODO: WEID ICON! (Whole tree)
 						$child2 = array(
 							'id' => 'weid:',
 							'text' => $ot::objectTypeTitle().' / '._L('WEID notation'),
@@ -1431,7 +1431,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 						// Special feature: Make a WEID tree that is a cloned OID tree!
 						if (($urn_ns == 'oid') && ($first_nss)) {
 							$children = OIDplus::menuUtils()->tree_populate('weid:', $goto_path);
-							$icon = $this->get_treeicon_root($ot); // TODO: WEID ICON!
+							$icon = $this->get_treeicon_root($ot); // TODO: WEID ICON! (Whole tree)
 							$urn_ns = 'x-weid';
 							$urn_child = array(
 								'id' => 'weid:',
