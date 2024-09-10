@@ -20,6 +20,7 @@
 namespace ViaThinkSoft\OIDplus\Core;
 
 use ViaThinkSoft\OIDplus\Plugins\ObjectTypes\OID\WeidOidConverter;
+use ViaThinkSoft\OIDplus\Plugins\PublicPages\Objects\OIDplusPagePublicObjects;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;
@@ -152,18 +153,22 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 			$child['id'] = $was_weid ? WeidOidConverter::oid2weid(substr($row['id'],strlen('oid:'))) : $row['id'];
 
 			// Determine display name (relative OID)
-			if ($was_weid) {
+			if (!$parentObj) {
+				$child['text'] = '';
+			}  else if ($was_weid) {
 				if (strtolower($parent) == 'oid:') {
-					$weid = $child['id'];
-					$weid_last_arc = substr($weid,strlen('weid:')/*remove prefix*/,-2/*remove checksum*/);
+					if (OIDplusPagePublicObjects::urnViewEnabled()) {
+						$child['text'] = substr($child['id'],strlen('weid:')/*remove prefix*/,-2/*remove checksum*/);
+					} else {
+						$child['text'] = substr($child['id'],0,-2/*remove checksum*/);
+					}
 				} else {
 					$bry = explode('.', $row['id']);
 					$last_arc = $bry[count($bry)-1];
-					$weid_last_arc = WeidOidConverter::encodeSingleArc($last_arc);
+					$child['text'] = WeidOidConverter::encodeSingleArc($last_arc);
 				}
-				$child['text'] = $parentObj ? $weid_last_arc : '';
 			} else {
-				$child['text'] = $parentObj ? $obj->jsTreeNodeName($parentObj) : '';
+				$child['text'] = $obj->jsTreeNodeName($parentObj);
 			}
 			$child['text'] .= empty($row['title']) ? /*' -- <i>'.htmlentities('Title missing').'</i>'*/ '' : ' -- <b>' . htmlentities($row['title']) . '</b>';
 
