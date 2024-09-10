@@ -144,7 +144,7 @@ try {
 			$_REQUEST['id'] = OIDplus::prefilterQuery($_REQUEST['id'], false);
 
 			if ($was_weid) {
-				$_REQUEST['id'] = 'weid:'.substr($_REQUEST['id'],strlen('oid:')); // TODO: convert???!!!
+				$_REQUEST['id'] = (strtolower($_REQUEST['id']) == 'oid:') ? 'weid:' : WeidOidConverter::oid2weid(substr($_REQUEST['id'],strlen('oid:')));
 			}
 
 			$json_out = OIDplus::menuUtils()->json_tree($_REQUEST['id'], $_REQUEST['goto'] ?? '');

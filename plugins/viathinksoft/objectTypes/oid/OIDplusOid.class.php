@@ -298,7 +298,7 @@ class OIDplusOid extends OIDplusObject {
 	 * @return string
 	 */
 	public function getWeidNotation(bool $withAbbr=true): string {
-		$weid = WeidOidConverter::oid2weid($this->getDotNotation());
+		$weid = (strtolower($this->getDotNotation()) == 'oid:') ? 'weid:' : WeidOidConverter::oid2weid($this->getDotNotation());
 		if ($withAbbr) {
 			$ary = explode(':', $weid);
 			$weid = array_pop($ary); // remove namespace and sub-namespace if existing
