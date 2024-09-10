@@ -124,7 +124,7 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 
 		$was_weid = str_starts_with(strtolower($parent), 'weid:');
 		if ($was_weid) {
-			$parent = 'oid:'.substr($parent,strlen('weid:')); // TODO: convert???!!!
+			$parent = 'oid:'.WeidOidConverter::weid2oid($parent);
 		}
 
 		$children = array();
@@ -150,7 +150,11 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 			if (!$obj->userHasReadRights()) continue;
 
 			$child = array();
-			$child['id'] = $was_weid ? WeidOidConverter::oid2weid(substr($row['id'],strlen('oid:'))) : $row['id'];
+			if ($was_weid) {
+				$child['id'] = (strtolower($row['id']) == 'oid:') ? 'weid:' : WeidOidConverter::oid2weid(substr($row['id'],strlen('oid:')));
+			} else {
+				$child['id'] = $row['id'];
+			}
 
 			// Determine display name (relative OID)
 			if (!$parentObj) {
@@ -182,7 +186,11 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 			$child['icon'] = $obj->getIcon($row);
 
 			// Check if there are more sub OIDs
-			$tmp = $was_weid ? 'weid:'.substr($row['id'],strlen('oid:')) : $row['id']; // TODO: convert???!!!
+			if ($was_weid) {
+				$tmp = (strtolower($row['id']) == 'oid:') ? 'weid:' : WeidOidConverter::oid2weid(substr($row['id'],strlen('oid:')));
+			} else {
+				$tmp = $row['id'];
+			}
 			if ($goto_path === true) {
 				$child['children'] = $this->tree_populate($tmp, $goto_path);
 				$child['state'] = array("opened" => true);
