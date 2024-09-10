@@ -191,7 +191,11 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 			} else {
 				$tmp = $row['id'];
 			}
-			if ($goto_path === true) {
+			if (($parent == 'urn:') && OIDplusPagePublicObjects::urnViewEnabled()) {
+				// For URNs, open to the 2nd level
+				$child['children'] = $this->tree_populate($tmp, $goto_path);
+				$child['state'] = array("opened" => true);
+			} else if ($goto_path === true) {
 				$child['children'] = $this->tree_populate($tmp, $goto_path);
 				$child['state'] = array("opened" => true);
 			} else if (!is_null($goto_path) && (count($goto_path) > 0) && ($goto_path[0] === $row['id'])) {
