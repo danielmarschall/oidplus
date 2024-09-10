@@ -150,6 +150,40 @@ class OIDplusUrn extends OIDplusObject {
 	}
 
 	/**
+	 * @return string[]
+	 * @throws OIDplusException
+	 */
+	private function getTechInfo(): array {
+		$tech_info = array();
+
+		$tmp = _L('URN notation');
+		$tmp = str_replace(explode(' ', $tmp, 2)[0], '<a href="https://datatracker.ietf.org/doc/html/rfc8141" target="_blank">'.explode(' ', $tmp, 2)[0].'</a>', $tmp);
+		$tech_info[$tmp] = $this->nodeId(true);
+
+		$tmp = _L('Type');
+		$first_arc = explode(':', $this->nodeId(false))[0];
+		if (str_starts_with($first_arc,'urn-')) {
+			if (preg_match('@^urn-(\d+)$@', $first_arc)) {
+				$tech_info[$tmp] = _L('Illegal informal');
+			} else {
+				$tech_info[$tmp] = _L('Informal (RFC 8141)');
+			}
+		} else if (strlen($first_arc) < 2) {
+			$tech_info[$tmp] = _L('Illegal (too short)');
+		} else if (preg_match('@^[a-zA-Z][a-zA-Z]-@', $first_arc)) {
+			$tech_info[$tmp] = _L('Reserved for country code usage (ISO 3166-1)');
+		} else if (str_starts_with($first_arc,'xn-')) {
+			$tech_info[$tmp] = _L('Reserved for country code usage (Punycode)');
+		} else if (str_starts_with($first_arc,'x-')) {
+			$tech_info[$tmp] = _L('Experimental (RFC 3406)');
+		} else {
+			$tech_info[$tmp] = _L('Formal (RFC 8141)');
+		}
+
+		return $tech_info;
+	}
+
+	/**
 	 * @return bool
 	 */
 	public function isLeafNode(): bool {
@@ -201,6 +235,19 @@ class OIDplusUrn extends OIDplusObject {
 			$title = $this->getTitle();
 
 			$content = '';
+
+			$tech_info = $this->getTechInfo();
+			$tech_info_html = '';
+			if (count($tech_info) > 0) {
+				$tech_info_html .= '<h2>'._L('Technical information').'</h2>';
+				$tech_info_html .= '<div style="overflow:auto"><table border="0">';
+				foreach ($tech_info as $key => $value) {
+					$tech_info_html .= '<tr><td valign="top" style="white-space: nowrap;">'.$key.': </td><td><code>'.$value.'</code></td></tr>';
+				}
+				$tech_info_html .= '</table></div>';
+			}
+
+			$content = $tech_info_html;
 
 			if ($this->userHasParentalWriteRights()) {
 				$content .= '<h2>'._L('Superior RA Allocation Info').'</h2>%%SUPRA%%';
