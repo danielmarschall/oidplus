@@ -120,6 +120,12 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	public function tree_populate(string $parent, /*array|true|null*/ $goto_path=null): array {
+
+// TODO: WEID
+$was_weid = str_starts_with(strtolower($parent), 'weid:');
+if ($was_weid) $parent = 'oid:'.substr($parent,strlen('weid:'));
+
+
 		$children = array();
 
 		$parentObj = OIDplusObject::parse($parent);
@@ -143,10 +149,25 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 			if (!$obj->userHasReadRights()) continue;
 
 			$child = array();
-			$child['id'] = $row['id'];
+			$child['id'] = $was_weid ? WeidOidConverter::oid2weid(substr($row['id'],strlen('oid:'))) : $row['id'];
 
 			// Determine display name (relative OID)
-			$child['text'] = $parentObj ? $obj->jsTreeNodeName($parentObj) : '';
+if ($was_weid) {
+
+if ($parent == 'oid:') {
+$weid = $child['id'];
+$weid_last_arc = substr($weid,strlen('weid:')/*remove prefix*/,-2/*remove checksum*/);
+} else {
+$bry = explode('.', $row['id']);
+$last_arc = $bry[count($bry)-1];
+$weid_last_arc = WeidOidConverter::encodeSingleArc($last_arc);
+}
+
+
+$child['text'] = $parentObj ? $weid_last_arc : '';
+} else {
+$child['text'] = $parentObj ? $obj->jsTreeNodeName($parentObj) : '';
+}
 			$child['text'] .= empty($row['title']) ? /*' -- <i>'.htmlentities('Title missing').'</i>'*/ '' : ' -- <b>' . htmlentities($row['title']) . '</b>';
 
 			// Check if node is confidential, or if one of its parent was confidential
@@ -159,11 +180,12 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 			$child['icon'] = $obj->getIcon($row);
 
 			// Check if there are more sub OIDs
+$tmp = $was_weid ? 'weid:'.substr($row['id'],strlen('oid:')) : $row['id'];
 			if ($goto_path === true) {
-				$child['children'] = $this->tree_populate($row['id'], $goto_path);
+				$child['children'] = $this->tree_populate($tmp, $goto_path);
 				$child['state'] = array("opened" => true);
 			} else if (!is_null($goto_path) && (count($goto_path) > 0) && ($goto_path[0] === $row['id'])) {
-				$child['children'] = $this->tree_populate($row['id'], $goto_path);
+				$child['children'] = $this->tree_populate($tmp, $goto_path);
 				$child['state'] = array("opened" => true);
 			} else {
 
@@ -200,36 +222,6 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 		}
 
 		return $children;
-	}
-
-	public static function replaceIdInJsonData(&$node, $search, $replace) {
-		foreach ($node as &$n) {
-			$n['id'] = str_ireplace($search, $replace, $n['id']);
-			if (isset($n['a_attr']['href'])) $n['a_attr']['href'] = str_ireplace(urlencode($search), urlencode($replace), $n['a_attr']['href']);
-			if (isset($n['children']) && is_array($n['children'])) self::replaceIdInJsonData($n['children'], $search, $replace);
-		}
-	}
-
-	private static function str_replace_first(string $search, string $replace, string $subject): string {
-		$search = '/'.preg_quote($search, '/').'/';
-		return preg_replace($search, $replace, $subject, 1);
-	}
-
-	public static function replaceOidWithWeid(&$node) {
-		foreach ($node as &$n) {
-			$oid = str_replace('oid:', '', $n['id']);
-			$weid = WeidOidConverter::oid2weid($oid); // already includes 'weid:' prefix
-			if (strpos($n['text'],$oid) !== false) {
-				$n['text'] = self::str_replace_first($oid, substr($weid,strlen('weid:')/*remove prefix*/,-2/*remove checksum*/), $n['text']);
-			} else {
-				$bry = explode('.', $n['id']);
-				$base10 = $bry[count($bry)-1];
-				$n['text'] = self::str_replace_first($base10, WeidOidConverter::encodeSingleArc($base10), $n['text']);
-			}
-			$n['id'] = $weid;
-			if (isset($n['a_attr']['href'])) $n['a_attr']['href'] = str_replace(urlencode($oid), urlencode($weid), $n['a_attr']['href']);
-			if (isset($n['children']) && is_array($n['children'])) self::replaceOidWithWeid($n['children']);
-		}
 	}
 
 }

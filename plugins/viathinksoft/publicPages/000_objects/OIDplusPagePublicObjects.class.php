@@ -1384,18 +1384,18 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 					// Special feature: Make a WEID tree that is a cloned OID tree!
 					if ($ot::ns() == 'oid') {
-						$tmp = $children;
-						OIDplus::menuUtils()::replaceOidWithWeid($tmp);
-						$child = array(
+						$children2 = OIDplus::menuUtils()->tree_populate('weid:', $goto_path);
+						$icon = $this->get_treeicon_root($ot); // TODO: WEID ICON!
+						$child2 = array(
 							'id' => 'weid:',
 							'text' => $ot::objectTypeTitle().' / '._L('WEID notation'),
 							'state' => array("opened" => true),
 						        'conditionalselect' => 'false',
 							'icon' => $icon,
-							'children' => $tmp
+							'children' => $children2
 						);
 						if ($child['icon'] && !file_exists($child['icon'])) $child['icon'] = null; // default icon (folder)
-						$objTypesChildren[] = $child;
+						$objTypesChildren[] = $child2;
 					}
 				}
 			}
@@ -1408,11 +1408,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					$urn_nss = $ot::urnNs();
 					if (count($urn_nss) == 0) $urn_nss = ['x-oidplus:'.$ot::ns()]; // create a pseudo URN
 
+					$first_nss = true;
 					foreach ($urn_nss as $urn_ns) {
 						$tmp = $ot_children[$ot::ns()];
 						$urn_child = array(
-							'id' => $ot::ns().':', // It is important that this is NS: and not UrnNS:, because "Tree search" relies on NS rather than UrnNS
-							'text' => 'urn:'.$urn_ns.' -- <b>'.$ot::objectTypeTitle().'</b>',
+							'id' => $first_nss ? $ot::ns().':' : 'urn:'.$urn_ns.':', // It is important that this is NS: and not UrnNS:, because "Tree search" relies on NS rather than UrnNS. But take care of duplicates if an OT has multiple URN NS
+							'text' => 'urn:'.$urn_ns.' -- <b>'.$ot::objectTypeTitle().' </b>',
 							'state' => array("opened" => true),
 							'icon' => $icon,
 							'children' => $tmp
@@ -1421,21 +1422,22 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 						$urn_children[] = $urn_child;
 
 						// Special feature: Make a WEID tree that is a cloned OID tree!
-						if ($urn_ns == 'oid') {
+						if (($urn_ns == 'oid') && ($first_nss)) {
+							$children = OIDplus::menuUtils()->tree_populate('weid:', $goto_path);
+							$icon = $this->get_treeicon_root($ot); // TODO: WEID ICON!
 							$urn_ns = 'x-weid';
-							$tmp = $ot_children[$ot::ns()];
-							OIDplus::menuUtils()::replaceOidWithWeid($tmp);
 							$urn_child = array(
-								'id' => 'urn:'.$urn_ns.':',
+								'id' => 'weid:',
 								'text' => 'urn:'.$urn_ns.' -- <b>'.$ot::objectTypeTitle().' / '._L('WEID notation').'</b>',
 								'state' => array("opened" => true),
 							        'conditionalselect' => 'false',
 								'icon' => $icon,
-								'children' => $tmp
+								'children' => $children
 							);
 							if ($urn_child['icon'] && !file_exists($urn_child['icon'])) $urn_child['icon'] = null; // default icon (folder)
 							$urn_children[] = $urn_child;
 						}
+						$first_nss = false;
 					}
 				}
 

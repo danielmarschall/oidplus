@@ -134,19 +134,10 @@ try {
 			$was_weid = str_starts_with($_REQUEST['id'],'weid:');
 
 			$_REQUEST['id'] = OIDplus::prefilterQuery($_REQUEST['id'], false);
-			$json_out = OIDplus::menuUtils()->json_tree($_REQUEST['id'], $_REQUEST['goto'] ?? '');
 
-			if ($was_weid) {
-				OIDplus::menuUtils()::replaceOidWithWeid($json_out);
-			} else if ($was_urn) {
-				foreach (OIDplus::getEnabledObjectTypes() as $ot) {
-					$urn_nss = $ot::urnNs();
-					foreach ($urn_nss as $urn_ns) {
-						// Replace all "guid:" with "urn:uuid:"
-						OIDplus::menuUtils()::replaceIdInJsonData($json_out, $ot::ns().':', 'urn:'.$urn_ns.':');
-					}
-				}
-			}
+if ($was_weid) $_REQUEST['id'] = 'weid:'.substr($_REQUEST['id'],strlen('oid:'));
+
+			$json_out = OIDplus::menuUtils()->json_tree($_REQUEST['id'], $_REQUEST['goto'] ?? '');
 		} else {
 			throw new OIDplusException(_L('Invalid action ID'));
 		}
