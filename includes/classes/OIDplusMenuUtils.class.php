@@ -153,7 +153,7 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 
 			// Determine display name (relative OID)
 			if ($was_weid) {
-				if ($parent == 'oid:') {
+				if (strtolower($parent) == 'oid:') {
 					$weid = $child['id'];
 					$weid_last_arc = substr($weid,strlen('weid:')/*remove prefix*/,-2/*remove checksum*/);
 				} else {

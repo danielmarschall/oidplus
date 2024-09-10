@@ -4,7 +4,7 @@
 /**
 * WEID<=>OID Converter
 * (c) Webfan.de, ViaThinkSoft
-* Revision 2023-08-09
+* Revision 2024-09-10
 **/
 
 // What is a WEID?
@@ -140,16 +140,16 @@ var WeidOidConverter = {
 			}
 		}
 
-		if (namespace.startsWith('weid:x-')) {
+		if (namespace.toLowerCase().startsWith('weid:x-')) {
 			// Spec Change 11: Proprietary Namespaces ( https://github.com/frdl/weid/issues/4 )
 			return { "weid": weid, "oid" : "[Proprietary WEID Namespace]" };
-		} else if (namespace == 'weid:') {
+		} else if (namespace.toLowerCase() == 'weid:') {
 			// Class C
 			base = '1-3-6-1-4-1-SZ5-8';
-		} else if (namespace == 'weid:pen:') {
+		} else if (namespace.toLowerCase() == 'weid:pen:') {
 			// Class B
 			base = '1-3-6-1-4-1';
-		} else if (namespace == 'weid:root:') {
+		} else if (namespace.toLowerCase() == 'weid:root:') {
 			// Class A
 			base = '';
 		} else {

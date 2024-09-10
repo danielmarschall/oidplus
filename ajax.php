@@ -123,8 +123,10 @@ try {
 				}
 			}
 
-			if ($was_weid) {
-				foreach ($json_out as &$o) $o = ($o == 'oid:') ? 'weid:' : WeidOidConverter::oid2weid(substr($o,strlen('oid:')));
+			if ($was_weid && is_array($json_out)) {
+				foreach ($json_out as &$o) {
+					$o = (strtolower($o) == 'oid:') ? 'weid:' : WeidOidConverter::oid2weid(substr($o,strlen('oid:')));
+				}
 			}
 
 			if (!$found) {
