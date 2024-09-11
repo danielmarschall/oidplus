@@ -219,6 +219,9 @@ class OIDplusUrn extends OIDplusObject {
 				if (count($urn_nss)==0) $urn_nss[] = 'x-oidplus:'.$ot::ns();
 				foreach ($urn_nss as $urn_ns) {
 					$content .= '<li><a '.OIDplus::gui()->link($ot::root()).'>urn:'.htmlentities($urn_ns).':</a> = <b>'.htmlentities($ot::objectTypeTitle()).'</b></li>';
+					if ($urn_ns == 'oid') {
+						$content .= '<li>urn:x-weid: = <b>'.htmlentities($ot::objectTypeTitle().' / '._L('WEID notation')).'</b></li>';
+					}
 				}
 			}
 			$content .= '</ul>';
