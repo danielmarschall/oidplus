@@ -262,7 +262,8 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 
 			$out['text']  = '<p>'._L('With the OID Information Protocol (OID-IP), you can query object information in a format that is human-readable and machine-readable.').'</p>';
 
-			$out['text'] .= '<p>'._L('Specification').': <a target="_blank" href="https://github.com/ViaThinkSoft/standards/blob/main/viathinksoft-std-0002-oidip.txt">ViaThinkSoft/Webfan Standard #2</a></p>';
+			// $out['text'] .= '<p>'._L('Specification').': <a target="_blank" href="https://htmlpreview.github.io/?https://raw.githubusercontent.com/ViaThinkSoft/standards/master/viathinksoft-std-0002-oidip.html">ViaThinkSoft/Webfan Standard #2</a></p>';
+			$out['text'] .= '<p>'._L('Specification').': <a target="_blank" href="https://www.viathinksoft.de/std/viathinksoft-std-0002-oidip.html">ViaThinkSoft/Webfan Standard #2</a></p>';
 			# ---
 			$out['text'] .= '<noscript>';
 			$out['text'] .= '<p><font color="red">'._L('You need to enable JavaScript to use this feature.').'</font></p>';

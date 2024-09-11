@@ -62,9 +62,9 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 		// - the schema URLs are also written in OIDplusPagePublicWhois.class.php
 		// - The URN "-x" prefix stands for experimental, not registered at IANA: https://www.rfc-editor.org/rfc/rfc3406#section-3.1
 		$this->XML_SCHEMA_URN  = 'urn:x-viathinksoft:std:0002:2024-09-02:json-schema';
-		$this->XML_SCHEMA_URL  = 'https://raw.githubusercontent.com/viathinksoft/standards/main/viathinksoft-std-0002-oidip.xsd';
+		$this->XML_SCHEMA_URL  = 'https://www.viathinksoft.de/std/viathinksoft-std-0002-oidip.xsd'; // 'https://raw.githubusercontent.com/viathinksoft/standards/main/viathinksoft-std-0002-oidip.xsd';
 		$this->JSON_SCHEMA_URN = 'urn:x-viathinksoft:std:0002:2024-09-02:xml-schema';
-		$this->JSON_SCHEMA_URL = 'https://raw.githubusercontent.com/viathinksoft/standards/main/viathinksoft-std-0002-oidip.json';
+		$this->JSON_SCHEMA_URL = 'https://www.viathinksoft.de/std/viathinksoft-std-0002-oidip.json'; // 'https://raw.githubusercontent.com/viathinksoft/standards/main/viathinksoft-std-0002-oidip.json';
 	}
 
 	/**

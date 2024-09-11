@@ -113,8 +113,8 @@ composer license -d plugins/viathinksoft/publicPages/100_whois/whois/json/ > plu
 remove_vendor_rubbish plugins/viathinksoft/publicPages/100_whois/whois/json/
 
 # Get latest version of WEID converter
-curl https://raw.githubusercontent.com/frdl/weid/gh-pages/WeidOidConverter.js > plugins/viathinksoft/objectTypes/oid/WeidOidConverter.js
-curl https://raw.githubusercontent.com/frdl/weid/gh-pages/WeidOidConverter.php > plugins/viathinksoft/objectTypes/oid/WeidOidConverter.class.php
+curl https://raw.githubusercontent.com/WEID-Consortium/weid.info/gh-pages/WeidOidConverter.js > plugins/viathinksoft/objectTypes/oid/WeidOidConverter.js
+curl https://raw.githubusercontent.com/WEID-Consortium/weid.info/gh-pages/WeidOidConverter.php > plugins/viathinksoft/objectTypes/oid/WeidOidConverter.class.php
 sed -i 's@namespace Frdl\\Weid;@namespace ViaThinkSoft\\OIDplus\\Plugins\\ObjectTypes\\OID;@g' plugins/viathinksoft/objectTypes/oid/WeidOidConverter.class.php
 sed -i 's@\\Frdl\\Weid\\WeidOidConverter::@WeidOidConverter::@g' plugins/viathinksoft/objectTypes/oid/WeidOidConverter.class.php
 
