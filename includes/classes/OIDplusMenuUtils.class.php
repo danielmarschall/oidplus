@@ -123,7 +123,7 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 	public function tree_populate(string $parent, /*array|true|null*/ $goto_path=null): array {
 
 		$was_weid = str_starts_with(strtolower($parent), 'weid:');
-		if ($was_weid) {
+		if ($was_weid && class_exists(WeidOidConverter::class)) {
 			$parent = 'oid:'.WeidOidConverter::weid2oid($parent);
 		}
 
@@ -150,7 +150,7 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 			if (!$obj->userHasReadRights()) continue;
 
 			$child = array();
-			if ($was_weid) {
+			if ($was_weid && class_exists(WeidOidConverter::class)) {
 				$child['id'] = (strtolower($row['id']) == 'oid:') ? 'weid:' : WeidOidConverter::oid2weid(substr($row['id'],strlen('oid:')));
 			} else {
 				$child['id'] = $row['id'];
@@ -159,9 +159,9 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 			// Determine display name (relative OID)
 			if (!$parentObj) {
 				$child['text'] = '';
-			}  else if ($was_weid) {
+			} else if ($was_weid && class_exists(WeidOidConverter::class)) {
 				if (strtolower($parent) == 'oid:') {
-					if (OIDplusPagePublicObjects::urnViewEnabled()) {
+					if (class_exists(OIDplusPagePublicObjects::class) && OIDplusPagePublicObjects::urnViewEnabled()) {
 						$child['text'] = substr($child['id'],strlen('weid:')/*remove prefix*/,-2/*remove checksum*/);
 					} else {
 						$child['text'] = substr($child['id'],0,-2/*remove checksum*/);
@@ -186,12 +186,12 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 			$child['icon'] = $obj->getIcon($row);
 
 			// Check if there are more sub OIDs
-			if ($was_weid) {
+			if ($was_weid && class_exists(WeidOidConverter::class)) {
 				$tmp = (strtolower($row['id']) == 'oid:') ? 'weid:' : WeidOidConverter::oid2weid(substr($row['id'],strlen('oid:')));
 			} else {
 				$tmp = $row['id'];
 			}
-			if (($parent == 'urn:') && OIDplusPagePublicObjects::urnViewEnabled()) {
+			if (($parent == 'urn:') && class_exists(OIDplusPagePublicObjects::class) && OIDplusPagePublicObjects::urnViewEnabled()) {
 				// For URNs, open to the 2nd level
 				$child['children'] = $this->tree_populate($tmp, $goto_path);
 				$child['state'] = array("opened" => true);
