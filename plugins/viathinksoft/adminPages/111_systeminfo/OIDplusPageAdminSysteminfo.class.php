@@ -208,7 +208,7 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '		<td>'.htmlentities($sys_install_type).'</td>';
 			$out['text'] .= '	</tr>';
 
-			if (count(glob(OIDplus::localpath().'userdata/tenant/'.'*')) == 0) {
+			if (count(glob(OIDplus::localpath().'userdata/tenant/'.'*', GLOB_ONLYDIR)) == 0) {
 				$op_mode = _L('Standalone system (no tenants)');
 			} else if (OIDplus::isTenant()) {
 				$op_mode = _L('Multi-Tenancy tenant system');
