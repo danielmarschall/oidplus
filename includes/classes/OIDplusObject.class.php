@@ -196,6 +196,21 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	}
 
 	/**
+	 * If the plugin has a no commonly known URN namespace, then generate an experimental one, otherwise, give the URN of the Object Type.
+	 * @return array
+	 */
+	final public static function urnNsOrDefault(): array {
+		// "static::" is "late binding", while "self::" is "early binding"
+		$urn_nss = static::urnNs();
+		if (count($urn_nss) == 0) {
+			// create a Pseudo-URN with NID=x-oidplus (x- is for experimental)
+			// the NSS part is a limited character set. Replace with 'X' if it has an invalid character
+			$urn_nss = [ 'x-oidplus:'.preg_replace('|[^a-zA-Z0-9()+,\-.:=@;$_!*\'%]|','X',static::ns()) ];
+		}
+		return $urn_nss;
+	}
+
+	/**
 	 * @return string
 	 */
 	public abstract static function root(): string;

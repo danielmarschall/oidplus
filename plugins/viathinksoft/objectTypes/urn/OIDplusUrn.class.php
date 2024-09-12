@@ -35,11 +35,30 @@ class OIDplusUrn extends OIDplusObject {
 
 	/**
 	 * @param string $urn
+	 * @param bool $allow_only_nid
+	 * @return bool
+	 */
+	private static function is_valid_urn(string $urn, bool $allow_only_nid=true): bool {
+		// URN-Spezifikation aus RFC 8141: "urn:<NID>:<NSS>"
+		// <NID> = Namespace Identifier, muss aus alphanumerischen Zeichen bestehen (1 bis 32 Zeichen).
+		// <NSS> = Namespace Specific String, kann aus unreserved, sub-delims, und pct-encoded bestehen.
+		if ($allow_only_nid) {
+			// "urn:<NID>:<NSS>" or "urn:<NID>"
+			$urn_pattern = '/^urn:([a-zA-Z0-9][a-zA-Z0-9-]{0,30}[a-zA-Z0-9])(:([a-zA-Z0-9()+,\-.:=@;$_!*\'%]+)){0,1}$/';
+		} else {
+			// "urn:<NID>:<NSS>"
+			$urn_pattern = '/^urn:([a-zA-Z0-9][a-zA-Z0-9-]{0,30}[a-zA-Z0-9]):([a-zA-Z0-9()+,\-.:=@;$_!*\'%]+)$/';
+		}
+		return preg_match($urn_pattern, $urn) === 1;
+	}
+
+	/**
+	 * @param string $urn
 	 */
 	public function __construct(string $urn) {
-
-		// TODO: Syntax checks ( https://github.com/danielmarschall/oidplus/issues/73 )
-
+		if (($urn != '') && !self::is_valid_urn("urn:".$urn, true)) {
+			throw new OIDplusException(_L("This is not a valid URN: %1", $urn));
+		}
 		$this->urn = $urn;
 	}
 
@@ -217,10 +236,7 @@ class OIDplusUrn extends OIDplusObject {
 			$objTypesChildren = array();
 			foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 				if ($ot::ns() == 'urn') continue;
-				$urn_nss = $ot::urnNs();
-
-				// TODO: Syntax checks https://github.com/danielmarschall/oidplus/issues/73
-				if (count($urn_nss)==0) $urn_nss[] = 'x-oidplus:'.$ot::ns();
+				$urn_nss = $ot::urnNsOrDefault();
 				foreach ($urn_nss as $urn_ns) {
 					$content .= '<li><a '.OIDplus::gui()->link($ot::root()).'>urn:'.htmlentities($urn_ns).':</a> = <b>'.htmlentities($ot::objectTypeTitle()).'</b></li>';
 					if ($urn_ns == 'oid') {

@@ -1412,11 +1412,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 					if ($ot::ns() == 'urn') continue;
 					$icon = $this->get_treeicon_root($ot);
-					$urn_nss = $ot::urnNs();
-
-					// TODO: KEEP URN CHARACTER RESTRICTIONS ( https://github.com/danielmarschall/oidplus/issues/73 )
-					if (count($urn_nss) == 0) $urn_nss = ['x-oidplus:'.$ot::ns()]; // create a pseudo URN
-
+					$urn_nss = $ot::urnNsOrDefault();
 					$first_nss = true;
 					foreach ($urn_nss as $urn_ns) {
 						$tmp = $ot_children[$ot::ns()];

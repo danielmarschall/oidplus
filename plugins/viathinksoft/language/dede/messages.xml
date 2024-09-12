@@ -8438,6 +8438,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		This is not a valid URN: %1
+		]]></source>
+		<target><![CDATA[
+		Dies ist keine gültige URN: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		This is not a valid WEID
 		]]></source>
 		<target><![CDATA[
