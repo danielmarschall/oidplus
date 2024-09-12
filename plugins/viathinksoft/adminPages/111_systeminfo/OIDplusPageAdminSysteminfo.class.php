@@ -316,6 +316,11 @@ class OIDplusPageAdminSysteminfo extends OIDplusPagePluginAdmin {
 			$out['text'] .= '<tbody>';
 
 			$out['text'] .= '	<tr>';
+			$out['text'] .= '		<td>'._L('DBMS Software').'</td>';
+			$out['text'] .= '		<td>'.OIDplus::db()->getSlang()->getDbmsVersion(OIDplus::db()).'</td>';
+			$out['text'] .= '	</tr>';
+
+			$out['text'] .= '	<tr>';
 			$out['text'] .= '		<td>'._L('Database provider').'</td>';
 			$out['text'] .= '		<td>'.OIDplus::db()->getPlugin()->getManifest()->getName().'</td>';
 			$out['text'] .= '	</tr>';

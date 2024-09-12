@@ -59,6 +59,15 @@ class OIDplusSqlSlangPluginMySQL extends OIDplusSqlSlangPlugin {
 
 	/**
 	 * @param OIDplusDatabaseConnection $db
+	 * @return string
+	 */
+	public function getDbmsVersion(OIDplusDatabaseConnection $db): string {
+		$sql = "SELECT VERSION() as VERSION;";
+		return $db->getScalar($sql);
+	}
+
+	/**
+	 * @param OIDplusDatabaseConnection $db
 	 * @return int
 	 * @throws OIDplusException
 	 */

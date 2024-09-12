@@ -66,6 +66,15 @@ class OIDplusSqlSlangPluginFirebird extends OIDplusSqlSlangPlugin {
 	}
 
 	/**
+	 * @param OIDplusDatabaseConnection $db
+	 * @return string
+	 */
+	public function getDbmsVersion(OIDplusDatabaseConnection $db): string {
+		$sql = "SELECT rdb\$get_context('SYSTEM', 'ENGINE_VERSION') as VERSION FROM rdb\$database;";
+		return $db->getScalar($sql);
+	}
+
+	/**
 	 * @var ?int
 	 */
 	private $last_insert_id = null;

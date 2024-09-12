@@ -1902,6 +1902,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		DBMS Software
+		]]></source>
+		<target><![CDATA[
+		Datenbank-Software
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		DCE/MSAD notation
 		]]></source>
 		<target><![CDATA[

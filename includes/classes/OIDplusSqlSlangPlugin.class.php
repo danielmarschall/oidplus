@@ -51,6 +51,12 @@ abstract class OIDplusSqlSlangPlugin extends OIDplusPlugin {
 	public abstract function detect(OIDplusDatabaseConnection $db): bool;
 
 	/**
+	 * @param OIDplusDatabaseConnection $db
+	 * @return string
+	 */
+	public abstract function getDbmsVersion(OIDplusDatabaseConnection $db): string;
+
+	/**
 	 * Please note: This insert_id() function should use SQL to receive
 	 * the last inserted ID. If the database connection provider (e.g. PDO)
 	 * offers a way to fetch the last inserted ID, please use this instead!
