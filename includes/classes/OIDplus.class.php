@@ -1766,10 +1766,10 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	/**
+	 * @param string $pubKey
 	 * @return string
 	 */
-	private static function getPrivKeyPassphraseFilename(): string {
-		$pubKey = OIDplus::getSystemPublicKey();
+	private static function getPrivKeyPassphraseFilename(string $pubKey): string {
 		$systemid = self::getSystemIdFromPubKey($pubKey);
 
 		$oldfile1 = OIDplus::localpath() . 'userdata/privkey_secret.php'; // backwards compatibility
@@ -1794,10 +1794,11 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	/**
+	 * @param string $pubKey
 	 * @return void
 	 */
-	private static function tryCreatePrivKeyPassphrase(): void {
-		$file = self::getPrivKeyPassphraseFilename();
+	private static function tryCreatePrivKeyPassphrase(string $pubKey): void {
+		$file = self::getPrivKeyPassphraseFilename($pubKey);
 
 		$passphrase = generateRandomString(64);
 		$cont = "<?php\n";
@@ -1813,10 +1814,11 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	/**
+	 * @param string $pubKey
 	 * @return string|false
 	 */
-	private static function getPrivKeyPassphrase()/*: false|string*/ {
-		$file = self::getPrivKeyPassphraseFilename();
+	private static function getPrivKeyPassphrase(string $pubKey)/*: false|string*/ {
+		$file = self::getPrivKeyPassphraseFilename($pubKey);
 		if (!file_exists($file)) return false;
 		$cont = file_get_contents($file);
 		$m = array();
@@ -1831,6 +1833,9 @@ class OIDplus extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	public static function getSystemPrivateKey(bool $auto_decrypt=true)/*: false|string*/ {
+		$pubKey = OIDplus::config()->getValue('oidplus_public_key');
+		if ($pubKey == '') return false;
+
 		$privKey = OIDplus::config()->getValue('oidplus_private_key');
 		if ($privKey == '') return false;
 
@@ -1839,7 +1844,7 @@ class OIDplus extends OIDplusBaseClass {
 				return false;
 			}
 
-			$passphrase = self::getPrivKeyPassphrase();
+			$passphrase = self::getPrivKeyPassphrase($pubKey);
 			if ($passphrase === false) {
 				return false;
 			}
@@ -1883,7 +1888,7 @@ class OIDplus extends OIDplusBaseClass {
 			if (!verify_private_public_key($privKey, $pubKey)) {
 
 				if ($pubKey) {
-					throw new OIDplusException(_L("The Private/Public key-pair is broken or cannot be decrypted! Please check if the file %1 is existing and OK! In case this file is missing or corrupted and cannot be recovered, you need to reset your private/public key-pair. Do so by removing the settings %2 and %3 in the OIDplus configuration table in the database. This will invoke a regeneration of the private/public key-pair (you will receive a new system ID).", self::getPrivKeyPassphraseFilename(), 'oidplus_public_key', 'oidplus_private_key'));
+					throw new OIDplusException(_L("The Private/Public key-pair is broken or cannot be decrypted! Please check if the file %1 is existing and OK! In case this file is missing or corrupted and cannot be recovered, you need to reset your private/public key-pair. Do so by removing the settings %2 and %3 in the OIDplus configuration table in the database. This will invoke a regeneration of the private/public key-pair (you will receive a new system ID).", self::getPrivKeyPassphraseFilename($pubKey), 'oidplus_public_key', 'oidplus_private_key'));
 					//OIDplus::logger()->log("V2:[CRIT]A", "The private/public key-pair is broken. A new key-pair will now be generated for your system. Your System-ID will change.");
 				}
 
@@ -1907,8 +1912,8 @@ class OIDplus extends OIDplusBaseClass {
 				$pubKey = $tmp["key"];
 
 				// encrypt new keys using a passphrase stored in a secret file
-				self::tryCreatePrivKeyPassphrase(); // *try* (re)generate this file
-				$passphrase = self::getPrivKeyPassphrase();
+				self::tryCreatePrivKeyPassphrase($pubKey); // *try* (re)generate this file
+				$passphrase = self::getPrivKeyPassphrase($pubKey);
 				if ($passphrase !== false) {
 					$privKey = encrypt_private_key($privKey, $passphrase);
 				}
@@ -1924,15 +1929,15 @@ class OIDplus extends OIDplusBaseClass {
 					OIDplus::logger()->log("V2:[INFO]A", "A new private/public key-pair for your system had been generated. Your SystemID is now %1", $system_id);
 				}
 			} else {
-				$passphrase = self::getPrivKeyPassphrase();
+				$passphrase = self::getPrivKeyPassphrase($pubKey);
 				$rawPrivKey = OIDplus::config()->getValue('oidplus_private_key');
 				if (($passphrase === false) || !is_privatekey_encrypted($rawPrivKey)) {
 					// Upgrade to new encrypted keys
-					self::tryCreatePrivKeyPassphrase(); // *try* generate this file
-					$passphrase = self::getPrivKeyPassphrase();
+					self::tryCreatePrivKeyPassphrase($pubKey); // *try* generate this file
+					$passphrase = self::getPrivKeyPassphrase($pubKey);
 					if ($passphrase !== false) {
 						$privKey = encrypt_private_key($privKey, $passphrase);
-						OIDplus::logger()->log("V2:[INFO]A", "The private/public key-pair has been upgraded to an encrypted key-pair. The key is saved in %1", self::getPrivKeyPassphraseFilename());
+						OIDplus::logger()->log("V2:[INFO]A", "The private/public key-pair has been upgraded to an encrypted key-pair. The key is saved in %1", self::getPrivKeyPassphraseFilename($pubKey));
 						OIDplus::config()->setValue('oidplus_private_key', $privKey);
 					}
 				}
