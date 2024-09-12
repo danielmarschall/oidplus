@@ -2612,7 +2612,7 @@ class OIDplus extends OIDplusBaseClass {
 		foreach (OIDplus::getObjectTypePluginsEnabled() as $plugin) {
 			// Convert URN to OIDplus (e.g. urn:uuid: becomes guid:)
 			$urn_nss = $plugin->getObjectTypeClassName()::urnNs();
-			if (count($urn_nss) == 0) $urn_nss = [ 'x-oidplus:'.$plugin->getObjectTypeClassName()::ns() ];
+			if (count($urn_nss) == 0) $urn_nss = [ 'x-oidplus:'.$plugin->getObjectTypeClassName()::ns() ]; // TODO: syntax checks https://github.com/danielmarschall/oidplus/issues/73
 			foreach ($urn_nss as $urn_ns) {
 				// Convert URN to OID+
 				// Replace 'urn:uuid:' with 'guid:' and 'urn:oid:' with 'oid:'

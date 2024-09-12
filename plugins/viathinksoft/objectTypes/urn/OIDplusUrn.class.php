@@ -37,7 +37,9 @@ class OIDplusUrn extends OIDplusObject {
 	 * @param string $urn
 	 */
 	public function __construct(string $urn) {
-		// No syntax checks
+
+		// TODO: Syntax checks ( https://github.com/danielmarschall/oidplus/issues/73 )
+
 		$this->urn = $urn;
 	}
 
@@ -216,6 +218,8 @@ class OIDplusUrn extends OIDplusObject {
 			foreach (OIDplus::getEnabledObjectTypes() as $ot) {
 				if ($ot::ns() == 'urn') continue;
 				$urn_nss = $ot::urnNs();
+
+				// TODO: Syntax checks https://github.com/danielmarschall/oidplus/issues/73
 				if (count($urn_nss)==0) $urn_nss[] = 'x-oidplus:'.$ot::ns();
 				foreach ($urn_nss as $urn_ns) {
 					$content .= '<li><a '.OIDplus::gui()->link($ot::root()).'>urn:'.htmlentities($urn_ns).':</a> = <b>'.htmlentities($ot::objectTypeTitle()).'</b></li>';
