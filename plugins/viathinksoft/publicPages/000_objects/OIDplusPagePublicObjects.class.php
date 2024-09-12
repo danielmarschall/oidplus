@@ -1413,17 +1413,19 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 					if ($ot::ns() == 'urn') continue;
 					$icon = $this->get_treeicon_root($ot);
 					$urn_nss = $ot::urnNs();
+
+					// TODO: KEEP URN CHARACTER RESTRICTIONS ( https://github.com/danielmarschall/oidplus/issues/73 )
 					if (count($urn_nss) == 0) $urn_nss = ['x-oidplus:'.$ot::ns()]; // create a pseudo URN
 
 					$first_nss = true;
 					foreach ($urn_nss as $urn_ns) {
 						$tmp = $ot_children[$ot::ns()];
 						$urn_child = array(
-							'id' => $first_nss ? $ot::ns().':' : 'urn:'.$urn_ns.':', // It is important that this is NS: and not UrnNS:, because "Tree search" relies on NS rather than UrnNS. But take care of duplicates if an OT has multiple URN NS
+							'id' => $first_nss ? $ot::root() : 'urn:'.$urn_ns.':', // It is important that this is NS: and not UrnNS:, because "Tree search" relies on NS rather than UrnNS. But take care of duplicates if an OT has multiple URN NS
 							'text' => 'urn:'.$urn_ns.' -- <b>'.$ot::objectTypeTitle().' </b>',
 							'state' => array("opened" => true),
 							'icon' => $icon,
-							'children' => $tmp
+							'children' => $tmp // TODO: If a plugin has multiple URNNS, then we get duplicate ids here!!!
 						);
 						if ($urn_child['icon'] && !file_exists($urn_child['icon'])) $urn_child['icon'] = null; // default icon (folder)
 						$urn_children[] = $urn_child;
