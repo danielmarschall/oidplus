@@ -3,6 +3,20 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.2.7",
+		"date": "2024-09-12 23:20:00 +0200",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"DBMS Version is now shown in the system info plugin. Fixes https://github.com/danielmarschall/oidplus/issues/71",
+			"Implemented URN syntax checks. Fixes https://github.com/danielmarschall/oidplus/issues/73",
+			"Fixed potential issue with incompatibility between URNview layout and OT plugins where root<>ns:",
+			"OOBE failure because of PKI, fixes https://github.com/danielmarschall/oidplus/issues/72",
+			"Fix wrong \"Multi-Tenancy base system\" text at systeminfo plugin",
+			"Link fixes",
+			"URN welcome page add urn:x-weid:"
+		]
+	},
+	{
 		"version": "2.0.2.6",
 		"date": "2024-09-11 01:05:00 +0200",
 		"author": "Daniel Marschall (ViaThinkSoft)",
