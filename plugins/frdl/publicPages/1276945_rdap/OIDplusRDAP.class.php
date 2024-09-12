@@ -23,6 +23,7 @@ namespace Frdlweb\OIDplus\Plugins\PublicPages\RDAP;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusBaseClass;
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
 use ViaThinkSoft\OIDplus\Core\OIDplusObject;
 use ViaThinkSoft\OIDplus\Plugins\PublicPages\Objects\OIDplusPagePublicObjects;
 
@@ -85,6 +86,10 @@ class OIDplusRDAP extends OIDplusBaseClass {
 	 * @throws \ViaThinkSoft\OIDplus\Core\OIDplusException
 	 */
 	public function rdapQuery(string $query): array {
+		if (!class_exists(OIDplusPagePublicObjects::class)) {
+			throw new OIDplusException(_L("Plugin %1 requires plugin %2 to work", __CLASS__, 'OIDplusPagePublicObjects'));
+		}
+
 		$query = str_replace('oid:.', 'oid:', $query);
 		$n = explode(':', $query);
 		if(2>count($n)){

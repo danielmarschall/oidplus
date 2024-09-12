@@ -73,6 +73,9 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	public function oidipQuery(string $query): array {
+		if (!class_exists(OIDplusPagePublicObjects::class)) {
+			throw new OIDplusException(_L("Plugin %1 requires plugin %2 to work", __CLASS__, 'OIDplusPagePublicObjects'));
+		}
 
 		$out_type = null;
 		$out_content = '';

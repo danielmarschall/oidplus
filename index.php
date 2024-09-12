@@ -50,7 +50,7 @@ $static_node_id_original = $static_node_id;
 
 $was_weid = str_starts_with(strtolower($static_node_id), 'weid:');
 $static_node_id = OIDplus::prefilterQuery($static_node_id, false);
-if ($was_weid) {
+if ($was_weid && class_exists(WeidOidConverter::class)) {
 	$static_node_id = (strtolower($static_node_id) == 'oid:') ? 'weid:' : WeidOidConverter::oid2weid(substr($static_node_id,strlen('oid:')));
 }
 if ($static_node_id_original !== $static_node_id) {

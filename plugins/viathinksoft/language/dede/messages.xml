@@ -6390,6 +6390,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Plugin %1 requires plugin %2 to work
+		]]></source>
+		<target><![CDATA[
+		Plugin %1 benötigt Plugin %2
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Plugin OID
 		]]></source>
 		<target><![CDATA[
