@@ -85,6 +85,15 @@ class OIDplusSqlSlangPluginAccess extends OIDplusSqlSlangPlugin {
 
 	/**
 	 * @param OIDplusDatabaseConnection $db
+	 * @return string
+	 */
+	public function getDbmsVersion(OIDplusDatabaseConnection $db): string {
+		// According to ChatGPT, you can only query the version via VBA, but not via SQL Query
+		return 'Unknown';
+	}
+
+	/**
+	 * @param OIDplusDatabaseConnection $db
 	 * @return int
 	 * @throws OIDplusException
 	 */

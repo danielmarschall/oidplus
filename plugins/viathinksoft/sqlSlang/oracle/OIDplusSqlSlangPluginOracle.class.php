@@ -58,6 +58,15 @@ class OIDplusSqlSlangPluginOracle extends OIDplusSqlSlangPlugin {
 	}
 
 	/**
+	 * @param OIDplusDatabaseConnection $db
+	 * @return string
+	 */
+	public function getDbmsVersion(OIDplusDatabaseConnection $db): string {
+		$sql = "SELECT banner as VERSION FROM v\$version WHERE banner LIKE 'Oracle%';";
+		return $db->getScalar($sql);
+	}
+
+	/**
 	 * @var string|null
 	 */
 	private $last_insert_table = null;

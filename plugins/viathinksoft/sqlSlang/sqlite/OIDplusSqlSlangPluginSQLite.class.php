@@ -58,6 +58,15 @@ class OIDplusSqlSlangPluginSQLite extends OIDplusSqlSlangPlugin {
 
 	/**
 	 * @param OIDplusDatabaseConnection $db
+	 * @return string
+	 */
+	public function getDbmsVersion(OIDplusDatabaseConnection $db): string {
+		$sql = "SELECT sqlite_version() as VERSION;";
+		return $db->getScalar($sql);
+	}
+
+	/**
+	 * @param OIDplusDatabaseConnection $db
 	 * @return int
 	 * @throws OIDplusException
 	 */
