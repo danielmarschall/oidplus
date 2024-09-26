@@ -3,6 +3,14 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.2.8",
+		"date": "2024-09-26 21:40:00 +0200",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"Small fixes"
+		]
+	},
+	{
 		"version": "2.0.2.7",
 		"date": "2024-09-12 23:20:00 +0200",
 		"author": "Daniel Marschall (ViaThinkSoft)",
