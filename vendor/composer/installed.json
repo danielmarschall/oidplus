@@ -791,12 +791,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "a5316b71f57c74d48d064be72ad91b0a2497f641"
+                "reference": "a3ef82e2819472fa4b3aee73313ba3956271f8ed"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/a5316b71f57c74d48d064be72ad91b0a2497f641",
-                "reference": "a5316b71f57c74d48d064be72ad91b0a2497f641",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/a3ef82e2819472fa4b3aee73313ba3956271f8ed",
+                "reference": "a3ef82e2819472fa4b3aee73313ba3956271f8ed",
                 "shasum": ""
             },
             "require": {
@@ -814,7 +814,7 @@
                 "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
                 "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
             },
-            "time": "2024-09-08T12:58:18+00:00",
+            "time": "2024-09-26T02:54:55+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -1144,18 +1144,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "dcec1df61f107e2b449486aafefbb1d14abe0333"
+                "reference": "a7a45b25a63c6eff9245dba6ab8ce15528ad1818"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/dcec1df61f107e2b449486aafefbb1d14abe0333",
-                "reference": "dcec1df61f107e2b449486aafefbb1d14abe0333",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/a7a45b25a63c6eff9245dba6ab8ce15528ad1818",
+                "reference": "a7a45b25a63c6eff9245dba6ab8ce15528ad1818",
                 "shasum": ""
             },
             "replace": {
                 "twitter/bootstrap": "self.version"
             },
-            "time": "2024-09-10T14:07:45+00:00",
+            "time": "2024-09-26T13:03:48+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
