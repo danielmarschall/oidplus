@@ -3,6 +3,15 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.2.9",
+		"date": "2024-10-15 23:10:00 +0200",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"URN object type: NID is now case insensitive",
+			"MAC object type: URN is now urn:dev:mac instead of urn:x-oidplus:mac"
+		]
+	},
+	{
 		"version": "2.0.2.8",
 		"date": "2024-09-26 21:40:00 +0200",
 		"author": "Daniel Marschall (ViaThinkSoft)",

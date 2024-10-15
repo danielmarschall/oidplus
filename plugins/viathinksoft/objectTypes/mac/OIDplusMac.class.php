@@ -74,6 +74,13 @@ class OIDplusMac extends OIDplusObject {
 	}
 
 	/**
+	 * @return array
+	 */
+	public static function urnNs(): array {
+		return array('dev:mac'); // 'dev:mac' means 'urn:dev:mac:'
+	}
+
+	/**
 	 * @return string
 	 */
 	public static function root(): string {
@@ -393,6 +400,10 @@ class OIDplusMac extends OIDplusObject {
 			if ((strlen($aid)%2) == 1) $aid .= 'F';
 			$aid_is_ok = aid_canonize($aid);
 			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, without prefix').')', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186F2');
+		}
+
+		if ((strlen($this->number)==12/*48 bit*/) || (strlen($this->number)==16/*64 bit*/)) {
+			$ids[] = new OIDplusAltId('urn', 'dev:mac:'.strtolower($this->number), _L('Uniform Resource Name (RFC 9039)'));
 		}
 
 		return $ids;

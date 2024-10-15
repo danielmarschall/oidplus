@@ -182,20 +182,20 @@ class OIDplusUrn extends OIDplusObject {
 		$tech_info[$tmp] = $this->nodeId(true);
 
 		$tmp = _L('Type');
-		$first_arc = explode(':', $this->nodeId(false))[0];
-		if (str_starts_with($first_arc,'urn-')) {
-			if (preg_match('@^urn-(\d+)$@', $first_arc)) {
+		$nid = explode(':', $this->nodeId(false))[0];
+		if (str_starts_with(strtolower($nid),'urn-')) {
+			if (!preg_match('@^urn-(\d+)$@', $nid)) {
 				$tech_info[$tmp] = _L('Illegal informal');
 			} else {
 				$tech_info[$tmp] = _L('Informal (RFC 8141)');
 			}
-		} else if (strlen($first_arc) < 2) {
+		} else if (strlen($nid) < 2) {
 			$tech_info[$tmp] = _L('Illegal (too short)');
-		} else if (preg_match('@^[a-zA-Z][a-zA-Z]-@', $first_arc)) {
+		} else if (preg_match('@^[a-zA-Z][a-zA-Z]-@', $nid)) {
 			$tech_info[$tmp] = _L('Reserved for country code usage (ISO 3166-1)');
-		} else if (str_starts_with($first_arc,'xn-')) {
+		} else if (str_starts_with(strtolower($nid),'xn-')) {
 			$tech_info[$tmp] = _L('Reserved for country code usage (Punycode)');
-		} else if (str_starts_with($first_arc,'x-')) {
+		} else if (str_starts_with(strtolower($nid),'x-')) {
 			$tech_info[$tmp] = _L('Experimental (RFC 3406)');
 		} else {
 			$tech_info[$tmp] = _L('Formal (RFC 8141)');

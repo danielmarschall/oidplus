@@ -8790,6 +8790,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Uniform Resource Name (RFC 9039)
+		]]></source>
+		<target><![CDATA[
+		Uniform Resource Name (RFC 9039)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Uniform Resource Name (URN)
 		]]></source>
 		<target><![CDATA[
