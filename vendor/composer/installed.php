@@ -184,7 +184,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => 'a3ef82e2819472fa4b3aee73313ba3956271f8ed',
+            'reference' => 'c228cc002b69644ed6871b4c3d8ecf50b19330c7',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),
@@ -231,7 +231,7 @@
         'tinymce/tinymce' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'e92ab7adaa3db1752639361ded41a7abb2d28996',
+            'reference' => 'e4d46be06c8d0d99f542e7199d1283850fb9192c',
             'type' => 'component',
             'install_path' => __DIR__ . '/../tinymce/tinymce',
             'aliases' => array(
@@ -242,7 +242,7 @@
         'twbs/bootstrap' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'a7a45b25a63c6eff9245dba6ab8ce15528ad1818',
+            'reference' => '5c2f2e7e0ec41daae3819106efce20e2568b19d2',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twbs/bootstrap',
             'aliases' => array(
