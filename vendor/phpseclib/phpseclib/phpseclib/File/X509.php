@@ -2755,7 +2755,8 @@ class X509
                     [
                         'version' => 'v1',
                         'subject' => $this->dn,
-                        'subjectPKInfo' => $publicKey
+                        'subjectPKInfo' => $publicKey,
+                        'attributes' => []
                     ],
                     'signatureAlgorithm' => $signatureAlgorithm,
                     'signature'          => false // this is going to be overwritten later
@@ -3498,6 +3499,28 @@ class X509
         }
 
         return false;
+    }
+
+    /**
+     * Get all requested CSR extensions
+     *
+     * Returns the list of extensions if there are any and false if not
+     *
+     * @param array $csr optional
+     * @return mixed
+     */
+    public function getRequestedCertificateExtensions(array $csr = null)
+    {
+        if (empty($csr)) {
+            $csr = $this->currentCert;
+        }
+
+        $requestedExtensions = $this->getAttribute('pkcs-9-at-extensionRequest');
+        if ($requestedExtensions === false) {
+            return false;
+        }
+
+        return $this->getAttribute('pkcs-9-at-extensionRequest')[0];
     }
 
     /**
