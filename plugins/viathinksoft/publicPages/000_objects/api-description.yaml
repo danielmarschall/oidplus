@@ -2,37 +2,37 @@ openapi: 3.1.0
 
 info:
   version: 0.0.1
-  title: OIDplus API
-  description: An API for OIDplus
+  title: OIDplus Objects REST API
+  description: REST API that can be used to manage objects at an OIDplus system.
   contact:
-    name: YourName
-    url: https://www.oidplus.com/features.php
+    name: Daniel Marschall, ViaThinkSoft
+    url: https://www.oidplus.com/
 
 servers:
   - url: https://www.example.com/oidplus/rest/v1/
-    description: placeholder
+    description: Replace "www.example.com/oidplus" with the actual URL of your OIDplus instance.
 
 paths:
-  /objects{ns}{id}:
+  /objects/{ns}:{id}/:
     get:
-      summary: get object details
-      description: returns data on objects
+      summary: GET request
+      description: Retrieve details of an object in the database
       parameters:
         - in: path
           name: ns
           schema:
-            type: integer
+            type: string
           required: true
-          description: namespace?
+          description: A namespace managed in OIDplus, such as "oid", "guid", etc.
         - in: path
           name: id
           schema:
-            type: integer
+            type: string
           required: true
-          description: id
+          description: The identifier inside the namespace, for example "2.999" for an OID.
       responses:
         200:
-          description: get response
+          description: GET response
           content:
             application/json:
               schema:
@@ -41,115 +41,139 @@ paths:
                 properties:
                   status:
                     type: integer
-                    description: status
-                    examples: [-1,0]
+                    description: Status<0 is error. Status>=0 is success. In case of success, the status can contain contain bit flags to return additional details (see status_bits). In case of failure, the status value can contain the error code, e.g. code -2 usually means that a server-side Exception has been thrown.
+                    example: 0
                   status_bits:
-                    type: integer
-                    description: status
-                    examples: [1,2]
+                    type: object
+                    description: In case status bits (values 1, 2, 4, 8, ...) were included in the status, then they are described in the array status_bits. When programmatically processing a status, please use the bit flags in "status", not the explanation text in "status_bits"!
+                    additionalProperties:
+                      type: string
+                      description: The description of the flag
+                    example:
+                      1: "Reserved for flag 1"
+                      2: "Reserved for flag 2"
+                      4: "Reserved for flag 4"
+                      8: "Reserved for flag 8"
                   error:
                     type: string
-                    description: optional error message
-                    examples: ["incorrect parameter"]
+                    description: In case of failure, the error description will be returned here
+                    example: "Object oid:2.999 already exists!"
                   ra_email:
                     type: string
-                    description: mail address
-                    examples: ["example@example.com"]
+                    description: The email address of the RA.
+                    example: "example@example.com"
                   comment:
                     type: string
-                    description: 
-                    examples: ["your comment"]
+                    description: A comment the superior RA made on the given OID.
+                    example: "your comment"
                   iris:
-                    type: integer
-                    description: foo
-                    examples: [0]
+                    type: array
+                    description: An array of Unicode Labels of this object'S arc. Only applies to OIDs.
+                    items:
+                      type: string
+                    example: ["Example", "Exemple", "Ejemplo", "Beispiel"]
                   asn1ids:
-                    type: integer
-                    description: foo
-                    examples: [0]
+                    type: array
+                    description: An array of alphanumeric identifiers of this object's arc. Only applies to OIDs.
+                    items:
+                      type: string
+                    example: ["joint-iso-itu-t", "joint-iso-ccitt"]
                   confidential:
-                    type: integer
-                    description: foo
-                    examples: [0]
+                    type: boolean
+                    description: True if the object is confidential. A value 'true' will only be returned if the request is authenticated, otherwise the request will fail with the error 'Insufficient authorization to read information about this object.'
+                    example: true
                   title:
                     type: string
-                    description: foo
-                    examples: ["foo"]
+                    description: Title or short description of the object
+                    example: "Contoso Ltd."
                   description:
                     type: string
-                    description: foo
-                    examples: ["foo"]
+                    description: More information about this object
+                    example: "More information at ..."
                   children:
-                    type: string
-                    description: foo
-                    examples: ["foo"]
+                    type: array
+                    items:
+                      type: string
+                    description: An array of direct subsequent objects (children, but not grand-children), including their namespace.
+                    example: ["oid:2.999.1", "oid:2.999.2", "oid:2.999.3"]
                   created:
                     type: string
-                    description: foo
-                    examples: ["foo"]
+                    description: Timestamp of the creation of the object.
+                    example: "2021-01-08 22:24:45"
                   updated:
                     type: string
-                    description: foo
-                    examples: ["foo"]
+                    description: Time of the last update of the object.
+                    example: "2021-10-10 23:46:14"
 
     put:
-      summary: put object on server
-      description: returns data on objects
+      summary: PUT request
+      description: Creates or Re-Creates an object on the server
       parameters:
         - in: path
           name: ns
           schema:
-            type: integer
+            type: string
           required: true
-          description: namespace?
+          description: A namespace managed in OIDplus, such as "oid", "guid", etc.
         - in: path
           name: id
           schema:
-            type: integer
+            type: string
           required: true
-          description: id
+          description: The identifier inside the namespace, for example "2.999" for an OID.
         - in: query
           name: ra_email
           schema:
             type: string
           required: false
-          description: email
+          description: The email address of the RA.
+          example: "example@example.com"
         - in: query
           name: comment
           schema:
             type: string
           required: false
-          description: comment
+          description: A comment the superior RA made on the given OID.
+          example: "your comment"
         - in: query
           name: iris
           schema:
-            type: string
+            type: array
+            items:
+              type: string
           required: false
-          description: iris
+          description: An array of Unicode Labels of this object's arc. Only applies to OIDs.
+          example: ["Example", "Exemple", "Ejemplo", "Beispiel"]
         - in: query
           name: asn1ids
           schema:
-            type: string
+            type: array
+            items:
+              type: string
           required: false
-          description: asn1ids
+          description: An array of alphanumeric identifiers of this object's arc. Only applies to OIDs.
+          example: ["joint-iso-itu-t", "joint-iso-ccitt"]
         - in: query
           name: confidential
           schema:
-            type: string
+            type: boolean
           required: false
-          description: confidential
+          description: True if the object is confidential.
+          example: true
         - in: query
           name: title
           schema:
             type: string
           required: false
-          description: title
+          description: Title or short description of the object
+          example: "Contoso Ltd."
         - in: query
           name: description
           schema:
             type: string
           required: false
-          description: description
+          description: More information about this object
+          example: "More information at ..."
       responses:
         200:
           description: put response
@@ -161,81 +185,99 @@ paths:
                 properties:
                   status:
                     type: integer
-                    description: status
-                    examples: [-1,1]
+                    description: Status<0 is error. Status>=0 is success. In case of success, the status can contain contain bit flags to return additional details (see status_bits). In case of failure, the status value can contain the error code, e.g. code -2 usually means that a server-side Exception has been thrown.
+                    example: 0
                   status_bits:
-                    type: integer
-                    description: status bits
-                    examples: [1,2]
+                    type: object
+                    description: In case status bits (values 1, 2, 4, 8, ...) were included in the status, then they are described in the array status_bits. When programmatically processing a status, please use the bit flags in "status", not the explanation text in "status_bits"!
+                    additionalProperties:
+                      type: string
+                      description: The description of the flag
+                    example:
+                      1: "RA is not registered, but it can be invited"
+                      2: "RA is not registered and it cannot be invited"
+                      4: "OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset"
+                      8: "User has write rights to the freshly created OID"
                   error:
                     type: string
-                    description: error
-                    examples: ["error description"]
+                    description: In case of failure, the error description will be returned here.
+                    example: "Authentication error. Please log in as the RA to update this OID."
                   inserted_id:
-                    type: integer
-                    description: inserted id
-                    examples: [2,3]
+                    type: string
+                    description: Created object id, including the namespace
+                    example: "oid:2.999"
     post:
-      summary: post
-      description: post
+      summary: POST request
+      description: Create an object in the database
       parameters:
         - in: path
           name: ns
           schema:
-            type: integer
+            type: string
           required: true
-          description: namespace?
+          description: A namespace managed in OIDplus, such as "oid", "guid", etc.
         - in: path
           name: id
           schema:
-            type: integer
+            type: string
           required: true
-          description: id
+          description: The identifier inside the namespace, for example "2.999" for an OID.
         - in: query
           name: ra_email
           schema:
             type: string
           required: false
-          description: email
+          description: The email address of the RA.
+          example: "example@example.com"
         - in: query
           name: comment
           schema:
             type: string
           required: false
-          description: comment
+          description: A comment the superior RA made on the given OID.
+          example: "your comment"
         - in: query
           name: iris
           schema:
-            type: string
+            type: array
+            items:
+              type: string
           required: false
-          description: iris
+          description: An array of Unicode Labels of this object's arc. Only applies to OIDs.
+          example: ["Example", "Exemple", "Ejemplo", "Beispiel"]
         - in: query
           name: asn1ids
           schema:
-            type: string
+            type: array
+            items:
+              type: string
           required: false
-          description: asn1ids
+          description: An array of alphanumeric identifiers of this object's arc. Only applies to OIDs.
+          example: ["joint-iso-itu-t", "joint-iso-ccitt"]
         - in: query
           name: confidential
           schema:
-            type: string
+            type: boolean
           required: false
-          description: confidential
+          description: True if the object is confidential.
+          example: true
         - in: query
           name: title
           schema:
             type: string
           required: false
-          description: title
+          description: Title or short description of the object
+          example: "Contoso Ltd."
         - in: query
           name: description
           schema:
             type: string
           required: false
-          description: description
+          description: More information about this object
+          example: "More information at ..."
       responses:
         200:
-          description: post response
+          description: POST response
           content:
             application/json:
               schema:
@@ -244,81 +286,99 @@ paths:
                 properties:
                   status:
                     type: integer
-                    description: status
-                    examples: [-1,1]
+                    description: Status<0 is error. Status>=0 is success. In case of success, the status can contain contain bit flags to return additional details (see status_bits). In case of failure, the status value can contain the error code, e.g. code -2 usually means that a server-side Exception has been thrown.
+                    example: 0
                   status_bits:
-                    type: integer
-                    description: status bits
-                    examples: [1,2]
+                    type: object
+                    description: In case status bits (values 1, 2, 4, 8, ...) were included in the status, then they are described in the array status_bits. When programmatically processing a status, please use the bit flags in "status", not the explanation text in "status_bits"!
+                    additionalProperties:
+                      type: string
+                      description: The description of the flag
+                    example:
+                      1: "RA is not registered, but it can be invited"
+                      2: "RA is not registered and it cannot be invited"
+                      4: "OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset"
+                      8: "User has write rights to the freshly created OID"
                   error:
                     type: string
-                    description: error
-                    examples: ["error description"]
+                    description: In case of failure, the error description will be returned here.
+                    example: "Object oid:2.999 already exists!"
                   inserted_id:
-                    type: integer
-                    description: inserted id
-                    examples: [2,3]
+                    type: string
+                    description: Created object id, including the namespace
+                    example: "oid:2.999"
     patch:
-      summary: patch
-      description: patch
+      summary: PATCH request
+      description: Update data of an object
       parameters:
         - in: path
           name: ns
           schema:
-            type: integer
+            type: string
           required: true
-          description: namespace?
+          description: A namespace managed in OIDplus, such as "oid", "guid", etc.
         - in: path
           name: id
           schema:
-            type: integer
+            type: string
           required: true
-          description: id
+          description: The identifier inside the namespace, for example "2.999" for an OID.
         - in: query
           name: ra_email
           schema:
             type: string
           required: false
-          description: email
+          description: The email address of the RA.
+          example: "example@example.com"
         - in: query
           name: comment
           schema:
             type: string
           required: false
-          description: comment
+          description: A comment the superior RA made on the given OID.
+          example: "your comment"
         - in: query
           name: iris
           schema:
-            type: string
+            type: array
+            items:
+              type: string
           required: false
-          description: iris
+          description: An array of Unicode Labels of this object's arc. Only applies to OIDs.
+          example: ["Example", "Exemple", "Ejemplo", "Beispiel"]
         - in: query
           name: asn1ids
           schema:
-            type: string
+            type: array
+            items:
+              type: string
           required: false
-          description: asn1ids
+          description: An array of alphanumeric identifiers of this object's arc. Only applies to OIDs.
+          example: ["joint-iso-itu-t", "joint-iso-ccitt"]
         - in: query
           name: confidential
           schema:
-            type: string
+            type: boolean
           required: false
-          description: confidential
+          description: True if the object is confidential.
+          example: true
         - in: query
           name: title
           schema:
             type: string
           required: false
-          description: title
+          description: Title or short description of the object
+          example: "Contoso Ltd."
         - in: query
           name: description
           schema:
             type: string
           required: false
-          description: description
+          description: More information about this object
+          example: "More information at ..."
       responses:
         200:
-          description: patch response
+          description: PATCH response
           content:
             application/json:
               schema:
@@ -327,36 +387,43 @@ paths:
                 properties:
                   status:
                     type: integer
-                    description: status
-                    examples: [-1,1]
+                    description: Status<0 is error. Status>=0 is success. In case of success, the status can contain contain bit flags to return additional details (see status_bits). In case of failure, the status value can contain the error code, e.g. code -2 usually means that a server-side Exception has been thrown.
+                    example: 0
                   status_bits:
-                    type: integer
-                    description: status bits
-                    examples: [1,2]
+                    type: object
+                    description: In case status bits (values 1, 2, 4, 8, ...) were included in the status, then they are described in the array status_bits. When programmatically processing a status, please use the bit flags in "status", not the explanation text in "status_bits"!
+                    additionalProperties:
+                      type: string
+                      description: The description of the flag
+                    example:
+                      1: "RA is not registered, but it can be invited"
+                      2: "RA is not registered and it cannot be invited"
+                      4: "OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset"
+                      8: "User has write rights to the freshly created OID"
                   error:
                     type: string
-                    description: error
-                    examples: ["error description"]
+                    description: In case of failure, the error description will be returned here.
+                    example: "Object oid:2.999 does not exist"
 
     delete:
-      summary: delete object
-      description: delete object
+      summary: DELETE request
+      description: Removes an object from the database
       parameters:
         - in: path
           name: ns
           schema:
-            type: integer
+            type: string
           required: true
-          description: namespace?
+          description: A namespace managed in OIDplus, such as "oid", "guid", etc.
         - in: path
           name: id
           schema:
-            type: integer
+            type: string
           required: true
-          description: id
+          description: The identifier inside the namespace, for example "2.999" for an OID.
       responses:
         200:
-          description: patch response
+          description: DELETE response
           content:
             application/json:
               schema:
@@ -365,13 +432,20 @@ paths:
                 properties:
                   status:
                     type: integer
-                    description: status
-                    examples: [-1,1]
+                    description: Status<0 is error. Status>=0 is success. In case of success, the status can contain contain bit flags to return additional details (see status_bits). In case of failure, the status value can contain the error code, e.g. code -2 usually means that a server-side Exception has been thrown.
+                    example: 0
                   status_bits:
-                    type: integer
-                    description: status bits
-                    examples: [1,2]
+                    type: object
+                    description: In case status bits (values 1, 2, 4, 8, ...) were included in the status, then they are described in the array status_bits. When programmatically processing a status, please use the bit flags in "status", not the explanation text in "status_bits"!
+                    additionalProperties:
+                      type: string
+                      description: The description of the flag
+                    example:
+                      1: "Reserved for flag 1"
+                      2: "Reserved for flag 2"
+                      4: "Reserved for flag 4"
+                      8: "Reserved for flag 8"
                   error:
                     type: string
-                    description: error
-                    examples: ["error description"]
+                    description: In case of failure, the error description will be returned here.
+                    example: "Object oid:2.999 does not exist"
