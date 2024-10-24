@@ -1,0 +1,377 @@
+openapi: 3.1.0
+
+info:
+  version: 0.0.1
+  title: OIDplus API
+  description: An API for OIDplus
+  contact:
+    name: YourName
+    url: https://www.oidplus.com/features.php
+
+servers:
+  - url: https://www.example.com/oidplus/rest/v1/
+    description: placeholder
+
+paths:
+  /objects{ns}{id}:
+    get:
+      summary: get object details
+      description: returns data on objects
+      parameters:
+        - in: path
+          name: ns
+          schema:
+            type: integer
+          required: true
+          description: namespace?
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: id
+      responses:
+        200:
+          description: get response
+          content:
+            application/json:
+              schema:
+                title: Response
+                type: array
+                properties:
+                  status:
+                    type: integer
+                    description: status
+                    examples: [-1,0]
+                  status_bits:
+                    type: integer
+                    description: status
+                    examples: [1,2]
+                  error:
+                    type: string
+                    description: optional error message
+                    examples: ["incorrect parameter"]
+                  ra_email:
+                    type: string
+                    description: mail address
+                    examples: ["example@example.com"]
+                  comment:
+                    type: string
+                    description: 
+                    examples: ["your comment"]
+                  iris:
+                    type: integer
+                    description: foo
+                    examples: [0]
+                  asn1ids:
+                    type: integer
+                    description: foo
+                    examples: [0]
+                  confidential:
+                    type: integer
+                    description: foo
+                    examples: [0]
+                  title:
+                    type: string
+                    description: foo
+                    examples: ["foo"]
+                  description:
+                    type: string
+                    description: foo
+                    examples: ["foo"]
+                  children:
+                    type: string
+                    description: foo
+                    examples: ["foo"]
+                  created:
+                    type: string
+                    description: foo
+                    examples: ["foo"]
+                  updated:
+                    type: string
+                    description: foo
+                    examples: ["foo"]
+
+    put:
+      summary: put object on server
+      description: returns data on objects
+      parameters:
+        - in: path
+          name: ns
+          schema:
+            type: integer
+          required: true
+          description: namespace?
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: id
+        - in: query
+          name: ra_email
+          schema:
+            type: string
+          required: false
+          description: email
+        - in: query
+          name: comment
+          schema:
+            type: string
+          required: false
+          description: comment
+        - in: query
+          name: iris
+          schema:
+            type: string
+          required: false
+          description: iris
+        - in: query
+          name: asn1ids
+          schema:
+            type: string
+          required: false
+          description: asn1ids
+        - in: query
+          name: confidential
+          schema:
+            type: string
+          required: false
+          description: confidential
+        - in: query
+          name: title
+          schema:
+            type: string
+          required: false
+          description: title
+        - in: query
+          name: description
+          schema:
+            type: string
+          required: false
+          description: description
+      responses:
+        200:
+          description: put response
+          content:
+            application/json:
+              schema:
+                title: Response
+                type: array
+                properties:
+                  status:
+                    type: integer
+                    description: status
+                    examples: [-1,1]
+                  status_bits:
+                    type: integer
+                    description: status bits
+                    examples: [1,2]
+                  error:
+                    type: string
+                    description: error
+                    examples: ["error description"]
+                  inserted_id:
+                    type: integer
+                    description: inserted id
+                    examples: [2,3]
+    post:
+      summary: post
+      description: post
+      parameters:
+        - in: path
+          name: ns
+          schema:
+            type: integer
+          required: true
+          description: namespace?
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: id
+        - in: query
+          name: ra_email
+          schema:
+            type: string
+          required: false
+          description: email
+        - in: query
+          name: comment
+          schema:
+            type: string
+          required: false
+          description: comment
+        - in: query
+          name: iris
+          schema:
+            type: string
+          required: false
+          description: iris
+        - in: query
+          name: asn1ids
+          schema:
+            type: string
+          required: false
+          description: asn1ids
+        - in: query
+          name: confidential
+          schema:
+            type: string
+          required: false
+          description: confidential
+        - in: query
+          name: title
+          schema:
+            type: string
+          required: false
+          description: title
+        - in: query
+          name: description
+          schema:
+            type: string
+          required: false
+          description: description
+      responses:
+        200:
+          description: post response
+          content:
+            application/json:
+              schema:
+                title: Response
+                type: array
+                properties:
+                  status:
+                    type: integer
+                    description: status
+                    examples: [-1,1]
+                  status_bits:
+                    type: integer
+                    description: status bits
+                    examples: [1,2]
+                  error:
+                    type: string
+                    description: error
+                    examples: ["error description"]
+                  inserted_id:
+                    type: integer
+                    description: inserted id
+                    examples: [2,3]
+    patch:
+      summary: patch
+      description: patch
+      parameters:
+        - in: path
+          name: ns
+          schema:
+            type: integer
+          required: true
+          description: namespace?
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: id
+        - in: query
+          name: ra_email
+          schema:
+            type: string
+          required: false
+          description: email
+        - in: query
+          name: comment
+          schema:
+            type: string
+          required: false
+          description: comment
+        - in: query
+          name: iris
+          schema:
+            type: string
+          required: false
+          description: iris
+        - in: query
+          name: asn1ids
+          schema:
+            type: string
+          required: false
+          description: asn1ids
+        - in: query
+          name: confidential
+          schema:
+            type: string
+          required: false
+          description: confidential
+        - in: query
+          name: title
+          schema:
+            type: string
+          required: false
+          description: title
+        - in: query
+          name: description
+          schema:
+            type: string
+          required: false
+          description: description
+      responses:
+        200:
+          description: patch response
+          content:
+            application/json:
+              schema:
+                title: Response
+                type: array
+                properties:
+                  status:
+                    type: integer
+                    description: status
+                    examples: [-1,1]
+                  status_bits:
+                    type: integer
+                    description: status bits
+                    examples: [1,2]
+                  error:
+                    type: string
+                    description: error
+                    examples: ["error description"]
+
+    delete:
+      summary: delete object
+      description: delete object
+      parameters:
+        - in: path
+          name: ns
+          schema:
+            type: integer
+          required: true
+          description: namespace?
+        - in: path
+          name: id
+          schema:
+            type: integer
+          required: true
+          description: id
+      responses:
+        200:
+          description: patch response
+          content:
+            application/json:
+              schema:
+                title: Response
+                type: array
+                properties:
+                  status:
+                    type: integer
+                    description: status
+                    examples: [-1,1]
+                  status_bits:
+                    type: integer
+                    description: status bits
+                    examples: [1,2]
+                  error:
+                    type: string
+                    description: error
+                    examples: ["error description"]
