@@ -329,6 +329,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 */
 	public function restApiInfo(string $kind='html'): string {
 		if ($kind === 'openapi-3.1.0') {
+			// Note: The script publicPages/002_rest_api/openapi_yaml.php will ONLY take the contents of the "paths:"
+			//       node and EVERYTHING else is ignored. Therefore, it is important that the version is exactly 3.1.0,
+			//       and no additional nodes besides "paths:" are required.
 			return file_get_contents(__DIR__.'/openapi-3.1.0.yaml');
 		} else if ($kind === 'html') {
 			throw new OIDplusException(_L('HTML Rest API support has been dropped'), null, 500);

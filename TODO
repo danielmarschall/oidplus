@@ -1,3 +1,6 @@
+Planned 2025:
+- REST API: config (#40), attachments (#41), log events (#42)
+
 Sep 2024 in discussion:
 - quota for attachments (#65)
 - WTF wordpress like plugin test bundle (#67)

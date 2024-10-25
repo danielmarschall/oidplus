@@ -50,7 +50,7 @@ $output = '';
 $output .= "openapi: ".OPENAPI_VERSION."\n";
 $output .= "\n";
 $output .= "info:\n";
-$output .= "  version: 1.0.0\n";
+$output .= "  version: ".OIDplus::getVersion()."\n";
 $output .= "  title: OIDplus REST API\n";
 $output .= "  description: This OpenAPI specification contains all REST endpoints that are installed on this system \"".OIDplus::config()->getValue('system_title')."\"\n";
 $output .= "  contact:\n";
@@ -67,7 +67,7 @@ $output .= "paths:\n";
 $submenu = array();
 foreach (OIDplus::getAllPlugins() as $plugin) {
 	if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9) {
-		$yaml = $plugin->restApiInfo('openapi-3.1.0');
+		$yaml = $plugin->restApiInfo('openapi-'.OPENAPI_VERSION);
 		if ($yaml) $output .= get_yaml_only_paths($yaml);
 	}
 }
@@ -81,7 +81,7 @@ $output .= "      scheme: bearer\n";
 $output .= "      bearerFormat: JWT\n";
 
 // https://stackoverflow.com/questions/52541842/what-is-the-media-type-of-an-openapi-schema
-header('Content-Type: application/vnd.oai.openapi');
+header('Content-Type: application/vnd.oai.openapi;version='.OPENAPI_VERSION);
 header('Content-Disposition: attachment; filename="oidplus_openapi.yaml"');
 //header('Content-Type: text/plain'); // just for debugging
 echo $output;
@@ -94,31 +94,22 @@ echo $output;
  * @return string The contents of the paths: node
  */
 function get_yaml_only_paths(string $content): string {
-	// Die YAML-Datei laden
-	$inhalt = explode("\n",$content); // Liest die Datei zeilenweise
-	$neueInhalte = [];
-	$ignorieren = true; // Wir beginnen mit dem Ignorieren
-	if (trim($inhalt[0]??'') != 'openapi: '.OPENAPI_VERSION) throw new OIDplusException(_L("OpenAPI version %1 not found in plugin's response", OPENAPI_VERSION));
-	foreach ($inhalt as $zeile) {
-	    // Trim die Zeile, um überflüssige Leerzeichen zu entfernen
-	    $trimmedZeile = trim($zeile);
-	    // Prüfen, ob die Zeile mit "paths:" beginnt
-	    if ($trimmedZeile === 'paths:') {
-	        $ignorieren = false; // Stoppe das Ignorieren
-	        //$neueInhalte[] = $zeile; // Füge die Zeile zu den neuen Inhalten hinzu
-	        continue; // Gehe zur nächsten Zeile
-	    }
-	    // Wenn die Zeile nicht leer und nicht mit Leerzeichen beginnt, beginne wieder mit dem Ignorieren
-	    if ($trimmedZeile !== '' && !preg_match('/^\s/', $zeile)) {
-	        $ignorieren = true; // Beginne wieder mit dem Ignorieren
-	    }
-	    // Wenn wir nicht ignorieren, füge die Zeile zur neuen Liste hinzu
-	    if (!$ignorieren) {
-	        // Wenn die Zeile nicht leer ist, füge sie hinzu
-	        if ($trimmedZeile !== '') {
-	            $neueInhalte[] = $zeile; // Füge die originale Zeile hinzu
-	        }
-	    }
+	$content = explode("\n",$content);
+	$new_contents = [];
+	$ignoring = true;
+	if (trim($content[0]??'') != 'openapi: '.OPENAPI_VERSION) throw new OIDplusException(_L("OpenAPI version %1 not found in plugin's response", OPENAPI_VERSION));
+	foreach ($content as $zeile) {
+		$trimmedZeile = trim($zeile);
+		if ($trimmedZeile === 'paths:') {
+			$ignoring = false;
+			continue;
+		}
+		if ($trimmedZeile !== '' && !preg_match('/^\s/', $zeile)) {
+			$ignoring = true;
+		}
+		if (!$ignoring) {
+			$new_contents[] = $zeile;
+		}
 	}
-	return implode("\n", $neueInhalte)."\n";
+	return implode("\n", $new_contents)."\n";
 }

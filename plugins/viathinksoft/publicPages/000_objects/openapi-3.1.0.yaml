@@ -1,7 +1,7 @@
 openapi: 3.1.0
 
 info:
-  version: 0.0.1
+  version: 1.0.0
   title: OIDplus Objects REST API
   description: REST API that can be used to manage objects at an OIDplus system.
   contact:
