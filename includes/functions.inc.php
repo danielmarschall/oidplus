@@ -648,26 +648,6 @@ function getBearerToken() {
 }
 
 /**
- * @param array $struct
- * @return string
- */
-function array_to_html_ul_li(array $struct): string {
-	$res = '';
-	$res .= '<ul>';
-	foreach ($struct as $name => $val) {
-		$res .= '<li>';
-		if (is_array($val)) {
-			$res .= $name . array_to_html_ul_li($val);
-		} else {
-			$res .= $val;
-		}
-		$res .= '</li>';
-	}
-	$res .= '</ul>';
-	return $res;
-}
-
-/**
  * @param mixed $mixed
  * @return bool
  */

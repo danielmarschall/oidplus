@@ -52,7 +52,7 @@ $all_strings = array();
 $it = new RecursiveDirectoryIterator($dir);
 $it->setFlags(FilesystemIterator::SKIP_DOTS); // DOES NOT WORK! Folders with . prefix still get evaluated!
 foreach(new RecursiveIteratorIterator($it) as $file) {
-	if ((strpos(str_replace('\\','/',realpath($file)),'/vendor/') !== false) && (strpos(str_replace('\\','/',realpath($file)),'/vendor/danielmarschall/') === false)) continue; // ignore third-party-code
+	if (((strpos(str_replace('\\','/',realpath($file)),'/vendor/') !== false) && (strpos(str_replace('\\','/',realpath($file)),'/vendor/danielmarschall/') === false)) || (strpos($file,'swagger-ui') !== false)) continue; // ignore third-party-code
 	if (substr_count(str_replace('\\','/',realpath($file)),'/dev/') > substr_count(str_replace('\\','/',realpath($dir).'/'),'/dev/')) continue; // ignore development utilities
 
 	if (preg_match('@[/\\\\]\\.[^\\.]@',$file,$m)) continue; // Alternative to SKIP_DOTS

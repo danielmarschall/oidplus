@@ -80,23 +80,10 @@ class OIDplusPageAdminRestApi extends OIDplusPagePluginAdmin {
 	 */
 	public function gui(string $id, array &$out, bool &$handled): void {
 		$parts = explode('$',$id,2);
-		$subpage = $parts[1] ?? '';
 
 		if ($parts[0] == 'oidplus:rest_api_information_admin') {
-			$handled = true;
+				$handled = true;
 
-			if (str_starts_with($subpage, 'endpoints:')) {
-				// Note: This page can be accessed WITHOUT login!
-				$plugin = OIDplus::getPluginByOid(explode(':',$subpage)[1]);
-				if (!$plugin || !($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9)) throw new OIDplusException(_L("No endpoints for this plugin found"), null, 404);
-				$out['title'] = _L('REST API').' - '.$plugin->getManifest()->getName() . ' ' . _L('Endpoints');
-				$out['icon'] = file_exists(__DIR__.'/img/endpoints_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/endpoints_icon.png' : '';
-				$out['text'] = '';
-				if (OIDplus::authUtils()->isAdminLoggedIn()) {
-					$out['text'] .= '<p><a '.OIDplus::gui()->link('oidplus:rest_api_information_admin').'><img src="img/arrow_back.png" width="16" alt="'._L('Go back').'"> '._L('Go back').'</a></p>';
-				}
-				$out['text'] .= $plugin->restApiInfo('html');
-			} else {
 				$out['title'] = _L('REST API');
 				$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
@@ -122,8 +109,7 @@ class OIDplusPageAdminRestApi extends OIDplusPagePluginAdmin {
 				$endpoints = '';
 				foreach (OIDplus::getAllPlugins() as $plugin) {
 					if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9) {
-						$link = 'oidplus:rest_api_information_admin$endpoints:'.$plugin->getManifest()->getOid();
-						$endpoints .= '<li><a '.OIDplus::gui()->link($link).'>'.htmlentities($plugin->getManifest()->getName()).'</a></li>';
+						$endpoints .= '<li>'.htmlentities($plugin->getManifest()->getName()).'</li>';
 					}
 				}
 				if ($endpoints) {
@@ -131,6 +117,9 @@ class OIDplusPageAdminRestApi extends OIDplusPagePluginAdmin {
 					$out['text'] .= '<p><ul>'.$endpoints.'</ul></p>';
 				} else {
 					$out['text'] .= '<p>'._L('No installed plugin offers a REST functionality').'</p>';
+				}
+				if (OIDplus::getPluginByOid("1.3.6.1.4.1.37476.2.5.2.4.1.2")) { // OIDplusPagePublicRestApi
+					$out['text'] .= '<a href="'.OIDplus::webpath(null).'plugins/viathinksoft/publicPages/002_rest_api/swagger-ui/" target="_blank" class="gray_footer_font">'._L('Documentation').'</a>';
 				}
 				$out['text'] .= '<h2>'._L('Authentication').'</h2>';
 				$out['text'] .= '<p>'._L('The authentication is done via the following HTTP header:').'</p>';
@@ -149,7 +138,6 @@ class OIDplusPageAdminRestApi extends OIDplusPagePluginAdmin {
 				}
 				$out['text'] .= '<button type="button" name="btn_blacklist_jwt" id="btn_blacklist_jwt" class="btn btn-danger btn-xs" onclick="OIDplusPageAdminRestApi.blacklistJWT()">'._L('Blacklist all previously generated tokens').'</button>';
 			}
-		}
 	}
 
 	/**
@@ -175,22 +163,10 @@ class OIDplusPageAdminRestApi extends OIDplusPagePluginAdmin {
 			$tree_icon_endpoints = null; // default icon (folder)
 		}
 
-		$submenu = array();
-		foreach (OIDplus::getAllPlugins() as $plugin) {
-			if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9) {
-				$submenu[] = [
-					'id' => 'oidplus:rest_api_information_admin$endpoints:'.$plugin->getManifest()->getOid(),
-					'icon' => $tree_icon_endpoints,
-					'text' => $plugin->getManifest()->getName() . ' ' . _L('Endpoints')
-				];
-			}
-		}
-
 		$json[] = array(
 			'id' => 'oidplus:rest_api_information_admin',
 			'icon' => $tree_icon,
-			'text' => _L('REST API'),
-			'children' => $submenu
+			'text' => _L('REST API')
 		);
 
 		return true;

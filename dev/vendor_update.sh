@@ -112,6 +112,15 @@ composer update --no-dev -d plugins/viathinksoft/publicPages/100_whois/whois/jso
 composer license -d plugins/viathinksoft/publicPages/100_whois/whois/json/ > plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/licenses
 remove_vendor_rubbish plugins/viathinksoft/publicPages/100_whois/whois/json/
 
+rm -rf plugins/viathinksoft/publicPages/002_rest_api/vendor/
+composer update --no-dev -d plugins/viathinksoft/publicPages/002_rest_api/
+composer license -d plugins/viathinksoft/publicPages/002_rest_api/ > plugins/viathinksoft/publicPages/002_rest_api/vendor/licenses
+mv plugins/viathinksoft/publicPages/002_rest_api/vendor/swagger-api/swagger-ui/dist plugins/viathinksoft/publicPages/002_rest_api/swagger-ui
+mv plugins/viathinksoft/publicPages/002_rest_api/vendor/licenses plugins/viathinksoft/publicPages/002_rest_api/swagger-ui/
+rm plugins/viathinksoft/publicPages/002_rest_api/swagger-ui/*.map
+rm -rf plugins/viathinksoft/publicPages/002_rest_api/vendor
+sed -i 's@url: "https:\/\/petstore\.swagger\.io\/v2\/swagger\.json",@url: new URL(window\.location\.origin+window\.location\.pathname+"\.\.\/openapi_yaml\.php")\.href,@g' plugins/viathinksoft/publicPages/002_rest_api/swagger-ui/swagger-initializer.js
+
 # Get latest version of WEID converter
 curl https://raw.githubusercontent.com/WEID-Consortium/weid.info/gh-pages/WeidOidConverter.js > plugins/viathinksoft/objectTypes/oid/WeidOidConverter.js
 curl https://raw.githubusercontent.com/WEID-Consortium/weid.info/gh-pages/WeidOidConverter.php > plugins/viathinksoft/objectTypes/oid/WeidOidConverter.class.php

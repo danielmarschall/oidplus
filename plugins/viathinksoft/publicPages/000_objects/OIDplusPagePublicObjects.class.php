@@ -85,11 +85,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 * @throws \ViaThinkSoft\OIDplus\Core\OIDplusException
 	 */
 	public function modifyContent(string $id, string &$title, string &$icon, string &$text): void {
-		$payload = '<br /> <a href="'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL)
-			.'rest/v1/objects/'.htmlentities($id).'" class="gray_footer_font" target="_blank">'._L('REST API').'</a> '
-			.'(<a '.OIDplus::gui()->link('oidplus:rest_api_information_admin$endpoints:1.3.6.1.4.1.37476.2.5.2.4.1.0').' class="gray_footer_font">'._L('Documentation').'</a>)';
-
-		$text = str_replace('<!-- MARKER 6 -->', '<!-- MARKER 6 -->'.$payload, $text);
+		if (OIDplus::getPluginByOid("1.3.6.1.4.1.37476.2.5.2.4.1.2")) { // OIDplusPagePublicRestApi
+			$payload = '<br /> <a href="'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL)
+				.'rest/v1/objects/'.htmlentities($id).'" class="gray_footer_font" target="_blank">'._L('REST API').'</a> '
+				.'(<a href="'.OIDplus::webpath(null).'plugins/viathinksoft/publicPages/002_rest_api/swagger-ui/" target="_blank" class="gray_footer_font">'._L('Documentation').'</a>)';
+			$text = str_replace('<!-- MARKER 6 -->', '<!-- MARKER 6 -->'.$payload, $text);
+		}
 	}
 
 	/**
@@ -327,95 +328,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 * @return string
 	 */
 	public function restApiInfo(string $kind='html'): string {
-		if ($kind === 'html') {
-			$struct = [
-				_L('Receive') => [
-					'<b>GET</b> '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'rest/v1/objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[ns]:[id]</abbr>',
-					_L('Input parameters') => [
-						'<i>'._L('None').'</i>'
-					],
-					_L('Output parameters') => [
-						'status ('._L('<0 is error, >=0 is success').')',
-						'status_bits',
-						'error ('._L('if an error occurred').')',
-						'ra_email',
-						'comment',
-						'iris ('._L('for OID only').')',
-						'asn1ids ('._L('for OID only').')',
-						'confidential',
-						'title',
-						'description',
-						'children',
-						'created',
-						'updated'
-					]
-				],
-				_L('Re-Create') => [
-					'<b>PUT</b> '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'rest/v1/objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[ns]:[id]</abbr>',
-					_L('Input parameters') => [
-						'ra_email ('._L('optional').')',
-						'comment ('._L('optional').')',
-						'iris ('._L('optional').')',
-						'asn1ids ('._L('optional').')',
-						'confidential ('._L('optional').')',
-						'title ('._L('optional').')',
-						'description ('._L('optional').')'
-					],
-					_L('Output parameters') => [
-						'status ('._L('<0 is error, >=0 is success').')',
-						'status_bits',
-						'error ('._L('if an error occurred').')',
-						'inserted_id ('._L('if it was created').')'
-					]
-				],
-				_L('Create') => [
-					'<b>POST</b> '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'rest/v1/objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[ns]:[id]</abbr>',
-					_L('Input parameters') => [
-						'ra_email ('._L('optional').')',
-						'comment ('._L('optional').')',
-						'iris ('._L('optional').')',
-						'asn1ids ('._L('optional').')',
-						'confidential ('._L('optional').')',
-						'title ('._L('optional').')',
-						'description ('._L('optional').')'
-					],
-					_L('Output parameters') => [
-						'status ('._L('<0 is error, >=0 is success').')',
-						'status_bits',
-						'error ('._L('if an error occurred').')',
-						'inserted_id'
-					]
-				],
-				_L('Update') => [
-					'<b>PATCH</b> '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'rest/v1/objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[ns]:[id]</abbr>',
-					_L('Input parameters') => [
-						'ra_email ('._L('optional').')',
-						'comment ('._L('optional').')',
-						'iris ('._L('optional').')',
-						'asn1ids ('._L('optional').')',
-						'confidential ('._L('optional').')',
-						'title ('._L('optional').')',
-						'description ('._L('optional').')'
-					],
-					_L('Output parameters') => [
-						'status ('._L('<0 is error, >=0 is success').')',
-						'status_bits',
-						'error ('._L('if an error occurred').')',
-					]
-				],
-				_L('Remove') => [
-					'<b>DELETE</b> '.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'rest/v1/objects/<abbr title="'._L('e.g. %1', 'oid:2.999').'">[ns]:[id]</abbr>',
-					_L('Input parameters') => [
-						'<i>'._L('None').'</i>'
-					],
-					_L('Output parameters') => [
-						'status ('._L('<0 is error, >=0 is success').')',
-						'status_bits',
-						'error ('._L('if an error occurred').')',
-					]
-				]
-			];
-			return array_to_html_ul_li($struct);
+		if ($kind === 'openapi-3.1.0') {
+			return file_get_contents(__DIR__.'/openapi-3.1.0.yaml');
+		} else if ($kind === 'html') {
+			throw new OIDplusException(_L('HTML Rest API support has been dropped'), null, 500);
 		} else {
 			throw new OIDplusException(_L('Invalid REST API information format'), null, 500);
 		}

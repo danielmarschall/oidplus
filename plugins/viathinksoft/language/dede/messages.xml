@@ -238,14 +238,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		<0 is error, >=0 is success
-		]]></source>
-		<target><![CDATA[
-		<0 ist Fehler, >=0 ist Erfolg
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		<a %1>Click here</a> for more information about privacy related topics.
 		]]></source>
 		<target><![CDATA[
@@ -3238,6 +3230,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		HTML Rest API support has been dropped
+		]]></source>
+		<target><![CDATA[
+		HTML Rest API Dokumentation wird nicht mehr unterstützt
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		HTTP header "%1" cannot be written as array. A newly installed plugin is probably misusing the method "%2".
 		]]></source>
 		<target><![CDATA[
@@ -3666,14 +3666,6 @@
 		]]></source>
 		<target><![CDATA[
 		Grundeinstellungen
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Input parameters
-		]]></source>
-		<target><![CDATA[
-		Eingabe-Parameter
 		]]></target>
 	</message>
 	<message>
@@ -4790,14 +4782,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		No endpoints for this plugin found
-		]]></source>
-		<target><![CDATA[
-		Keine Endpunkte für dieses Plugin gefunden
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		No extra OIDs found
 		]]></source>
 		<target><![CDATA[
@@ -5526,6 +5510,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		OpenAPI version %1 not found in plugin's response
+		]]></source>
+		<target><![CDATA[
+		OpenAPI version %1 wurde nicht in der Plugin-Ausgabe gefunden
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Operating System
 		]]></source>
 		<target><![CDATA[
@@ -5634,14 +5626,6 @@
 		]]></source>
 		<target><![CDATA[
 		Ausgabeformat
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Output parameters
-		]]></source>
-		<target><![CDATA[
-		Ausgabe-Parameter
 		]]></target>
 	</message>
 	<message>
@@ -6694,26 +6678,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Re-Create
-		]]></source>
-		<target><![CDATA[
-		Neu-Erstellen
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Re-Install database (all data will be deleted)
 		]]></source>
 		<target><![CDATA[
 		Neu-Installation der Datenbank (alle Daten werden gelöscht)
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Receive
-		]]></source>
-		<target><![CDATA[
-		Empfangen
 		]]></target>
 	</message>
 	<message>
@@ -6834,14 +6802,6 @@
 		]]></source>
 		<target><![CDATA[
 		Seite neu laden
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Remove
-		]]></source>
-		<target><![CDATA[
-		Entfernen
 		]]></target>
 	</message>
 	<message>
@@ -9742,14 +9702,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		e.g. %1
-		]]></source>
-		<target><![CDATA[
-		z.B. %1
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		eMail address does not exist anymore. It was probably already changed.
 		]]></source>
 		<target><![CDATA[
@@ -9798,14 +9750,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		for OID only
-		]]></source>
-		<target><![CDATA[
-		nur bei OIDs
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		hCaptcha Secret
 		]]></source>
 		<target><![CDATA[
@@ -9818,22 +9762,6 @@
 		]]></source>
 		<target><![CDATA[
 		hCaptcha Site-Key
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		if an error occurred
-		]]></source>
-		<target><![CDATA[
-		wenn ein Fehler aufgetreten ist
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		if it was created
-		]]></source>
-		<target><![CDATA[
-		wenn es erstellt wurde
 		]]></target>
 	</message>
 	<message>
@@ -9906,14 +9834,6 @@
 		]]></source>
 		<target><![CDATA[
 		nicht verfügbar: %1
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		optional
-		]]></source>
-		<target><![CDATA[
-		optional
 		]]></target>
 	</message>
 	<message>

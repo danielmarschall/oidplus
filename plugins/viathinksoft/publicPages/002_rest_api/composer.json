@@ -1,0 +1,12 @@
+{
+	"require": {
+		"swagger-api/swagger-ui": "*"
+	},
+	"config": {
+		"secure-http": false,
+		"preferred-install": {
+			"*": "dist"
+		},
+		"autoloader-suffix": "OidPlusRestSwagger"
+	}
+}
