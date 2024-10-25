@@ -17,6 +17,8 @@ paths:
     get:
       summary: GET request
       description: Retrieve details of an object in the database
+      security:
+        - BearerAuth: []
       parameters:
         - in: path
           name: ns
@@ -108,6 +110,8 @@ paths:
     put:
       summary: PUT request
       description: Creates or Re-Creates an object on the server
+      security:
+        - BearerAuth: []
       parameters:
         - in: path
           name: ns
@@ -209,6 +213,8 @@ paths:
     post:
       summary: POST request
       description: Create an object in the database
+      security:
+        - BearerAuth: []
       parameters:
         - in: path
           name: ns
@@ -310,6 +316,8 @@ paths:
     patch:
       summary: PATCH request
       description: Update data of an object
+      security:
+        - BearerAuth: []
       parameters:
         - in: path
           name: ns
@@ -408,6 +416,8 @@ paths:
     delete:
       summary: DELETE request
       description: Removes an object from the database
+      security:
+        - BearerAuth: []
       parameters:
         - in: path
           name: ns
@@ -449,3 +459,10 @@ paths:
                     type: string
                     description: In case of failure, the error description will be returned here.
                     example: "Object oid:2.999 does not exist"
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
