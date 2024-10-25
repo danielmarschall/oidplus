@@ -919,7 +919,7 @@
             "version_normalized": "dev-master",
             "dist": {
                 "type": "zip",
-                "url": "http://www.spamspan.com/releases/spamspan-latest.zip",
+                "url": "https://www.spamspan.com/releases/spamspan-latest.zip",
                 "reference": "master"
             },
             "type": "library",
@@ -1144,18 +1144,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "5c2f2e7e0ec41daae3819106efce20e2568b19d2"
+                "reference": "c2a7d686de56f5cdb829c63e1b3849a2c04409d0"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/5c2f2e7e0ec41daae3819106efce20e2568b19d2",
-                "reference": "5c2f2e7e0ec41daae3819106efce20e2568b19d2",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/c2a7d686de56f5cdb829c63e1b3849a2c04409d0",
+                "reference": "c2a7d686de56f5cdb829c63e1b3849a2c04409d0",
                 "shasum": ""
             },
             "replace": {
                 "twitter/bootstrap": "self.version"
             },
-            "time": "2024-10-17T07:18:32+00:00",
+            "time": "2024-10-25T05:40:14+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",

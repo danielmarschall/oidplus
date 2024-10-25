@@ -37,8 +37,8 @@ spomky-labs/php-punycode         9999999-dev d12fe5c MIT
 symfony/polyfill-mbstring        1.x-dev 2369cb9     MIT                   
 tinymce/tinymce                  9999999-dev e4d46be GPL-2.0-or-later      
 tinymce/tinymce                  dev-master e4d46be  GPL-2.0-or-later      
-twbs/bootstrap                   9999999-dev 5c2f2e7 MIT                   
-twbs/bootstrap                   dev-main 5c2f2e7    MIT                   
+twbs/bootstrap                   9999999-dev c2a7d68 MIT                   
+twbs/bootstrap                   dev-main c2a7d68    MIT                   
 tweeb/tinymce-i18n               9999999-dev 058da08 MIT                   
 tweeb/tinymce-i18n               dev-master 058da08  MIT                   
 vakata/jstree                    9999999-dev 6256df0 MIT                   

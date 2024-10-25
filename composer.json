@@ -91,7 +91,7 @@
 				"version": "master",
 				"license": "GPL-2.0-only",
 				"dist": {
-					"url": "http://www.spamspan.com/releases/spamspan-latest.zip",
+					"url": "https://www.spamspan.com/releases/spamspan-latest.zip",
 					"type": "zip",
 					"reference": "master"
 				}

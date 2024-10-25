@@ -242,7 +242,7 @@
         'twbs/bootstrap' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '5c2f2e7e0ec41daae3819106efce20e2568b19d2',
+            'reference' => 'c2a7d686de56f5cdb829c63e1b3849a2c04409d0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twbs/bootstrap',
             'aliases' => array(

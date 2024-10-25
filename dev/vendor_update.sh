@@ -115,6 +115,7 @@ remove_vendor_rubbish plugins/viathinksoft/publicPages/100_whois/whois/json/
 rm -rf plugins/viathinksoft/publicPages/002_rest_api/vendor/
 composer update --no-dev -d plugins/viathinksoft/publicPages/002_rest_api/
 composer license -d plugins/viathinksoft/publicPages/002_rest_api/ > plugins/viathinksoft/publicPages/002_rest_api/vendor/licenses
+rm -rf plugins/viathinksoft/publicPages/002_rest_api/swagger-ui
 mv plugins/viathinksoft/publicPages/002_rest_api/vendor/swagger-api/swagger-ui/dist plugins/viathinksoft/publicPages/002_rest_api/swagger-ui
 mv plugins/viathinksoft/publicPages/002_rest_api/vendor/licenses plugins/viathinksoft/publicPages/002_rest_api/swagger-ui/
 rm plugins/viathinksoft/publicPages/002_rest_api/swagger-ui/*.map
