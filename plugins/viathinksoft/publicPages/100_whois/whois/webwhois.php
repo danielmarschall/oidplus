@@ -63,5 +63,7 @@ list($out_content, $out_type) = $x->oidipQuery($query);
 
 OIDplus::invoke_shutdown();
 
-if ($out_type) header('Content-Type:'.$out_type);
+if ($out_type) @header('Content-Type:'.$out_type);
+@header("Content-Disposition: inline"); // TODO! DOES NOT WORK! IT ALWAYS DOWNLOADS!
+                                        // https://github.com/whatwg/html/issues/7420
 echo $out_content;

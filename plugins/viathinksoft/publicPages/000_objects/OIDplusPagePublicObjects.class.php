@@ -88,7 +88,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		if (OIDplus::getPluginByOid("1.3.6.1.4.1.37476.2.5.2.4.1.2")) { // OIDplusPagePublicRestApi
 			$payload = '<br /> <a href="'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL)
 				.'rest/v1/objects/'.htmlentities($id).'" class="gray_footer_font" target="_blank">'._L('REST API').'</a> '
-				.'(<a href="'.OIDplus::webpath(null).'plugins/viathinksoft/publicPages/002_rest_api/swagger-ui/" target="_blank" class="gray_footer_font">'._L('Documentation').'</a>)';
+				.'(<a '.OIDplus::gui()->link('oidplus:rest_api_documentation').' class="gray_footer_font">'._L('Documentation').'</a>)';
 			$text = str_replace('<!-- MARKER 6 -->', '<!-- MARKER 6 -->'.$payload, $text);
 		}
 	}
@@ -329,9 +329,6 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 */
 	public function restApiInfo(string $kind='html'): string {
 		if ($kind === 'openapi-3.1.0') {
-			// Note: The script publicPages/002_rest_api/openapi_yaml.php will ONLY take the contents of the "paths:"
-			//       node and EVERYTHING else is ignored. Therefore, it is important that the version is exactly 3.1.0,
-			//       and no additional nodes besides "paths:" are required.
 			return file_get_contents(__DIR__.'/openapi-3.1.0.yaml');
 		} else if ($kind === 'html') {
 			throw new OIDplusException(_L('HTML Rest API support has been dropped'), null, 500);

@@ -27,8 +27,9 @@ use ViaThinkSoft\OIDplus\Core\OIDplusPagePluginPublic;
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-// TODO: should this be a different plugin type? A page without gui is weird!
 class OIDplusPagePublicRestApi extends OIDplusPagePluginPublic {
+
+	// === PART 1: REST request handling (/rest/v1/...) ===
 
 	/**
 	 * @param string $request
@@ -89,6 +90,87 @@ class OIDplusPagePublicRestApi extends OIDplusPagePluginPublic {
 			die(); // return true;
 		}
 
+		return false;
+	}
+
+	// === PART 2: GUI (Swagger UI) ===
+
+	/**
+	 * @param string $html
+	 * @return void
+	 */
+	public function htmlPostprocess(string &$html): void {
+		$scrTag = '<link rel="stylesheet" type="text/css" href="plugins/viathinksoft/publicPages/002_rest_api/swagger-ui/swagger-ui.css" />'.
+		          '<link rel="stylesheet" type="text/css" href="plugins/viathinksoft/publicPages/002_rest_api/swagger-ui/index.css" />'.
+		          '<script src="plugins/viathinksoft/publicPages/002_rest_api/swagger-ui/swagger-ui-bundle.js" charset="UTF-8"> </script>'.
+		          '<script src="plugins/viathinksoft/publicPages/002_rest_api/swagger-ui/swagger-ui-standalone-preset.js" charset="UTF-8"> </script>';
+		$html = preg_replace('|(<head([^>]*)>)|imU', "\\1\n\t".str_replace('\\', '\\\\', $scrTag), $html);
+	}
+
+	/**
+	 * @param string $id
+	 * @param array $out
+	 * @param bool $handled
+	 * @return void
+	 * @throws OIDplusException
+	 */
+	public function gui(string $id, array &$out, bool &$handled): void {
+		if (explode('$',$id)[0] == 'oidplus:rest_api_documentation') {
+			$handled = true;
+
+			$out['title'] = _L('REST API Documentation');
+			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
+
+			$out['text']  = '<div id="swagger-ui"></div>'."\n";
+			$out['text'] .= '<script>'."\n";
+			$out['text'] .= ''."\n";
+			$out['text'] .= '  window.ui = SwaggerUIBundle({'."\n";
+			$out['text'] .= '    url: "'.OIDplus::webpath(__DIR__.'/openapi_yaml.php').'",'."\n";
+			$out['text'] .= '    dom_id: "#swagger-ui",'."\n";
+			$out['text'] .= '    deepLinking: true,'."\n";
+			$out['text'] .= '    presets: ['."\n";
+			$out['text'] .= '      SwaggerUIBundle.presets.apis,'."\n";
+			$out['text'] .= '      SwaggerUIStandalonePreset'."\n";
+			$out['text'] .= '    ],'."\n";
+			$out['text'] .= '    plugins: ['."\n";
+			$out['text'] .= '      SwaggerUIBundle.plugins.DownloadUrl'."\n";
+			$out['text'] .= '    ],'."\n";
+			$out['text'] .= '    layout: "StandaloneLayout"'."\n";
+			$out['text'] .= '  });'."\n";
+			$out['text'] .= ''."\n";
+			$out['text'] .= '</script>'."\n";
+		}
+	}
+
+	/**
+	 * @param array $json
+	 * @param string|null $ra_email
+	 * @param bool $nonjs
+	 * @param string $req_goto
+	 * @return bool
+	 * @throws OIDplusException
+	 */
+	public function tree(array &$json, ?string $ra_email=null, bool $nonjs=false, string $req_goto=''): bool {
+		if (file_exists(__DIR__.'/img/main_icon16.png')) {
+			$tree_icon = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon16.png';
+		} else {
+			$tree_icon = null; // default icon (folder)
+		}
+
+		$json[] = array(
+			'id' => 'oidplus:rest_api_documentation',
+			'icon' => $tree_icon,
+			'text' => _L('REST API Documentation')
+		);
+
+		return true;
+	}
+
+	/**
+	 * @param string $request
+	 * @return array|false
+	 */
+	public function tree_search(string $request) {
 		return false;
 	}
 

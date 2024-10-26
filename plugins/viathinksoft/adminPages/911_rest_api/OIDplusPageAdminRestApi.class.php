@@ -119,9 +119,9 @@ class OIDplusPageAdminRestApi extends OIDplusPagePluginAdmin {
 					$out['text'] .= '<p>'._L('No installed plugin offers a REST functionality').'</p>';
 				}
 				if (OIDplus::getPluginByOid("1.3.6.1.4.1.37476.2.5.2.4.1.2")) { // OIDplusPagePublicRestApi
-					$out['text'] .= '<a href="'.OIDplus::webpath(null).'plugins/viathinksoft/publicPages/002_rest_api/swagger-ui/" target="_blank" class="gray_footer_font">'._L('Documentation').'</a>';
+					$out['text'] .= '<a '.OIDplus::gui()->link('oidplus:rest_api_documentation').' class="gray_footer_font">'._L('Documentation').'</a>';
 				}
-				$out['text'] .= '<h2>'._L('Authentication').'</h2>';
+				$out['text'] .= '<h2>'._L('Authentication for %1', $sub).'</h2>';
 				$out['text'] .= '<p>'._L('The authentication is done via the following HTTP header:').'</p>';
 				$out['text'] .= '<p><pre id="oidplus_auth_jwt">';
 				$out['text'] .= 'Authorization: Bearer '.htmlentities($token)."\n";
@@ -129,7 +129,7 @@ class OIDplusPageAdminRestApi extends OIDplusPagePluginAdmin {
 				$out['text'] .= '<p><input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(oidplus_auth_jwt)"></p>';
 				$out['text'] .= '<p>'._L('Please keep this information confidential!').'</p>';
 
-				$out['text'] .= '<h2>'._L('Blacklisted tokens').'</h2>';
+				$out['text'] .= '<h2>'._L('Blacklisted tokens for %1', $sub).'</h2>';
 				$bl_time = OIDplusAuthContentStoreJWT::jwtGetBlacklistTime($gen, $sub);
 				if ($bl_time == 0) {
 					$out['text'] .= '<p>'._L('None of the previously generated JWT tokens have been blacklisted.').'</p>';

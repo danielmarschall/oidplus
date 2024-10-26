@@ -201,6 +201,8 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 				}
 
 				@header('Content-Type: '.$out_type);
+				@header("Content-Disposition: inline"); // TODO! DOES NOT WORK! IT ALWAYS DOWNLOADS!
+				                                        // https://github.com/whatwg/html/issues/7420
 				echo $out_content;
 			}
 
@@ -361,8 +363,13 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 	public function modifyContent(string $id, string &$title, string &$icon, string &$text): void {
 		//$oidipUrl = OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'whois/webwhois.php?query='.urlencode($id);
 		list($ns, $id_no_ns) = explode(':', $id, 2);
-		$oidipUrl = OIDplus::webpath().'oidip/'.urlencode($ns).'/'.$id_no_ns.'/text';
-		$payload = '<br><img src="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/page_pictogram.png" height="15" alt=""> <a href="'.$oidipUrl.'" class="gray_footer_font" target="_blank">'._L('Whois').'</a>';
+		$oidipUrl = OIDplus::webpath().'oidip/'.urlencode($ns).'/'.$id_no_ns;
+		$payload = '<br><img src="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/page_pictogram.png" height="15" alt=""> '.
+		           _L('OID-IP').': '.
+		           '<a href="'.$oidipUrl.'/text" class="gray_footer_font" target="_blank">'._L('Text').'</a>, '.
+		           '<a href="'.$oidipUrl.'/json" class="gray_footer_font" target="_blank">'._L('JSON').'</a>, '.
+		           '<a href="'.$oidipUrl.'/xml" class="gray_footer_font" target="_blank">'._L('XML').'</a> '.
+		           '(<a href="https://www.viathinksoft.de/std/viathinksoft-std-0002-oidip.html" target="_blank" class="gray_footer_font">'._L('Documentation').'</a>)';
 
 		$obj = OIDplusObject::parse($id);
 		if ($obj && $obj->userHasParentalWriteRights()) {

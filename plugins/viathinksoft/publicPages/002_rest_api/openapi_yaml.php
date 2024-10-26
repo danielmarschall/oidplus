@@ -62,23 +62,27 @@ $output .= "servers:\n";
 $output .= "  - url: ".OIDplus::webpath(null, OIDplus::PATH_ABSOLUTE)."rest/v1/\n";
 $output .= "    description: ".OIDplus::config()->getValue('system_title')."\n";
 $output .= "\n";
-$output .= "paths:\n";
-
-$submenu = array();
-foreach (OIDplus::getAllPlugins() as $plugin) {
-	if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9) {
-		$yaml = $plugin->restApiInfo('openapi-'.OPENAPI_VERSION);
-		if ($yaml) $output .= get_yaml_only_paths($yaml);
+foreach (['tags','paths'] as $accepted_node) {
+	$output .= $accepted_node.":\n";
+	foreach (OIDplus::getAllPlugins() as $plugin) {
+		if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9) {
+			$yaml = $plugin->restApiInfo('openapi-'.OPENAPI_VERSION);
+			if ($yaml) {
+				check_openapi_version($yaml);
+				$output .= get_yaml_only_node_contents($yaml, $accepted_node);
+			}
+		}
 	}
+	$output .= "\n";
 }
-
-$output .= "\n";
 $output .= "components:\n";
 $output .= "  securitySchemes:\n";
 $output .= "    BearerAuth:\n";
 $output .= "      type: http\n";
 $output .= "      scheme: bearer\n";
 $output .= "      bearerFormat: JWT\n";
+
+OIDplus::invoke_shutdown();
 
 // https://stackoverflow.com/questions/52541842/what-is-the-media-type-of-an-openapi-schema
 header('Content-Type: application/vnd.oai.openapi;version='.OPENAPI_VERSION);
@@ -89,27 +93,37 @@ echo $output;
 # ---
 
 /**
- * Loads an OpenAPI Yaml file and removes everything except the contents of the node "paths:"
+ * Verifies that the YAML file has the correct OpenAPI version and throws an Exception otherwise
  * @param $content string The YAML file contents
- * @return string The contents of the paths: node
  */
-function get_yaml_only_paths(string $content): string {
+function check_openapi_version(string $content): void {
+	$content = explode("\n",$content);
+	if (trim($content[0]??'') != 'openapi: '.OPENAPI_VERSION) {
+		throw new OIDplusException(_L("OpenAPI version %1 not found in plugin's response", OPENAPI_VERSION));
+	}
+}
+
+/**
+ * Loads an OpenAPI Yaml file and removes everything except the contents of a node
+ * @param $content string The YAML file contents
+ * @param $node string The name of the node
+ * @return string The contents of the node
+ */
+function get_yaml_only_node_contents(string $content, string $node): string {
 	$content = explode("\n",$content);
 	$new_contents = [];
 	$ignoring = true;
-	if (trim($content[0]??'') != 'openapi: '.OPENAPI_VERSION) throw new OIDplusException(_L("OpenAPI version %1 not found in plugin's response", OPENAPI_VERSION));
-	foreach ($content as $zeile) {
-		$trimmedZeile = trim($zeile);
-		if ($trimmedZeile === 'paths:') {
+	foreach ($content as $line) {
+		if ($line === $node.':') {
 			$ignoring = false;
 			continue;
 		}
-		if ($trimmedZeile !== '' && !preg_match('/^\s/', $zeile)) {
+		if (trim($line) !== '' && !preg_match('/^\s/', $line)) {
 			$ignoring = true;
 		}
 		if (!$ignoring) {
-			$new_contents[] = $zeile;
+			$new_contents[] = $line;
 		}
 	}
-	return implode("\n", $new_contents)."\n";
+	return implode("\n", $new_contents);
 }

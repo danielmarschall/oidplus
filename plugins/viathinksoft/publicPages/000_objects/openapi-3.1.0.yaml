@@ -1,5 +1,9 @@
 openapi: 3.1.0
 
+# Note: The script publicPages/002_rest_api/openapi_yaml.php will ONLY take the contents of the "paths:" and "tags:"
+#       nodes and EVERYTHING else is ignored. Therefore, it is important that the version is exactly 3.1.0,
+#       and no additional nodes besides "paths:" and "tags:" are required.
+
 info:
   version: 1.0.0
   title: OIDplus Objects REST API
@@ -12,11 +16,17 @@ servers:
   - url: https://www.example.com/oidplus/rest/v1/
     description: Replace "www.example.com/oidplus" with the actual URL of your OIDplus instance.
 
+tags:
+  - name: objects
+    description: Read and write objects into the database
+
 paths:
   /objects/{ns}:{id}:
     get:
       summary: GET request
       description: Retrieve details of an object in the database
+      tags:
+        - objects
       security:
         - BearerAuth: []
       parameters:
@@ -110,6 +120,8 @@ paths:
     put:
       summary: PUT request
       description: Creates or Re-Creates an object on the server
+      tags:
+        - objects
       security:
         - BearerAuth: []
       parameters:
@@ -213,6 +225,8 @@ paths:
     post:
       summary: POST request
       description: Create an object in the database
+      tags:
+        - objects
       security:
         - BearerAuth: []
       parameters:
@@ -316,6 +330,8 @@ paths:
     patch:
       summary: PATCH request
       description: Update data of an object
+      tags:
+        - objects
       security:
         - BearerAuth: []
       parameters:
@@ -416,6 +432,8 @@ paths:
     delete:
       summary: DELETE request
       description: Removes an object from the database
+      tags:
+        - objects
       security:
         - BearerAuth: []
       parameters:
