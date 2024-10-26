@@ -141,9 +141,14 @@ class OIDplusPagePublicRestApi extends OIDplusPagePluginPublic {
 			$out['text'] .= ''."\n";
 			$out['text'] .= '</script>'."\n";
 
+			$out['text'] .= '<style>'."\n";
 			// Removing SwaggerUIStandalonePreset, layout, and SwaggerUIBundle.plugins.DownloadUrl will remove the top bar (good),
 			// but it also removes the verification button (not good). So we remove the top bar using CSS.
-			$out['text'] .= '<style>.swagger-ui .topbar { display: none; }</style>'."\n";
+			$out['text'] .= '.swagger-ui .topbar { display: none; }'."\n";
+			// The authentication dialog has z-index 9999, but for some reason it is still behind
+			// the jsTree menu. By removing "position: fixed", it works so that the dialog is centered to the content panel.
+			$out['text'] .= '.swagger-ui .dialog-ux { position: static; }'."\n";
+			$out['text'] .= '</style>'."\n";
 		}
 	}
 

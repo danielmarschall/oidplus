@@ -64,7 +64,7 @@ $output_ary = [
 	'servers' => [
 		[
 			'url' => OIDplus::webpath(null, OIDplus::PATH_ABSOLUTE).'rest/v1/',
-			'description' => OIDplus::config()->getValue('admin_email')
+			'description' => OIDplus::config()->getValue('system_title')
 		]
 	],
 	'tags' => [], // will be filled from contents of all plugins
