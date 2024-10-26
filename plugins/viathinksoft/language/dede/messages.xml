@@ -806,14 +806,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Authentication
-		]]></source>
-		<target><![CDATA[
-		Authentifizierung
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Authentication error. Please log in as admin, or as the RA of "%1" to upload an attachment.
 		]]></source>
 		<target><![CDATA[
@@ -874,6 +866,14 @@
 		]]></source>
 		<target><![CDATA[
 		Zugriff verweigert! Bitte melden Sie sich an.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Authentication for %1
+		]]></source>
+		<target><![CDATA[
+		Authentifizierung für %1
 		]]></target>
 	</message>
 	<message>
@@ -1038,10 +1038,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Blacklisted tokens
+		Blacklisted tokens for %1
 		]]></source>
 		<target><![CDATA[
-		Gesperrte Token
+		Gesperrte Token für %1
 		]]></target>
 	</message>
 	<message>
@@ -4006,6 +4006,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		JSON
+		]]></source>
+		<target><![CDATA[
+		JSON
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		JSON Decode failed
 		]]></source>
 		<target><![CDATA[
@@ -5002,6 +5010,14 @@
 		]]></source>
 		<target><![CDATA[
 		OID-Wurzelknoten
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		OID-IP
+		]]></source>
+		<target><![CDATA[
+		OID-IP
 		]]></target>
 	</message>
 	<message>
@@ -6662,6 +6678,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		REST API Documentation
+		]]></source>
+		<target><![CDATA[
+		REST API Dokumentation
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		REST endpoint not found
 		]]></source>
 		<target><![CDATA[
@@ -7762,6 +7786,14 @@
 		]]></source>
 		<target><![CDATA[
 		Testen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Text
+		]]></source>
+		<target><![CDATA[
+		Text
 		]]></target>
 	</message>
 	<message>
@@ -9238,14 +9270,6 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Whois
-		]]></source>
-		<target><![CDATA[
-		WhoIs
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
 		Wire format
 		]]></source>
 		<target><![CDATA[
@@ -9306,6 +9330,14 @@
 		]]></source>
 		<target><![CDATA[
 		X.500 Distinguished Name
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		XML
+		]]></source>
+		<target><![CDATA[
+		XML
 		]]></target>
 	</message>
 	<message>

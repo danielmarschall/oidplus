@@ -104,8 +104,11 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 			$token = OIDplusAuthContentStoreJWT::craftJWT([$sub], false, $gen);
 
 			$out['text'] .= '<p>'._L('You can make automated calls to your OIDplus account by calling the AJAX API.').'</p>';
+			$out['text'] .= '<p>'._L('Currently, there is no documentation for the AJAX calls. However, you can look at the <b>script.js</b> files of the plugins to see the field names being used. You can also enable network analysis in your web browser debugger (F12) to see the request headers sent to the server during the operation of OIDplus.').'</p>';
 			$out['text'] .= '<p>'._L('The URL for the AJAX script is:').'</p>';
 			$out['text'] .= '<p><b>'.(OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL)?:'.../').'ajax.php</b></p>';
+
+			$out['text'] .= '<h2>'._L('Authentication for %1', $sub).'</h2>';
 			$out['text'] .= '<p>'._L('You must at least provide following fields:').'</p>';
 			$out['text'] .= '<p><pre id="oidplus_auth_jwt">';
 			$out['text'] .= htmlentities(OIDplusAuthContentStoreJWT::COOKIE_NAME).' = "'.htmlentities($token).'"'."\n";
@@ -113,9 +116,8 @@ class OIDplusPageRaAutomatedAJAXCalls extends OIDplusPagePluginRa {
 			$out['text'] .= '<p><input type="button" value="'._L('Copy to clipboard').'" onClick="copyToClipboard(oidplus_auth_jwt)"></p>';
 			$out['text'] .= '<p>'._L('Please keep this information confidential!').'</p>';
 			$out['text'] .= '<p>'._L('The JWT-token (secret!) will automatically perform a login to fulfill the request. The other fields are the normal fields which are called during the usual operation of OIDplus.').'</p>';
-			$out['text'] .= '<p>'._L('Currently, there is no documentation for the AJAX calls. However, you can look at the <b>script.js</b> files of the plugins to see the field names being used. You can also enable network analysis in your web browser debugger (F12) to see the request headers sent to the server during the operation of OIDplus.').'</p>';
 
-			$out['text'] .= '<h2>'._L('Blacklisted tokens').'</h2>';
+			$out['text'] .= '<h2>'._L('Blacklisted tokens for %1', $sub).'</h2>';
 			$bl_time = OIDplusAuthContentStoreJWT::jwtGetBlacklistTime($gen, $sub);
 			if ($bl_time == 0) {
 				$out['text'] .= '<p>'._L('None of the previously generated JWT tokens have been blacklisted.').'</p>';
