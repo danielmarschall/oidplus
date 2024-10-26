@@ -122,6 +122,7 @@ class OIDplusPagePublicRestApi extends OIDplusPagePluginPublic {
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			$out['text']  = '<div id="swagger-ui"></div>'."\n";
+#			$out['text'] .= '<style>.swagger-ui .topbar { display: none; }</style>'."\n";
 			$out['text'] .= '<script>'."\n";
 			$out['text'] .= ''."\n";
 			$out['text'] .= '  window.ui = SwaggerUIBundle({'."\n";
@@ -130,12 +131,12 @@ class OIDplusPagePublicRestApi extends OIDplusPagePluginPublic {
 			$out['text'] .= '    deepLinking: true,'."\n";
 			$out['text'] .= '    presets: ['."\n";
 			$out['text'] .= '      SwaggerUIBundle.presets.apis,'."\n";
-			$out['text'] .= '      SwaggerUIStandalonePreset'."\n";
+#			$out['text'] .= '      SwaggerUIStandalonePreset'."\n";
 			$out['text'] .= '    ],'."\n";
 			$out['text'] .= '    plugins: ['."\n";
-			$out['text'] .= '      SwaggerUIBundle.plugins.DownloadUrl'."\n";
+#			$out['text'] .= '      SwaggerUIBundle.plugins.DownloadUrl'."\n";
 			$out['text'] .= '    ],'."\n";
-			$out['text'] .= '    layout: "StandaloneLayout"'."\n";
+#			$out['text'] .= '    layout: "StandaloneLayout"'."\n";
 			$out['text'] .= '  });'."\n";
 			$out['text'] .= ''."\n";
 			$out['text'] .= '</script>'."\n";
