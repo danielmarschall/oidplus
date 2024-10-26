@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2024 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,6 +21,7 @@ use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;
 use ViaThinkSoft\OIDplus\Core\OIDplusGui;
 use ViaThinkSoft\OIDplus\Plugins\PublicPages\Attachments\OIDplusPagePublicAttachments;
+use ViaThinkSoft\OIDplus\Plugins\PublicPages\Attachments\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_11;
 
 for ($sysdir_depth=4; $sysdir_depth<=7; $sysdir_depth++) {
 	// The plugin directory can be in plugins (i=4), userdata_pub/plugins (i=5), or userdata_pub/tenant/.../plugins/ (i=7)
@@ -64,6 +65,12 @@ try {
 	if (!file_exists($local_file)) {
 		http_response_code(404);
 		throw new OIDplusException(_L('The file does not exist'));
+	}
+
+	foreach (OIDplus::getAllPlugins() as $plugin) {
+		if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_11) {
+			$plugin->beforeAttachmentDownload($id, $filename);
+		}
 	}
 
 	OIDplus::invoke_shutdown();

@@ -214,6 +214,12 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 		$uploaddir = self::getUploadDir($id);
 		$uploadfile = $uploaddir . DIRECTORY_SEPARATOR . basename($req_filename);
 
+		foreach (OIDplus::getAllPlugins() as $plugin) {
+			if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_11) {
+				$plugin->beforeAttachmentDelete($id, $req_filename);
+			}
+		}
+
 		if (!file_exists($uploadfile)) throw new OIDplusException(_L('File does not exist'));
 		@unlink($uploadfile);
 		if (file_exists($uploadfile)) {
@@ -231,6 +237,12 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 		}
 
 		OIDplus::logger()->log("V2:[OK]OID(%1)+[OK/INFO]OIDRA(%1)+[OK/INFO]A", "Deleted attachment '%2' from object '%1'", $id, basename($uploadfile));
+
+		foreach (OIDplus::getAllPlugins() as $plugin) {
+			if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_11) {
+				$plugin->afterAttachmentDelete($id, $req_filename);
+			}
+		}
 
 		return array("status" => 0);
 	}
@@ -299,6 +311,12 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 		$uploaddir = self::getUploadDir($id);
 		$uploadfile = $uploaddir . DIRECTORY_SEPARATOR . basename($req_filename);
 
+		foreach (OIDplus::getAllPlugins() as $plugin) {
+			if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_11) {
+				$plugin->beforeAttachmentUpload($id, $req_filename, $_FILES['userfile']);
+			}
+		}
+
 		if (!is_dir($uploaddir)) {
 			@mkdir($uploaddir, 0777, true);
 			if (!is_dir($uploaddir)) {
@@ -323,6 +341,12 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 		}
 
 		OIDplus::logger()->log("V2:[OK]OID(%1)+[OK/INFO]OIDRA(%1)+[OK/INFO]A", "Uploaded attachment '%2' to object '%1'", $id, basename($uploadfile));
+
+		foreach (OIDplus::getAllPlugins() as $plugin) {
+			if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_11) {
+				$plugin->afterAttachmentUpload($id, $req_filename, $_FILES['userfile']);
+			}
+		}
 
 		return array("status" => 0);
 	}

@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2024 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,27 +17,18 @@
  * limitations under the License.
  */
 
-namespace ViaThinkSoft\OIDplus\Plugins\PublicPages\RestApi;
+namespace ViaThinkSoft\OIDplus\Plugins\PublicPages\Attachments;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9 {
+interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_11 {
 
-	/**
-	 * @param string $requestMethod
-	 * @param string $endpoint
-	 * @param array $json_in
-	 * @return array|false
-	 */
-	public function restApiCall(string $requestMethod, string $endpoint, array $json_in)/*: array|false*/;
-
-	/**
-	 * Outputs information about valid endpoints
-	 * @param string $kind Previously HTML, but now an OpenAPI array structure
-	 * @return string
-	 */
-	public function restApiInfo(string $kind='html'): string;
+	public function beforeAttachmentUpload(string $id, string $filename_relative, array $file_data): void;
+	public function afterAttachmentUpload(string $id, string $filename_relative, array $file_data): void;
+	public function beforeAttachmentDelete(string $id, string $filename_relative): void;
+	public function afterAttachmentDelete(string $id, string $filename_relative): void;
+	public function beforeAttachmentDownload(string $id, string $filename_relative): void;
 
 }

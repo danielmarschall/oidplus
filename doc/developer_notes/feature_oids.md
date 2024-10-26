@@ -119,3 +119,9 @@ Currently, there are the following features defined in the standard plugins of O
 
 - plugins/viathinksoft/publicPages/998_polyfill/INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_10.class.php containing the functions:
     - requestPolyfills
+
+- plugins/viathinksoft/publicPages/095_attachments/INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_11.class.php containing the functions:
+    - beforeAttachmentUpload
+    - afterAttachmentUpload
+    - beforeAttachmentDelete
+    - afterAttachmentDelete
