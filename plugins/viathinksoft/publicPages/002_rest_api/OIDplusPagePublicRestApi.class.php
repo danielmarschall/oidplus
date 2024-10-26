@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2024 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -122,24 +122,28 @@ class OIDplusPagePublicRestApi extends OIDplusPagePluginPublic {
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			$out['text']  = '<div id="swagger-ui"></div>'."\n";
-#			$out['text'] .= '<style>.swagger-ui .topbar { display: none; }</style>'."\n";
+
 			$out['text'] .= '<script>'."\n";
 			$out['text'] .= ''."\n";
 			$out['text'] .= '  window.ui = SwaggerUIBundle({'."\n";
-			$out['text'] .= '    url: "'.OIDplus::webpath(__DIR__.'/openapi_yaml.php').'",'."\n";
+			$out['text'] .= '    url: "'.OIDplus::webpath(__DIR__.'/openapi_json.php').'",'."\n";
 			$out['text'] .= '    dom_id: "#swagger-ui",'."\n";
 			$out['text'] .= '    deepLinking: true,'."\n";
 			$out['text'] .= '    presets: ['."\n";
 			$out['text'] .= '      SwaggerUIBundle.presets.apis,'."\n";
-#			$out['text'] .= '      SwaggerUIStandalonePreset'."\n";
+			$out['text'] .= '      SwaggerUIStandalonePreset'."\n";
 			$out['text'] .= '    ],'."\n";
 			$out['text'] .= '    plugins: ['."\n";
-#			$out['text'] .= '      SwaggerUIBundle.plugins.DownloadUrl'."\n";
+			$out['text'] .= '      SwaggerUIBundle.plugins.DownloadUrl'."\n";
 			$out['text'] .= '    ],'."\n";
-#			$out['text'] .= '    layout: "StandaloneLayout"'."\n";
+			$out['text'] .= '    layout: "StandaloneLayout"'."\n";
 			$out['text'] .= '  });'."\n";
 			$out['text'] .= ''."\n";
 			$out['text'] .= '</script>'."\n";
+
+			// Removing SwaggerUIStandalonePreset, layout, and SwaggerUIBundle.plugins.DownloadUrl will remove the top bar (good),
+			// but it also removes the verification button (not good). So we remove the top bar using CSS.
+			$out['text'] .= '<style>.swagger-ui .topbar { display: none; }</style>'."\n";
 		}
 	}
 

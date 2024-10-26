@@ -324,12 +324,15 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	/**
 	 * Implements INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9
 	 * Outputs information about valid endpoints
-	 * @param string $kind Reserved for different kind of output format (i.e. OpenAPI "TODO"). Currently only 'html' is implemented
+	 * @param string $kind Previously HTML, but now an OpenAPI array structure
 	 * @return string
 	 */
 	public function restApiInfo(string $kind='html'): string {
-		if ($kind === 'openapi-3.1.0') {
-			return file_get_contents(__DIR__.'/openapi-3.1.0.yaml');
+		if ($kind === 'openapi-3.1.0-json') {
+			// Note: The script publicPages/002_rest_api/openapi_json.php will ONLY take the contents of the "paths" and "tags"
+			//       nodes and EVERYTHING else is ignored. Therefore, it is important that the version is exactly 3.1.0,
+			//       and no additional nodes besides "paths:" and "tags:" are required.
+			return file_get_contents(__DIR__.'/openapi-3.1.0.json');
 		} else if ($kind === 'html') {
 			throw new OIDplusException(_L('HTML Rest API support has been dropped'), null, 500);
 		} else {

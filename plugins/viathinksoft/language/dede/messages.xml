@@ -46,6 +46,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		%1 System Administrator
+		]]></source>
+		<target><![CDATA[
+		%1 System-Administrator
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		%1 action failed because object "%2" cannot be parsed!
 		]]></source>
 		<target><![CDATA[
@@ -602,6 +610,14 @@
 		]]></source>
 		<target><![CDATA[
 		Eine AID darf nur maximal 16 Bytes lang sein
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Apache 2.0 License
+		]]></source>
+		<target><![CDATA[
+		Apache 2.0 Lizenz
 		]]></target>
 	</message>
 	<message>
@@ -5134,6 +5150,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		OIDplus REST API
+		]]></source>
+		<target><![CDATA[
+		OIDplus REST API
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		OIDplus Setup
 		]]></source>
 		<target><![CDATA[
@@ -8354,6 +8378,14 @@
 		]]></source>
 		<target><![CDATA[
 		Drittanbieter-Plugins dürfen nicht den ViaThinkSoft PHP-Namensraum verwenden. Bitte verwenden Sie einen eigenen Namespace.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		This OpenAPI specification contains all REST endpoints that are installed on this system "%1"
+		]]></source>
+		<target><![CDATA[
+		Diese OpenAPI-Spezifikation enthält alle REST-Endpunkte die auf diesem System "%1" zur Verfügung stehen
 		]]></target>
 	</message>
 	<message>

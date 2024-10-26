@@ -1,0 +1,725 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "OIDplus Objects REST API",
+    "description": "REST API that can be used to manage objects at an OIDplus system.",
+    "contact": {
+      "name": "Daniel Marschall, ViaThinkSoft",
+      "url": "https://www.oidplus.com/"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://www.example.com/oidplus/rest/v1/",
+      "description": "Replace \"www.example.com/oidplus\" with the actual URL of your OIDplus instance."
+    }
+  ],
+  "tags": [
+    {
+      "name": "objects",
+      "description": "Read and write objects into the database"
+    }
+  ],
+  "paths": {
+    "/objects/{ns}:{id}": {
+      "get": {
+        "summary": "GET request",
+        "description": "Retrieve details of an object in the database",
+        "tags": [
+          "objects"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ns",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "A namespace managed in OIDplus, such as \"oid\", \"guid\", etc."
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The identifier inside the namespace, for example \"2.999\" for an OID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "GET response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response",
+                  "type": "array",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "description": "Status<0 is error. Status>=0 is success. In case of success, the status can contain contain bit flags to return additional details (see status_bits). In case of failure, the status value can contain the error code, e.g. code -2 usually means that a server-side Exception has been thrown.",
+                      "example": 0
+                    },
+                    "status_bits": {
+                      "type": "object",
+                      "description": "In case status bits (values 1, 2, 4, 8, ...) were included in the status, then they are described in the array status_bits. When programmatically processing a status, please use the bit flags in \"status\", not the explanation text in \"status_bits\"!",
+                      "additionalProperties": {
+                        "type": "string",
+                        "description": "The description of the flag"
+                      },
+                      "example": {
+                        "1": "Reserved for flag 1",
+                        "2": "Reserved for flag 2",
+                        "4": "Reserved for flag 4",
+                        "8": "Reserved for flag 8"
+                      }
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "In case of failure, the error description will be returned here",
+                      "example": "Object oid:2.999 already exists!"
+                    },
+                    "ra_email": {
+                      "type": "string",
+                      "description": "The email address of the RA.",
+                      "example": "example@example.com"
+                    },
+                    "comment": {
+                      "type": "string",
+                      "description": "A comment the superior RA made on the given OID.",
+                      "example": "your comment"
+                    },
+                    "iris": {
+                      "type": "array",
+                      "description": "An array of Unicode Labels of this object'S arc. Only applies to OIDs.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "Example",
+                        "Exemple",
+                        "Ejemplo",
+                        "Beispiel"
+                      ]
+                    },
+                    "asn1ids": {
+                      "type": "array",
+                      "description": "An array of alphanumeric identifiers of this object's arc. Only applies to OIDs.",
+                      "items": {
+                        "type": "string"
+                      },
+                      "example": [
+                        "joint-iso-itu-t",
+                        "joint-iso-ccitt"
+                      ]
+                    },
+                    "confidential": {
+                      "type": "boolean",
+                      "description": "True if the object is confidential. A value 'true' will only be returned if the request is authenticated, otherwise the request will fail with the error 'Insufficient authorization to read information about this object.'",
+                      "example": true
+                    },
+                    "title": {
+                      "type": "string",
+                      "description": "Title or short description of the object",
+                      "example": "Contoso Ltd."
+                    },
+                    "description": {
+                      "type": "string",
+                      "description": "More information about this object",
+                      "example": "More information at ..."
+                    },
+                    "children": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "An array of direct subsequent objects (children, but not grand-children), including their namespace.",
+                      "example": [
+                        "oid:2.999.1",
+                        "oid:2.999.2",
+                        "oid:2.999.3"
+                      ]
+                    },
+                    "created": {
+                      "type": "string",
+                      "description": "Timestamp of the creation of the object.",
+                      "example": "2021-01-08 22:24:45"
+                    },
+                    "updated": {
+                      "type": "string",
+                      "description": "Time of the last update of the object.",
+                      "example": "2021-10-10 23:46:14"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "put": {
+        "summary": "PUT request",
+        "description": "Creates or Re-Creates an object on the server",
+        "tags": [
+          "objects"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ns",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "A namespace managed in OIDplus, such as \"oid\", \"guid\", etc."
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The identifier inside the namespace, for example \"2.999\" for an OID."
+          },
+          {
+            "in": "query",
+            "name": "ra_email",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "The email address of the RA.",
+            "example": "example@example.com"
+          },
+          {
+            "in": "query",
+            "name": "comment",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "A comment the superior RA made on the given OID.",
+            "example": "your comment"
+          },
+          {
+            "in": "query",
+            "name": "iris",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "An array of Unicode Labels of this object's arc. Only applies to OIDs.",
+            "example": [
+              "Example",
+              "Exemple",
+              "Ejemplo",
+              "Beispiel"
+            ]
+          },
+          {
+            "in": "query",
+            "name": "asn1ids",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "An array of alphanumeric identifiers of this object's arc. Only applies to OIDs.",
+            "example": [
+              "joint-iso-itu-t",
+              "joint-iso-ccitt"
+            ]
+          },
+          {
+            "in": "query",
+            "name": "confidential",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "True if the object is confidential.",
+            "example": true
+          },
+          {
+            "in": "query",
+            "name": "title",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Title or short description of the object",
+            "example": "Contoso Ltd."
+          },
+          {
+            "in": "query",
+            "name": "description",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "More information about this object",
+            "example": "More information at ..."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "put response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response",
+                  "type": "array",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "description": "Status<0 is error. Status>=0 is success. In case of success, the status can contain contain bit flags to return additional details (see status_bits). In case of failure, the status value can contain the error code, e.g. code -2 usually means that a server-side Exception has been thrown.",
+                      "example": 0
+                    },
+                    "status_bits": {
+                      "type": "object",
+                      "description": "In case status bits (values 1, 2, 4, 8, ...) were included in the status, then they are described in the array status_bits. When programmatically processing a status, please use the bit flags in \"status\", not the explanation text in \"status_bits\"!",
+                      "additionalProperties": {
+                        "type": "string",
+                        "description": "The description of the flag"
+                      },
+                      "example": {
+                        "1": "RA is not registered, but it can be invited",
+                        "2": "RA is not registered and it cannot be invited",
+                        "4": "OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset",
+                        "8": "User has write rights to the freshly created OID"
+                      }
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "In case of failure, the error description will be returned here.",
+                      "example": "Authentication error. Please log in as the RA to update this OID."
+                    },
+                    "inserted_id": {
+                      "type": "string",
+                      "description": "Created object id, including the namespace",
+                      "example": "oid:2.999"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "POST request",
+        "description": "Create an object in the database",
+        "tags": [
+          "objects"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ns",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "A namespace managed in OIDplus, such as \"oid\", \"guid\", etc."
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The identifier inside the namespace, for example \"2.999\" for an OID."
+          },
+          {
+            "in": "query",
+            "name": "ra_email",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "The email address of the RA.",
+            "example": "example@example.com"
+          },
+          {
+            "in": "query",
+            "name": "comment",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "A comment the superior RA made on the given OID.",
+            "example": "your comment"
+          },
+          {
+            "in": "query",
+            "name": "iris",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "An array of Unicode Labels of this object's arc. Only applies to OIDs.",
+            "example": [
+              "Example",
+              "Exemple",
+              "Ejemplo",
+              "Beispiel"
+            ]
+          },
+          {
+            "in": "query",
+            "name": "asn1ids",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "An array of alphanumeric identifiers of this object's arc. Only applies to OIDs.",
+            "example": [
+              "joint-iso-itu-t",
+              "joint-iso-ccitt"
+            ]
+          },
+          {
+            "in": "query",
+            "name": "confidential",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "True if the object is confidential.",
+            "example": true
+          },
+          {
+            "in": "query",
+            "name": "title",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Title or short description of the object",
+            "example": "Contoso Ltd."
+          },
+          {
+            "in": "query",
+            "name": "description",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "More information about this object",
+            "example": "More information at ..."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "POST response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response",
+                  "type": "array",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "description": "Status<0 is error. Status>=0 is success. In case of success, the status can contain contain bit flags to return additional details (see status_bits). In case of failure, the status value can contain the error code, e.g. code -2 usually means that a server-side Exception has been thrown.",
+                      "example": 0
+                    },
+                    "status_bits": {
+                      "type": "object",
+                      "description": "In case status bits (values 1, 2, 4, 8, ...) were included in the status, then they are described in the array status_bits. When programmatically processing a status, please use the bit flags in \"status\", not the explanation text in \"status_bits\"!",
+                      "additionalProperties": {
+                        "type": "string",
+                        "description": "The description of the flag"
+                      },
+                      "example": {
+                        "1": "RA is not registered, but it can be invited",
+                        "2": "RA is not registered and it cannot be invited",
+                        "4": "OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset",
+                        "8": "User has write rights to the freshly created OID"
+                      }
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "In case of failure, the error description will be returned here.",
+                      "example": "Object oid:2.999 already exists!"
+                    },
+                    "inserted_id": {
+                      "type": "string",
+                      "description": "Created object id, including the namespace",
+                      "example": "oid:2.999"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "PATCH request",
+        "description": "Update data of an object",
+        "tags": [
+          "objects"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ns",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "A namespace managed in OIDplus, such as \"oid\", \"guid\", etc."
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The identifier inside the namespace, for example \"2.999\" for an OID."
+          },
+          {
+            "in": "query",
+            "name": "ra_email",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "The email address of the RA.",
+            "example": "example@example.com"
+          },
+          {
+            "in": "query",
+            "name": "comment",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "A comment the superior RA made on the given OID.",
+            "example": "your comment"
+          },
+          {
+            "in": "query",
+            "name": "iris",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "An array of Unicode Labels of this object's arc. Only applies to OIDs.",
+            "example": [
+              "Example",
+              "Exemple",
+              "Ejemplo",
+              "Beispiel"
+            ]
+          },
+          {
+            "in": "query",
+            "name": "asn1ids",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "required": false,
+            "description": "An array of alphanumeric identifiers of this object's arc. Only applies to OIDs.",
+            "example": [
+              "joint-iso-itu-t",
+              "joint-iso-ccitt"
+            ]
+          },
+          {
+            "in": "query",
+            "name": "confidential",
+            "schema": {
+              "type": "boolean"
+            },
+            "required": false,
+            "description": "True if the object is confidential.",
+            "example": true
+          },
+          {
+            "in": "query",
+            "name": "title",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "Title or short description of the object",
+            "example": "Contoso Ltd."
+          },
+          {
+            "in": "query",
+            "name": "description",
+            "schema": {
+              "type": "string"
+            },
+            "required": false,
+            "description": "More information about this object",
+            "example": "More information at ..."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "PATCH response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response",
+                  "type": "array",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "description": "Status<0 is error. Status>=0 is success. In case of success, the status can contain contain bit flags to return additional details (see status_bits). In case of failure, the status value can contain the error code, e.g. code -2 usually means that a server-side Exception has been thrown.",
+                      "example": 0
+                    },
+                    "status_bits": {
+                      "type": "object",
+                      "description": "In case status bits (values 1, 2, 4, 8, ...) were included in the status, then they are described in the array status_bits. When programmatically processing a status, please use the bit flags in \"status\", not the explanation text in \"status_bits\"!",
+                      "additionalProperties": {
+                        "type": "string",
+                        "description": "The description of the flag"
+                      },
+                      "example": {
+                        "1": "RA is not registered, but it can be invited",
+                        "2": "RA is not registered and it cannot be invited",
+                        "4": "OID is a well-known OID, so RA, ASN.1, and IRI identifiers were reset",
+                        "8": "User has write rights to the freshly created OID"
+                      }
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "In case of failure, the error description will be returned here.",
+                      "example": "Object oid:2.999 does not exist"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "DELETE request",
+        "description": "Removes an object from the database",
+        "tags": [
+          "objects"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "ns",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "A namespace managed in OIDplus, such as \"oid\", \"guid\", etc."
+          },
+          {
+            "in": "path",
+            "name": "id",
+            "schema": {
+              "type": "string"
+            },
+            "required": true,
+            "description": "The identifier inside the namespace, for example \"2.999\" for an OID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "DELETE response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "title": "Response",
+                  "type": "array",
+                  "properties": {
+                    "status": {
+                      "type": "integer",
+                      "description": "Status<0 is error. Status>=0 is success. In case of success, the status can contain contain bit flags to return additional details (see status_bits). In case of failure, the status value can contain the error code, e.g. code -2 usually means that a server-side Exception has been thrown.",
+                      "example": 0
+                    },
+                    "status_bits": {
+                      "type": "object",
+                      "description": "In case status bits (values 1, 2, 4, 8, ...) were included in the status, then they are described in the array status_bits. When programmatically processing a status, please use the bit flags in \"status\", not the explanation text in \"status_bits\"!",
+                      "additionalProperties": {
+                        "type": "string",
+                        "description": "The description of the flag"
+                      },
+                      "example": {
+                        "1": "Reserved for flag 1",
+                        "2": "Reserved for flag 2",
+                        "4": "Reserved for flag 4",
+                        "8": "Reserved for flag 8"
+                      }
+                    },
+                    "error": {
+                      "type": "string",
+                      "description": "In case of failure, the error description will be returned here.",
+                      "example": "Object oid:2.999 does not exist"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+  }
+}
