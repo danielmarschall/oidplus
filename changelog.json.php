@@ -3,6 +3,17 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.2.10",
+		"date": "2024-10-27 11:20:00 +0100",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"REST API Documentation now in OpenAPI 3.1 standard, with Swagger UI visualization",
+			"Implemented Attachment plugin upload/delete/download events",
+			"Bugfix: ASN.1 and IRI fields could be edited for Non-OIDs. Fixed",
+			"Various improvements to the code"
+		]
+	},
+	{
 		"version": "2.0.2.9",
 		"date": "2024-10-15 23:10:00 +0200",
 		"author": "Daniel Marschall (ViaThinkSoft)",
