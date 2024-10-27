@@ -929,8 +929,10 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			}
 			if ($test !== false) {
 				list($id, $obj, $objParent) = $test;
+				$parentNS = $objParent::ns();
 			} else {
 				$objParent = null; // to avoid warnings
+				$parentNS = '';
 			}
 
 			// --- If the object type is disabled or not an object at all (e.g. "oidplus:"), then $handled=false
@@ -1048,18 +1050,26 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				$ra = $obj->getRa();
 				$ra_email = $ra ? $ra->raEMail() : '';
 				$supra .= '<tr><td width="50%">'._L('Registration Authority').'</td><td><input type="text" name="ra_email" id="suprabox_ra" value="'.htmlentities($ra_email).'" style="width:100%"></td></tr>';
-				$asn1ids = array();
-				$res2 = OIDplus::db()->query("select name from ###asn1id where oid = ? order by lfd", array($obj->nodeId(true)));
-				while ($row2 = $res2->fetch_array()) {
-					$asn1ids[] = $row2['name'];
+				if ($parentNS == 'oid') {
+					$accepts_asn1 = ($parentNS == 'oid') && (!in_array($objParent->nodeId(), self::$no_asn1)) && (!is_uuid_oid($objParent->nodeId(),true));
+					if ($accepts_asn1) {
+						$asn1ids = array();
+						$res2 = OIDplus::db()->query("select name from ###asn1id where oid = ? order by lfd", array($obj->nodeId(true)));
+						while ($row2 = $res2->fetch_array()) {
+							$asn1ids[] = $row2['name'];
+						}
+						$supra .= '<tr><td width="50%">'._L('ASN.1 IDs (comma sep.)').'</td><td><input type="text" name="asn1ids" id="suprabox_asn1" value="'.htmlentities(implode(', ',$asn1ids)).'" style="width:100%"></td></tr>';
+					}
+					$accepts_iri = ($parentNS == 'oid') && (!in_array($objParent->nodeId(), self::$no_iri)) && (!is_uuid_oid($objParent->nodeId(),true));
+					if ($accepts_iri) {
+						$iris = array();
+						$res2 = OIDplus::db()->query("select name from ###iri where oid = ? order by lfd", array($obj->nodeId(true)));
+						while ($row2 = $res2->fetch_array()) {
+							$iris[] = $row2['name'];
+						}
+						$supra .= '<tr><td width="50%">'._L('IRI IDs (comma sep.)').'</td><td><input type="text" name="iris" id="suprabox_iri" value="'.htmlentities(implode(', ', $iris)).'" style="width:100%"></td></tr>';
+					}
 				}
-					$supra .= '<tr><td width="50%">'._L('ASN.1 IDs (comma sep.)').'</td><td><input type="text" name="asn1ids" id="suprabox_asn1" value="'.htmlentities(implode(', ',$asn1ids)).'" style="width:100%"></td></tr>';
-				$iris = array();
-				$res2 = OIDplus::db()->query("select name from ###iri where oid = ? order by lfd", array($obj->nodeId(true)));
-				while ($row2 = $res2->fetch_array()) {
-					$iris[] = $row2['name'];
-				}
-				$supra .= '<tr><td width="50%">'._L('IRI IDs (comma sep.)').'</td><td><input type="text" name="iris" id="suprabox_iri" value="'.htmlentities(implode(', ', $iris)).'" style="width:100%"></td></tr>';
 				$supra .= '<tr><td width="50%">'._L('Comment').'</td><td><input type="text" name="comment" id="suprabox_comment" value="'.htmlentities($obj->getComment()).'" style="width:100%"></td></tr>';
 				$supra .= '<tr><td width="50%">'._L('Confidential').'</td><td><input type="checkbox" name="confidential" id="suprabox_hide" value="1"'.htmlentities($obj->isConfidential()?' checked':'').'> <label for="suprabox_hide">Hide</label></td></tr>';
 				$supra .= '</tbody>';
@@ -1436,22 +1446,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 */
 	private static $crudCounter = 0;
 
-	/**
-	 * @param string $parent
-	 * @return string
-	 * @throws OIDplusConfigInitializationException
-	 * @throws OIDplusException
-	 */
-	protected static function showCrud(string $parent='oid:'): string {
-		$items_total = 0;
-		$items_hidden = 0;
-
-		$objParent = OIDplusObject::parse($parent);
-		if (!$objParent) return '';
-		$parentNS = $objParent::ns();
-
-		// http://oid-info.com/cgi-bin/display?a=list-by-category&category=Not%20allocating%20identifiers (15 Nov 2023)
-		$no_asn1 = array(
+	// http://oid-info.com/cgi-bin/display?a=list-by-category&category=Not%20allocating%20identifiers (15 Nov 2023)
+	private static $no_asn1 = array(
 			'oid:0.2.228',
 			'oid:1.3.6.1.4.1',
 			'oid:1.3.6.1.4.1.37476.9000',
@@ -1467,8 +1463,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			//'oid:1.3.6.1.4.1.54392.3', // Another UUID-to-OID method
 		);
 
-		// http://oid-info.com/cgi-bin/display?a=list-by-category&category=Not%20allocating%20Unicode%20labels (15 Nov 2023)
-		$no_iri = array(
+	// http://oid-info.com/cgi-bin/display?a=list-by-category&category=Not%20allocating%20Unicode%20labels (15 Nov 2023)
+	private static $no_iri = array(
 			'oid:0.2.228',
 			'oid:1.2.36',
 			'oid:1.2.250.1',
@@ -1483,8 +1479,22 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			'oid:2.25'
 		);
 
-		$accepts_asn1 = ($parentNS == 'oid') && (!in_array($objParent->nodeId(), $no_asn1)) && (!is_uuid_oid($objParent->nodeId(),true));
-		$accepts_iri  = ($parentNS == 'oid') && (!in_array($objParent->nodeId(), $no_iri)) && (!is_uuid_oid($objParent->nodeId(),true));
+	/**
+	 * @param string $parent
+	 * @return string
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 */
+	protected static function showCrud(string $parent='oid:'): string {
+		$items_total = 0;
+		$items_hidden = 0;
+
+		$objParent = OIDplusObject::parse($parent);
+		if (!$objParent) return '';
+		$parentNS = $objParent::ns();
+
+		$accepts_asn1 = ($parentNS == 'oid') && (!in_array($objParent->nodeId(), self::$no_asn1)) && (!is_uuid_oid($objParent->nodeId(),true));
+		$accepts_iri  = ($parentNS == 'oid') && (!in_array($objParent->nodeId(), self::$no_iri)) && (!is_uuid_oid($objParent->nodeId(),true));
 
 		$result = OIDplus::db()->query("select o.*, r.ra_name " .
 		                               "from ###objects o " .
