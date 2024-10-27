@@ -24,7 +24,8 @@ use ViaThinkSoft\OIDplus\Core\OIDplusException;
  * @param string $privKey
  * @return bool
  */
-function is_privatekey_encrypted(string $privKey): bool {
+function is_privatekey_encrypted(#[\SensitiveParameter]
+                                 string $privKey): bool {
 	return strpos($privKey,'BEGIN ENCRYPTED PRIVATE KEY') !== false;
 }
 
@@ -33,7 +34,8 @@ function is_privatekey_encrypted(string $privKey): bool {
  * @param string $pubKey
  * @return bool
  */
-function verify_private_public_key(string $privKey, string $pubKey): bool {
+function verify_private_public_key(#[\SensitiveParameter]
+                                   string $privKey, string $pubKey): bool {
 	if (!function_exists('openssl_public_encrypt')) return false;
 	try {
 		if (empty($privKey)) return false;
@@ -55,7 +57,12 @@ function verify_private_public_key(string $privKey, string $pubKey): bool {
  * @param string|null $passphrase_new
  * @return false|string
  */
-function change_private_key_passphrase(string $privKeyOld, ?string $passphrase_old=null, ?string $passphrase_new=null) {
+function change_private_key_passphrase(#[\SensitiveParameter]
+                                       string $privKeyOld,
+                                       #[\SensitiveParameter]
+                                       ?string $passphrase_old=null,
+                                       #[\SensitiveParameter]
+                                       ?string $passphrase_new=null) {
 	$pkey_config = array(
 	    //"digest_alg" => "sha512",
 	    //"private_key_bits" => 2048,
@@ -74,7 +81,10 @@ function change_private_key_passphrase(string $privKeyOld, ?string $passphrase_o
  * @param string $passphrase
  * @return false|string
  */
-function decrypt_private_key(string $privKey, string $passphrase) {
+function decrypt_private_key(#[\SensitiveParameter]
+                             string $privKey,
+                             #[\SensitiveParameter]
+                             string $passphrase) {
 	return change_private_key_passphrase($privKey, $passphrase, null);
 }
 
@@ -83,7 +93,10 @@ function decrypt_private_key(string $privKey, string $passphrase) {
  * @param string $passphrase
  * @return false|string
  */
-function encrypt_private_key(string $privKey, string $passphrase) {
+function encrypt_private_key(#[\SensitiveParameter]
+                             string $privKey,
+                             #[\SensitiveParameter]
+                             string $passphrase) {
 	return change_private_key_passphrase($privKey, null, $passphrase);
 }
 
@@ -289,13 +302,14 @@ function extractHtmlContents(string $cont): array {
 }
 
 /**
- * @param string $password
+ * @param string $message
  * @param bool $raw_output
  * @return string
  * @throws Exception
  */
-function sha3_512(string $password, bool $raw_output=false): string {
-	return hash('sha3-512', $password, $raw_output);
+function sha3_512(#[\SensitiveParameter]
+                  string $message, bool $raw_output=false): string {
+	return hash('sha3-512', $message, $raw_output);
 }
 
 /**
@@ -304,21 +318,27 @@ function sha3_512(string $password, bool $raw_output=false): string {
  * @param bool $raw_output
  * @return string
  */
-function sha3_512_hmac(string $message, string $key, bool $raw_output=false): string {
+function sha3_512_hmac(#[\SensitiveParameter]
+                       string $message,
+                       #[\SensitiveParameter]
+                       string $key, bool $raw_output=false): string {
 	// RFC 2104 HMAC
 	return hash_hmac('sha3-512', $message, $key, $raw_output);
 }
 
 /**
- * @param string $password
+ * @param string $message
  * @param string $salt
  * @param int $iterations
  * @param int $length
  * @param bool $binary
  * @return string
  */
-function sha3_512_pbkdf2(string $password, string $salt, int $iterations, int $length=0, bool $binary=false): string {
-	return hash_pbkdf2('sha3-512', $password, $salt, $iterations, $length, $binary);
+function sha3_512_pbkdf2(#[\SensitiveParameter]
+                         string $message,
+                         #[\SensitiveParameter]
+                         string $salt, int $iterations, int $length=0, bool $binary=false): string {
+	return hash_pbkdf2('sha3-512', $message, $salt, $iterations, $length, $binary);
 }
 
 /**
@@ -637,14 +657,14 @@ function getHttpRequestHeader(string $name) {
  * @see https://stackoverflow.com/questions/40582161/how-to-properly-use-bearer-tokens
  **/
 function getBearerToken() {
-    $headers = getHttpRequestHeader('Authorization');
-    // HEADER: Get the access token from the header
-    if (!empty($headers)) {
-        if (preg_match('/Bearer\s(\S+)/', $headers, $matches)) {
-            return $matches[1];
-        }
-    }
-    return null;
+	$headers = getHttpRequestHeader('Authorization');
+	// HEADER: Get the access token from the header
+	if (!empty($headers)) {
+		if (preg_match('/Bearer\s(\S+)/', $headers, $matches)) {
+			return $matches[1];
+		}
+	}
+	return null;
 }
 
 /**
@@ -671,7 +691,10 @@ function oidplus_is_true($mixed): bool {
  * @return string
  * @throws \Exception
  */
-function encrypt_str(string $data, string $key): string {
+function encrypt_str(#[\SensitiveParameter]
+                     string $data,
+                     #[\SensitiveParameter]
+                     string $key): string {
 	if (!function_exists('openssl_encrypt')) {
 		throw new OIDplusException(_L('Decryption failed (OpenSSL not installed)'));
 	}
@@ -702,7 +725,10 @@ function encrypt_str(string $data, string $key): string {
  * @return string
  * @throws OIDplusException
  */
-function decrypt_str(string $data, string $key): string {
+function decrypt_str(#[\SensitiveParameter]
+                     string $data,
+                     #[\SensitiveParameter]
+                     string $key): string {
 	if (!function_exists('openssl_decrypt')) {
 		throw new OIDplusException(_L('Decryption failed (OpenSSL not installed)'));
 	}

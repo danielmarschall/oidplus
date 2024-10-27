@@ -48,7 +48,8 @@ class OIDplusAuthPluginArgon2 extends OIDplusAuthPlugin {
 	 * @param string $authKey
 	 * @return bool
 	 */
-	private function supportedCryptAlgo(string $authKey): bool {
+	private function supportedCryptAlgo(#[\SensitiveParameter]
+	                                    string $authKey): bool {
 		return str_starts_with($authKey, '$argon2i$') ||
 		       str_starts_with($authKey, '$argon2id$');
 	}
@@ -58,7 +59,10 @@ class OIDplusAuthPluginArgon2 extends OIDplusAuthPlugin {
 	 * @param string $check_password
 	 * @return bool
 	 */
-	public function verify(OIDplusRAAuthInfo $authInfo, string $check_password): bool {
+	public function verify(#[\SensitiveParameter]
+	                       OIDplusRAAuthInfo $authInfo,
+	                       #[\SensitiveParameter]
+	                       string $check_password): bool {
 		$authKey = $authInfo->getAuthKey();
 
 		if (!$this->supportedCryptAlgo($authKey)) {
@@ -92,7 +96,8 @@ class OIDplusAuthPluginArgon2 extends OIDplusAuthPlugin {
 	 * @return OIDplusRAAuthInfo
 	 * @throws OIDplusException
 	 */
-	public function generate(string $password): OIDplusRAAuthInfo {
+	public function generate(#[\SensitiveParameter]
+	                         string $password): OIDplusRAAuthInfo {
 		$hashalgo = $this->getBestHashAlgo();
 		assert($hashalgo !== false); // Should not happen if we called available() before!
 		$calc_authkey = password_hash($password, $hashalgo);

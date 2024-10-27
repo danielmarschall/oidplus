@@ -35,7 +35,8 @@ class OIDplusRAAuthInfo extends OIDplusBaseClass {
 	 * @return void
 	 * @throws OIDplusException
 	 */
-	public function setAuthKey(string $authKey): void {
+	public function setAuthKey(#[\SensitiveParameter]
+	                           string $authKey): void {
 		// 250 is the length of the database field
 		if (strlen($authKey) > 250) throw new OIDplusException(_L('Field %1 is too long. Max allowed %2','Auth key',250));
 		$this->authKey = $authKey;
@@ -52,7 +53,8 @@ class OIDplusRAAuthInfo extends OIDplusBaseClass {
 	 * @param string $authKey
 	 * @throws OIDplusException
 	 */
-	public function __construct(string $authKey) {
+	public function __construct(#[\SensitiveParameter]
+	                            string $authKey) {
 		$this->setAuthKey($authKey);
 	}
 

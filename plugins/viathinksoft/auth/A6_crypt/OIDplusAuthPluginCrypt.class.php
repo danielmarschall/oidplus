@@ -41,7 +41,10 @@ class OIDplusAuthPluginCrypt extends OIDplusAuthPlugin {
 	 * @param string $check_password
 	 * @return bool
 	 */
-	public function verify(OIDplusRAAuthInfo $authInfo, string $check_password): bool {
+	public function verify(#[\SensitiveParameter]
+	                       OIDplusRAAuthInfo $authInfo,
+	                       #[\SensitiveParameter]
+	                       string $check_password): bool {
 		$authKey = $authInfo->getAuthKey();
 		return password_verify($check_password, $authKey);
 	}
@@ -51,7 +54,8 @@ class OIDplusAuthPluginCrypt extends OIDplusAuthPlugin {
 	 * @return OIDplusRAAuthInfo
 	 * @throws OIDplusException
 	 */
-	public function generate(string $password): OIDplusRAAuthInfo {
+	public function generate(#[\SensitiveParameter]
+	                         string $password): OIDplusRAAuthInfo {
 		$hashalgo = PASSWORD_SHA512; // choose the best out of crypt()
 		$calc_authkey = vts_password_hash($password, $hashalgo);
 		return new OIDplusRAAuthInfo($calc_authkey);

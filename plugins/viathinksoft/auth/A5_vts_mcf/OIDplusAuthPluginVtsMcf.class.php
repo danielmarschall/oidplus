@@ -41,7 +41,10 @@ class OIDplusAuthPluginVtsMcf extends OIDplusAuthPlugin {
 	 * @param string $check_password
 	 * @return bool
 	 */
-	public function verify(OIDplusRAAuthInfo $authInfo, string $check_password): bool {
+	public function verify(#[\SensitiveParameter]
+	                       OIDplusRAAuthInfo $authInfo,
+	                       #[\SensitiveParameter]
+	                       string $check_password): bool {
 		$authKey = $authInfo->getAuthKey();
 
 		if (str_starts_with($authKey, '$'.OID_MCF_VTS_V1.'$')) {
@@ -56,9 +59,10 @@ class OIDplusAuthPluginVtsMcf extends OIDplusAuthPlugin {
 	 * @return OIDplusRAAuthInfo
 	 * @throws OIDplusException
 	 */
-	public function generate(string $password): OIDplusRAAuthInfo {
+	public function generate(#[\SensitiveParameter]
+	                         string $password): OIDplusRAAuthInfo {
 		$calc_authkey = vts_password_hash($password, PASSWORD_VTS_MCF1, array(
-			'algo' => 'sha3-512', // we can safely use it, because we have a pure-PHP implementation shipped with OIDplus
+			'algo' => 'sha3-512',
 			'mode' => 'hmac'
 		));
 		return new OIDplusRAAuthInfo($calc_authkey);

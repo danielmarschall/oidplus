@@ -120,7 +120,7 @@ mv plugins/viathinksoft/publicPages/002_rest_api/vendor/swagger-api/swagger-ui/d
 mv plugins/viathinksoft/publicPages/002_rest_api/vendor/licenses plugins/viathinksoft/publicPages/002_rest_api/swagger-ui/
 rm plugins/viathinksoft/publicPages/002_rest_api/swagger-ui/*.map
 rm -rf plugins/viathinksoft/publicPages/002_rest_api/vendor
-sed -i 's@url: "https:\/\/petstore\.swagger\.io\/v2\/swagger\.json",@url: new URL(window\.location\.origin+window\.location\.pathname+"\.\.\/openapi_yaml\.php")\.href,@g' plugins/viathinksoft/publicPages/002_rest_api/swagger-ui/swagger-initializer.js
+sed -i 's@url: "https:\/\/petstore\.swagger\.io\/v2\/swagger\.json",@url: new URL(window\.location\.origin+window\.location\.pathname+"\.\.\/openapi_json\.php")\.href,@g' plugins/viathinksoft/publicPages/002_rest_api/swagger-ui/swagger-initializer.js
 
 # Get latest version of WEID converter
 curl https://raw.githubusercontent.com/WEID-Consortium/weid.info/gh-pages/WeidOidConverter.js > plugins/viathinksoft/objectTypes/oid/WeidOidConverter.js

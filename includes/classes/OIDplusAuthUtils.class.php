@@ -32,7 +32,8 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @return string
 	 * @throws OIDplusException
 	 */
-	private function raPepperProcessing(string $password): string {
+	private function raPepperProcessing( #[\SensitiveParameter]
+	                                     string $password): string {
 		// Additional feature: Pepper
 		// The pepper is stored inside the base configuration file
 		// It prevents that an attacker with SQL write rights can
@@ -128,7 +129,9 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	public function raCheckPassword(string $ra_email, string $password): bool {
+	public function raCheckPassword(string $ra_email,
+	                                #[\SensitiveParameter]
+	                                string $password): bool {
 		$ra = new OIDplusRA($ra_email);
 
 		// Get RA info from RA
@@ -257,7 +260,8 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @return bool
 	 * @throws OIDplusException
 	 */
-	public function adminCheckPassword(string $password): bool {
+	public function adminCheckPassword( #[\SensitiveParameter]
+	                                    string $password): bool {
 		$cfgData = OIDplus::baseConfig()->getValue('ADMIN_PASSWORD', '');
 		if (empty($cfgData)) {
 			throw new OIDplusException(_L('No admin password set in %1',OIDplus::getUserDataDir("baseconfig").'config.inc.php'));
@@ -375,7 +379,9 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @return bool True if the key is valid and not expired.
 	 * @throws OIDplusException
 	 */
-	public function validateAuthKey(/*array|string*/ $data, string $auth_key, int $valid_secs=-1): bool {
+	public function validateAuthKey(/*array|string*/ $data,
+	                                #[\SensitiveParameter]
+	                                string $auth_key, int $valid_secs=-1): bool {
 		$auth_key_ary = explode('.', $auth_key, 2);
 		if (count($auth_key_ary) != 2) return false; // invalid auth key syntax
 		list($ts, $secret) = $auth_key_ary;
@@ -463,7 +469,8 @@ class OIDplusAuthUtils extends OIDplusBaseClass {
 	 * @return OIDplusRAAuthInfo
 	 * @throws OIDplusException
 	 */
-	public function raGeneratePassword(string $password): OIDplusRAAuthInfo {
+	public function raGeneratePassword( #[\SensitiveParameter]
+	                                    string $password): OIDplusRAAuthInfo {
 		$plugin = OIDplus::getDefaultRaAuthPlugin(true);
 		return $plugin->generate($this->raPepperProcessing($password));
 	}

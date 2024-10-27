@@ -35,13 +35,17 @@ abstract class OIDplusAuthPlugin extends OIDplusPlugin {
 	 * @param string $check_password
 	 * @return bool
 	 */
-	public abstract function verify(OIDplusRAAuthInfo $authInfo, string $check_password): bool;
+	public abstract function verify(#[\SensitiveParameter]
+	                                OIDplusRAAuthInfo $authInfo,
+	                                #[\SensitiveParameter]
+	                                string $check_password): bool;
 
 	/**
 	 * @param string $password
 	 * @return OIDplusRAAuthInfo
 	 */
-	public abstract function generate(string $password): OIDplusRAAuthInfo;
+	public abstract function generate( #[\SensitiveParameter]
+	                                   string $password): OIDplusRAAuthInfo;
 
 	/**
 	 * @param string $reason

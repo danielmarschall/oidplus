@@ -39,3 +39,9 @@ Their source code can be viewed in a web browser.
 | .class.phps        | No      |   | Yes            | No (must not)        | Mandatory, exactly 1 |   | Contains exactly one class or interface, usually code example     |
 | .inc.php           | No      |   | No             | No (should not)      | Optional             |   | Usually contains methods (without OOP)                            |
 | .sh, .phps or none | Yes     |   | Yes            | Yes (must)           | Optional             |   | Executable shell script                                           |
+
+## Namespaces
+
+Only `*.class.php` and `*.class.phps` should have a namespace.
+All other file types should not have a namespace.
+

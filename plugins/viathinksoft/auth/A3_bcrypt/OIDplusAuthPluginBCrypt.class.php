@@ -56,7 +56,8 @@ class OIDplusAuthPluginBCrypt extends OIDplusAuthPlugin {
 	 * @param string $authKey
 	 * @return bool
 	 */
-	private function supportedCryptAlgo(string $authKey): bool {
+	private function supportedCryptAlgo(#[\SensitiveParameter]
+	                                    string $authKey): bool {
 		return str_starts_with($authKey, '$2$')  ||
 		       str_starts_with($authKey, '$2a$') ||
 		       str_starts_with($authKey, '$2b$') ||
@@ -69,7 +70,10 @@ class OIDplusAuthPluginBCrypt extends OIDplusAuthPlugin {
 	 * @param string $check_password
 	 * @return bool
 	 */
-	public function verify(OIDplusRAAuthInfo $authInfo, string $check_password): bool {
+	public function verify(#[\SensitiveParameter]
+	                       OIDplusRAAuthInfo $authInfo,
+	                       #[\SensitiveParameter]
+	                       string $check_password): bool {
 		$authKey = $authInfo->getAuthKey();
 
 		if (!$this->supportedCryptAlgo($authKey)) {
@@ -89,7 +93,8 @@ class OIDplusAuthPluginBCrypt extends OIDplusAuthPlugin {
 	 * @return OIDplusRAAuthInfo
 	 * @throws OIDplusException
 	 */
-	public function generate(string $password): OIDplusRAAuthInfo {
+	public function generate(#[\SensitiveParameter]
+	                         string $password): OIDplusRAAuthInfo {
 		if (strlen($password) > 72) throw new OIDplusException(_L('Password is too long (max %1 bytes)',72));
 		$cost = OIDplus::config()->getValue('ra_bcrypt_cost', 10);
 		$calc_authkey = password_hash($password, PASSWORD_BCRYPT, array("cost" => $cost));
