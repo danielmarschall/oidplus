@@ -156,6 +156,10 @@ foreach ($svn_version_cache["version-first-revision"] as $version => $version_fi
 
 		oidplus_create_changescript($old_dir, $new_dir, $changescript_file, $prev_version, $version, $priv_key);
 
+		// Put changelog.json (sic: not .json.php) to the release repository, because the
+		// the oidplus repo and oidplus_updates repo may be updated at different times!
+		copy($new_dir.'/changelog.json.php', $output_dir.'/changelog.json.php');
+
 		if ($prev_commit == '-') {
 			if ($old_dir && is_dir($old_dir)) {
 				$ec = -1;

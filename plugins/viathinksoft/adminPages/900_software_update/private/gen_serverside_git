@@ -183,6 +183,10 @@ foreach ($git_version_cache["version-first-commit"] as $version => $version_firs
 
 		oidplus_create_changescript($old_dir, $new_dir, $changescript_file, $prev_version, $version, $priv_key);
 
+		// Put changelog.json (sic: not .json.php) to the release repository, because the
+		// the oidplus repo and oidplus_updates repo may be updated at different times!
+		copy($new_dir.'/changelog.json.php', $output_dir.'/changelog.json');
+
 		if ($prev_commit == '-') {
 			rmdir($old_dir);
 		}
