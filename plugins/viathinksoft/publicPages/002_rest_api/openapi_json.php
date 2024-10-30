@@ -104,4 +104,4 @@ header('Content-Type: application/vnd.oai.openapi+json;version='.OPENAPI_VERSION
 header('Content-Disposition: attachment; filename="oidplus_openapi.json"');
 //header('Content-Type: text/json'); // just for debugging (display contents inline)
 
-echo json_encode($output_ary);
+echo json_encode($output_ary, JSON_PRETTY_PRINT);
