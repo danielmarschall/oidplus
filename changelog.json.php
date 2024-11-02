@@ -3,6 +3,16 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.2.11",
+		"date": "2024-11-02 22:00:00 +0100",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"Fixed showstopper bug when opening a root node",
+			"REST API Documentation now also contains example values",
+			"The lag in software distribution (meaning the delay between detecting a new release and making it available for download) has been resolved."
+		]
+	},
+	{
 		"version": "2.0.2.10",
 		"date": "2024-10-27 11:20:00 +0100",
 		"author": "Daniel Marschall (ViaThinkSoft)",

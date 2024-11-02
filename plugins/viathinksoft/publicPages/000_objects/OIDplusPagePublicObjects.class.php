@@ -929,7 +929,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			}
 			if ($test !== false) {
 				list($id, $obj, $objParent) = $test;
-				$parentNS = $objParent::ns();
+				$parentNS = $objParent == null ? null : $objParent::ns();
 			} else {
 				$objParent = null; // to avoid warnings
 				$parentNS = '';
