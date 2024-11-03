@@ -42,9 +42,11 @@ class OIDplusPagePublicRdap extends OIDplusPagePluginPublic
 	 * @throws \ViaThinkSoft\OIDplus\Core\OIDplusException
 	 */
 	public function modifyContent(string $id, string &$title, string &$icon, string &$text): void {
-	    $payload = '<br /> <a href="'.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE)
-			.'rdap/rdap.php?query='.urlencode($id).'" class="gray_footer_font" target="_blank">'._L('RDAP').'</a>';
-
+		$ary = explode(':', $id, 2);
+		$ns = $ary[0] ?? null;
+		$id = $ary[1] ?? null;
+		$payload = '<br /> <a href="'.OIDplus::webpath(null).
+		           'rdap/'.urlencode($ns).'/'.urlencode($id).'" class="gray_footer_font" target="_blank">'._L('RDAP').'</a>';
 		$text = str_replace('<!-- MARKER 6 -->', '<!-- MARKER 6 -->'.$payload, $text);
 	}
 
@@ -54,22 +56,32 @@ class OIDplusPagePublicRdap extends OIDplusPagePluginPublic
 	 * @throws OIDplusException
 	 */
 	public function handle404(string $request): bool {
-		$namespaces = array();
-		foreach (OIDplus::getEnabledObjectTypes() as $ot) {
-			$namespaces[] = $ot::ns();
+		if (!isset($_SERVER['REQUEST_URI']) || !isset($_SERVER["REQUEST_METHOD"])) return false;
+
+		$rel_url = substr($_SERVER['REQUEST_URI'], strlen(OIDplus::webpath(null, OIDplus::PATH_RELATIVE_TO_ROOT)));
+		$expect = 'rdap/';
+		if (str_starts_with($rel_url, $expect)) {
+			originHeaders(); // Allows queries from other domains
+			OIDplus::authUtils()->disableCSRF(); // allow access to ajax.php without valid CSRF token
+
+			$rel_url = preg_replace('@^'.preg_quote($expect,'@').'@', '', $rel_url);
+
+			$rel_url = explode('?', $rel_url, 2)[0];
+			$ary = explode('/', $rel_url, 2);
+			$ns = $ary[0] ?? null;
+			$id = $ary[1] ?? null;
+			if ($ns && $id) {
+				$query = "$ns:$id";
+				$x = new OIDplusRDAP();
+				list($out_content, $out_type) = $x->rdapQuery($query);
+				if ($out_type) header('Content-Type:'.$out_type);
+				echo $out_content;
+			}
+
+			OIDplus::invoke_shutdown();
+			die(); // return true;
 		}
-		foreach ($namespaces as $ns) {
-			// Note: This only works if OIDplus is located at the domain root (because $request is relative to the domain)
-			if (!preg_match('@^/'.preg_quote($ns,'@').'/(.+)$@', $request, $m)) return false;
-			$oid = $m[1];
-			$query = "$ns:$oid";
-			$x = new OIDplusRDAP();
-			list($out_content, $out_type) = $x->rdapQuery($query);
-			if ($out_type) header('Content-Type:'.$out_type);
-			echo $out_content;
-			die();
-			// return true;
-		}
+
 		return false;
 	}
 

@@ -3,6 +3,14 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.2.12",
+		"date": "2024-11-03 19:00:00 +0100",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"RDAP plugin now uses RDAP conform URL"
+		]
+	},
+	{
 		"version": "2.0.2.11",
 		"date": "2024-11-02 22:00:00 +0100",
 		"author": "Daniel Marschall (ViaThinkSoft)",
