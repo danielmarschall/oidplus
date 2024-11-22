@@ -179,6 +179,12 @@ class OIDplusConfig extends OIDplusBaseClass implements OIDplusGetterSetterInter
 			$this->descriptions[$row->name] = $row->description;
 			$this->protectSettings[$row->name] = $row->protected;
 			$this->visibleSettings[$row->name] = $row->visible;
+
+			// On a Windows PHP8.3/8.4 test system, a NULL byte way added at position 0xFE of the fetched data of the WideMemo
+			// it was verified that in the database there is no null byte. It was also confirmed that the fetched data is 1 byte longer than the data in the database.
+			// This bug was critical for OIDplus, because oidplus_public_key was corrupted due to that inserted NULL byte.
+			// TODO: is there anything we can do about it? Or do we need to report a bug at PHP? Similar problems existed in the past? https://bugs.php.net/bug.php?id=74021
+			$this->values[$row->name] = str_replace("\0", "", $this->values[$row->name]);
 		}
 
 		$this->configTableReadOnce = true;
