@@ -173,7 +173,7 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 		}
 
 		if (!class_exists('COM')) {
-			throw new OIDplusConfigInitializationException(_L('To use %1, please enable the lines "extension=%2" and "extension_dir=ext" in the configuration file %3.',get_class(),'com_dotnet',php_ini_loaded_file() ? php_ini_loaded_file() : 'PHP.ini'));
+			throw new OIDplusConfigInitializationException(_L('To use %1, please enable the lines "extension=%2" and "extension_dir=ext" in the configuration file %3.',get_class($this),'com_dotnet',php_ini_loaded_file() ? php_ini_loaded_file() : 'PHP.ini'));
 		}
 
 		// Try connecting to the database

@@ -71,7 +71,7 @@ class OIDplusLoggerPluginWindowsEventLog extends OIDplusLoggerPlugin {
 		}
 
 		if (!class_exists('COM')) {
-			$reason = _L('To use %1, please enable the lines "extension=%2" and "extension_dir=ext" in the configuration file %3.',get_class(),'com_dotnet',php_ini_loaded_file() ? php_ini_loaded_file() : 'PHP.ini');
+			$reason = _L('To use %1, please enable the lines "extension=%2" and "extension_dir=ext" in the configuration file %3.',get_class($this),'com_dotnet',php_ini_loaded_file() ? php_ini_loaded_file() : 'PHP.ini');
 			return false;
 		}
 
