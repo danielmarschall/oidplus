@@ -1068,7 +1068,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 						$supra .= '<tr><td width="50%">'._L('IRI IDs (comma sep.)').'</td><td><input type="text" name="iris" id="suprabox_iri" value="'.htmlentities(implode(', ', $iris)).'" style="width:100%"></td></tr>';
 					}
 				}
-				$supra .= '<tr><td width="50%">'._L('Comment').'</td><td><input type="text" name="comment" id="suprabox_comment" value="'.htmlentities($obj->getComment()).'" style="width:100%"></td></tr>';
+				$supra .= '<tr><td width="50%">'._L('Comment').'</td><td><input type="text" name="comment" id="suprabox_comment" value="'.htmlentities($obj->getComment()??'').'" style="width:100%"></td></tr>';
 				$supra .= '<tr><td width="50%">'._L('Confidential').'</td><td><input type="checkbox" name="confidential" id="suprabox_hide" value="1"'.htmlentities($obj->isConfidential()?' checked':'').'> <label for="suprabox_hide">Hide</label></td></tr>';
 				$supra .= '</tbody>';
 				$supra .= '</table>';
