@@ -107,7 +107,7 @@ abstract class OIDplusQueryResult extends OIDplusBaseClass {
 				$ret[strtolower($name)] = $val;
 				$ret[strtoupper($name)] = $val;
 			}
-		} else if (is_object($ret)) {
+		} else if (is_object($ret)) { /* @phpstan-ignore-line */
 			foreach ($ret as $name => $val) {
 				$ret->{strtoupper($name)} = $val;
 				$ret->{strtolower($name)} = $val;

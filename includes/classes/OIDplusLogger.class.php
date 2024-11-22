@@ -222,7 +222,7 @@ class OIDplusLogger extends OIDplusBaseClass {
 		// Some other checks (it makes it easier to validate the maskcodes with dev tools)
 		foreach ($out as list($severity,$target)) {
 			if (($target[0] == 'OID') || ($target[0] == 'SUPOID')) {
-				if (is_array($severity)) return false; // OID and SUPOID logger mask cannot have online/offline severity
+				if (is_array($severity)) return false; /** @phpstan-ignore-line */ // OID and SUPOID logger mask cannot have online/offline severity
 				if (empty($target[1])) return false; /** @phpstan-ignore-line */
 			} else if (($target[0] == 'OIDRA') || ($target[0] == 'SUPOIDRA') || ($target[0] == 'RA')) {
 				if (empty($target[1])) return false;

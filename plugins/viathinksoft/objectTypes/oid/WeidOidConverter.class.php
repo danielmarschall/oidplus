@@ -131,7 +131,7 @@ class WeidOidConverter {
 		$namespace = substr($weid, 0, $p+1);
 		$rest = substr($weid, $p+1);
 
-		$weid = preg_replace('@^urn:x-weid:@', 'weid:', $weid);
+		$weid = preg_replace('@^urn:x-weid:@', 'weid:', $weid) ?? $weid;
 
 		$namespace = strtolower($namespace); // namespace is case insensitive
 

@@ -85,7 +85,7 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 			$json = $this->tree_populate($req_id);
 		}
 
-		if (is_array($json)) $this->addHrefIfRequired($json);
+		$this->addHrefIfRequired($json);
 
 		return $json;
 	}

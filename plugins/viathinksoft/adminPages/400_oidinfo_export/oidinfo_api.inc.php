@@ -3,7 +3,7 @@
 /*
  * OID-Info.com API for PHP
  * Copyright 2019-2024 Daniel Marschall, ViaThinkSoft
- * Version 2024-08-01
+ * Version 2024-11-22
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -560,7 +560,7 @@ class OIDInfoAPI {
 		$m = array();
 		if (preg_match('@^[a-z]@', $elements['description'], $m)) {
 			$ending_dot_policy = self::OIDINFO_CORRECT_DESC_DISALLOW_ENDING_DOT; // for description
-			if (($ending_dot_policy != self::OIDINFO_CORRECT_DESC_ENFORCE_ENDING_DOT) && (strpos($elements['description'], ' ') === false)) { // <-- added by DM
+			if (strpos($elements['description'], ' ') === false) { // <-- added by DM
 				$elements['description'] = '"' . $elements['description'] . '"';
 			}
 		}
@@ -575,7 +575,7 @@ class OIDInfoAPI {
 			} else if ($params['auto_extract_url'] != '') {
 				$hr_url = $params['auto_extract_url'];
 				// $hr_url = preg_replace('@^https{0,1}://@ismU', '', $hr_url);
-				$hr_url = preg_replace('@^http://@ismU', '', $hr_url);
+				$hr_url = preg_replace('@^http://@ismU', '', (string)$hr_url);
 				$elements['information'] .= 'Automatically extracted from <a href="'.$params['auto_extract_url'].'">'.$hr_url.'</a>.';
 			}
 		}

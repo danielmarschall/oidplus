@@ -158,7 +158,7 @@ class OIDplusRDAP extends OIDplusBaseClass {
 		$out['name'] = $obj->nodeId(true);
 		$out['objectClassName'] = $ns;
 		$out['handle'] = $ns.':'.$n[1];
-		$out['parentHandle'] =   (null !== $parentHandle && is_callable([$parentHandle, 'nodeId']) )
+		$out['parentHandle'] =   (null !== $parentHandle && is_callable([$parentHandle, 'nodeId']) ) /* @phpstan-ignore-line */
 		                         ? $parentHandle->nodeId(true)
 		                         : null;
 

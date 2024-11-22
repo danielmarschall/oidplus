@@ -307,12 +307,10 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 					$out['text'] .= '<p>'._L('You are using <b>method B</b> (Git working copy).').'</p>';
 					$requireInfo = _L('shell access with Git client');
 					$updateCommand = $this->getGitCommand();
-				} else if ($installType === 'manual') {
+				} else /*if ($installType === 'manual')*/ {
 					$out['text'] .= '<p>'._L('You are using <b>method C</b> (Snapshot file).').'</p>';
 					$requireInfo = ''; // unused
 					$updateCommand = ''; // unused
-				} else {
-					assert(false);
 				}
 
 				$local_installation = OIDplus::getVersion();
@@ -342,10 +340,8 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 					if (($installType === 'svn-wc') || ($installType === 'git-wc')) {
 						if ($installType === 'svn-wc') {
 							$shell_diff_cmd = 'svn stat';
-						} else if ($installType === 'git-wc') {
+						} /*else if ($installType === 'git-wc')*/ {
 							$shell_diff_cmd = 'git status -s';
-						} else {
-							$shell_diff_cmd = '';
 						}
 
 						$can_access_shell = true;

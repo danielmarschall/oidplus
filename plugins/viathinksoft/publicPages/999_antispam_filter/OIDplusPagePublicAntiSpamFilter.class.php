@@ -39,7 +39,7 @@ class OIDplusPagePublicAntiSpamFilter extends OIDplusPagePluginPublic {
 				$email = $treffer[2];
 				$text = $treffer[4];
 				return OIDplus::mailUtils()->secureEmailAddress($email, $text, 1); // AntiSpam
-			}, $html);
+			}, $html) ?? $html;
 	}
 
 }

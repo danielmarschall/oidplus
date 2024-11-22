@@ -642,13 +642,14 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @return string|null
+	 * @return string
 	 * @throws OIDplusException
 	 */
-	public function getTitle(): ?string {
+	public function getTitle(): string {
+		$undef = _L('Object: ',$this->nodeId());
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select title from ###objects where id = ?", array($this->nodeId()));
-			if (!$res->any()) return null;
+			if (!$res->any()) return $undef;
 			$row = $res->fetch_array();
 			return $row['title'];
 		} else {
@@ -656,7 +657,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			if (isset(self::$object_info_cache[$this->nodeId()])) {
 				return self::$object_info_cache[$this->nodeId()][self::CACHE_TITLE];
 			}
-			return null;
+			return $undef;
 		}
 	}
 

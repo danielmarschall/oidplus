@@ -54,7 +54,7 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 	protected $JSON_SCHEMA_URL;
 
 	/**
-	 * @throws OIDplusException
+	 *
 	 */
 	public function __construct() {
 		// NOTES:
@@ -270,7 +270,7 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 					// $this->_oidip_attr('lang', ...); // not implemented (since we don't know the language of the texts written by the page operator)
 
 					if ($obj) {
-						$out[] = $this->_oidip_attr('name', $obj->getTitle() ?? ''); // DO NOT TRANSLATE!
+						$out[] = $this->_oidip_attr('name', $obj->getTitle()); // DO NOT TRANSLATE!
 
 						$cont = $obj->getDescription() ?? '';
 						$cont = preg_replace('@<a[^>]+href\s*=\s*["\']([^\'"]+)["\'][^>]*>(.+)<\s*/\s*a\s*>@ismU', '\2 (\1)', $cont);
@@ -547,7 +547,7 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 			$bry = array();
 			foreach ($ary as $cry) {
 				$dry = array_keys($cry);
-				if (count($dry) == 0) continue;
+				if (count($dry) == 0) continue; /** @phpstan-ignore-line */ // PHPStan thinks that count($dry) is always 0
 				$bry[$dry[0].'Section'] = $cry; /** @phpstan-ignore-line */ // PHPStan thinks that count($dry) is always 0
 			}
 

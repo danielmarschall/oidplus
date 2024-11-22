@@ -104,7 +104,7 @@ class OIDplusPagePublicRestApi extends OIDplusPagePluginPublic {
 		          '<link rel="stylesheet" type="text/css" href="plugins/viathinksoft/publicPages/002_rest_api/swagger-ui/index.css" />'.
 		          '<script src="plugins/viathinksoft/publicPages/002_rest_api/swagger-ui/swagger-ui-bundle.js" charset="UTF-8"> </script>'.
 		          '<script src="plugins/viathinksoft/publicPages/002_rest_api/swagger-ui/swagger-ui-standalone-preset.js" charset="UTF-8"> </script>';
-		$html = preg_replace('|(<head([^>]*)>)|imU', "\\1\n\t".str_replace('\\', '\\\\', $scrTag), $html);
+		$html = preg_replace('|(<head([^>]*)>)|imU', "\\1\n\t".str_replace('\\', '\\\\', $scrTag), $html) ?? $html;
 	}
 
 	/**

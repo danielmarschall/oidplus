@@ -64,7 +64,6 @@ class OIDplusQueryResultADO extends OIDplusQueryResult {
 
 	/**
 	 * @return int
-	 * @throws OIDplusException
 	 */
 	protected function do_num_rows(): int {
 		return $this->res->RecordCount;

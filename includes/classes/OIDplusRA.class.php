@@ -26,9 +26,9 @@ namespace ViaThinkSoft\OIDplus\Core;
 class OIDplusRA extends OIDplusBaseClass {
 
 	/**
-	 * @var ?string
+	 * @var string
 	 */
-	private ?string $email;
+	private string $email;
 
 	/**
 	 * @param string $email

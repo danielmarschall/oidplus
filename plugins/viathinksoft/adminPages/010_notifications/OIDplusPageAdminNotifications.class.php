@@ -100,7 +100,7 @@ class OIDplusPageAdminNotifications extends OIDplusPagePluginAdmin
 				krsort($notifications_by_sev);
 
 				foreach ($notifications_by_sev as $severity => $notifications) {
-					if (count($notifications) == 0) continue;
+					if (count($notifications) == 0) continue; /* @phpstan-ignore-line */
 
 					$sev_hf = $notifications[0]->getSeverityAsHumanFriendlyString(true);
 

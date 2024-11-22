@@ -36,7 +36,7 @@ class OIDplusPagePublicPolyfill extends OIDplusPagePluginPublic {
 		$tmp = (OIDplus::insideSetup()) ? '?noBaseConfig=1' : '';
 		$scrTag = '<script src="'.htmlentities(OIDplus::webpath(__DIR__, OIDplus::PATH_RELATIVE)?:'').'polyfill.min.js.php'.$tmp.'"></script>';
 
-		$html = preg_replace('|(<head([^>]*)>)|imU', "\\1\n\t".str_replace('\\', '\\\\', $scrTag), $html);
+		$html = preg_replace('|(<head([^>]*)>)|imU', "\\1\n\t".str_replace('\\', '\\\\', $scrTag), $html) ?? $html;
 	}
 
 }

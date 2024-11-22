@@ -43,7 +43,7 @@ class OIDplusPagePublicRdap extends OIDplusPagePluginPublic
 	 */
 	public function modifyContent(string $id, string &$title, string &$icon, string &$text): void {
 		$ary = explode(':', $id, 2);
-		$ns = $ary[0] ?? null;
+		$ns = $ary[0];
 		$id = $ary[1] ?? null;
 		$payload = '<br /> <a href="'.OIDplus::webpath(null).
 		           'rdap/'.urlencode($ns).'/'.urlencode($id).'" class="gray_footer_font" target="_blank">'._L('RDAP').'</a>';
@@ -68,7 +68,7 @@ class OIDplusPagePublicRdap extends OIDplusPagePluginPublic
 
 			$rel_url = explode('?', $rel_url, 2)[0];
 			$ary = explode('/', $rel_url, 2);
-			$ns = $ary[0] ?? null;
+			$ns = $ary[0];
 			$id = $ary[1] ?? null;
 			if ($ns && $id) {
 				$query = "$ns:$id";

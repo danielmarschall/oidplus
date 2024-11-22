@@ -460,7 +460,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		// RA E-Mail change
 		if (isset($params['ra_email'])) {
 			// Validate RA email address
-			$new_ra = $params['ra_email'] ?? '';
+			$new_ra = $params['ra_email'];
 			if ($obj::ns() == 'oid') {
 				assert($obj instanceof OIDplusOid); //assert(get_class($obj) === "ViaThinkSoft\OIDplus\Plugins\ObjectTypes\OID\OIDplusOid");
 				if ($obj->isWellKnown()) {
@@ -848,9 +848,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		foreach (OIDplus::getAllPlugins() as $plugin) {
 			if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_7) {
 				$tmp = $plugin->getAlternativesForQuery($id);
-				if (is_array($tmp)) {
-					$alternatives = array_merge($tmp, $alternatives);
-				}
+				$alternatives = array_merge($tmp, $alternatives);
 			}
 		}
 
@@ -1008,7 +1006,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			$out['text'] .= '<!-- MARKER 2 -->'; // use this to better control modifyContent!
 
 			if ($obj) {
-				$title = $obj->getTitle() ?? '';
+				$title = $obj->getTitle();
 				$description = $obj->getDescription() ?? '';
 				if (empty(strip_tags($description)) && (stripos($description,'<img') === false)) {
 					if (empty($title)) {

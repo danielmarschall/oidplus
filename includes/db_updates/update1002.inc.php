@@ -55,7 +55,7 @@ function vts_crypt_convert_from_old_oidplus(string $authkey, string $salt): stri
 		if ($m[1] == 'a') $mode = 'sp';
 		else if ($m[1] == 'b') $mode = 'ps';
 		else if ($m[1] == 'c') $mode = 'sps';
-		else if ($m[1] == 'd') $mode = 'hmac';
+		else if ($m[1] == 'd') $mode = 'hmac'; /* @phpstan-ignore-line */ // phpstan wants to remove the if-statement, but I think it is important in case someone changes the regex by accident
 		else assert(false);
 		$algo = $m[2];
 		$bin_salt = $salt;

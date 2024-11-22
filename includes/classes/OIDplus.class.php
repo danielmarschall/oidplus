@@ -144,7 +144,8 @@ class OIDplus extends OIDplusBaseClass {
 
 	/**
 	 * @return OIDplusBaseConfig
-	 * @throws OIDplusException, OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 * @throws OIDplusConfigInitializationException
 	 */
 	public static function baseConfig(): OIDplusBaseConfig {
 		if ($first_init = is_null(self::$baseConfig)) {
@@ -550,7 +551,8 @@ class OIDplus extends OIDplusBaseClass {
 
 	/**
 	 * @return OIDplusDatabasePlugin
-	 * @throws OIDplusException, OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 * @throws OIDplusConfigInitializationException
 	 */
 	public static function getActiveDatabasePlugin(): OIDplusDatabasePlugin {
 		$db_plugin_name = OIDplus::baseConfig()->getValue('DATABASE_PLUGIN','');
@@ -572,7 +574,8 @@ class OIDplus extends OIDplusBaseClass {
 
 	/**
 	 * @return OIDplusDatabaseConnection
-	 * @throws OIDplusException, OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 * @throws OIDplusConfigInitializationException
 	 */
 	public static function db(): OIDplusDatabaseConnection {
 		if (is_null(self::$dbMainSession)) {
@@ -589,7 +592,8 @@ class OIDplus extends OIDplusBaseClass {
 
 	/**
 	 * @return OIDplusDatabaseConnection
-	 * @throws OIDplusException, OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 * @throws OIDplusConfigInitializationException
 	 */
 	public static function dbIsolated(): OIDplusDatabaseConnection {
 		if (is_null(self::$dbIsolatedSession)) {
@@ -630,7 +634,8 @@ class OIDplus extends OIDplusBaseClass {
 
 	/**
 	 * @return string
-	 * @throws OIDplusException, OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 * @throws OIDplusConfigInitializationException
 	 */
 	public static function getActiveCaptchaPluginId(): string {
 		$captcha_plugin_name = OIDplus::baseConfig()->getValue('CAPTCHA_PLUGIN', '');
@@ -647,7 +652,8 @@ class OIDplus extends OIDplusBaseClass {
 
 	/**
 	 * @return OIDplusCaptchaPlugin
-	 * @throws OIDplusException, OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 * @throws OIDplusConfigInitializationException
 	 */
 	public static function getActiveCaptchaPlugin(): OIDplusCaptchaPlugin {
 		$captcha_plugin_name = OIDplus::getActiveCaptchaPluginId();
@@ -1097,7 +1103,7 @@ class OIDplus extends OIDplusBaseClass {
 		}
 
 		// Sort the plugins by their type and name, as if they would be in a single vendor-folder!
-		uasort($ary, function($a,$b) {
+		uasort($ary, function($a,$b) { /* @phpstan-ignore-line */ // Weird message which I don't understand: Parameter #1 $array of function uasort contains unresolvable type.
 			if ($a == $b) return 0;
 
 			$a = str_replace('\\', '/', $a);
@@ -1191,10 +1197,10 @@ class OIDplus extends OIDplusBaseClass {
 					if (!class_exists($fq_classname)) {
 						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Manifest declares PHP main class as "%1", but it could not be found', $fq_classname));
 					}
-					if (!is_subclass_of($fq_classname, $expectedPluginClass)) {
+					if (!is_subclass_of($fq_classname, $expectedPluginClass)) { /* @phpstan-ignore-line */ // Weird message which I don't understand: Call to function is_subclass_of() with class-string and string will always evaluate to true.
 						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Plugin main class "%1" is expected to be a subclass of "%2"', $fq_classname, $expectedPluginClass));
 					}
-					if (($fq_classname != $manifest->getTypeClass()) && (!is_subclass_of($fq_classname, $manifest->getTypeClass()))) {
+					if (($fq_classname != $manifest->getTypeClass()) && (!is_subclass_of($fq_classname, $manifest->getTypeClass()))) { /* @phpstan-ignore-line */ // Weird message which I don't understand: Call to function is_subclass_of() with class-string and string will always evaluate to true.
 						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Plugin main class "%1" is expected to be a subclass of "%2", according to type declared in manifest', $fq_classname, $manifest->getTypeClass()));
 					}
 					if (($manifest->getTypeClass() != $expectedPluginClass) && (!is_subclass_of($manifest->getTypeClass(), $expectedPluginClass))) {
@@ -1520,11 +1526,11 @@ class OIDplus extends OIDplusBaseClass {
 			foreach ($http_headers as $name => $val) {
 
 				// Plugins can remove standard OIDplus headers by setting the value to null.
-				if (is_null($val)) continue;
+				if (is_null($val)) continue; /* @phpstan-ignore-line */
 
 				// Some headers can be written as arrays to make it easier for plugin authors
 				// to manipulate/extend the contents.
-				if (is_array($val)) {
+				if (is_array($val)) { /* @phpstan-ignore-line */
 					if ((strtolower($name) == 'cache-control') ||
 						(strtolower($name) == 'referrer-policy'))
 					{
@@ -1542,7 +1548,7 @@ class OIDplus extends OIDplusBaseClass {
 					}
 				}
 
-				if (is_string($val)) {
+				if (is_string($val)) { /* @phpstan-ignore-line */
 					@header("$name: $val");
 				}
 			}
@@ -1663,11 +1669,11 @@ class OIDplus extends OIDplusBaseClass {
 
 	/**
 	 * @param string $pubKey
-	 * @return false|int
+	 * @return int|null
 	 */
-	private static function getSystemIdFromPubKey(string $pubKey)/*: false|int*/ {
+	private static function getSystemIdFromPubKey(string $pubKey): ?int {
 		$rawData = self::pubKeyToRaw($pubKey);
-		if ($rawData === false) return false;
+		if ($rawData === false) return null;
 		return smallhash($rawData);
 	}
 
@@ -1696,9 +1702,9 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @var string|false|null
+	 * @var int|null
 	 */
-	private static $system_id_cache = null;
+	private static ?int $system_id_cache = null;
 
 	/**
 	 * @param bool $oid
@@ -1920,7 +1926,7 @@ class OIDplus extends OIDplusBaseClass {
 
 				// Calculate the system ID from the public key
 				$system_id = self::getSystemIdFromPubKey($pubKey);
-				if ($system_id !== false) {
+				if ($system_id !== null) {
 					// Save the key pair to database
 					OIDplus::config()->setValue('oidplus_private_key', $privKey);
 					OIDplus::config()->setValue('oidplus_public_key', $pubKey);
@@ -2061,7 +2067,8 @@ class OIDplus extends OIDplusBaseClass {
 
 	/**
 	 * @return bool
-	 * @throws OIDplusException, OIDplusConfigInitializationException
+	 * @throws OIDplusException
+	 * @throws OIDplusConfigInitializationException
 	 */
 	public static function isSslAvailable(): bool {
 		if (!is_null(self::$sslAvailableCache)) return self::$sslAvailableCache;
@@ -2071,12 +2078,12 @@ class OIDplus extends OIDplusBaseClass {
 			return false;
 		}
 
-		$timeout = 2;
+		$timeout = 2; // TODO: make configurable
 		$already_ssl = self::isSSL();
-		$ssl_port = 443;
+		$ssl_port = 443; // TODO: make configurable
 		$host_with_port = $_SERVER['HTTP_HOST'];
 		$host_no_port = explode(':',$host_with_port)[0];
-		$host_ssl = $host_no_port . ($ssl_port != 443 ? ':'.$ssl_port : '');
+		$host_ssl = $host_no_port . ($ssl_port != 443 ? ':'.$ssl_port : ''); /* @phpstan-ignore-line */
 
 		if ($already_ssl) {
 			OIDplus::cookieUtils()->setcookie('SSL_CHECK', '1', 0, true/*allowJS*/, null/*samesite*/, true/*forceInsecure*/);
@@ -2497,7 +2504,7 @@ class OIDplus extends OIDplusBaseClass {
 					glob(__DIR__.'/../../plugins/'.'*'.'/language/'.$lang.'/'.$wildcard),
 					glob(OIDplus::getUserDataDir("plugins", true).'*'.'/language/'.$lang.'/'.$wildcard)
 				);
-				sort($translation_files);
+				sort($translation_files); /* @phpstan-ignore-line */ // Weird message which I don't understand: Parameter #1 $array of function sort contains unresolvable type.
 				foreach ($translation_files as $translation_file) {
 					if (!file_exists($translation_file)) continue;
 					$cac = self::getTranslationFileContents($translation_file);

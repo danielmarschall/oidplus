@@ -106,7 +106,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 				$sql_where[] = $slang->lowerCase('email')." like ?";   $prep_where[] = '%'.$params['term'].'%';
 				$sql_where[] = $slang->lowerCase('ra_name')." like ?"; $prep_where[] = '%'.$params['term'].'%';
 
-				if (count($sql_where) == 0) $sql_where[] = '1=0';
+				//if (count($sql_where) == 0) $sql_where[] = '1=0';
 				$res = OIDplus::db()->query("select * from ###ra where (".implode(' or ', $sql_where).")", $prep_where);
 
 				$count = 0;
@@ -140,7 +140,7 @@ class OIDplusPagePublicSearch extends OIDplusPagePluginPublic {
 					}
 				}
 
-				if (count($sql_where) == 0) $sql_where[] = '1=0';
+				//if (count($sql_where) == 0) $sql_where[] = '1=0';
 				array_unshift($prep_where, $params['namespace'].':%');
 
 				$res = OIDplus::db()->query("select * from ###objects where ".$slang->lowerCase('id')." like ? and (".implode(' or ', $sql_where).")", $prep_where);

@@ -78,8 +78,8 @@ class OIDplusLoggerPluginWindowsEventLog extends OIDplusLoggerPlugin {
 		try {
 			$x = new \COM(self::CLASS_ViaThinkSoftSimpleEventLog, NULL, 65001/*CP_UTF8*/);
 			$reason = '?'; // LogSimulate() must actively clear it if everything is OK
-			$x->LogSimulate(self::LOGPROVIDER, self::LOGEVENT_MSG_SUCCESS, 'TEST', $reason);/** @phpstan-ignore-line */
-			return $reason != '';
+			$x->LogSimulate(self::LOGPROVIDER, self::LOGEVENT_MSG_SUCCESS, 'TEST', $reason); /** @phpstan-ignore-line */
+			return $reason != ''; /** @phpstan-ignore-line */ // PHPstand does not know that $reason will be changed by $x->LogSimulate
 		} catch (\Exception $e) {
 			$reason = $e->getMessage();
 			return false;

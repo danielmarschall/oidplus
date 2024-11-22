@@ -496,7 +496,7 @@ class OIDplusOid extends OIDplusObject {
 				$first_name = array_shift($names);
 				$abbr = _L('Numeric value').': '.array_shift($names);
 				$iri_notation = $withAbbr ? '<abbr title="'.$abbr.'">'.$first_name.'</abbr>/'.$iri_notation : $first_name.'/'.$iri_notation;
-			} else if (count($names) == 1) {
+			} else /*if (count($names) == 1)*/ {
 				$iri_notation = array_shift($names) . '/' . $iri_notation;
 			}
 

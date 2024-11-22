@@ -167,7 +167,7 @@ class OIDplusPagePublicWhois extends OIDplusPagePluginPublic
 
 			$rel_url = explode('?', $rel_url, 2)[0];
 			$ary = explode('/', trim($rel_url,'/'), 3);
-			$ns = $ary[0] ?? null;
+			$ns = $ary[0];
 			$id = $ary[1] ?? null;
 			if ($id === 'root') $id = '';
 			$format = $ary[2] ?? 'text';
