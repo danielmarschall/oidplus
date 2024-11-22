@@ -29,4 +29,5 @@ parameters:
 		- '#Function (.+) has no return type specified.#'
 		- '#Property (.+) has no type specified.#'
 		- '#Function (.+) return type has no value type specified in iterable type array.#'
-	
+		# For PHP<8.2 compatibility:
+		- '#PHPDoc tag @throws with type Random\\RandomException is not subtype of Throwable#'

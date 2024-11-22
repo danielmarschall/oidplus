@@ -3,7 +3,7 @@
 /**
  * WEID<=>OID Converter
  * (c) Webfan.de, ViaThinkSoft
- * Revision 2024-09-10
+ * Revision 2024-11-22
  **/
 
 // What is a WEID?
@@ -130,6 +130,7 @@ class WeidOidConverter {
 		$p = strrpos($weid,':');
 		$namespace = substr($weid, 0, $p+1);
 		$rest = substr($weid, $p+1);
+		if ($rest === false) $rest = '';
 
 		$weid = preg_replace('@^urn:x-weid:@', 'weid:', $weid) ?? $weid;
 
