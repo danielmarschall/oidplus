@@ -1215,34 +1215,20 @@ class OIDplus extends OIDplusBaseClass {
 	 * @throws OIDplusConfigInitializationException|OIDplusException|\ReflectionException
 	 */
 	public static function init(bool $html=true, bool $keepBaseConfig=true): void {
-		// TODO: instead of having parameter $html=true|false, wouldn't it be better to have $type=html|css|js ?
-		self::getCurrentContext()->html = $html;
+
+		// For test cases we need to be able to control base config and setting values manually, so $keepBaseConfig needs to be true
+		$bakBaseConfig = $keepBaseConfig ? self::getCurrentContext()->baseConfig : null;
+
+		// Makes sure that forceTenantSubDirName() can be used before init()
+		$bakForcedTenantSubDirName = self::getCurrentContext()->forcedTenantSubDirName;
 
 		// Reset internal state, so we can re-init verything if required
+		self::setCurrentContext(new OIDplusContext());
+		self::getCurrentContext()->baseConfig = $bakBaseConfig;
+		self::getCurrentContext()->forcedTenantSubDirName = $bakForcedTenantSubDirName;
 
-		self::getCurrentContext()->config = null;
-		if (!$keepBaseConfig) self::getCurrentContext()->baseConfig = null;  // for test cases we need to be able to control base config and setting values manually, so $keepBaseConfig needs to be true
-		self::getCurrentContext()->gui = null;
-		self::getCurrentContext()->authUtils = null;
-		self::getCurrentContext()->mailUtils = null;
-		self::getCurrentContext()->menuUtils = null;
-		self::getCurrentContext()->logger = null;
-		self::getCurrentContext()->dbMainSession = null;
-		self::getCurrentContext()->dbIsolatedSession = null;
-		self::getCurrentContext()->pagePlugins = array();
-		self::getCurrentContext()->authPlugins = array();
-		self::getCurrentContext()->loggerPlugins = array();
-		self::getCurrentContext()->objectTypePlugins = array();
-		self::getCurrentContext()->enabledObjectTypes = array();
-		self::getCurrentContext()->disabledObjectTypes = array();
-		self::getCurrentContext()->dbPlugins = array();
-		self::getCurrentContext()->captchaPlugins = array();
-		self::getCurrentContext()->sqlSlangPlugins = array();
-		self::getCurrentContext()->languagePlugins = array();
-		self::getCurrentContext()->designPlugins = array();
-		self::getCurrentContext()->system_id_cache = null;
-		self::getCurrentContext()->sslAvailableCache = null;
-		self::getCurrentContext()->translationArray = array();
+		// TODO: instead of having parameter $html=true|false, wouldn't it be better to have $type=html|css|js ?
+		self::getCurrentContext()->html = $html;
 
 		// Continue...
 

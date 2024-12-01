@@ -51,8 +51,8 @@ foreach ($tenants as $tenant) {
 	$tenant = basename($tenant);
 	try {
 		// echo "\n\n******************** Tenant $tenant ...\n";
-		OIDplus::forceTenantSubDirName($tenant);
 		ob_start();
+		OIDplus::forceTenantSubDirName($tenant);
 		OIDplus::init(false, false);
 		assert(OIDplus::isTenant());
 		OIDplus::invoke_shutdown();
