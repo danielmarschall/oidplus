@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2024 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -127,7 +127,7 @@ class OIDplus extends OIDplusBaseClass {
 	public static function insideSetup(): bool {
 		if (PHP_SAPI == 'cli') return false;
 		if (!isset($_SERVER['REQUEST_URI'])) return false;
-		return (strpos($_SERVER['REQUEST_URI'], OIDplus::webpath(null,OIDplus::PATH_RELATIVE_TO_ROOT).'setup/') === 0);
+		return (strpos($_SERVER['REQUEST_URI'], self::webpath(null,self::PATH_RELATIVE_TO_ROOT).'setup/') === 0);
 	}
 
 	// --- Static classes
@@ -162,12 +162,12 @@ class OIDplus extends OIDplusBaseClass {
 			// It is important to include it before userdata/baseconfig/config.inc.php was included,
 			// so we can give userdata/baseconfig/config.inc.php the chance to override the values.
 
-			include OIDplus::localpath().'includes/oidplus_limits.inc.php';
+			include self::localpath().'includes/oidplus_limits.inc.php';
 
 			// Include config file
 
-			$config_file = OIDplus::getUserDataDir("baseconfig") . 'config.inc.php';
-			$config_file_old = OIDplus::localpath() . 'includes/config.inc.php'; // backwards compatibility
+			$config_file = self::getUserDataDir("baseconfig") . 'config.inc.php';
+			$config_file_old = self::localpath() . 'includes/config.inc.php'; // backwards compatibility
 
 			if (!file_exists($config_file) && file_exists($config_file_old)) {
 				$config_file = $config_file_old;
@@ -200,7 +200,7 @@ class OIDplus extends OIDplusBaseClass {
 							include $config_file;
 						}
 					}
-					else if ((strpos($tmp,'OIDplus::') !== false) && (strpos($tmp,$uses) === false)) {
+					else if ((strpos($tmp,'self::') !== false) && (strpos($tmp,$uses) === false)) {
 						// Migrate config file to namespace class names
 						// Note: Only config files version 2.1 are affected. Not 2.0 ones
 
@@ -236,20 +236,20 @@ class OIDplus extends OIDplusBaseClass {
 					}
 				}
 			} else {
-				if (!is_dir(OIDplus::localpath().'setup')) {
-					$config_file = substr($config_file, strlen(OIDplus::localpath(NULL))); // "censor" the system local path
+				if (!is_dir(self::localpath().'setup')) {
+					$config_file = substr($config_file, strlen(self::localpath(NULL))); // "censor" the system local path
 					throw new OIDplusConfigInitializationException(_L('File %1 is missing, but setup can\'t be started because its directory missing.',$config_file));
 				} else {
 					if (self::$html) {
 						if (!self::insideSetup()) {
-							header('Location:'.OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/');
+							header('Location:'.self::webpath(null,self::PATH_RELATIVE).'setup/');
 							die(_L('Redirecting to setup...'));
 						} else {
 							return self::$baseConfig;
 						}
 					} else {
 						// This can be displayed in e.g. ajax.php
-						$config_file = substr($config_file, strlen(OIDplus::localpath(NULL))); // "censor" the system local path
+						$config_file = substr($config_file, strlen(self::localpath(NULL))); // "censor" the system local path
 						throw new OIDplusConfigInitializationException(_L('File %1 is missing. Please run setup again.',$config_file));
 					}
 				}
@@ -258,15 +258,15 @@ class OIDplus extends OIDplusBaseClass {
 			// Check important config settings
 
 			if (self::$baseConfig->getValue('CONFIG_VERSION') != 2.1) {
-				if (strpos($_SERVER['REQUEST_URI'], OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/') !== 0) {
-					$config_file = substr($config_file, strlen(OIDplus::localpath(NULL))); // "censor" the system local path
+				if (strpos($_SERVER['REQUEST_URI']??'', self::webpath(null,self::PATH_RELATIVE).'setup/') !== 0) {
+					$config_file = substr($config_file, strlen(self::localpath(NULL))); // "censor" the system local path
 					throw new OIDplusConfigInitializationException(_L("The information located in %1 is outdated.",$config_file));
 				}
 			}
 
 			if (self::$baseConfig->getValue('SERVER_SECRET', '') === '') {
-				if (strpos($_SERVER['REQUEST_URI'], OIDplus::webpath(null,OIDplus::PATH_RELATIVE).'setup/') !== 0) {
-					$config_file = substr($config_file, strlen(OIDplus::localpath(NULL))); // "censor" the system local path
+				if (strpos($_SERVER['REQUEST_URI']??'', self::webpath(null,self::PATH_RELATIVE).'setup/') !== 0) {
+					$config_file = substr($config_file, strlen(self::localpath(NULL))); // "censor" the system local path
 					throw new OIDplusConfigInitializationException(_L("You must set a value for SERVER_SECRET in %1 for the system to operate secure.",$config_file));
 				}
 			}
@@ -305,7 +305,7 @@ class OIDplus extends OIDplusBaseClass {
 				}
 			});
 			self::$config->prepareConfigKey('admin_email', 'E-Mail address of the system administrator', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
-				if (!empty($value) && !OIDplus::mailUtils()->validMailAddress($value)) {
+				if (!empty($value) && !self::mailUtils()->validMailAddress($value)) {
 					throw new OIDplusException(_L('This is not a correct email address'));
 				}
 			});
@@ -315,7 +315,7 @@ class OIDplus extends OIDplusBaseClass {
 				$addrs = explode(';', $value);
 				foreach ($addrs as $addr) {
 					$addr = trim($addr);
-					if (!empty($addr) && !OIDplus::mailUtils()->validMailAddress($addr)) {
+					if (!empty($addr) && !self::mailUtils()->validMailAddress($addr)) {
 						throw new OIDplusException(_L('%1 is not a correct email address',$addr));
 					}
 				}
@@ -326,7 +326,7 @@ class OIDplus extends OIDplusBaseClass {
 				$addrs = explode(';', $value);
 				foreach ($addrs as $addr) {
 					$addr = trim($addr);
-					if (!empty($addr) && !OIDplus::mailUtils()->validMailAddress($addr)) {
+					if (!empty($addr) && !self::mailUtils()->validMailAddress($addr)) {
 						throw new OIDplusException(_L('%1 is not a correct email address',$addr));
 					}
 				}
@@ -346,13 +346,13 @@ class OIDplus extends OIDplusBaseClass {
 
 				foreach ($ary as $ot_check) {
 					$ns_found = false;
-					foreach (OIDplus::getEnabledObjectTypes() as $ot) {
+					foreach (self::getEnabledObjectTypes() as $ot) {
 						if ($ot::ns() == $ot_check) {
 							$ns_found = true;
 							break;
 						}
 					}
-					foreach (OIDplus::getDisabledObjectTypes() as $ot) {
+					foreach (self::getDisabledObjectTypes() as $ot) {
 						if ($ot::ns() == $ot_check) {
 							$ns_found = true;
 							break;
@@ -386,7 +386,7 @@ class OIDplus extends OIDplusBaseClass {
 					throw new OIDplusException(_L('Invalid auth plugin name. It is usually the folder name, without path, e.g. "%1"', 'A4_argon2'));
 				}
 
-				OIDplus::checkRaAuthPluginAvailable($value, true);
+				self::checkRaAuthPluginAvailable($value, true);
 			});
 		}
 
@@ -555,7 +555,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @throws OIDplusConfigInitializationException
 	 */
 	public static function getActiveDatabasePlugin(): OIDplusDatabasePlugin {
-		$db_plugin_name = OIDplus::baseConfig()->getValue('DATABASE_PLUGIN','');
+		$db_plugin_name = self::baseConfig()->getValue('DATABASE_PLUGIN','');
 		if ($db_plugin_name === '') {
 			throw new OIDplusConfigInitializationException(_L('No database plugin selected in config file'));
 		}
@@ -638,9 +638,9 @@ class OIDplus extends OIDplusBaseClass {
 	 * @throws OIDplusConfigInitializationException
 	 */
 	public static function getActiveCaptchaPluginId(): string {
-		$captcha_plugin_name = OIDplus::baseConfig()->getValue('CAPTCHA_PLUGIN', '');
+		$captcha_plugin_name = self::baseConfig()->getValue('CAPTCHA_PLUGIN', '');
 
-		if (OIDplus::baseConfig()->getValue('RECAPTCHA_ENABLED', false) && ($captcha_plugin_name === '')) {
+		if (self::baseConfig()->getValue('RECAPTCHA_ENABLED', false) && ($captcha_plugin_name === '')) {
 			// Legacy config file support!
 			$captcha_plugin_name = 'reCAPTCHA';
 		}
@@ -656,7 +656,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @throws OIDplusConfigInitializationException
 	 */
 	public static function getActiveCaptchaPlugin(): OIDplusCaptchaPlugin {
-		$captcha_plugin_name = OIDplus::getActiveCaptchaPluginId();
+		$captcha_plugin_name = self::getActiveCaptchaPluginId();
 		foreach (self::$captchaPlugins as $name => $plugin) {
 			if (strtolower($name) == strtolower($captcha_plugin_name)) {
 				return $plugin;
@@ -689,7 +689,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @return OIDplusAuthPlugin|null
 	 */
 	public static function getAuthPluginById(string $id): ?OIDplusAuthPlugin {
-		$plugins = OIDplus::getAuthPlugins();
+		$plugins = self::getAuthPlugins();
 		foreach ($plugins as $plugin) {
 			if ($plugin->id() == $id) {
 				return $plugin;
@@ -705,7 +705,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	private static function checkRaAuthPluginAvailable(string $plugin_id, bool $must_hash): void {
-		$plugin = OIDplus::getAuthPluginById($plugin_id);
+		$plugin = self::getAuthPluginById($plugin_id);
 		if (is_null($plugin)) {
 			throw new OIDplusException(_L('The auth plugin "%1" does not exist in plugin directory %2',$plugin_id,'[userdata_pub/]plugins/[vendorname]/auth/'));
 		}
@@ -726,10 +726,10 @@ class OIDplus extends OIDplusBaseClass {
 	 */
 	public static function getDefaultRaAuthPlugin(bool $must_hash): OIDplusAuthPlugin {
 		// 1. Priority: Use the auth plugin the user prefers
-		$def_plugin_id = OIDplus::config()->getValue('default_ra_auth_method');
+		$def_plugin_id = self::config()->getValue('default_ra_auth_method');
 		if (trim($def_plugin_id) !== '') {
-			OIDplus::checkRaAuthPluginAvailable($def_plugin_id, $must_hash);
-			$tmp = OIDplus::getAuthPluginById($def_plugin_id);
+			self::checkRaAuthPluginAvailable($def_plugin_id, $must_hash);
+			$tmp = self::getAuthPluginById($def_plugin_id);
 			if ($tmp) return $tmp;
 		}
 
@@ -742,7 +742,7 @@ class OIDplus extends OIDplusBaseClass {
 			'A6_crypt'    // usually Salted SHA512 with 5000 rounds
 		);
 		foreach ($preferred_auth_plugins as $plugin_id) {
-			$plugin = OIDplus::getAuthPluginById($plugin_id);
+			$plugin = self::getAuthPluginById($plugin_id);
 			if (is_null($plugin)) continue;
 
 			$reason = '';
@@ -752,7 +752,7 @@ class OIDplus extends OIDplusBaseClass {
 		}
 
 		// 3. Priority: If nothing found, take the first found plugin
-		$plugins = OIDplus::getAuthPlugins();
+		$plugins = self::getAuthPlugins();
 		foreach ($plugins as $plugin) {
 			$reason = '';
 			if (!$plugin->availableForHash($reason)) continue;
@@ -772,7 +772,7 @@ class OIDplus extends OIDplusBaseClass {
 	 */
 	private static function registerAuthPlugin(OIDplusAuthPlugin $plugin): void {
 		$reason = '';
-		if (OIDplus::baseConfig()->getValue('DEBUG') && $plugin->availableForHash($reason) && $plugin->availableForVerify($reason)) {
+		if (self::baseConfig()->getValue('DEBUG') && $plugin->availableForHash($reason) && $plugin->availableForVerify($reason)) {
 			$password = generateRandomString(25);
 
 			try {
@@ -842,9 +842,9 @@ class OIDplus extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	public static function getActiveDesignPlugin(): ?OIDplusDesignPlugin {
-		$plugins = OIDplus::getDesignPlugins();
+		$plugins = self::getDesignPlugins();
 		foreach ($plugins as $plugin) {
-			if ($plugin->id() == OIDplus::config()->getValue('design','default')) {
+			if ($plugin->id() == self::config()->getValue('design','default')) {
 				return $plugin;
 			}
 		}
@@ -878,7 +878,7 @@ class OIDplus extends OIDplusBaseClass {
 	private static function registerObjectTypePlugin(OIDplusObjectTypePlugin $plugin): void {
 		self::$objectTypePlugins[] = $plugin;
 
-		if (OIDplus::baseConfig()->getValue('DEBUG')) {
+		if (self::baseConfig()->getValue('DEBUG')) {
 			// Avoid a namespace hash conflict of the OIDplus Information Object Custom UUIDs
 			// see here https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md
 			if (!str_starts_with($plugin->getManifest()->getOid(), '1.3.6.1.4.1.37476.2.5.2.4.8.')) {
@@ -919,7 +919,7 @@ class OIDplus extends OIDplusBaseClass {
 		if (!str_starts_with($root,$ns.':')) throw new OIDplusException(_L('ObjectType plugin %1 is erroneous: Root node (%2) is in wrong namespace (needs starts with %3)!',$ot,$root,$ns.':'));
 
 		$ns_found = false;
-		foreach (array_merge(OIDplus::getEnabledObjectTypes(), OIDplus::getDisabledObjectTypes()) as $test_ot) {
+		foreach (array_merge(self::getEnabledObjectTypes(), self::getDisabledObjectTypes()) as $test_ot) {
 			if ($test_ot::ns() == $ns) {
 				$ns_found = true;
 				break;
@@ -929,11 +929,11 @@ class OIDplus extends OIDplusBaseClass {
 			throw new OIDplusException(_L('Attention: Two objectType plugins use the same namespace "%1"!',$ns));
 		}
 
-		$init = OIDplus::config()->getValue("objecttypes_initialized");
+		$init = self::config()->getValue("objecttypes_initialized");
 		$init_ary = empty($init) ? array() : explode(';', $init);
 		$init_ary = array_map('trim', $init_ary);
 
-		$enabled = OIDplus::config()->getValue("objecttypes_enabled");
+		$enabled = self::config()->getValue("objecttypes_enabled");
 		$enabled_ary = empty($enabled) ? array() : explode(';', $enabled);
 		$enabled_ary = array_map('trim', $enabled_ary);
 
@@ -941,7 +941,7 @@ class OIDplus extends OIDplusBaseClass {
 			// If it is in the list of enabled object types, it is enabled (obviously)
 			$do_enable = true;
 		} else {
-			if (!OIDplus::config()->getValue('oobe_objects_done')) {
+			if (!self::config()->getValue('oobe_objects_done')) {
 				// If the OOBE wizard is NOT done, then just enable the "oid" object type by default
 				$do_enable = $ns == 'oid';
 			} else {
@@ -955,7 +955,7 @@ class OIDplus extends OIDplusBaseClass {
 		if ($do_enable) {
 			self::$enabledObjectTypes[] = $ot;
 			usort(self::$enabledObjectTypes, function($a, $b) {
-				$enabled = OIDplus::config()->getValue("objecttypes_enabled");
+				$enabled = self::config()->getValue("objecttypes_enabled");
 				$enabled_ary = explode(';', $enabled);
 
 				$idx_a = array_search($a::ns(), $enabled_ary);
@@ -974,11 +974,11 @@ class OIDplus extends OIDplusBaseClass {
 			if ($do_enable) {
 				$enabled_ary[] = $ns;
 				// Important: Don't validate the input, because the other object types might not be initialized yet! So use setValueNoCallback() instead setValue().
-				OIDplus::config()->setValueNoCallback("objecttypes_enabled", implode(';', $enabled_ary));
+				self::config()->setValueNoCallback("objecttypes_enabled", implode(';', $enabled_ary));
 			}
 
 			$init_ary[] = $ns;
-			OIDplus::config()->setValue("objecttypes_initialized", implode(';', $init_ary));
+			self::config()->setValue("objecttypes_initialized", implode(';', $init_ary));
 		}
 	}
 
@@ -1033,7 +1033,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @return OIDplusPlugin[]
 	 */
 	public static function getAllPlugins(): array {
-		// TODO: such methods must throw an exception if OIDplus::init() was not called previously!
+		// TODO: such methods must throw an exception if self::init() was not called previously!
 		$res = array();
 		$res = array_merge($res, self::$pagePlugins);
 		$res = array_merge($res, self::$authPlugins);
@@ -1081,7 +1081,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @throws OIDplusException if the class name or config file (disabled setting) does not contain a namespace
 	 */
 	private static function pluginIsDisabled(string $oid): bool {
-		return OIDplus::baseConfig()->getValue('DISABLE_PLUGIN_'.$oid, false);
+		return self::baseConfig()->getValue('DISABLE_PLUGIN_'.$oid, false);
 	}
 
 	/**
@@ -1097,8 +1097,8 @@ class OIDplus extends OIDplusBaseClass {
 		$ary = array();
 		foreach (explode(',',$pluginFolderMasks) as $pluginFolderMask) {
 			$ary = array_merge($ary,
-				glob(OIDplus::localpath().'plugins/'.'*'.'/'.$pluginFolderMask.'/'.'*'.'/manifest.json'),
-				glob(OIDplus::getUserDataDir("plugins", true).'*'.'/'.$pluginFolderMask.'/'.'*'.'/manifest.json')
+				glob(self::localpath().'plugins/'.'*'.'/'.$pluginFolderMask.'/'.'*'.'/manifest.json'),
+				glob(self::getUserDataDir("plugins", true).'*'.'/'.$pluginFolderMask.'/'.'*'.'/manifest.json')
 			);
 		}
 
@@ -1181,7 +1181,7 @@ class OIDplus extends OIDplusBaseClass {
 					$php_class_name = $manifest->getPhpMainClass();
 					$fq_classname = $php_namespace . $php_class_name;
 					$full_plugin_dir = dirname($manifest->getManifestFile());
-					$full_plugin_dir_rel = substr($full_plugin_dir, strlen(OIDplus::localpath()));
+					$full_plugin_dir_rel = substr($full_plugin_dir, strlen(self::localpath()));
 
 					// Before we load the plugin, we want to make some checks to confirm
 					// that the plugin is working correctly.
@@ -1223,7 +1223,7 @@ class OIDplus extends OIDplusBaseClass {
 					$dir_is_viathinksoft =
 						   str_starts_with($full_plugin_dir_rel, 'plugins/viathinksoft/')
 						|| str_starts_with(strtolower($full_plugin_dir_rel), strtolower('plugins\\viathinksoft\\'))
-						// TODO: hier auch tenant dir berücksichtigen! OIDplus::getUserDataDir("plugins", true)
+						// TODO: hier auch tenant dir berücksichtigen! self::getUserDataDir("plugins", true)
 						|| str_starts_with($full_plugin_dir_rel, 'userdata_pub/plugins/viathinksoft/')
 						|| str_starts_with(strtolower($full_plugin_dir_rel), strtolower('userdata_pub\\plugins\\viathinksoft\\'));
 					$oid_is_viathinksoft = str_starts_with($plugin_oid, '1.3.6.1.4.1.37476.2.5.2.4.'); // { iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 37476 products(2) oidplus(5) v2(2) plugins(4) }
@@ -1239,7 +1239,7 @@ class OIDplus extends OIDplusBaseClass {
 					// Additional check: does the plugin define JS/CSS although it is not an interactive plugin type?
 					$has_js = $manifest->getJSFiles();
 					$has_css = $manifest->getCSSFiles();
-					$is_interactive = in_array(basename($plugintype_folder), OIDplus::INTERACTIVE_PLUGIN_TYPES);
+					$is_interactive = in_array(basename($plugintype_folder), self::INTERACTIVE_PLUGIN_TYPES);
 					$is_design = basename($plugintype_folder) === 'design';
 					if (!$is_interactive && $has_js) {
 						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('%1 files are included in the manifest XML, but this plugin type does not allow such files.', 'JavaScript'));
@@ -1328,22 +1328,22 @@ class OIDplus extends OIDplusBaseClass {
 
 		// Continue...
 
-		OIDplus::baseConfig(); // this loads the base configuration located in userdata/baseconfig/config.inc.php (once!)
-		// You can do changes to the configuration afterwards using OIDplus::baseConfig()->...
+		self::baseConfig(); // this loads the base configuration located in userdata/baseconfig/config.inc.php (once!)
+		// You can do changes to the configuration afterwards using self::baseConfig()->...
 
 		// Register database types (highest priority)
 
 		// SQL slangs
 
-		self::registerAllPlugins('sqlSlang', OIDplusSqlSlangPlugin::class, array(OIDplus::class,'registerSqlSlangPlugin'));
-		foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
+		self::registerAllPlugins('sqlSlang', OIDplusSqlSlangPlugin::class, array(self::class,'registerSqlSlangPlugin'));
+		foreach (self::getSqlSlangPlugins() as $plugin) {
 			$plugin->init($html);
 		}
 
 		// Database providers
 
-		self::registerAllPlugins('database', OIDplusDatabasePlugin::class, array(OIDplus::class,'registerDatabasePlugin'));
-		foreach (OIDplus::getDatabasePlugins() as $plugin) {
+		self::registerAllPlugins('database', OIDplusDatabasePlugin::class, array(self::class,'registerDatabasePlugin'));
+		foreach (self::getDatabasePlugins() as $plugin) {
 			$plugin->init($html);
 		}
 
@@ -1353,44 +1353,44 @@ class OIDplus extends OIDplusBaseClass {
 
 		// Construct the configuration manager
 
-		OIDplus::config(); // During the construction, various system settings are prepared if required
+		self::config(); // During the construction, various system settings are prepared if required
 
 		// Initialize public / private keys
 
-		OIDplus::getPkiStatus(true);
+		self::getPkiStatus(true);
 
 		// Register non-DB plugins
 
-		self::registerAllPlugins(array('publicPages', 'raPages', 'adminPages'), OIDplusPagePlugin::class, array(OIDplus::class,'registerPagePlugin'));
-		self::registerAllPlugins('auth', OIDplusAuthPlugin::class, array(OIDplus::class,'registerAuthPlugin'));
-		self::registerAllPlugins('logger', OIDplusLoggerPlugin::class, array(OIDplus::class,'registerLoggerPlugin'));
+		self::registerAllPlugins(array('publicPages', 'raPages', 'adminPages'), OIDplusPagePlugin::class, array(self::class,'registerPagePlugin'));
+		self::registerAllPlugins('auth', OIDplusAuthPlugin::class, array(self::class,'registerAuthPlugin'));
+		self::registerAllPlugins('logger', OIDplusLoggerPlugin::class, array(self::class,'registerLoggerPlugin'));
 		self::logger()->reLogMissing(); // Some previous plugins might have tried to log. Repeat that now.
-		self::registerAllPlugins('objectTypes', OIDplusObjectTypePlugin::class, array(OIDplus::class,'registerObjectTypePlugin'));
-		self::registerAllPlugins('language', OIDplusLanguagePlugin::class, array(OIDplus::class,'registerLanguagePlugin'));
-		self::registerAllPlugins('design', OIDplusDesignPlugin::class, array(OIDplus::class,'registerDesignPlugin'));
-		self::registerAllPlugins('captcha', OIDplusCaptchaPlugin::class, array(OIDplus::class,'registerCaptchaPlugin'));
+		self::registerAllPlugins('objectTypes', OIDplusObjectTypePlugin::class, array(self::class,'registerObjectTypePlugin'));
+		self::registerAllPlugins('language', OIDplusLanguagePlugin::class, array(self::class,'registerLanguagePlugin'));
+		self::registerAllPlugins('design', OIDplusDesignPlugin::class, array(self::class,'registerDesignPlugin'));
+		self::registerAllPlugins('captcha', OIDplusCaptchaPlugin::class, array(self::class,'registerCaptchaPlugin'));
 
 		// Initialize non-DB plugins
 
-		foreach (OIDplus::getPagePlugins() as $plugin) {
+		foreach (self::getPagePlugins() as $plugin) {
 			$plugin->init($html);
 		}
-		foreach (OIDplus::getAuthPlugins() as $plugin) {
+		foreach (self::getAuthPlugins() as $plugin) {
 			$plugin->init($html);
 		}
-		foreach (OIDplus::getLoggerPlugins() as $plugin) {
+		foreach (self::getLoggerPlugins() as $plugin) {
 			$plugin->init($html);
 		}
-		foreach (OIDplus::getObjectTypePluginsEnabled() as $plugin) {
+		foreach (self::getObjectTypePluginsEnabled() as $plugin) {
 			$plugin->init($html);
 		}
-		foreach (OIDplus::getLanguagePlugins() as $plugin) {
+		foreach (self::getLanguagePlugins() as $plugin) {
 			$plugin->init($html);
 		}
-		foreach (OIDplus::getDesignPlugins() as $plugin) {
+		foreach (self::getDesignPlugins() as $plugin) {
 			$plugin->init($html);
 		}
-		foreach (OIDplus::getCaptchaPlugins() as $plugin) {
+		foreach (self::getCaptchaPlugins() as $plugin) {
 			$plugin->init($html);
 		}
 
@@ -1399,8 +1399,8 @@ class OIDplus extends OIDplusBaseClass {
 			// Prepare some security related response headers (default values)
 
 			$content_language =
-				strtolower(substr(OIDplus::getCurrentLang(),0,2)) . '-' .
-				strtoupper(substr(OIDplus::getCurrentLang(),2,2)); // e.g. 'en-US'
+				strtolower(substr(self::getCurrentLang(),0,2)) . '-' .
+				strtoupper(substr(self::getCurrentLang(),2,2)); // e.g. 'en-US'
 
 			$http_headers = array(
 				"X-Content-Type-Options" => "nosniff",
@@ -1490,33 +1490,33 @@ class OIDplus extends OIDplusBaseClass {
 
 			// Give plugins the opportunity to manipulate/extend the headers
 
-			foreach (OIDplus::getSqlSlangPlugins() as $plugin) {
+			foreach (self::getSqlSlangPlugins() as $plugin) {
 				$plugin->httpHeaderCheck($http_headers);
 			}
-			//foreach (OIDplus::getDatabasePlugins() as $plugin) {
-			if ($plugin = OIDplus::getActiveDatabasePlugin()) {
+			//foreach (self::getDatabasePlugins() as $plugin) {
+			if ($plugin = self::getActiveDatabasePlugin()) {
 				$plugin->httpHeaderCheck($http_headers);
 			}
-			foreach (OIDplus::getPagePlugins() as $plugin) {
+			foreach (self::getPagePlugins() as $plugin) {
 				$plugin->httpHeaderCheck($http_headers);
 			}
-			foreach (OIDplus::getAuthPlugins() as $plugin) {
+			foreach (self::getAuthPlugins() as $plugin) {
 				$plugin->httpHeaderCheck($http_headers);
 			}
-			foreach (OIDplus::getLoggerPlugins() as $plugin) {
+			foreach (self::getLoggerPlugins() as $plugin) {
 				$plugin->httpHeaderCheck($http_headers);
 			}
-			foreach (OIDplus::getObjectTypePlugins() as $plugin) {
+			foreach (self::getObjectTypePlugins() as $plugin) {
 				$plugin->httpHeaderCheck($http_headers);
 			}
-			foreach (OIDplus::getLanguagePlugins() as $plugin) {
+			foreach (self::getLanguagePlugins() as $plugin) {
 				$plugin->httpHeaderCheck($http_headers);
 			}
-			foreach (OIDplus::getDesignPlugins() as $plugin) {
+			foreach (self::getDesignPlugins() as $plugin) {
 				$plugin->httpHeaderCheck($http_headers);
 			}
-			//foreach (OIDplus::getCaptchaPlugins() as $plugin) {
-			if ($plugin = OIDplus::getActiveCaptchaPlugin()) {
+			//foreach (self::getCaptchaPlugins() as $plugin) {
+			if ($plugin = self::getActiveCaptchaPlugin()) {
 				$plugin->httpHeaderCheck($http_headers);
 			}
 
@@ -1557,8 +1557,8 @@ class OIDplus extends OIDplusBaseClass {
 
 		// Initialize other stuff (i.e. things which require the logger!)
 
-		OIDplus::recognizeSystemUrl(); // Make sure "last_known_system_url" is set
-		OIDplus::recognizeVersion(); // Make sure "last_known_version" is set and a log entry is created
+		self::recognizeSystemUrl(); // Make sure "last_known_system_url" is set
+		self::recognizeVersion(); // Make sure "last_known_version" is set and a log entry is created
 	}
 
 	// --- System URL, System ID, PKI, and other functions
@@ -1568,8 +1568,8 @@ class OIDplus extends OIDplusBaseClass {
 	 */
 	private static function recognizeSystemUrl(): void {
 		try {
-			$url = OIDplus::webpath(null,self::PATH_ABSOLUTE_CANONICAL);
-			OIDplus::config()->setValue('last_known_system_url', $url);
+			$url = self::webpath(null,self::PATH_ABSOLUTE_CANONICAL);
+			self::config()->setValue('last_known_system_url', $url);
 		} catch (\Exception $e) {
 		}
 	}
@@ -1604,9 +1604,9 @@ class OIDplus extends OIDplusBaseClass {
 
 	/**
 	 * Returns the URL of the system.
-	 * @param int $mode If true or OIDplus::PATH_RELATIVE, the returning path is relative to the currently executed
-	 *                  PHP script (i.e. index.php , not the plugin PHP script!). False or OIDplus::PATH_ABSOLUTE is
-	 *                  results in an absolute URL. OIDplus::PATH_ABSOLUTE_CANONICAL is an absolute URL,
+	 * @param int $mode If true or self::PATH_RELATIVE, the returning path is relative to the currently executed
+	 *                  PHP script (i.e. index.php , not the plugin PHP script!). False or self::PATH_ABSOLUTE is
+	 *                  results in an absolute URL. self::PATH_ABSOLUTE_CANONICAL is an absolute URL,
 	 *                  but a canonical path (set by base config setting CANONICAL_SYSTEM_URL) is preferred.
 	 * @return string|false The URL, with guaranteed trailing path delimiter for directories
 	 * @throws OIDplusException
@@ -1621,7 +1621,7 @@ class OIDplus extends OIDplusBaseClass {
 			}
 		} else {
 			if ($mode === self::PATH_ABSOLUTE_CANONICAL) {
-				$tmp = OIDplus::baseConfig()->getValue('CANONICAL_SYSTEM_URL', '');
+				$tmp = self::baseConfig()->getValue('CANONICAL_SYSTEM_URL', '');
 				if ($tmp) {
 					return rtrim($tmp,'/').'/';
 				}
@@ -1629,7 +1629,7 @@ class OIDplus extends OIDplusBaseClass {
 
 			if (PHP_SAPI == 'cli') {
 				try {
-					return OIDplus::config()->getValue('last_known_system_url', false);
+					return self::config()->getValue('last_known_system_url', false);
 				} catch (\Exception $e) {
 					return false;
 				}
@@ -1690,7 +1690,7 @@ class OIDplus extends OIDplusBaseClass {
 		*/
 
 		// https://github.com/danielmarschall/oidplus/blob/master/doc/oidplus_custom_guid.md
-		$sysid = OIDplus::getSystemId(false);
+		$sysid = self::getSystemId(false);
 		$sysid_int = $sysid ? $sysid : 0;
 		return gen_uuid_v8(
 			dechex($sysid_int),
@@ -1717,7 +1717,7 @@ class OIDplus extends OIDplusBaseClass {
 		} else {
 			$out = false;
 			if (self::getPkiStatus(true)) {
-				$pubKey = OIDplus::getSystemPublicKey();
+				$pubKey = self::getSystemPublicKey();
 				$out = self::getSystemIdFromPubKey($pubKey);
 			}
 			self::$system_id_cache = $out;
@@ -1742,7 +1742,7 @@ class OIDplus extends OIDplusBaseClass {
 			$out = false;
 
 			if (self::getPkiStatus(true)) {
-				$pubKey = OIDplus::getSystemPublicKey();
+				$pubKey = self::getSystemPublicKey();
 				$out = self::getSystemGuidFromPubKey($pubKey);
 			}
 			self::$system_guid_cache = $out;
@@ -1778,10 +1778,10 @@ class OIDplus extends OIDplusBaseClass {
 	private static function getPrivKeyPassphraseFilename(string $pubKey): string {
 		$systemid = self::getSystemIdFromPubKey($pubKey);
 
-		$oldfile1 = OIDplus::localpath() . 'userdata/privkey_secret.php'; // backwards compatibility
-		$oldfile2 = realpath(OIDplus::getUserDataDir("secret").'../').'/privkey_secret.php'; // when userdata is copied to a new tenant
-		$oldfile3 = OIDplus::getUserDataDir("secret") . 'privkey_secret.php';
-		$newfile = OIDplus::getUserDataDir("secret") . 'privkey_secret_'.$systemid.'.php';
+		$oldfile1 = self::localpath() . 'userdata/privkey_secret.php'; // backwards compatibility
+		$oldfile2 = realpath(self::getUserDataDir("secret").'../').'/privkey_secret.php'; // when userdata is copied to a new tenant
+		$oldfile3 = self::getUserDataDir("secret") . 'privkey_secret.php';
+		$newfile = self::getUserDataDir("secret") . 'privkey_secret_'.$systemid.'.php';
 
 		$file_to_choose = $newfile;
 		if (file_exists($oldfile3) && !file_exists($newfile)) {
@@ -1839,10 +1839,10 @@ class OIDplus extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	public static function getSystemPrivateKey(bool $auto_decrypt=true)/*: false|string*/ {
-		$pubKey = OIDplus::config()->getValue('oidplus_public_key');
+		$pubKey = self::config()->getValue('oidplus_public_key');
 		if ($pubKey == '') return false;
 
-		$privKey = OIDplus::config()->getValue('oidplus_private_key');
+		$privKey = self::config()->getValue('oidplus_private_key');
 		if ($privKey == '') return false;
 
 		if (is_privatekey_encrypted($privKey)) {
@@ -1870,7 +1870,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	public static function getSystemPublicKey()/*: false|string*/ {
-		$pubKey = OIDplus::config()->getValue('oidplus_public_key');
+		$pubKey = self::config()->getValue('oidplus_public_key');
 		if ($pubKey == '') return false;
 		return $pubKey;
 	}
@@ -1887,22 +1887,22 @@ class OIDplus extends OIDplusBaseClass {
 
 		if ($try_generate) {
 			// For debug purposes: Invalidate current key once:
-			//OIDplus::config()->setValue('oidplus_private_key', '');
+			//self::config()->setValue('oidplus_private_key', '');
 
-			$privKey = OIDplus::getSystemPrivateKey();
-			$pubKey = OIDplus::getSystemPublicKey();
+			$privKey = self::getSystemPrivateKey();
+			$pubKey = self::getSystemPublicKey();
 			if (!verify_private_public_key($privKey, $pubKey)) {
 
 				if ($pubKey) {
 					throw new OIDplusException(_L("The Private/Public key-pair is broken or cannot be decrypted! Please check if the file %1 is existing and OK! In case this file is missing or corrupted and cannot be recovered, you need to reset your private/public key-pair. Do so by removing the settings %2 and %3 in the OIDplus configuration table in the database. This will invoke a regeneration of the private/public key-pair (you will receive a new system ID).", self::getPrivKeyPassphraseFilename($pubKey), 'oidplus_public_key', 'oidplus_private_key'));
-					//OIDplus::logger()->log("V2:[CRIT]A", "The private/public key-pair is broken. A new key-pair will now be generated for your system. Your System-ID will change.");
+					//self::logger()->log("V2:[CRIT]A", "The private/public key-pair is broken. A new key-pair will now be generated for your system. Your System-ID will change.");
 				}
 
 				$pkey_config = array(
 					"digest_alg" => "sha512",
 					"private_key_bits" => defined('OPENSSL_SUPPLEMENT') ? 1024 : 2048, // openssl_supplement.inc.php is based on phpseclib, which is very slow. So we use 1024 bits instead of 2048 bits
 					"private_key_type" => OPENSSL_KEYTYPE_RSA,
-					"config" => OIDplus::getOpenSslCnf()
+					"config" => self::getOpenSslCnf()
 				);
 
 				// Create the private and public key
@@ -1928,30 +1928,30 @@ class OIDplus extends OIDplusBaseClass {
 				$system_id = self::getSystemIdFromPubKey($pubKey);
 				if ($system_id !== null) {
 					// Save the key pair to database
-					OIDplus::config()->setValue('oidplus_private_key', $privKey);
-					OIDplus::config()->setValue('oidplus_public_key', $pubKey);
+					self::config()->setValue('oidplus_private_key', $privKey);
+					self::config()->setValue('oidplus_public_key', $pubKey);
 
 					// Log the new system ID
-					OIDplus::logger()->log("V2:[INFO]A", "A new private/public key-pair for your system had been generated. Your SystemID is now %1", $system_id);
+					self::logger()->log("V2:[INFO]A", "A new private/public key-pair for your system had been generated. Your SystemID is now %1", $system_id);
 				}
 			} else {
 				$passphrase = self::getPrivKeyPassphrase($pubKey);
-				$rawPrivKey = OIDplus::config()->getValue('oidplus_private_key');
+				$rawPrivKey = self::config()->getValue('oidplus_private_key');
 				if (($passphrase === false) || !is_privatekey_encrypted($rawPrivKey)) {
 					// Upgrade to new encrypted keys
 					self::tryCreatePrivKeyPassphrase($pubKey); // *try* generate this file
 					$passphrase = self::getPrivKeyPassphrase($pubKey);
 					if ($passphrase !== false) {
 						$privKey = encrypt_private_key($privKey, $passphrase);
-						OIDplus::logger()->log("V2:[INFO]A", "The private/public key-pair has been upgraded to an encrypted key-pair. The key is saved in %1", self::getPrivKeyPassphraseFilename($pubKey));
-						OIDplus::config()->setValue('oidplus_private_key', $privKey);
+						self::logger()->log("V2:[INFO]A", "The private/public key-pair has been upgraded to an encrypted key-pair. The key is saved in %1", self::getPrivKeyPassphraseFilename($pubKey));
+						self::config()->setValue('oidplus_private_key', $privKey);
 					}
 				}
 			}
 		}
 
-		$privKey = OIDplus::getSystemPrivateKey();
-		$pubKey = OIDplus::getSystemPublicKey();
+		$privKey = self::getSystemPrivateKey();
+		$pubKey = self::getSystemPublicKey();
 		return verify_private_public_key($privKey, $pubKey);
 	}
 
@@ -1961,10 +1961,10 @@ class OIDplus extends OIDplusBaseClass {
 	public static function getInstallType(): string {
 		$counter = 0;
 
-		if ($svn_dir_exists = (OIDplus::findSvnFolder() !== false)) {
+		if ($svn_dir_exists = (self::findSvnFolder() !== false)) {
 			$counter++;
 		}
-		if ($git_dir_exists = (OIDplus::findGitFolder() !== false)) {
+		if ($git_dir_exists = (self::findGitFolder() !== false)) {
 			$counter++;
 		}
 
@@ -1987,17 +1987,17 @@ class OIDplus extends OIDplusBaseClass {
 	 */
 	private static function recognizeVersion(): void {
 		try {
-			if ($ver_now = OIDplus::getVersion()) {
-				$ver_prev = OIDplus::config()->getValue("last_known_version");
+			if ($ver_now = self::getVersion()) {
+				$ver_prev = self::config()->getValue("last_known_version");
 				if (($ver_prev) && ($ver_now != $ver_prev)) {
 					// TODO: Problem: When the system was updated using SVN or GIT in the console, then the IP address of the next random visitor of the website is logged!
 					//       Idea: Maybe we should extend the mask code with some kind of magic constant "[NO_IP]", so that no IP is logged for that event?
-					OIDplus::logger()->log("V2:[INFO]A", "Detected system version change from '%1' to '%2'", $ver_prev, $ver_now);
+					self::logger()->log("V2:[INFO]A", "Detected system version change from '%1' to '%2'", $ver_prev, $ver_now);
 
 					// Just to be sure, recanonize objects (we don't do it at every page visit due to performance reasons)
 					self::recanonizeObjects();
 				}
-				OIDplus::config()->setValue("last_known_version", $ver_now);
+				self::config()->setValue("last_known_version", $ver_now);
 			}
 		} catch (\Exception $e) {
 		}
@@ -2037,10 +2037,10 @@ class OIDplus extends OIDplusBaseClass {
 
 		/*
 
-		$installType = OIDplus::getInstallType();
+		$installType = self::getInstallType();
 
 		if ($installType === 'svn-wc') {
-			if (is_dir($svn_dir = OIDplus::findSvnFolder())) {
+			if (is_dir($svn_dir = self::findSvnFolder())) {
 				$ver = get_svn_revision($svn_dir);
 				if ($ver)
 					return ($cachedVersion[$infoFile] = '2.0.0.'.$ver);
@@ -2048,7 +2048,7 @@ class OIDplus extends OIDplusBaseClass {
 		}
 
 		if ($installType === 'git-wc') {
-			$ver = OIDplus::getGitsvnRevision();
+			$ver = self::getGitsvnRevision();
 			if ($ver)
 				return ($cachedVersion[$infoFile] = '2.0.0.'.$ver);
 		}
@@ -2086,7 +2086,7 @@ class OIDplus extends OIDplusBaseClass {
 		$host_ssl = $host_no_port . ($ssl_port != 443 ? ':'.$ssl_port : ''); /* @phpstan-ignore-line */
 
 		if ($already_ssl) {
-			OIDplus::cookieUtils()->setcookie('SSL_CHECK', '1', 0, true/*allowJS*/, null/*samesite*/, true/*forceInsecure*/);
+			self::cookieUtils()->setcookie('SSL_CHECK', '1', 0, true/*allowJS*/, null/*samesite*/, true/*forceInsecure*/);
 			self::$sslAvailableCache = true;
 			return true;
 		} else {
@@ -2101,21 +2101,21 @@ class OIDplus extends OIDplusBaseClass {
 				// Note: SSL_CHECK is NOT a replacement for HSTS! You should use HSTS,
 				//       because on there your browser ensures that HTTPS is called, before the server
 				//       is even contacted (and therefore, no HTTP connection can be hacked).
-				$mode = OIDplus::ENFORCE_SSL_YES;
+				$mode = self::ENFORCE_SSL_YES;
 			} else {
-				$mode = OIDplus::baseConfig()->getValue('ENFORCE_SSL', OIDplus::ENFORCE_SSL_AUTO);
+				$mode = self::baseConfig()->getValue('ENFORCE_SSL', self::ENFORCE_SSL_AUTO);
 			}
 
-			if ($mode == OIDplus::ENFORCE_SSL_NO) {
+			if ($mode == self::ENFORCE_SSL_NO) {
 				// No SSL available
 				self::$sslAvailableCache = false;
 				return false;
-			} else if ($mode == OIDplus::ENFORCE_SSL_YES) {
+			} else if (($mode == self::ENFORCE_SSL_YES) && isset($_SERVER['REQUEST_URI'])) {
 				// Force SSL
 				$location = 'https://' . $host_ssl . $_SERVER['REQUEST_URI'];
 				header('Location:'.$location);
 				die(_L('Redirecting to HTTPS...'));
-			} else if ($mode == OIDplus::ENFORCE_SSL_AUTO) {
+			} else if ($mode == self::ENFORCE_SSL_AUTO) {
 				// Automatic SSL detection
 				if (isset($_COOKIE['SSL_CHECK'])) {
 					// We already had the HTTPS detection done before.
@@ -2129,19 +2129,19 @@ class OIDplus extends OIDplusBaseClass {
 						self::$sslAvailableCache = false;
 						return false;
 					}
-				} else {
+				} else if (isset($_SERVER['REQUEST_URI'])) {
 					// This is our first check (or the browser didn't accept the SSL_CHECK cookie)
 					$errno = -1;
 					$errstr = '';
 					if (@fsockopen($host_no_port, $ssl_port, $errno, $errstr, $timeout)) {
 						// HTTPS detected. Redirect now, and remember that we had detected HTTPS
-						OIDplus::cookieUtils()->setcookie('SSL_CHECK', '1', 0, true/*allowJS*/, null/*samesite*/, true/*forceInsecure*/);
+						self::cookieUtils()->setcookie('SSL_CHECK', '1', 0, true/*allowJS*/, null/*samesite*/, true/*forceInsecure*/);
 						$location = 'https://' . $host_ssl . $_SERVER['REQUEST_URI'];
 						header('Location:'.$location);
 						die(_L('Redirecting to HTTPS...'));
 					} else {
 						// No HTTPS detected. Do nothing, and next time, don't try to detect HTTPS again.
-						OIDplus::cookieUtils()->setcookie('SSL_CHECK', '0', 0, true/*allowJS*/, null/*samesite*/, true/*forceInsecure*/);
+						self::cookieUtils()->setcookie('SSL_CHECK', '0', 0, true/*allowJS*/, null/*samesite*/, true/*forceInsecure*/);
 						self::$sslAvailableCache = false;
 						return false;
 					}
@@ -2159,7 +2159,7 @@ class OIDplus extends OIDplusBaseClass {
 	* @return bool true for tenants
 	*/
 	public static function isTenant(): bool {
-		$localdir = OIDplus::localpath(); // contains trailing dir separator
+		$localdir = self::localpath(); // contains trailing dir separator
 		$priv_or_pub = "userdata".DIRECTORY_SEPARATOR;
 		$tenant_dir = "tenant".DIRECTORY_SEPARATOR.self::tenantSubDirName().DIRECTORY_SEPARATOR;
 		return is_dir($localdir.$priv_or_pub.$tenant_dir);
@@ -2194,7 +2194,7 @@ class OIDplus extends OIDplusBaseClass {
 		// becomes: hosted.oidplus.com__r74n_tenant
 		// If you want to work with directories (instead of domain names), you
 		// can symlink the directories towards one OIDplus base installation.
-		$test = OIDplus::webpath(null, self::PATH_ABSOLUTE); // NOT canonical, otherwise it will be different before and after loading baseconfig
+		$test = self::webpath(null, self::PATH_ABSOLUTE); // NOT canonical, otherwise it will be different before and after loading baseconfig
 		if (!$test) return 'NOT_AVAILABLE';
 		$test = explode('://', $test, 2)[1];
 		$test = rtrim($test, '/');
@@ -2209,7 +2209,7 @@ class OIDplus extends OIDplusBaseClass {
 	* @return string the local path
 	*/
 	public static function getUserDataDir(string $subdir, bool $public=false): string {
-		$localdir = OIDplus::localpath(); // contains trailing dir separator
+		$localdir = self::localpath(); // contains trailing dir separator
 		$priv_or_pub = $public ? "userdata_pub".DIRECTORY_SEPARATOR : "userdata".DIRECTORY_SEPARATOR;
 		$tenant_dir = "tenant".DIRECTORY_SEPARATOR.self::tenantSubDirName().DIRECTORY_SEPARATOR;
 		if (is_dir($localdir.$priv_or_pub.$tenant_dir)) {
@@ -2266,9 +2266,9 @@ class OIDplus extends OIDplusBaseClass {
 	/**
 	 * Gets a URL pointing to a resource
 	 * @param string|null $target Target resource (file or directory must exist), or null to get the OIDplus base directory
-	 * @param int|bool $mode If true or OIDplus::PATH_RELATIVE, the returning path is relative to the currently executed
-	 *                          PHP script (i.e. index.php , not the plugin PHP script!). False or OIDplus::PATH_ABSOLUTE is
-	 *                          results in an absolute URL. OIDplus::PATH_ABSOLUTE_CANONICAL is an absolute URL,
+	 * @param int|bool $mode If true or self::PATH_RELATIVE, the returning path is relative to the currently executed
+	 *                          PHP script (i.e. index.php , not the plugin PHP script!). False or self::PATH_ABSOLUTE is
+	 *                          results in an absolute URL. self::PATH_ABSOLUTE_CANONICAL is an absolute URL,
 	 *                          but a canonical path (set by base config setting CANONICAL_SYSTEM_URL) is preferred.
 	 * @return string|false The URL, with guaranteed trailing path delimiter for directories
 	 * @throws OIDplusException
@@ -2278,15 +2278,15 @@ class OIDplus extends OIDplusBaseClass {
 		if ($mode === true) $mode = self::PATH_RELATIVE;
 		if ($mode === false) $mode = self::PATH_ABSOLUTE;
 
-		if ($mode == OIDplus::PATH_RELATIVE_TO_ROOT) {
-			$tmp = OIDplus::webpath($target,OIDplus::PATH_ABSOLUTE);
+		if ($mode == self::PATH_RELATIVE_TO_ROOT) {
+			$tmp = self::webpath($target,self::PATH_ABSOLUTE);
 			if ($tmp === false) return false;
 			$tmp = parse_url($tmp);
 			if ($tmp === false) return false;
 			if (!isset($tmp['path'])) return false;
 			return $tmp['path'];
-		} else if ($mode == OIDplus::PATH_RELATIVE_TO_ROOT_CANONICAL) {
-			$tmp = OIDplus::webpath($target,OIDplus::PATH_ABSOLUTE_CANONICAL);
+		} else if ($mode == self::PATH_RELATIVE_TO_ROOT_CANONICAL) {
+			$tmp = self::webpath($target,self::PATH_ABSOLUTE_CANONICAL);
 			if ($tmp === false) return false;
 			$tmp = parse_url($tmp);
 			if ($tmp === false) return false;
@@ -2320,7 +2320,7 @@ class OIDplus extends OIDplusBaseClass {
 	 */
 	public static function canonicalURL(?string $goto=null)/*: false|string*/ {
 		// First part: OIDplus system URL (or canonical system URL)
-		$sysurl = OIDplus::getSystemUrl(self::PATH_ABSOLUTE_CANONICAL);
+		$sysurl = self::getSystemUrl(self::PATH_ABSOLUTE_CANONICAL);
 
 		// Second part: Directory
 		$basedir = realpath(__DIR__.'/../../');
@@ -2338,7 +2338,7 @@ class OIDplus extends OIDplusBaseClass {
 
 		// Fourth part: Query string (ordered)
 		$url = [];
-		parse_str($_SERVER['QUERY_STRING'], $url);
+		parse_str($_SERVER['QUERY_STRING']??'', $url);
 		if ($goto !== null) $url['goto'] = $goto;
 		ksort($url);
 		$tmp2 = http_build_query($url);
@@ -2375,7 +2375,7 @@ class OIDplus extends OIDplusBaseClass {
 	 */
 	public static function getAvailableLangs(): array {
 		$langs = array();
-		foreach (OIDplus::getAllPluginManifests('language') as $pluginManifest) {
+		foreach (self::getAllPluginManifests('language') as $pluginManifest) {
 			$code = $pluginManifest->getLanguageCode();
 			$langs[] = $code;
 		}
@@ -2412,7 +2412,7 @@ class OIDplus extends OIDplusBaseClass {
 	public static function getCurrentLang()/*: false|string*/ {
 
 		if (isset($_SERVER['REQUEST_URI'])) {
-			$rel_url = substr($_SERVER['REQUEST_URI'], strlen(OIDplus::webpath(null, OIDplus::PATH_RELATIVE_TO_ROOT)));
+			$rel_url = substr($_SERVER['REQUEST_URI'], strlen(self::webpath(null, self::PATH_RELATIVE_TO_ROOT)));
 			if (str_starts_with($rel_url, 'rest/')) { // <== TODO: Find a way how to move this into the plugin, since REST does not belong to the core. (Maybe some kind of "stateless mode" that is enabled by the REST plugin)
 				return self::getDefaultLang();
 			}
@@ -2441,9 +2441,9 @@ class OIDplus extends OIDplusBaseClass {
 			// the page in that language, but the cookie must be set, otherwise
 			// the menu and other stuff would be in their cookie-based-language and not the
 			// argument-based-language.
-			OIDplus::cookieUtils()->setcookie('LANGUAGE', $_GET['lang'], 0, true/*HttpOnly off, because JavaScript also needs translation*/);
+			self::cookieUtils()->setcookie('LANGUAGE', $_GET['lang'], 0, true/*HttpOnly off, because JavaScript also needs translation*/);
 		} else if (isset($_POST['lang'])) {
-			OIDplus::cookieUtils()->setcookie('LANGUAGE', $_POST['lang'], 0, true/*HttpOnly off, because JavaScript also needs translation*/);
+			self::cookieUtils()->setcookie('LANGUAGE', $_POST['lang'], 0, true/*HttpOnly off, because JavaScript also needs translation*/);
 		}
 	}
 
@@ -2458,7 +2458,7 @@ class OIDplus extends OIDplusBaseClass {
 	 */
 	protected static function getTranslationFileContents(string $translation_file): array {
 		// First, try the cache
-		$cache_file = OIDplus::getUserDataDir("cache").'translation_'.md5($translation_file).'.ser';
+		$cache_file = self::getUserDataDir("cache").'translation_'.md5($translation_file).'.ser';
 		if (file_exists($cache_file) && (filemtime($cache_file) == filemtime($translation_file))) {
 			$cac = @unserialize(file_get_contents($cache_file));
 			if ($cac) return $cac;
@@ -2484,7 +2484,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	public static function getTranslationArray(string $requested_lang='*'): array {
-		foreach (OIDplus::getAllPluginManifests('language') as $pluginManifest) {
+		foreach (self::getAllPluginManifests('language') as $pluginManifest) {
 			$lang = $pluginManifest->getLanguageCode();
 			if (strpos($lang,'/') !== false) continue; // just to be sure
 			if (strpos($lang,'\\') !== false) continue; // just to be sure
@@ -2502,7 +2502,7 @@ class OIDplus extends OIDplusBaseClass {
 
 				$translation_files = array_merge(
 					glob(__DIR__.'/../../plugins/'.'*'.'/language/'.$lang.'/'.$wildcard),
-					glob(OIDplus::getUserDataDir("plugins", true).'*'.'/language/'.$lang.'/'.$wildcard)
+					glob(self::getUserDataDir("plugins", true).'*'.'/language/'.$lang.'/'.$wildcard)
 				);
 				sort($translation_files); /* @phpstan-ignore-line */ // Weird message which I don't understand: Parameter #1 $array of function sort contains unresolvable type.
 				foreach ($translation_files as $translation_file) {
@@ -2528,7 +2528,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @return false|string The git path, with guaranteed trailing path delimiter for directories
 	 */
 	public static function findGitFolder()/*: false|string*/ {
-		$dir = rtrim(OIDplus::localpath(), DIRECTORY_SEPARATOR);
+		$dir = rtrim(self::localpath(), DIRECTORY_SEPARATOR);
 
 		// Git command line saves git information in folder ".git"
 		if (is_dir($res = $dir.'/.git')) {
@@ -2542,7 +2542,7 @@ class OIDplus extends OIDplusBaseClass {
 				$confs = @glob($dir.'/git/'.'*'.'/config');
 				if ($confs) foreach ($confs as $conf) {
 					$cont = file_get_contents($conf);
-					if (isset(OIDplus::getEditionInfo()['gitrepo']) && (OIDplus::getEditionInfo()['gitrepo'] != '') && (strpos($cont, OIDplus::getEditionInfo()['gitrepo']) !== false)) {
+					if (isset(self::getEditionInfo()['gitrepo']) && (self::getEditionInfo()['gitrepo'] != '') && (strpos($cont, self::getEditionInfo()['gitrepo']) !== false)) {
 						$res = dirname($conf);
 						return str_replace('/', DIRECTORY_SEPARATOR, $res.'/');
 					}
@@ -2558,7 +2558,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @return false|string The SVN path, with guaranteed trailing path delimiter for directories
 	 */
 	public static function findSvnFolder()/*: false|string*/ {
-		$dir = rtrim(OIDplus::localpath(), DIRECTORY_SEPARATOR);
+		$dir = rtrim(self::localpath(), DIRECTORY_SEPARATOR);
 
 		if (is_dir($res = $dir.'/.svn')) {
 			return str_replace('/', DIRECTORY_SEPARATOR, $res.'/');
@@ -2577,7 +2577,7 @@ class OIDplus extends OIDplusBaseClass {
 	 */
 	public static function getGitsvnRevision()/*: false|string*/ {
 		try {
-			$git_dir = OIDplus::findGitFolder();
+			$git_dir = self::findGitFolder();
 			if ($git_dir === false) return false;
 
 			// git_get_latest_commit_message() tries command line and binary parsing
@@ -2616,7 +2616,7 @@ class OIDplus extends OIDplusBaseClass {
 		}
 
 		// Ask plugins if they want to change the node id
-		foreach (OIDplus::getObjectTypePluginsEnabled() as $plugin) {
+		foreach (self::getObjectTypePluginsEnabled() as $plugin) {
 			// Convert URN to OIDplus (e.g. urn:uuid: becomes guid:)
 			$urn_nss = $plugin->getObjectTypeClassName()::urnNsOrDefault();
 			foreach ($urn_nss as $urn_ns) {
@@ -2658,23 +2658,23 @@ class OIDplus extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	private static function recanonizeObjects(): void {
-		$res = OIDplus::db()->query("select id from ###objects");
+		$res = self::db()->query("select id from ###objects");
 		while ($row = $res->fetch_array()) {
 			$ida = $row['id'];
 			$obj = OIDplusObject::parse($ida);
 			if (!$obj) continue;
 			$idb = $obj->nodeId();
 			if (($idb) && ($ida != $idb)) {
-				if (OIDplus::db()->transaction_supported()) OIDplus::db()->transaction_begin();
+				if (self::db()->transaction_supported()) self::db()->transaction_begin();
 				try {
-					OIDplus::db()->query("update ###objects set id = ? where id = ?", array($idb, $ida));
-					OIDplus::db()->query("update ###asn1id set oid = ? where oid = ?", array($idb, $ida));
-					OIDplus::db()->query("update ###iri set oid = ? where oid = ?", array($idb, $ida));
-					OIDplus::db()->query("update ###log_object set object = ? where object = ?", array($idb, $ida));
-					OIDplus::logger()->log("V2:[INFO]A", "Object name '%1' has been changed to '%2' during re-canonization", $ida, $idb);
-					if (OIDplus::db()->transaction_supported()) OIDplus::db()->transaction_commit();
+					self::db()->query("update ###objects set id = ? where id = ?", array($idb, $ida));
+					self::db()->query("update ###asn1id set oid = ? where oid = ?", array($idb, $ida));
+					self::db()->query("update ###iri set oid = ? where oid = ?", array($idb, $ida));
+					self::db()->query("update ###log_object set object = ? where object = ?", array($idb, $ida));
+					self::logger()->log("V2:[INFO]A", "Object name '%1' has been changed to '%2' during re-canonization", $ida, $idb);
+					if (self::db()->transaction_supported()) self::db()->transaction_commit();
 				} catch (\Exception $e) {
-					if (OIDplus::db()->transaction_supported()) OIDplus::db()->transaction_rollback();
+					if (self::db()->transaction_supported()) self::db()->transaction_rollback();
 					throw $e;
 				}
 				OIDplusObject::resetObjectInformationCache();
@@ -2690,7 +2690,7 @@ class OIDplus extends OIDplusBaseClass {
 		$direct_connection = $_SERVER['REMOTE_ADDR'] ?? false;
 		if ($direct_connection === false) return false;
 
-		$trusted_proxies = OIDplus::baseConfig()->getValue('XFF_TRUSTED_PROXIES', []);
+		$trusted_proxies = self::baseConfig()->getValue('XFF_TRUSTED_PROXIES', []);
 		if (in_array($direct_connection, $trusted_proxies)) {
 			return $_SERVER['HTTP_X_FORWARDED_FOR'] ?: $direct_connection;
 		} else {
