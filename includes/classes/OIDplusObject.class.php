@@ -325,10 +325,10 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			foreach ($ra_mails_to_check as $check_ra_mail) {
 				$out_part = array();
 
-				foreach (self::$object_info_cache as $id => $cacheitem) {
+				foreach (OIDplus::getCurrentContext()->object_info_cache as $id => $cacheitem) {
 					if ($cacheitem[self::CACHE_RA_EMAIL] == $check_ra_mail) {
 						$parent = $cacheitem[self::CACHE_PARENT];
-						if (!isset(self::$object_info_cache[$parent]) || (self::$object_info_cache[$parent][self::CACHE_RA_EMAIL] != $check_ra_mail)) {
+						if (!isset(OIDplus::getCurrentContext()->object_info_cache[$parent]) || (OIDplus::getCurrentContext()->object_info_cache[$parent][self::CACHE_RA_EMAIL] != $check_ra_mail)) {
 							$out_part[] = $id;
 						}
 					}
@@ -365,7 +365,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		} else {
 			self::buildObjectInformationCache();
 
-			foreach (self::$object_info_cache as $id => $cacheitem) {
+			foreach (OIDplus::getCurrentContext()->object_info_cache as $id => $cacheitem) {
 				$confidential = $cacheitem[self::CACHE_CONFIDENTIAL];
 				if (!$confidential) {
 					$obj = self::parse($id); // will be NULL if the object type is not registered
@@ -385,37 +385,36 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 */
 	public function isConfidential(): bool {
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
-			//static $confidential_cache = array();
 			$curid = $this->nodeId();
 			//$orig_curid = $curid;
-			//if (isset($confidential_cache[$curid])) return $confidential_cache[$curid];
+			//if (isset(OIDplus::getCurrentContext()->confidential_cache[$curid])) return OIDplus::getCurrentContext()->confidential_cache[$curid];
 			// Recursively search for the confidential flag in the parents
 			while (($res = OIDplus::db()->query("select parent, confidential from ###objects where id = ?", array($curid)))->any()) {
 				$row = $res->fetch_array();
 				if ($row['confidential']) {
-					//$confidential_cache[$curid] = true;
-					//$confidential_cache[$orig_curid] = true;
+					//OIDplus::getCurrentContext()->confidential_cache[$curid] = true;
+					//OIDplus::getCurrentContext()->confidential_cache[$orig_curid] = true;
 					return true;
 				} else {
-					//$confidential_cache[$curid] = false;
+					//OIDplus::getCurrentContext()->confidential_cache[$curid] = false;
 				}
 				$curid = $row['parent'];
-				//if (isset($confidential_cache[$curid])) {
-					//$confidential_cache[$orig_curid] = $confidential_cache[$curid];
-					//return $confidential_cache[$curid];
+				//if (isset(OIDplus::getCurrentContext()->confidential_cache[$curid])) {
+					//OIDplus::getCurrentContext()->confidential_cache[$orig_curid] = OIDplus::getCurrentContext()->confidential_cache[$curid];
+					//return OIDplus::getCurrentContext()->confidential_cache[$curid];
 				//}
 			}
 
-			//$confidential_cache[$orig_curid] = false;
+			//OIDplus::getCurrentContext()->confidential_cache[$orig_curid] = false;
 			return false;
 		} else {
 			self::buildObjectInformationCache();
 
 			$curid = $this->nodeId();
 			// Recursively search for the confidential flag in the parents
-			while (isset(self::$object_info_cache[$curid])) {
-				if (self::$object_info_cache[$curid][self::CACHE_CONFIDENTIAL]) return true;
-				$curid = self::$object_info_cache[$curid][self::CACHE_PARENT];
+			while (isset(OIDplus::getCurrentContext()->object_info_cache[$curid])) {
+				if (OIDplus::getCurrentContext()->object_info_cache[$curid][self::CACHE_CONFIDENTIAL]) return true;
+				$curid = OIDplus::getCurrentContext()->object_info_cache[$curid][self::CACHE_PARENT];
 			}
 			return false;
 		}
@@ -439,9 +438,9 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			self::buildObjectInformationCache();
 
 			$curid = $this->nodeId();
-			while (isset(self::$object_info_cache[$curid])) {
+			while (isset(OIDplus::getCurrentContext()->object_info_cache[$curid])) {
 				if ($curid == $obj->nodeId()) return true;
-				$curid = self::$object_info_cache[$curid][self::CACHE_PARENT];
+				$curid = OIDplus::getCurrentContext()->object_info_cache[$curid][self::CACHE_PARENT];
 			}
 			return false;
 		}
@@ -463,7 +462,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 		} else {
 			self::buildObjectInformationCache();
 
-			foreach (self::$object_info_cache as $id => $cacheitem) {
+			foreach (OIDplus::getCurrentContext()->object_info_cache as $id => $cacheitem) {
 				$parent = $cacheitem[self::CACHE_PARENT];
 				if ($parent == $this->nodeId()) {
 					$obj = self::parse($id);
@@ -579,7 +578,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			return $res->any();
 		} else {
 			self::buildObjectInformationCache();
-			return isset(self::$object_info_cache[$id]);
+			return isset(OIDplus::getCurrentContext()->object_info_cache[$id]);
 		}
 	}
 
@@ -600,8 +599,8 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			}
 		} else {
 			self::buildObjectInformationCache();
-			if (isset(self::$object_info_cache[$this->nodeId()])) {
-				$parent = self::$object_info_cache[$this->nodeId()][self::CACHE_PARENT];
+			if (isset(OIDplus::getCurrentContext()->object_info_cache[$this->nodeId()])) {
+				$parent = OIDplus::getCurrentContext()->object_info_cache[$this->nodeId()][self::CACHE_PARENT];
 				$obj = OIDplusObject::parse($parent);
 				if ($obj) return $obj;
 			}
@@ -634,8 +633,8 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			return $row['ra_email'];
 		} else {
 			self::buildObjectInformationCache();
-			if (isset(self::$object_info_cache[$this->nodeId()])) {
-				return self::$object_info_cache[$this->nodeId()][self::CACHE_RA_EMAIL];
+			if (isset(OIDplus::getCurrentContext()->object_info_cache[$this->nodeId()])) {
+				return OIDplus::getCurrentContext()->object_info_cache[$this->nodeId()][self::CACHE_RA_EMAIL];
 			}
 			return null;
 		}
@@ -654,8 +653,8 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			return $row['title'];
 		} else {
 			self::buildObjectInformationCache();
-			if (isset(self::$object_info_cache[$this->nodeId()])) {
-				return self::$object_info_cache[$this->nodeId()][self::CACHE_TITLE];
+			if (isset(OIDplus::getCurrentContext()->object_info_cache[$this->nodeId()])) {
+				return OIDplus::getCurrentContext()->object_info_cache[$this->nodeId()][self::CACHE_TITLE];
 			}
 			return $undef;
 		}
@@ -674,8 +673,8 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			return $row['description'];
 		} else {
 			self::buildObjectInformationCache();
-			if (isset(self::$object_info_cache[$this->nodeId()])) {
-				return self::$object_info_cache[$this->nodeId()][self::CACHE_DESCRIPTION];
+			if (isset(OIDplus::getCurrentContext()->object_info_cache[$this->nodeId()])) {
+				return OIDplus::getCurrentContext()->object_info_cache[$this->nodeId()][self::CACHE_DESCRIPTION];
 			}
 			return null;
 		}
@@ -693,8 +692,8 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			return $row['comment'];
 		} else {
 			self::buildObjectInformationCache();
-			if (isset(self::$object_info_cache[$this->nodeId()])) {
-				return self::$object_info_cache[$this->nodeId()][self::CACHE_COMMENT];
+			if (isset(OIDplus::getCurrentContext()->object_info_cache[$this->nodeId()])) {
+				return OIDplus::getCurrentContext()->object_info_cache[$this->nodeId()][self::CACHE_COMMENT];
 			}
 			return null;
 		}
@@ -712,8 +711,8 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			return $row['created'];
 		} else {
 			self::buildObjectInformationCache();
-			if (isset(self::$object_info_cache[$this->nodeId()])) {
-				return self::$object_info_cache[$this->nodeId()][self::CACHE_CREATED];
+			if (isset(OIDplus::getCurrentContext()->object_info_cache[$this->nodeId()])) {
+				return OIDplus::getCurrentContext()->object_info_cache[$this->nodeId()][self::CACHE_CREATED];
 			}
 			return null;
 		}
@@ -731,8 +730,8 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			return $row['updated'];
 		} else {
 			self::buildObjectInformationCache();
-			if (isset(self::$object_info_cache[$this->nodeId()])) {
-				return self::$object_info_cache[$this->nodeId()][self::CACHE_UPDATED];
+			if (isset(OIDplus::getCurrentContext()->object_info_cache[$this->nodeId()])) {
+				return OIDplus::getCurrentContext()->object_info_cache[$this->nodeId()][self::CACHE_UPDATED];
 			}
 			return null;
 		}
@@ -822,7 +821,7 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 			return false;
 		} else {
 			self::buildObjectInformationCache();
-			foreach (self::$object_info_cache as $id => $cacheitem) {
+			foreach (OIDplus::getCurrentContext()->object_info_cache as $id => $cacheitem) {
 				if (strpos($id, $obj->ns().':') === 0) {
 					$test = OIDplusObject::parse($id);
 					if ($test && $obj->equals($test)) return $test;
@@ -842,15 +841,10 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	// Caching stuff
 
 	/**
-	 * @var ?array
-	 */
-	protected static ?array $object_info_cache = null;
-
-	/**
 	 * @return void
 	 */
 	public static function resetObjectInformationCache(): void {
-		self::$object_info_cache = null;
+		OIDplus::getCurrentContext()->object_info_cache = null;
 	}
 
 	public const CACHE_ID = 'id';
@@ -868,11 +862,11 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	private static function buildObjectInformationCache(): void {
-		if (is_null(self::$object_info_cache)) {
-			self::$object_info_cache = array();
+		if (is_null(OIDplus::getCurrentContext()->object_info_cache)) {
+			OIDplus::getCurrentContext()->object_info_cache = array();
 			$res = OIDplus::db()->query("select * from ###objects");
 			while ($row = $res->fetch_array()) {
-				self::$object_info_cache[$row['id']] = $row;
+				OIDplus::getCurrentContext()->object_info_cache[$row['id']] = $row;
 			}
 		}
 	}

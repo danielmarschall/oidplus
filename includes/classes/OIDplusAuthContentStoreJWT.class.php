@@ -501,16 +501,11 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	}
 
 	/**
-	 * @var ?OIDplusAuthContentStoreJWT
-	 */
-	private static ?OIDplusAuthContentStoreJWT $contentProvider = null;
-
-	/**
 	 * @return OIDplusAuthContentStoreJWT|null
 	 * @throws OIDplusException
 	 */
 	public static function getActiveProvider(): ?OIDplusAuthContentStoreJWT {
-		if (!self::$contentProvider) {
+		if (!OIDplus::getCurrentContext()->jwtAuthContentProvider) {
 
 			$tmp = null;
 			$silent_error = false;
@@ -577,10 +572,10 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 				}
 			}
 
-			self::$contentProvider = $tmp;
+			OIDplus::getCurrentContext()->jwtAuthContentProvider = $tmp;
 		}
 
-		return self::$contentProvider;
+		return OIDplus::getCurrentContext()->jwtAuthContentProvider;
 	}
 
 	/**
@@ -592,7 +587,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	public function raLoginEx(string $email, string &$loginfo): void {
 		if (is_null(self::getActiveProvider())) {
 			$loginfo = 'into new JWT session';
-			self::$contentProvider = $this;
+			OIDplus::getCurrentContext()->jwtAuthContentProvider = $this;
 		} else {
 			$gen = $this->getValue(self::CLAIM_GENERATOR,-1);
 			switch ($gen) {
@@ -630,7 +625,7 @@ class OIDplusAuthContentStoreJWT implements OIDplusGetterSetterInterface {
 	public function adminLoginEx(string &$loginfo): void {
 		if (is_null(self::getActiveProvider())) {
 			$loginfo = 'into new JWT session';
-			self::$contentProvider = $this;
+			OIDplus::getCurrentContext()->jwtAuthContentProvider = $this;
 		} else {
 			$gen = $this->getValue(self::CLAIM_GENERATOR,-1);
 			switch ($gen) {

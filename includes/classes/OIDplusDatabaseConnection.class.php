@@ -199,13 +199,12 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 			$end = microtime(true);
 			$ts = explode(" ",microtime());
 			$ts = date("Y-m-d H:i:s",intval($ts[1])).substr((string)$ts[0],1,4);
-			static $log_session_id = "";
-			if (empty($log_session_id)) {
-				$log_session_id = rand(10000,99999);
+			if (is_null(OIDplus::getCurrentContext()->dbLogSessionId)) {
+				OIDplus::getCurrentContext()->dbLogSessionId = rand(10000,99999);
 			}
 			$file = isset($_SERVER['REQUEST_URI']) ? ' | '.$_SERVER['REQUEST_URI'] : '';
-			// file_put_contents($query_logfile, "$ts <$log_session_id$file> [".($end-$start)." sec] $sql ".print_r($prepared_args,true)."\n", FILE_APPEND);
-			file_put_contents($query_logfile, "$ts <$log_session_id$file> [".($end-$start)." sec] $sql\n", FILE_APPEND);
+			// file_put_contents($query_logfile, "$ts <".OIDplus::getCurrentContext()->dbLogSessionId."$file> [".($end-$start)." sec] $sql ".print_r($prepared_args,true)."\n", FILE_APPEND);
+			file_put_contents($query_logfile, "$ts <".OIDplus::getCurrentContext()->dbLogSessionId."$file> [".($end-$start)." sec] $sql\n", FILE_APPEND);
 		}
 
 		return $res;

@@ -25,54 +25,27 @@ namespace ViaThinkSoft\OIDplus\Core;
 
 class OIDplus extends OIDplusBaseClass {
 	/**
-	 * @var OIDplusPagePlugin[]
+	 * @var ?OIDplusContext
 	 */
-	private static array $pagePlugins = array();
-	/**
-	 * @var OIDplusAuthPlugin[]
-	 */
-	private static array $authPlugins = array();
-	/**
-	 * @var OIDplusLoggerPlugin[]
-	 */
-	private static array $loggerPlugins = array();
-	/**
-	 * @var OIDplusObjectTypePlugin[]
-	 */
-	private static array $objectTypePlugins = array();
-	/**
-	 * @var string[]|OIDplusObject[] Classnames of OIDplusObject classes
-	 */
-	private static array $enabledObjectTypes = array();
-	/**
-	 * @var string[]|OIDplusObject[] Classnames of OIDplusObject classes
-	 */
-	private static array $disabledObjectTypes = array();
-	/**
-	 * @var OIDplusDatabasePlugin[]
-	 */
-	private static array $dbPlugins = array();
-	/**
-	 * @var OIDplusCaptchaPlugin[]
-	 */
-	private static array $captchaPlugins = array();
-	/**
-	 * @var OIDplusSqlSlangPlugin[]
-	 */
-	private static array $sqlSlangPlugins = array();
-	/**
-	 * @var OIDplusLanguagePlugin[]
-	 */
-	private static array $languagePlugins = array();
-	/**
-	 * @var OIDplusDesignPlugin[]
-	 */
-	private static array $designPlugins = array();
+	private static ?OIDplusContext $currentContext = null;
 
 	/**
-	 * @var bool
+	 * Gets the current state of the system
+	 * @return OIDplusContext
 	 */
-	protected static bool $html = true;
+	public static function getCurrentContext(): OIDplusContext {
+		if (is_null(self::$currentContext)) self::$currentContext = new OIDplusContext();
+		return self::$currentContext;
+	}
+
+	/**
+	 * Sets the current state of the system, for example if you want to connect to a different tenant.
+	 * @param OIDplusContext $newContext
+	 * @return void
+	 */
+	public static function setCurrentContext(OIDplusContext $newContext): void {
+		self::$currentContext = $newContext;
+	}
 
 	/**
 	 * e.g. "../"
@@ -133,30 +106,20 @@ class OIDplus extends OIDplusBaseClass {
 	// --- Static classes
 
 	/**
-	 * @var ?OIDplusBaseConfig
-	 */
-	private static ?OIDplusBaseConfig $baseConfig = null;
-
-	/**
-	 * @var bool
-	 */
-	private static bool $oldConfigFormatLoaded = false;
-
-	/**
 	 * @return OIDplusBaseConfig
 	 * @throws OIDplusException
 	 * @throws OIDplusConfigInitializationException
 	 */
 	public static function baseConfig(): OIDplusBaseConfig {
-		if ($first_init = is_null(self::$baseConfig)) {
-			self::$baseConfig = new OIDplusBaseConfig();
+		if ($first_init = is_null(self::getCurrentContext()->baseConfig)) {
+			self::getCurrentContext()->baseConfig = new OIDplusBaseConfig();
 		}
 
 		if ($first_init) {
-			if (self::insideSetup()) return self::$baseConfig;
+			if (self::insideSetup()) return self::getCurrentContext()->baseConfig;
 			// noBaseConfig=1 setting: see OIDplusGui.class.php
-			if ((basename($_SERVER['SCRIPT_NAME']) === 'oidplus.min.js.php') && isset($_REQUEST['noBaseConfig']) && ($_REQUEST['noBaseConfig'] == '1')) return self::$baseConfig;
-			if ((basename($_SERVER['SCRIPT_NAME']) === 'oidplus.min.css.php') && isset($_REQUEST['noBaseConfig']) && ($_REQUEST['noBaseConfig'] == '1')) return self::$baseConfig;
+			if ((basename($_SERVER['SCRIPT_NAME']) === 'oidplus.min.js.php') && isset($_REQUEST['noBaseConfig']) && ($_REQUEST['noBaseConfig'] == '1')) return self::getCurrentContext()->baseConfig;
+			if ((basename($_SERVER['SCRIPT_NAME']) === 'oidplus.min.css.php') && isset($_REQUEST['noBaseConfig']) && ($_REQUEST['noBaseConfig'] == '1')) return self::getCurrentContext()->baseConfig;
 
 			// Include a file containing various size/depth limitations of OIDs
 			// It is important to include it before userdata/baseconfig/config.inc.php was included,
@@ -174,7 +137,7 @@ class OIDplus extends OIDplusBaseClass {
 			}
 
 			if (file_exists($config_file)) {
-				if (self::$oldConfigFormatLoaded) {
+				if (self::getCurrentContext()->oldConfigFormatLoaded) {
 					// Note: We may only include it once due to backwards compatibility,
 					//       since in version 2.0, the configuration was defined using define() statements
 					// Attention: This does mean that a full re-init (e.g. for test cases) is not possible
@@ -222,7 +185,7 @@ class OIDplus extends OIDplusBaseClass {
 
 				// Backwards compatibility 2.0 => 2.1
 				if (defined('OIDPLUS_CONFIG_VERSION') && (OIDPLUS_CONFIG_VERSION == 2.0)) {
-					self::$oldConfigFormatLoaded = true;
+					self::getCurrentContext()->oldConfigFormatLoaded = true;
 					foreach (get_defined_constants(true)['user'] as $name => $value) {
 						$name = str_replace('OIDPLUS_', '', $name);
 						if ($name == 'SESSION_SECRET') $name = 'SERVER_SECRET';
@@ -232,7 +195,7 @@ class OIDplus extends OIDplusBaseClass {
 						} else if (($name == 'MYSQL_PASSWORD') || ($name == 'ODBC_PASSWORD') || ($name == 'PDO_PASSWORD') || ($name == 'PGSQL_PASSWORD')) {
 							$value = base64_decode($value);
 						}
-						self::$baseConfig->setValue($name, $value);
+						self::getCurrentContext()->baseConfig->setValue($name, $value);
 					}
 				}
 			} else {
@@ -240,12 +203,12 @@ class OIDplus extends OIDplusBaseClass {
 					$config_file = substr($config_file, strlen(self::localpath(NULL))); // "censor" the system local path
 					throw new OIDplusConfigInitializationException(_L('File %1 is missing, but setup can\'t be started because its directory missing.',$config_file));
 				} else {
-					if (self::$html) {
+					if (self::getCurrentContext()->html) {
 						if (!self::insideSetup()) {
 							header('Location:'.self::webpath(null,self::PATH_RELATIVE).'setup/');
 							die(_L('Redirecting to setup...'));
 						} else {
-							return self::$baseConfig;
+							return self::getCurrentContext()->baseConfig;
 						}
 					} else {
 						// This can be displayed in e.g. ajax.php
@@ -257,21 +220,21 @@ class OIDplus extends OIDplusBaseClass {
 
 			// Check important config settings
 
-			if (self::$baseConfig->getValue('CONFIG_VERSION') != 2.1) {
+			if (self::getCurrentContext()->baseConfig->getValue('CONFIG_VERSION') != 2.1) {
 				if (strpos($_SERVER['REQUEST_URI']??'', self::webpath(null,self::PATH_RELATIVE).'setup/') !== 0) {
 					$config_file = substr($config_file, strlen(self::localpath(NULL))); // "censor" the system local path
 					throw new OIDplusConfigInitializationException(_L("The information located in %1 is outdated.",$config_file));
 				}
 			}
 
-			if (self::$baseConfig->getValue('SERVER_SECRET', '') === '') {
+			if (self::getCurrentContext()->baseConfig->getValue('SERVER_SECRET', '') === '') {
 				if (strpos($_SERVER['REQUEST_URI']??'', self::webpath(null,self::PATH_RELATIVE).'setup/') !== 0) {
 					$config_file = substr($config_file, strlen(self::localpath(NULL))); // "censor" the system local path
 					throw new OIDplusConfigInitializationException(_L("You must set a value for SERVER_SECRET in %1 for the system to operate secure.",$config_file));
 				}
 			}
 
-			foreach (self::$baseConfig->getAllKeys() as $key) {
+			foreach (self::getCurrentContext()->baseConfig->getAllKeys() as $key) {
 				if (str_starts_with($key, 'DISABLE_PLUGIN_')) {
 					if (!oid_valid_dotnotation(substr($key, strlen('DISABLE_PLUGIN_')))) {
 						throw new OIDplusConfigInitializationException(_L("File %1 contains an outdated setting %2. It must be a plugin OID instead of PHP class name.",$config_file,$key));
@@ -280,36 +243,31 @@ class OIDplus extends OIDplusBaseClass {
 			}
 		}
 
-		return self::$baseConfig;
+		return self::getCurrentContext()->baseConfig;
 	}
-
-	/**
-	 * @var ?OIDplusConfig
-	 */
-	private static ?OIDplusConfig $config = null;
 
 	/**
 	 * @return OIDplusConfig
 	 * @throws OIDplusException
 	 */
 	public static function config(): OIDplusConfig {
-		if ($first_init = is_null(self::$config)) {
-			self::$config = new OIDplusConfig();
+		if ($first_init = is_null(self::getCurrentContext()->config)) {
+			self::getCurrentContext()->config = new OIDplusConfig();
 		}
 
 		if ($first_init) {
 			// These are important settings for base functionalities and therefore are not inside plugins
-			self::$config->prepareConfigKey('system_title', 'What is the name of your RA?', 'OIDplus 2.0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			self::getCurrentContext()->config->prepareConfigKey('system_title', 'What is the name of your RA?', 'OIDplus 2.0', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 				if (empty($value)) {
 					throw new OIDplusException(_L('Please enter a value for the system title.'));
 				}
 			});
-			self::$config->prepareConfigKey('admin_email', 'E-Mail address of the system administrator', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			self::getCurrentContext()->config->prepareConfigKey('admin_email', 'E-Mail address of the system administrator', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 				if (!empty($value) && !self::mailUtils()->validMailAddress($value)) {
 					throw new OIDplusException(_L('This is not a correct email address'));
 				}
 			});
-			self::$config->prepareConfigKey('global_cc', 'Global CC for all outgoing emails?', '', OIDplusConfig::PROTECTION_EDITABLE, function(&$value) {
+			self::getCurrentContext()->config->prepareConfigKey('global_cc', 'Global CC for all outgoing emails?', '', OIDplusConfig::PROTECTION_EDITABLE, function(&$value) {
 				$value = trim($value);
 				if ($value === '') return;
 				$addrs = explode(';', $value);
@@ -320,7 +278,7 @@ class OIDplus extends OIDplusBaseClass {
 					}
 				}
 			});
-			self::$config->prepareConfigKey('global_bcc', 'Global BCC for all outgoing emails?', '', OIDplusConfig::PROTECTION_EDITABLE, function(&$value) {
+			self::getCurrentContext()->config->prepareConfigKey('global_bcc', 'Global BCC for all outgoing emails?', '', OIDplusConfig::PROTECTION_EDITABLE, function(&$value) {
 				$value = trim($value);
 				if ($value === '') return;
 				$addrs = explode(';', $value);
@@ -331,10 +289,10 @@ class OIDplus extends OIDplusBaseClass {
 					}
 				}
 			});
-			self::$config->prepareConfigKey('objecttypes_initialized', 'List of object type plugins that were initialized once', '', OIDplusConfig::PROTECTION_READONLY, function($value) {
+			self::getCurrentContext()->config->prepareConfigKey('objecttypes_initialized', 'List of object type plugins that were initialized once', '', OIDplusConfig::PROTECTION_READONLY, function($value) {
 				// Nothing here yet
 			});
-			self::$config->prepareConfigKey('objecttypes_enabled', 'Enabled object types and their order, separated with a semicolon (please reload the page so that the change is applied)', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			self::getCurrentContext()->config->prepareConfigKey('objecttypes_enabled', 'Enabled object types and their order, separated with a semicolon (please reload the page so that the change is applied)', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 				// TODO: when objecttypes_enabled is changed at the admin control panel, we need to do a reload of the page, so that jsTree will be updated. Is there anything we can do?
 
 				$ary = explode(';',$value);
@@ -363,19 +321,19 @@ class OIDplus extends OIDplusBaseClass {
 					}
 				}
 			});
-			self::$config->prepareConfigKey('oidplus_private_key', 'Private key for this system', '', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
+			self::getCurrentContext()->config->prepareConfigKey('oidplus_private_key', 'Private key for this system', '', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
 				// Nothing here yet
 			});
-			self::$config->prepareConfigKey('oidplus_public_key', 'Public key for this system. If you "clone" your system, you must delete this key (e.g. using phpMyAdmin), so that a new one is created.', '', OIDplusConfig::PROTECTION_READONLY, function($value) {
+			self::getCurrentContext()->config->prepareConfigKey('oidplus_public_key', 'Public key for this system. If you "clone" your system, you must delete this key (e.g. using phpMyAdmin), so that a new one is created.', '', OIDplusConfig::PROTECTION_READONLY, function($value) {
 				// Nothing here yet
 			});
-			self::$config->prepareConfigKey('last_known_system_url', 'Last known System URL', '', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
+			self::getCurrentContext()->config->prepareConfigKey('last_known_system_url', 'Last known System URL', '', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
 				// Nothing here yet
 			});
-			self::$config->prepareConfigKey('last_known_version', 'Last known OIDplus Version', '', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
+			self::getCurrentContext()->config->prepareConfigKey('last_known_version', 'Last known OIDplus Version', '', OIDplusConfig::PROTECTION_HIDDEN, function($value) {
 				// Nothing here yet
 			});
-			self::$config->prepareConfigKey('default_ra_auth_method', 'Default auth method used for generating password of RAs (must exist in [userdata_pub/]plugins/[vendorname]/auth/)? Empty = OIDplus decides.', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+			self::getCurrentContext()->config->prepareConfigKey('default_ra_auth_method', 'Default auth method used for generating password of RAs (must exist in [userdata_pub/]plugins/[vendorname]/auth/)? Empty = OIDplus decides.', '', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 				if (trim($value) === '') return; // OIDplus decides
 
 				$good = true;
@@ -390,97 +348,67 @@ class OIDplus extends OIDplusBaseClass {
 			});
 		}
 
-		return self::$config;
+		return self::getCurrentContext()->config;
 	}
-
-	/**
-	 * @var ?OIDplusGui
-	 */
-	private static ?OIDplusGui $gui = null;
 
 	/**
 	 * @return OIDplusGui
 	 */
 	public static function gui(): OIDplusGui {
-		if (is_null(self::$gui)) {
-			self::$gui = new OIDplusGui();
+		if (is_null(self::getCurrentContext()->gui)) {
+			self::getCurrentContext()->gui = new OIDplusGui();
 		}
-		return self::$gui;
+		return self::getCurrentContext()->gui;
 	}
-
-	/**
-	 * @var ?OIDplusAuthUtils
-	 */
-	private static ?OIDplusAuthUtils $authUtils = null;
 
 	/**
 	 * @return OIDplusAuthUtils
 	 */
 	public static function authUtils(): OIDplusAuthUtils {
-		if (is_null(self::$authUtils)) {
-			self::$authUtils = new OIDplusAuthUtils();
+		if (is_null(self::getCurrentContext()->authUtils)) {
+			self::getCurrentContext()->authUtils = new OIDplusAuthUtils();
 		}
-		return self::$authUtils;
+		return self::getCurrentContext()->authUtils;
 	}
-
-	/**
-	 * @var ?OIDplusMailUtils
-	 */
-	private static ?OIDplusMailUtils $mailUtils = null;
 
 	/**
 	 * @return OIDplusMailUtils
 	 */
 	public static function mailUtils(): OIDplusMailUtils {
-		if (is_null(self::$mailUtils)) {
-			self::$mailUtils = new OIDplusMailUtils();
+		if (is_null(self::getCurrentContext()->mailUtils)) {
+			self::getCurrentContext()->mailUtils = new OIDplusMailUtils();
 		}
-		return self::$mailUtils;
+		return self::getCurrentContext()->mailUtils;
 	}
-
-	/**
-	 * @var ?OIDplusCookieUtils
-	 */
-	private static ?OIDplusCookieUtils $cookieUtils = null;
 
 	/**
 	 * @return OIDplusCookieUtils
 	 */
 	public static function cookieUtils(): OIDplusCookieUtils {
-		if (is_null(self::$cookieUtils)) {
-			self::$cookieUtils = new OIDplusCookieUtils();
+		if (is_null(self::getCurrentContext()->cookieUtils)) {
+			self::getCurrentContext()->cookieUtils = new OIDplusCookieUtils();
 		}
-		return self::$cookieUtils;
+		return self::getCurrentContext()->cookieUtils;
 	}
-
-	/**
-	 * @var ?OIDplusMenuUtils
-	 */
-	private static ?OIDplusMenuUtils $menuUtils = null;
 
 	/**
 	 * @return OIDplusMenuUtils
 	 */
 	public static function menuUtils(): OIDplusMenuUtils {
-		if (is_null(self::$menuUtils)) {
-			self::$menuUtils = new OIDplusMenuUtils();
+		if (is_null(self::getCurrentContext()->menuUtils)) {
+			self::getCurrentContext()->menuUtils = new OIDplusMenuUtils();
 		}
-		return self::$menuUtils;
+		return self::getCurrentContext()->menuUtils;
 	}
-
-	/**
-	 * @var ?OIDplusLogger
-	 */
-	private static ?OIDplusLogger $logger = null;
 
 	/**
 	 * @return OIDplusLogger
 	 */
 	public static function logger(): OIDplusLogger {
-		if (is_null(self::$logger)) {
-			self::$logger = new OIDplusLogger();
+		if (is_null(self::getCurrentContext()->logger)) {
+			self::getCurrentContext()->logger = new OIDplusLogger();
 		}
-		return self::$logger;
+		return self::getCurrentContext()->logger;
 	}
 
 	// --- SQL slang plugin
@@ -497,19 +425,19 @@ class OIDplus extends OIDplusBaseClass {
 			throw new OIDplusException(_L('Plugin %1 cannot be registered because it does not return a valid ID', $plugin->getPluginDirectory()));
 		}
 
-		if (isset(self::$sqlSlangPlugins[$name])) {
+		if (isset(self::getCurrentContext()->sqlSlangPlugins[$name])) {
 			$plugintype_hf = _L('SQL slang');
 			throw new OIDplusException(_L('Multiple %1 plugins use the ID %2', $plugintype_hf, $name));
 		}
 
-		self::$sqlSlangPlugins[$name] = $plugin;
+		self::getCurrentContext()->sqlSlangPlugins[$name] = $plugin;
 	}
 
 	/**
 	 * @return OIDplusSqlSlangPlugin[]
 	 */
 	public static function getSqlSlangPlugins(): array {
-		return self::$sqlSlangPlugins;
+		return self::getCurrentContext()->sqlSlangPlugins;
 	}
 
 	/**
@@ -517,7 +445,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @return OIDplusSqlSlangPlugin|null
 	 */
 	public static function getSqlSlangPlugin(string $id): ?OIDplusSqlSlangPlugin {
-		return self::$sqlSlangPlugins[$id] ?? null;
+		return self::getCurrentContext()->sqlSlangPlugins[$id] ?? null;
 	}
 
 	// --- Database plugin
@@ -534,19 +462,19 @@ class OIDplus extends OIDplusBaseClass {
 			throw new OIDplusException(_L('Plugin %1 cannot be registered because it does not return a valid ID', $plugin->getPluginDirectory()));
 		}
 
-		if (isset(self::$dbPlugins[$name])) {
+		if (isset(self::getCurrentContext()->dbPlugins[$name])) {
 			$plugintype_hf = _L('Database');
 			throw new OIDplusException(_L('Multiple %1 plugins use the ID %2', $plugintype_hf, $name));
 		}
 
-		self::$dbPlugins[$name] = $plugin;
+		self::getCurrentContext()->dbPlugins[$name] = $plugin;
 	}
 
 	/**
 	 * @return OIDplusDatabasePlugin[]
 	 */
 	public static function getDatabasePlugins(): array {
-		return self::$dbPlugins;
+		return self::getCurrentContext()->dbPlugins;
 	}
 
 	/**
@@ -559,7 +487,7 @@ class OIDplus extends OIDplusBaseClass {
 		if ($db_plugin_name === '') {
 			throw new OIDplusConfigInitializationException(_L('No database plugin selected in config file'));
 		}
-		foreach (self::$dbPlugins as $name => $plugin) {
+		foreach (self::getCurrentContext()->dbPlugins as $name => $plugin) {
 			if (strtolower($name) == strtolower($db_plugin_name)) {
 				return $plugin;
 			}
@@ -568,27 +496,17 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @var OIDplusDatabaseConnection|null
-	 */
-	private static ?OIDplusDatabaseConnection $dbMainSession = null;
-
-	/**
 	 * @return OIDplusDatabaseConnection
 	 * @throws OIDplusException
 	 * @throws OIDplusConfigInitializationException
 	 */
 	public static function db(): OIDplusDatabaseConnection {
-		if (is_null(self::$dbMainSession)) {
-			self::$dbMainSession = self::getActiveDatabasePlugin()->newConnection();
+		if (is_null(self::getCurrentContext()->dbMainSession)) {
+			self::getCurrentContext()->dbMainSession = self::getActiveDatabasePlugin()->newConnection();
 		}
-		if (!self::$dbMainSession->isConnected()) self::$dbMainSession->connect();
-		return self::$dbMainSession;
+		if (!self::getCurrentContext()->dbMainSession->isConnected()) self::getCurrentContext()->dbMainSession->connect();
+		return self::getCurrentContext()->dbMainSession;
 	}
-
-	/**
-	 * @var OIDplusDatabaseConnection|null
-	 */
-	private static ?OIDplusDatabaseConnection $dbIsolatedSession = null;
 
 	/**
 	 * @return OIDplusDatabaseConnection
@@ -596,11 +514,11 @@ class OIDplus extends OIDplusBaseClass {
 	 * @throws OIDplusConfigInitializationException
 	 */
 	public static function dbIsolated(): OIDplusDatabaseConnection {
-		if (is_null(self::$dbIsolatedSession)) {
-			self::$dbIsolatedSession = self::getActiveDatabasePlugin()->newConnection();
+		if (is_null(self::getCurrentContext()->dbIsolatedSession)) {
+			self::getCurrentContext()->dbIsolatedSession = self::getActiveDatabasePlugin()->newConnection();
 		}
-		if (!self::$dbIsolatedSession->isConnected()) self::$dbIsolatedSession->connect();
-		return self::$dbIsolatedSession;
+		if (!self::getCurrentContext()->dbIsolatedSession->isConnected()) self::getCurrentContext()->dbIsolatedSession->connect();
+		return self::getCurrentContext()->dbIsolatedSession;
 	}
 
 	// --- CAPTCHA plugin
@@ -617,19 +535,19 @@ class OIDplus extends OIDplusBaseClass {
 			throw new OIDplusException(_L('Plugin %1 cannot be registered because it does not return a valid ID', $plugin->getPluginDirectory()));
 		}
 
-		if (isset(self::$captchaPlugins[$name])) {
+		if (isset(self::getCurrentContext()->captchaPlugins[$name])) {
 			$plugintype_hf = _L('CAPTCHA');
 			throw new OIDplusException(_L('Multiple %1 plugins use the ID %2', $plugintype_hf, $name));
 		}
 
-		self::$captchaPlugins[$name] = $plugin;
+		self::getCurrentContext()->captchaPlugins[$name] = $plugin;
 	}
 
 	/**
 	 * @return OIDplusCaptchaPlugin[]
 	 */
 	public static function getCaptchaPlugins(): array {
-		return self::$captchaPlugins;
+		return self::getCurrentContext()->captchaPlugins;
 	}
 
 	/**
@@ -657,7 +575,7 @@ class OIDplus extends OIDplusBaseClass {
 	 */
 	public static function getActiveCaptchaPlugin(): OIDplusCaptchaPlugin {
 		$captcha_plugin_name = self::getActiveCaptchaPluginId();
-		foreach (self::$captchaPlugins as $name => $plugin) {
+		foreach (self::getCurrentContext()->captchaPlugins as $name => $plugin) {
 			if (strtolower($name) == strtolower($captcha_plugin_name)) {
 				return $plugin;
 			}
@@ -672,14 +590,14 @@ class OIDplus extends OIDplusBaseClass {
 	 * @return void
 	 */
 	private static function registerPagePlugin(OIDplusPagePlugin $plugin): void {
-		self::$pagePlugins[] = $plugin;
+		self::getCurrentContext()->pagePlugins[] = $plugin;
 	}
 
 	/**
 	 * @return OIDplusPagePlugin[]
 	 */
 	public static function getPagePlugins(): array {
-		return self::$pagePlugins;
+		return self::getCurrentContext()->pagePlugins;
 	}
 
 	// --- Auth plugin
@@ -793,14 +711,14 @@ class OIDplus extends OIDplusBaseClass {
 			}
 		}
 
-		self::$authPlugins[] = $plugin;
+		self::getCurrentContext()->authPlugins[] = $plugin;
 	}
 
 	/**
 	 * @return OIDplusAuthPlugin[]
 	 */
 	public static function getAuthPlugins(): array {
-		return self::$authPlugins;
+		return self::getCurrentContext()->authPlugins;
 	}
 
 	// --- Language plugin
@@ -810,14 +728,14 @@ class OIDplus extends OIDplusBaseClass {
 	 * @return void
 	 */
 	private static function registerLanguagePlugin(OIDplusLanguagePlugin $plugin): void {
-		self::$languagePlugins[] = $plugin;
+		self::getCurrentContext()->languagePlugins[] = $plugin;
 	}
 
 	/**
 	 * @return OIDplusLanguagePlugin[]
 	 */
 	public static function getLanguagePlugins(): array {
-		return self::$languagePlugins;
+		return self::getCurrentContext()->languagePlugins;
 	}
 
 	// --- Design plugin
@@ -827,14 +745,14 @@ class OIDplus extends OIDplusBaseClass {
 	 * @return void
 	 */
 	private static function registerDesignPlugin(OIDplusDesignPlugin $plugin): void {
-		self::$designPlugins[] = $plugin;
+		self::getCurrentContext()->designPlugins[] = $plugin;
 	}
 
 	/**
 	 * @return OIDplusDesignPlugin[]
 	 */
 	public static function getDesignPlugins(): array {
-		return self::$designPlugins;
+		return self::getCurrentContext()->designPlugins;
 	}
 
 	/**
@@ -858,14 +776,14 @@ class OIDplus extends OIDplusBaseClass {
 	 * @return void
 	 */
 	private static function registerLoggerPlugin(OIDplusLoggerPlugin $plugin): void {
-		self::$loggerPlugins[] = $plugin;
+		self::getCurrentContext()->loggerPlugins[] = $plugin;
 	}
 
 	/**
 	 * @return OIDplusLoggerPlugin[]
 	 */
 	public static function getLoggerPlugins(): array {
-		return self::$loggerPlugins;
+		return self::getCurrentContext()->loggerPlugins;
 	}
 
 	// --- Object type plugin
@@ -876,7 +794,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	private static function registerObjectTypePlugin(OIDplusObjectTypePlugin $plugin): void {
-		self::$objectTypePlugins[] = $plugin;
+		self::getCurrentContext()->objectTypePlugins[] = $plugin;
 
 		if (self::baseConfig()->getValue('DEBUG')) {
 			// Avoid a namespace hash conflict of the OIDplus Information Object Custom UUIDs
@@ -953,8 +871,8 @@ class OIDplus extends OIDplusBaseClass {
 		}
 
 		if ($do_enable) {
-			self::$enabledObjectTypes[] = $ot;
-			usort(self::$enabledObjectTypes, function($a, $b) {
+			self::getCurrentContext()->enabledObjectTypes[] = $ot;
+			usort(self::getCurrentContext()->enabledObjectTypes, function($a, $b) {
 				$enabled = self::config()->getValue("objecttypes_enabled");
 				$enabled_ary = explode(';', $enabled);
 
@@ -965,7 +883,7 @@ class OIDplus extends OIDplusBaseClass {
 				return ($idx_a > $idx_b) ? +1 : -1;
 			});
 		} else {
-			self::$disabledObjectTypes[] = $ot;
+			self::getCurrentContext()->disabledObjectTypes[] = $ot;
 		}
 
 		if (!in_array($ns, $init_ary)) {
@@ -986,7 +904,7 @@ class OIDplus extends OIDplusBaseClass {
 	 * @return OIDplusObjectTypePlugin[]
 	 */
 	public static function getObjectTypePlugins(): array {
-		return self::$objectTypePlugins;
+		return self::getCurrentContext()->objectTypePlugins;
 	}
 
 	/**
@@ -994,9 +912,9 @@ class OIDplus extends OIDplusBaseClass {
 	 */
 	public static function getObjectTypePluginsEnabled(): array {
 		$res = array();
-		foreach (self::$objectTypePlugins as $plugin) {
+		foreach (self::getCurrentContext()->objectTypePlugins as $plugin) {
 			$ot = $plugin::getObjectTypeClassName();
-			if (in_array($ot, self::$enabledObjectTypes)) $res[] = $plugin;
+			if (in_array($ot, self::getCurrentContext()->enabledObjectTypes)) $res[] = $plugin;
 		}
 		return $res;
 	}
@@ -1006,9 +924,9 @@ class OIDplus extends OIDplusBaseClass {
 	 */
 	public static function getObjectTypePluginsDisabled(): array {
 		$res = array();
-		foreach (self::$objectTypePlugins as $plugin) {
+		foreach (self::getCurrentContext()->objectTypePlugins as $plugin) {
 			$ot = $plugin::getObjectTypeClassName();
-			if (in_array($ot, self::$disabledObjectTypes)) $res[] = $plugin;
+			if (in_array($ot, self::getCurrentContext()->disabledObjectTypes)) $res[] = $plugin;
 		}
 		return $res;
 	}
@@ -1017,14 +935,14 @@ class OIDplus extends OIDplusBaseClass {
 	 * @return string[]|OIDplusObject[] Classname of a OIDplusObject class
 	 */
 	public static function getEnabledObjectTypes(): array {
-		return self::$enabledObjectTypes;
+		return self::getCurrentContext()->enabledObjectTypes;
 	}
 
 	/**
 	 * @return string[]|OIDplusObject[] Classname of a OIDplusObject class
 	 */
 	public static function getDisabledObjectTypes(): array {
-		return self::$disabledObjectTypes;
+		return self::getCurrentContext()->disabledObjectTypes;
 	}
 
 	// --- Plugin handling functions
@@ -1035,15 +953,15 @@ class OIDplus extends OIDplusBaseClass {
 	public static function getAllPlugins(): array {
 		// TODO: such methods must throw an exception if self::init() was not called previously!
 		$res = array();
-		$res = array_merge($res, self::$pagePlugins);
-		$res = array_merge($res, self::$authPlugins);
-		$res = array_merge($res, self::$loggerPlugins);
-		$res = array_merge($res, self::$objectTypePlugins);
-		$res = array_merge($res, self::$dbPlugins);
-		$res = array_merge($res, self::$captchaPlugins);
-		$res = array_merge($res, self::$sqlSlangPlugins);
-		$res = array_merge($res, self::$languagePlugins);
-		return array_merge($res, self::$designPlugins);
+		$res = array_merge($res, self::getCurrentContext()->pagePlugins);
+		$res = array_merge($res, self::getCurrentContext()->authPlugins);
+		$res = array_merge($res, self::getCurrentContext()->loggerPlugins);
+		$res = array_merge($res, self::getCurrentContext()->objectTypePlugins);
+		$res = array_merge($res, self::getCurrentContext()->dbPlugins);
+		$res = array_merge($res, self::getCurrentContext()->captchaPlugins);
+		$res = array_merge($res, self::getCurrentContext()->sqlSlangPlugins);
+		$res = array_merge($res, self::getCurrentContext()->languagePlugins);
+		return array_merge($res, self::getCurrentContext()->designPlugins);
 	}
 
 	/**
@@ -1298,33 +1216,33 @@ class OIDplus extends OIDplusBaseClass {
 	 */
 	public static function init(bool $html=true, bool $keepBaseConfig=true): void {
 		// TODO: instead of having parameter $html=true|false, wouldn't it be better to have $type=html|css|js ?
-		self::$html = $html;
+		self::getCurrentContext()->html = $html;
 
 		// Reset internal state, so we can re-init verything if required
 
-		self::$config = null;
-		if (!$keepBaseConfig) self::$baseConfig = null;  // for test cases we need to be able to control base config and setting values manually, so $keepBaseConfig needs to be true
-		self::$gui = null;
-		self::$authUtils = null;
-		self::$mailUtils = null;
-		self::$menuUtils = null;
-		self::$logger = null;
-		self::$dbMainSession = null;
-		self::$dbIsolatedSession = null;
-		self::$pagePlugins = array();
-		self::$authPlugins = array();
-		self::$loggerPlugins = array();
-		self::$objectTypePlugins = array();
-		self::$enabledObjectTypes = array();
-		self::$disabledObjectTypes = array();
-		self::$dbPlugins = array();
-		self::$captchaPlugins = array();
-		self::$sqlSlangPlugins = array();
-		self::$languagePlugins = array();
-		self::$designPlugins = array();
-		self::$system_id_cache = null;
-		self::$sslAvailableCache = null;
-		self::$translationArray = array();
+		self::getCurrentContext()->config = null;
+		if (!$keepBaseConfig) self::getCurrentContext()->baseConfig = null;  // for test cases we need to be able to control base config and setting values manually, so $keepBaseConfig needs to be true
+		self::getCurrentContext()->gui = null;
+		self::getCurrentContext()->authUtils = null;
+		self::getCurrentContext()->mailUtils = null;
+		self::getCurrentContext()->menuUtils = null;
+		self::getCurrentContext()->logger = null;
+		self::getCurrentContext()->dbMainSession = null;
+		self::getCurrentContext()->dbIsolatedSession = null;
+		self::getCurrentContext()->pagePlugins = array();
+		self::getCurrentContext()->authPlugins = array();
+		self::getCurrentContext()->loggerPlugins = array();
+		self::getCurrentContext()->objectTypePlugins = array();
+		self::getCurrentContext()->enabledObjectTypes = array();
+		self::getCurrentContext()->disabledObjectTypes = array();
+		self::getCurrentContext()->dbPlugins = array();
+		self::getCurrentContext()->captchaPlugins = array();
+		self::getCurrentContext()->sqlSlangPlugins = array();
+		self::getCurrentContext()->languagePlugins = array();
+		self::getCurrentContext()->designPlugins = array();
+		self::getCurrentContext()->system_id_cache = null;
+		self::getCurrentContext()->sslAvailableCache = null;
+		self::getCurrentContext()->translationArray = array();
 
 		// Continue...
 
@@ -1702,42 +1620,32 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @var int|null
-	 */
-	private static ?int $system_id_cache = null;
-
-	/**
 	 * @param bool $oid
 	 * @return false|string
 	 * @throws OIDplusException
 	 */
 	public static function getSystemId(bool $oid=false)/*: false|string*/ {
-		if (!is_null(self::$system_id_cache)) {
-			$out = self::$system_id_cache;
+		if (!is_null(self::getCurrentContext()->system_id_cache)) {
+			$out = self::getCurrentContext()->system_id_cache;
 		} else {
 			$out = false;
 			if (self::getPkiStatus(true)) {
 				$pubKey = self::getSystemPublicKey();
 				$out = self::getSystemIdFromPubKey($pubKey);
 			}
-			self::$system_id_cache = $out;
+			self::getCurrentContext()->system_id_cache = $out;
 		}
 		if (!$out) return false;
 		return ($oid ? '1.3.6.1.4.1.37476.30.9.' : '').$out;
 	}
 
 	/**
-	 * @var string|null
-	 */
-	private static ?string $system_guid_cache = null;
-
-	/**
 	 * @return false|string
 	 * @throws OIDplusException
 	 */
 	public static function getSystemGuid()/*: false|string*/ {
-		if (!is_null(self::$system_guid_cache)) {
-			$out = self::$system_guid_cache;
+		if (!is_null(self::getCurrentContext()->system_guid_cache)) {
+			$out = self::getCurrentContext()->system_guid_cache;
 		} else {
 			$out = false;
 
@@ -1745,7 +1653,7 @@ class OIDplus extends OIDplusBaseClass {
 				$pubKey = self::getSystemPublicKey();
 				$out = self::getSystemGuidFromPubKey($pubKey);
 			}
-			self::$system_guid_cache = $out;
+			self::getCurrentContext()->system_guid_cache = $out;
 		}
 		if (!$out) return false;
 		return $out;
@@ -2061,20 +1969,15 @@ class OIDplus extends OIDplusBaseClass {
 	const ENFORCE_SSL_AUTO = 2;
 
 	/**
-	 * @var bool|null
-	 */
-	private static ?bool $sslAvailableCache = null;
-
-	/**
 	 * @return bool
 	 * @throws OIDplusException
 	 * @throws OIDplusConfigInitializationException
 	 */
 	public static function isSslAvailable(): bool {
-		if (!is_null(self::$sslAvailableCache)) return self::$sslAvailableCache;
+		if (!is_null(self::getCurrentContext()->sslAvailableCache)) return self::getCurrentContext()->sslAvailableCache;
 
 		if (PHP_SAPI == 'cli') {
-			self::$sslAvailableCache = false;
+			self::getCurrentContext()->sslAvailableCache = false;
 			return false;
 		}
 
@@ -2087,7 +1990,7 @@ class OIDplus extends OIDplusBaseClass {
 
 		if ($already_ssl) {
 			self::cookieUtils()->setcookie('SSL_CHECK', '1', 0, true/*allowJS*/, null/*samesite*/, true/*forceInsecure*/);
-			self::$sslAvailableCache = true;
+			self::getCurrentContext()->sslAvailableCache = true;
 			return true;
 		} else {
 			if (isset($_COOKIE['SSL_CHECK']) && ($_COOKIE['SSL_CHECK'] == '1')) {
@@ -2108,7 +2011,7 @@ class OIDplus extends OIDplusBaseClass {
 
 			if ($mode == self::ENFORCE_SSL_NO) {
 				// No SSL available
-				self::$sslAvailableCache = false;
+				self::getCurrentContext()->sslAvailableCache = false;
 				return false;
 			} else if (($mode == self::ENFORCE_SSL_YES) && isset($_SERVER['REQUEST_URI'])) {
 				// Force SSL
@@ -2126,7 +2029,7 @@ class OIDplus extends OIDplusBaseClass {
 						die(_L('Redirecting to HTTPS...'));
 					} else {
 						// No HTTPS available. Do nothing.
-						self::$sslAvailableCache = false;
+						self::getCurrentContext()->sslAvailableCache = false;
 						return false;
 					}
 				} else if (isset($_SERVER['REQUEST_URI'])) {
@@ -2142,9 +2045,11 @@ class OIDplus extends OIDplusBaseClass {
 					} else {
 						// No HTTPS detected. Do nothing, and next time, don't try to detect HTTPS again.
 						self::cookieUtils()->setcookie('SSL_CHECK', '0', 0, true/*allowJS*/, null/*samesite*/, true/*forceInsecure*/);
-						self::$sslAvailableCache = false;
+						self::getCurrentContext()->sslAvailableCache = false;
 						return false;
 					}
+				} else {
+					return false;
 				}
 			} else {
 				assert(false);
@@ -2166,18 +2071,13 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @var string|null
-	 */
-	private static ?string $forcedTenantSubDirName = null;
-
-	/**
 	* Overrides the tenant subdir detection. Only used for cron.sh and should not be used otherwise,
 	* since the detection of the tenant subdir is made out of the hostname and directory.
 	* @param string $name The name of the subdirectory inside userdata/tenant/ )
 	* @return void
 	*/
 	public static function forceTenantSubDirName(string $name): void {
-		self::$forcedTenantSubDirName = $name;
+		self::getCurrentContext()->forcedTenantSubDirName = $name;
 	}
 
 	/**
@@ -2185,7 +2085,7 @@ class OIDplus extends OIDplusBaseClass {
 	*/
 	private static function tenantSubDirName(): string {
 		// Important for cron.sh
-		if (!is_null(self::$forcedTenantSubDirName)) return self::$forcedTenantSubDirName;
+		if (!is_null(self::getCurrentContext()->forcedTenantSubDirName)) return self::getCurrentContext()->forcedTenantSubDirName;
 
 		// CLI cannot use tenants
 		if (!isset($_SERVER['HTTP_HOST'])) return 'NOT_AVAILABLE';
@@ -2348,23 +2248,18 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @var array
-	 */
-	private static array $shutdown_functions = array();
-
-	/**
 	 * @param callable $func
 	 * @return void
 	 */
 	public static function register_shutdown_function(callable $func): void {
-		self::$shutdown_functions[] = $func;
+		self::getCurrentContext()->shutdown_functions[] = $func;
 	}
 
 	/**
 	 * @return void
 	 */
 	public static function invoke_shutdown(): void {
-		foreach (self::$shutdown_functions as $func) {
+		foreach (self::getCurrentContext()->shutdown_functions as $func) {
 			$func();
 		}
 	}
@@ -2388,13 +2283,11 @@ class OIDplus extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	public static function getDefaultLang(): string {
-		static $thrownOnce = false; // avoid endless loop inside OIDplusConfigInitializationException
-
 		$lang = self::baseConfig()->getValue('DEFAULT_LANGUAGE', 'enus');
 
 		if (!in_array($lang,self::getAvailableLangs())) {
-			if (!$thrownOnce) {
-				$thrownOnce = true;
+			if (!self::getCurrentContext()->getDefaultLang_thrownOnce) {
+				self::getCurrentContext()->getDefaultLang_thrownOnce = true;
 				throw new OIDplusConfigInitializationException(_L('DEFAULT_LANGUAGE points to an invalid language plugin. (Consider setting to "enus" = "English USA".)'));
 			} else {
 				return 'enus';
@@ -2448,15 +2341,10 @@ class OIDplus extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @var array
-	 */
-	private static array $translationArray = array();
-
-	/**
 	 * @param string $translation_file
 	 * @return array
 	 */
-	protected static function getTranslationFileContents(string $translation_file): array {
+	private static function getTranslationFileContents(string $translation_file): array {
 		// First, try the cache
 		$cache_file = self::getUserDataDir("cache").'translation_'.md5($translation_file).'.ser';
 		if (file_exists($cache_file) && (filemtime($cache_file) == filemtime($translation_file))) {
@@ -2492,8 +2380,8 @@ class OIDplus extends OIDplusBaseClass {
 
 			if (($requested_lang != '*') && ($lang != $requested_lang)) continue;
 
-			if (!isset(self::$translationArray[$lang])) {
-				self::$translationArray[$lang] = array();
+			if (!isset(self::getCurrentContext()->translationArray[$lang])) {
+				self::getCurrentContext()->translationArray[$lang] = array();
 
 				$wildcard = $pluginManifest->getLanguageMessages();
 				if (strpos($wildcard,'/') !== false) continue; // just to be sure
@@ -2509,12 +2397,12 @@ class OIDplus extends OIDplusBaseClass {
 					if (!file_exists($translation_file)) continue;
 					$cac = self::getTranslationFileContents($translation_file);
 					foreach ($cac as $src => $dst) {
-						self::$translationArray[$lang][$src] = $dst;
+						self::getCurrentContext()->translationArray[$lang][$src] = $dst;
 					}
 				}
 			}
 		}
-		return self::$translationArray;
+		return self::getCurrentContext()->translationArray;
 	}
 
 	/**

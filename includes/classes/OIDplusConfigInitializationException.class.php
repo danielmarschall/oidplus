@@ -29,7 +29,7 @@ class OIDplusConfigInitializationException extends OIDplusHtmlException {
 	 * @param string $message
 	 */
 	public function __construct(string $message) {
-		static $deadlock_fix = false;
+		static $deadlock_fix = false; // this does not need to be in OIDplus::getCurrentContext(), because it is only used here and does not store information acreoss multiple parts of the program
 		if ($deadlock_fix) return; // deadlock can happen if calls to webpath(), getUserDatadir(), etc. fail
 		$deadlock_fix = true;
 

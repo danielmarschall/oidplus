@@ -72,6 +72,7 @@ class OIDplusQueryResultOci extends OIDplusQueryResult {
 		if (!is_null($this->prefetchedArray)) return;
 		$this->prefetchedArray = array();
 		oci_fetch_all($this->res, $this->prefetchedArray, 0, -1, OCI_FETCHSTATEMENT_BY_ROW);
+		$row = null;
 		foreach ($this->prefetchedArray as &$row) {
 			$this->fixFields($row);
 		}

@@ -65,6 +65,10 @@ $i = 0;
 $res = OIDplus::db()->query("select * from ###ra");
 $res->naturalSortByField('email');
 $ra_dos_ids = [];
+$ra_name = [];
+$ra_phone = [];
+$ra_cdat = [];
+$ra_udat = [];
 while ($row = $res->fetch_object()) {
 	$ra_dos_ids[$row->email] = str_pad(strval($i++), 8, '0', STR_PAD_LEFT);
 	$ra_name[$row->email] = $row->ra_name;
