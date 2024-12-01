@@ -3,5 +3,5 @@ Version: 1.0.0+no-version-set
 Licenses: none
 Dependencies:
 
-Name                   Version  Licenses   
-swagger-api/swagger-ui v5.17.14 Apache-2.0 
+Name                   Version Licenses   
+swagger-api/swagger-ui v5.18.2 Apache-2.0 

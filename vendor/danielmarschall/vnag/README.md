@@ -39,6 +39,7 @@ VNag comes with the following plugins pre-installed (in the bin directory):
 - **owncloud_version**: Checks ownCloud installations for updates.
 - **phpbb_version**: Checks phpBB installations for updates.
 - **phpmyadmin_version**: Checks phpMyAdmin installations for updates.
+- **phppgadmin_version**: Checks phpPgAdmin installations (original or ReimuHakurei fork) for updates.
 - **ping**: Pings a hostname or IP address.
 - **pmwiki_version**: Checks PmWiki installations for updates.
 - **roundcube_version**: Checks RoundCube installations for updates.

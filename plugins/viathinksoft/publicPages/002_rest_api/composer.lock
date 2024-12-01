@@ -8,16 +8,16 @@
     "packages": [
         {
             "name": "swagger-api/swagger-ui",
-            "version": "v5.17.14",
+            "version": "v5.18.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/swagger-api/swagger-ui.git",
-                "reference": "74ed0adebfc9c8dd0de2bf8e81495b022a66c083"
+                "reference": "3c7e281d97fd3e70b25f7ff4a001eabd56e375d7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/swagger-api/swagger-ui/zipball/74ed0adebfc9c8dd0de2bf8e81495b022a66c083",
-                "reference": "74ed0adebfc9c8dd0de2bf8e81495b022a66c083",
+                "url": "https://api.github.com/repos/swagger-api/swagger-ui/zipball/3c7e281d97fd3e70b25f7ff4a001eabd56e375d7",
+                "reference": "3c7e281d97fd3e70b25f7ff4a001eabd56e375d7",
                 "shasum": ""
             },
             "type": "library",
@@ -63,9 +63,9 @@
             ],
             "support": {
                 "issues": "https://github.com/swagger-api/swagger-ui/issues",
-                "source": "https://github.com/swagger-api/swagger-ui/tree/v5.17.14"
+                "source": "https://github.com/swagger-api/swagger-ui/tree/v5.18.2"
             },
-            "time": "2024-05-28T05:24:40+00:00"
+            "time": "2024-11-07T14:02:16+00:00"
         }
     ],
     "packages-dev": [],
