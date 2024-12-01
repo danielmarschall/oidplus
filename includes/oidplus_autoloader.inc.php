@@ -55,7 +55,7 @@ spl_autoload_register(function ($fq_class_name) {
 
 	// --- Loading classes of plugins for OIDplus >= 2.0.2
 
-	static $oidplus_autoloader_folders = null;
+	static $oidplus_autoloader_folders = null; // [NoOidplusContextOk]
 	if (is_null($oidplus_autoloader_folders)) {
 		// Populate the class map
 		$oidplus_autoloader_folders = [];

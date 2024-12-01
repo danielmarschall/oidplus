@@ -55,7 +55,7 @@ class OIDplusDatabaseConnectionODBC extends OIDplusDatabaseConnection {
 		if ($mode === 'on') return true;
 		if ($mode === 'off') return false;
 
-		static $res = null;
+		$res = &OIDplus::getCurrentContext()->pluginData('1.3.6.1.4.1.37476.2.5.2.4.5.2', 'RealPrepareAvailable', false);
 		if (is_null($res)) {
 			$sql = 'select name from ###config where name = ?';
 			$sql = str_replace('###', OIDplus::baseConfig()->getValue('TABLENAME_PREFIX', ''), $sql);

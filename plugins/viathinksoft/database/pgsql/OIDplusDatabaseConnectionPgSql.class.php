@@ -67,7 +67,7 @@ class OIDplusDatabaseConnectionPgSql extends OIDplusDatabaseConnection {
 		} else {
 			// convert ? ? ? to $1 $2 $3
 			$sql = preg_replace_callback('@\\?@', function($found) {
-				static $i = 0;
+				static $i = 0; // [NoOidplusContextOk]
 				$i++;
 				return '$'.$i;
 			}, $sql, count($prepared_args));

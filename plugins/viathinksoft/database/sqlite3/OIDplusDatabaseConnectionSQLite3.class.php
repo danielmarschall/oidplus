@@ -70,7 +70,7 @@ class OIDplusDatabaseConnectionSQLite3 extends OIDplusDatabaseConnection {
 		} else {
 			// convert ? ? ? to :param1 :param2 :param3 ...
 			$sql = preg_replace_callback('@\\?@', function($found) {
-				static $i = 0;
+				static $i = 0; // [NoOidplusContextOk]
 				$i++;
 				return ':param'.$i;
 			}, $sql, count($prepared_args), $count);

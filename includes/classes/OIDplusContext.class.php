@@ -23,49 +23,80 @@ namespace ViaThinkSoft\OIDplus\Core;
 \defined('INSIDE_OIDPLUS') or die;
 // phpcs:enable PSR1.Files.SideEffects
 
-// You should regularly run this command inside includes/classes/ to see if there are static variables which
-// need to be put into the context:   grep -r "static " | grep -v "static function"
+// You should regulary run this command to see if there are static variables which
+// need to be put into the OIDplusContext:
+// grep -r "static " | grep -v "static function" | grep -v "static abstract function" | grep "\.php:" | grep -v "vendor/" | grep -v "NoOidplusContextOk"
+
 class OIDplusContext extends OIDplusBaseClass {
+
+	/**
+	 * In this array, plugins can put static data which they want to preserve during the session and reset on init(), e.g. with cron.sh on multiple tenants
+	 * It is recommended to include OIDs in order to avoid name conflicts!
+	 * Example usage: `$res = &OIDplus::getCurrentContext()->pluginData('1.3.6.1.4.1.37476.2.5.2.4.5.2', 'RealPrepareAvailable', false);`
+	 */
+	public function &pluginData($pluginOid, $attribName, $default) {
+		$id = $pluginOid.':'.$attribName;
+		if (!isset($this->pluginData[$id])) $this->pluginData[$id] = $default;
+		return $this->pluginData[$id];
+	}
+
+	/**
+	 * @var array
+	 */
+	private array $pluginData = array();
+
+	// The following fields are static data by the core classes. Plugins SHALL NOT modify them!
+
 	/**
 	 * @var OIDplusPagePlugin[]
 	 */
 	public array $pagePlugins = array();
+
 	/**
 	 * @var OIDplusAuthPlugin[]
 	 */
 	public array $authPlugins = array();
+
 	/**
 	 * @var OIDplusLoggerPlugin[]
 	 */
 	public array $loggerPlugins = array();
+
 	/**
 	 * @var OIDplusObjectTypePlugin[]
 	 */
 	public array $objectTypePlugins = array();
+
 	/**
 	 * @var string[]|OIDplusObject[] Classnames of OIDplusObject classes
 	 */
 	public array $enabledObjectTypes = array();
+
 	/**
 	 * @var string[]|OIDplusObject[] Classnames of OIDplusObject classes
 	 */
 	public array $disabledObjectTypes = array();
+
 	/**
 	 * @var OIDplusDatabasePlugin[]
 	 */
 	public array $dbPlugins = array();
+
 	/**
 	 * @var OIDplusCaptchaPlugin[]
 	 */
 	public array $captchaPlugins = array();
+
 	/**
 	 * @var OIDplusSqlSlangPlugin[]
 	 */
 	public array $sqlSlangPlugins = array();
+
 	/**
 	 * @var OIDplusLanguagePlugin[]
 	 */
 	public array $languagePlugins = array();
+
 	/**
 	 * @var OIDplusDesignPlugin[]
 	 */
@@ -160,11 +191,6 @@ class OIDplusContext extends OIDplusBaseClass {
 	 * @var array
 	 */
 	public array $translationArray = array();
-
-	/**
-	 * @var bool
-	 */
-	public bool $getDefaultLang_thrownOnce = false; // avoid endless loop inside OIDplusConfigInitializationException
 
 	/**
 	 * @var ?array

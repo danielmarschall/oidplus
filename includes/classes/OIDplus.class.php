@@ -2272,11 +2272,13 @@ class OIDplus extends OIDplusBaseClass {
 		$lang = self::baseConfig()->getValue('DEFAULT_LANGUAGE', 'enus');
 
 		if (!in_array($lang,self::getAvailableLangs())) {
-			if (!self::getCurrentContext()->getDefaultLang_thrownOnce) {
-				self::getCurrentContext()->getDefaultLang_thrownOnce = true;
+			static $anti_deadlock = false; // [NoOidplusContextOk] avoid endless loop inside OIDplusConfigInitializationException. this does not need to be in OIDplus::getCurrentContext(), because it is only used here and does not store information acreoss multiple parts of the program
+			if ($anti_deadlock) return 'enus';
+			$anti_deadlock = true;
+			try {
 				throw new OIDplusConfigInitializationException(_L('DEFAULT_LANGUAGE points to an invalid language plugin. (Consider setting to "enus" = "English USA".)'));
-			} else {
-				return 'enus';
+			} finally {
+				$anti_deadlock = false;
 			}
 		}
 

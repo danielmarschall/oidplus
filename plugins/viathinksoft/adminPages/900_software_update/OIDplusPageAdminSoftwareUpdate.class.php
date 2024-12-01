@@ -428,7 +428,7 @@ class OIDplusPageAdminSoftwareUpdate extends OIDplusPagePluginAdmin
 	 * @return array|false
 	 */
 	private function changeLogJson() {
-		static $cache = null;
+		$cache = &OIDplus::getCurrentContext()->pluginData('1.3.6.1.4.1.37476.2.5.2.4.3.900', 'ChangeLogJson', null);
 		if (!is_null($cache)) return $cache;
 
 		$cache_file = OIDplus::getUserDataDir("cache").'master_changelog.json';

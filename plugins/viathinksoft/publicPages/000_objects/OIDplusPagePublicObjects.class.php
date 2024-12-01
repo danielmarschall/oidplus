@@ -1049,7 +1049,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 				$ra_email = $ra ? $ra->raEMail() : '';
 				$supra .= '<tr><td width="50%">'._L('Registration Authority').'</td><td><input type="text" name="ra_email" id="suprabox_ra" value="'.htmlentities($ra_email).'" style="width:100%"></td></tr>';
 				if ($parentNS == 'oid') {
-					$accepts_asn1 = ($parentNS == 'oid') && (!in_array($objParent->nodeId(), self::$no_asn1)) && (!is_uuid_oid($objParent->nodeId(),true));
+					$accepts_asn1 = ($parentNS == 'oid') && (!in_array($objParent->nodeId(), self::NO_ASN1)) && (!is_uuid_oid($objParent->nodeId(),true));
 					if ($accepts_asn1) {
 						$asn1ids = array();
 						$res2 = OIDplus::db()->query("select name from ###asn1id where oid = ? order by lfd", array($obj->nodeId(true)));
@@ -1058,7 +1058,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 						}
 						$supra .= '<tr><td width="50%">'._L('ASN.1 IDs (comma sep.)').'</td><td><input type="text" name="asn1ids" id="suprabox_asn1" value="'.htmlentities(implode(', ',$asn1ids)).'" style="width:100%"></td></tr>';
 					}
-					$accepts_iri = ($parentNS == 'oid') && (!in_array($objParent->nodeId(), self::$no_iri)) && (!is_uuid_oid($objParent->nodeId(),true));
+					$accepts_iri = ($parentNS == 'oid') && (!in_array($objParent->nodeId(), self::NO_IRI)) && (!is_uuid_oid($objParent->nodeId(),true));
 					if ($accepts_iri) {
 						$iris = array();
 						$res2 = OIDplus::db()->query("select name from ###iri where oid = ? order by lfd", array($obj->nodeId(true)));
@@ -1442,10 +1442,11 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	/**
 	 * @var int
 	 */
-	private static $crudCounter = 0;
+	private static $crudCounter = 0; // [NoOidplusContextOk] doesn't need to be in OIDplusContext, because there is no issue if it gets increased across context changes
 
-	// http://oid-info.com/cgi-bin/display?a=list-by-category&category=Not%20allocating%20identifiers (15 Nov 2023)
-	private static $no_asn1 = array(
+	// http://oid-info.com/cgi-bin/display?a=list-by-category&category=Not%20allocating%20identifiers (01 Dec 2024)
+	private const NO_ASN1 = array(
+			'oid:0.2',
 			'oid:0.2.228',
 			'oid:1.3.6.1.4.1',
 			'oid:1.3.6.1.4.1.37476.9000',
@@ -1461,8 +1462,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			//'oid:1.3.6.1.4.1.54392.3', // Another UUID-to-OID method
 		);
 
-	// http://oid-info.com/cgi-bin/display?a=list-by-category&category=Not%20allocating%20Unicode%20labels (15 Nov 2023)
-	private static $no_iri = array(
+	// http://oid-info.com/cgi-bin/display?a=list-by-category&category=Not%20allocating%20Unicode%20labels (01 Dec 2024)
+	private const NO_IRI = array(
+			'oid:0.2',
 			'oid:0.2.228',
 			'oid:1.2.36',
 			'oid:1.2.250.1',
@@ -1491,8 +1493,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		if (!$objParent) return '';
 		$parentNS = $objParent::ns();
 
-		$accepts_asn1 = ($parentNS == 'oid') && (!in_array($objParent->nodeId(), self::$no_asn1)) && (!is_uuid_oid($objParent->nodeId(),true));
-		$accepts_iri  = ($parentNS == 'oid') && (!in_array($objParent->nodeId(), self::$no_iri)) && (!is_uuid_oid($objParent->nodeId(),true));
+		$accepts_asn1 = ($parentNS == 'oid') && (!in_array($objParent->nodeId(), self::NO_ASN1)) && (!is_uuid_oid($objParent->nodeId(),true));
+		$accepts_iri  = ($parentNS == 'oid') && (!in_array($objParent->nodeId(), self::NO_IRI)) && (!is_uuid_oid($objParent->nodeId(),true));
 
 		$result = OIDplus::db()->query("select o.*, r.ra_name " .
 		                               "from ###objects o " .
@@ -1697,9 +1699,9 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 * 'legacyoutput' added 24 September 2021, because it is declared as deprecated
 	 * 'spellchecker' added 6 October 2021, because it is declared as deprecated and marked for removal in TinyMCE 6.0
 	 * 'imagetools' and 'toc' added 23 February 2022, because they are declared as deprecated and marked for removal in TinyMCE 6.0 ("moving to premium")
-	 * @var string[]
+	 * @const string[]
 	 */
-	public static $exclude_tinymce_plugins = array('fullpage', 'bbcode', 'quickbars', 'colorpicker', 'textcolor', 'contextmenu', 'importcss', 'legacyoutput', 'spellchecker', 'imagetools', 'toc');
+	private const EXCLUDE_TINYMCE_PLUGINS = array('fullpage', 'bbcode', 'quickbars', 'colorpicker', 'textcolor', 'contextmenu', 'importcss', 'legacyoutput', 'spellchecker', 'imagetools', 'toc');
 
 	/**
 	 * @param string $name
@@ -1714,7 +1716,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			$mce_plugins[] = basename($m);
 		}
 
-		foreach (self::$exclude_tinymce_plugins as $exclude) {
+		foreach (self::EXCLUDE_TINYMCE_PLUGINS as $exclude) {
 			$index = array_search($exclude, $mce_plugins);
 			if ($index !== false) unset($mce_plugins[$index]);
 		}

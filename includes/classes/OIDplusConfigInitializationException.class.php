@@ -29,41 +29,47 @@ class OIDplusConfigInitializationException extends OIDplusHtmlException {
 	 * @param string $message
 	 */
 	public function __construct(string $message) {
-		static $deadlock_fix = false; // this does not need to be in OIDplus::getCurrentContext(), because it is only used here and does not store information acreoss multiple parts of the program
-		if ($deadlock_fix) return; // deadlock can happen if calls to webpath(), getUserDatadir(), etc. fail
-		$deadlock_fix = true;
-
-		try {
-			$is_tenant = OIDplus::isTenant();
-		} catch (\Throwable $e) {
-			$is_tenant = false; // just assume
+		static $anti_deadlock = false; // [NoOidplusContextOk] this does not need to be in OIDplus::getCurrentContext(), because it is only used here and does not store information acreoss multiple parts of the program
+		if ($anti_deadlock) {
+			// deadlock can happen if calls to webpath(), getUserDatadir(), etc. fail
+			// so, make a minimal construction
+			\Exception::__construct($message);
+			return;
 		}
-
+		$anti_deadlock = true;
 		try {
-			$baseconfig_file = OIDplus::getUserDataDir("baseconfig").'config.inc.php';
-			$baseconfig_file = substr($baseconfig_file, strlen(OIDplus::localpath(NULL))); // "censor" the system local path
-		} catch (\Throwable $e) {
-			$baseconfig_file = $is_tenant ? 'userdata/tenant/.../baseconfig/config.inc.php' : 'userdata/baseconfig/config.inc.php';
-		}
-
-		try {
-			$title = _L('OIDplus initialization error');
-			$message_html = '<p>'.$message.'</p>';
-			$message_html .= '<p>'._L('Please check the file %1', '<b>'.htmlentities($baseconfig_file).'</b>');
-			if (is_dir(__DIR__ . '/../../setup')) {
-				$message_html .= ' ' . _L('or run <a href="%1">setup</a> again', OIDplus::webpath(null, OIDplus::PATH_RELATIVE) . 'setup/');
+			try {
+				$is_tenant = OIDplus::isTenant();
+			} catch (\Throwable $e) {
+				$is_tenant = false; // just assume
 			}
-			$message_html .= '</p>';
-		} catch (\Throwable $e) {
-			// In case something fails very hard (i.e. the translation), then we still must show the Exception somehow!
-			// We intentionally catch Exception and Error
-			$title = 'OIDplus initialization error';
-			$message_html = '<p>'.$message.'</p><p>Please check the file <b>'.htmlentities($baseconfig_file).'</b> or run <b>setup/</b> again</p>';
+
+			try {
+				$baseconfig_file = OIDplus::getUserDataDir("baseconfig").'config.inc.php';
+				$baseconfig_file = substr($baseconfig_file, strlen(OIDplus::localpath(NULL))); // "censor" the system local path
+			} catch (\Throwable $e) {
+				$baseconfig_file = $is_tenant ? 'userdata/tenant/.../baseconfig/config.inc.php' : 'userdata/baseconfig/config.inc.php';
+			}
+
+			try {
+				$title = _L('OIDplus initialization error');
+				$message_html = '<p>'.$message.'</p>';
+				$message_html .= '<p>'._L('Please check the file %1', '<b>'.htmlentities($baseconfig_file).'</b>');
+				if (is_dir(__DIR__ . '/../../setup')) {
+					$message_html .= ' ' . _L('or run <a href="%1">setup</a> again', OIDplus::webpath(null, OIDplus::PATH_RELATIVE) . 'setup/');
+				}
+				$message_html .= '</p>';
+			} catch (\Throwable $e) {
+				// In case something fails very hard (i.e. the translation), then we still must show the Exception somehow!
+				// We intentionally catch Exception and Error
+				$title = 'OIDplus initialization error';
+				$message_html = '<p>'.$message.'</p><p>Please check the file <b>'.htmlentities($baseconfig_file).'</b> or run <b>setup/</b> again</p>';
+			}
+
+			parent::__construct($message_html, $title, 500);
+		} finally {
+			$anti_deadlock = false;
 		}
-
-		parent::__construct($message_html, $title, 500);
-
-		$deadlock_fix = false;
 	}
 
 }

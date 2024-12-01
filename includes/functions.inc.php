@@ -235,9 +235,6 @@ function my_vsprintf(string $str, array $args): string {
  * @throws \ViaThinkSoft\OIDplus\Core\OIDplusException
  */
 function _L(string $str, ...$sprintfArgs): string {
-	static $translation_array = array();
-	static $translation_loaded = null;
-
 	$str = trim($str);
 
 	if (!class_exists(OIDplus::class)) {
