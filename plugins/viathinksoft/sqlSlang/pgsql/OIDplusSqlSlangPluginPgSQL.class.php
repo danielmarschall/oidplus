@@ -94,7 +94,18 @@ class OIDplusSqlSlangPluginPgSQL extends OIDplusSqlSlangPlugin {
 	 * @return string
 	 */
 	public function setupCreateDbIfNotExists(string $database): string {
-		return "-- CREATE DATABASE $database;\n\n";
+		return "--CREATE ROLE your_username WITH LOGIN PASSWORD 'your_password';\n".
+		       "\n".
+		       "--CREATE DATABASE $database WITH\n".
+		       "--    OWNER = your_username\n".
+		       "--    TEMPLATE = template0\n".
+		       "--    ENCODING 'UTF8'\n".
+		       "--    TABLESPACE = pg_default\n".
+		       "--    LC_COLLATE = 'C'\n".
+		       "--    LC_CTYPE = 'C'\n".
+		       "--    CONNECTION LIMIT = -1;\n".
+		       "\n".
+		       "--GRANT ALL PRIVILEGES ON DATABASE $database TO your_username;\n\n";
 	}
 
 	/**

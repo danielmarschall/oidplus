@@ -200,6 +200,11 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 			throw new OIDplusConfigInitializationException(trim(_L('Connection to the database failed!').' '.$message));
 		}
 
+		if (str_starts_with($dsn,'odbc:')) {
+			// Workaround for SQLSRV32.dll driver bug, see https://github.com/php/php-src/issues/16901#issuecomment-2495423968
+			$this->conn->setAttribute(\PDO::ODBC_ATTR_ASSUME_UTF8, true);
+		}
+
 		$this->last_error = null;
 
 		try {
