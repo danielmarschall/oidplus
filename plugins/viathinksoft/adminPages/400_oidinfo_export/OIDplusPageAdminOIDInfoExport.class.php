@@ -727,14 +727,6 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 		$out_type = null;
 		$out_content = '';
 
-		// This file contains class \OIDInfoAPI.
-		// We cannot include this in init(), because the init
-		// of the registration plugin (OIDplusPageAdminRegistration) uses
-		// OIDplusPageAdminOIDInfoExport::outputXML() before
-		// OIDplusPageAdminOIDInfoExport::init() ,
-		// because OIDplusPageAdminRegistration::init() comes first sometimes.
-		require_once __DIR__ . '/oidinfo_api.inc.php';
-
 		$oa = new \OIDInfoAPI();
 		if ($only_non_existing) {
 			if (!function_exists('socket_create')) {
@@ -924,6 +916,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 		}
 
 		$out_content .= $oa->xmlAddFooter();
+		$oa = null;
 
 		$out_type = 'text/xml';
 		return array($out_content, $out_type);

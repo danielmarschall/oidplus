@@ -1,0 +1,22 @@
+{
+	"name": "danielmarschall/oidinfo_api",
+	"description": "OID-Info.com API for PHP",
+	"version": "1.0",
+	"type": "library",
+	"homepage": "https://www.viathinksoft.com/projects/oidinfo_api",
+	"authors": [
+		{
+			"name": "Daniel Marschall",
+			"email": "info@daniel-marschall.de",
+			"homepage": "https://www.daniel-marschall.de/"
+		}
+	],
+	"license": [
+		"Apache-2.0"
+	],
+	"prefer-dist": true,
+	"minimum-stability": "dev",
+	"require": {
+		"php": ">=7.4"
+	}
+}

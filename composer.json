@@ -122,7 +122,8 @@
 		"script47/bs5-utils": "*",
 		"danielmarschall/glip": "*",
 		"ext-json": "*",
-		"spomky-labs/php-punycode": "dev-master"
+		"spomky-labs/php-punycode": "dev-master",
+		"danielmarschall/oidinfo_api": "dev-master"
 	},
 	"config": {
 		"secure-http": false,

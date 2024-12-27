@@ -766,6 +766,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Attention! This OID is probably illegal: %1
+		]]></source>
+		<target><![CDATA[
+		Achtung! Diese OID is möglicherweise unzulässig: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Attention: This user does not have a password because they log in using LDAP or Google OAuth etc.
 		]]></source>
 		<target><![CDATA[
@@ -5394,6 +5402,14 @@
 		]]></source>
 		<target><![CDATA[
 		Objekt-Typen
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		Object:
+		]]></source>
+		<target><![CDATA[
+		Objekt:
 		]]></target>
 	</message>
 	<message>

@@ -65,8 +65,9 @@ unset($missing_dependencies);
 // Now we can continue!
 
 require_once __DIR__ . '/functions.inc.php';
-require_once __DIR__ . '/../vendor/danielmarschall/php_utils/oid_utils.inc.php';
-require_once __DIR__ . '/../vendor/danielmarschall/php_utils/xml_utils.inc.php';
+require_once __DIR__ . '/../vendor/danielmarschall/oidinfo_api/oidinfo_api.inc.phps';
+//require_once __DIR__ . '/../vendor/danielmarschall/php_utils/oid_utils.inc.php'; // will use the one in oidinfo_api
+//require_once __DIR__ . '/../vendor/danielmarschall/php_utils/xml_utils.inc.php'; // will use the one in oidinfo_api
 require_once __DIR__ . '/../vendor/danielmarschall/uuid_mac_utils/includes/uuid_utils.inc.php';
 require_once __DIR__ . '/../vendor/danielmarschall/uuid_mac_utils/includes/mac_utils.inc.php';
 require_once __DIR__ . '/../vendor/danielmarschall/php_utils/color_utils.inc.php';

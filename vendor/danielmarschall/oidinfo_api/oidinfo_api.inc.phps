@@ -3,7 +3,7 @@
 /*
  * OID-Info.com API for PHP
  * Copyright 2019-2024 Daniel Marschall, ViaThinkSoft
- * Version 2024-11-22
+ * Version 2024-12-27
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -746,12 +746,13 @@ class OIDInfoAPI {
 			// Remove comments
 			$ary  = explode('--', $line);
 			$rule = trim($ary[0]);
+			$explanation = strip_tags(trim($ary[1]??''));
 
-			if ($rule !== '') $this->addIllegalityRule($rule);
+			if ($rule !== '') $this->addIllegalityRule($rule, $explanation);
 		}
 	}
 
-	public function addIllegalityRule($rule) {
+	public function addIllegalityRule($rule, $explanation='') {
 		$test = $rule;
 		$test = preg_replace('@\\.\\(!\\d+\\)@ismU', '.0', $test); // added in ver 2
 		$test = preg_replace('@\\.\\(\\d+\\+\\)@ismU', '.0', $test);
@@ -763,7 +764,7 @@ class OIDInfoAPI {
 			throw new OIDInfoException("Illegal illegality rule '$rule'.");
 		}
 
-		$this->illegality_rules[] = $rule;
+		$this->illegality_rules[] = array($rule, $explanation);
 	}
 
 	private static function bigint_cmp($a, $b) {
@@ -780,7 +781,7 @@ class OIDInfoAPI {
 		return 0;
 	}
 
-	public function illegalOID($oid, &$illegal_root='') {
+	public function illegalOID($oid, &$illegal_root='', &$explanation='') {
 		$bak = $oid;
 		$oid = self::trySanitizeOID($oid);
 		if ($oid === false) {
@@ -790,7 +791,7 @@ class OIDInfoAPI {
 
 		$rules = $this->illegality_rules;
 
-		foreach ($rules as $rule) {
+		foreach ($rules as list($rule, $expl)) {
 			$rule = str_replace(array('(', ')'), '', $rule);
 
 			$oarr = explode('.', $oid);
@@ -846,13 +847,15 @@ class OIDInfoAPI {
 			}
 
 			if ($rulefit && ($vararcs == $varsfit)) {
-				// echo "$oid is illegal because of rule $rule\n";
+				// echo "$oid is illegal because of rule $rule ($explanation)\n";
 				$illegal_root = implode('.', $illrootary);
+				$explanation = $expl;
 				return true; // is illegal
 			}
 		}
 
 		$illegal_root = '';
+		$explanation = '';
 		return false; // not illegal
 	}
 

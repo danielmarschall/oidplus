@@ -256,6 +256,12 @@ class OIDplusOid extends OIDplusObject {
 
 			$content = $tech_info_html;
 
+			$oa = new \OIDInfoAPI();
+			if ($oa->illegalOid($this->oid, $illegal_root, $explanation)) {
+				$content .= '<p><font color="red" size="+1">'._L('Attention! This OID is probably illegal: %1', $explanation).'</font></p>';
+			}
+			$oa = null;
+
 			if ($this->userHasParentalWriteRights()) {
 				$content .= '<h2>'._L('Superior RA Allocation Info').'</h2>%%SUPRA%%';
 			}
