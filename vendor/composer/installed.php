@@ -65,6 +65,17 @@
             ),
             'dev_requirement' => false,
         ),
+        'danielmarschall/oidinfo_api' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '9567d2a12a6e69d088ad1526fe7d53de87753f20',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../danielmarschall/oidinfo_api',
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
+            'dev_requirement' => false,
+        ),
         'danielmarschall/oidplus' => array(
             'pretty_version' => '2.0',
             'version' => '2.0.0.0',
@@ -184,7 +195,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => 'ad709d815fdada7ec4e488ecd480c450099cf1d6',
+            'reference' => '709ec107af3cb2f385b9617be72af8cf62441d02',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),
@@ -222,7 +233,7 @@
         'symfony/polyfill-mbstring' => array(
             'pretty_version' => '1.x-dev',
             'version' => '1.9999999.9999999.9999999-dev',
-            'reference' => '2369cb908b33d7b7518cce042615de430142497f',
+            'reference' => '6d857f4d76bd4b343eac26d6b539585d2bc56493',
             'type' => 'library',
             'install_path' => __DIR__ . '/../symfony/polyfill-mbstring',
             'aliases' => array(),
@@ -231,7 +242,7 @@
         'tinymce/tinymce' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '3ba28fd6a4037849dbdaf7f6341493b23db9e13c',
+            'reference' => '0c4bc43d572ea9673468bf12cc30e8fb556550f4',
             'type' => 'component',
             'install_path' => __DIR__ . '/../tinymce/tinymce',
             'aliases' => array(
@@ -242,7 +253,7 @@
         'twbs/bootstrap' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'ec96eacd0e6f297a64ee058b22ce9f567c0860e3',
+            'reference' => '0cbfe13adf669ad39ae9d8e873c2ad59befd3a3a',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twbs/bootstrap',
             'aliases' => array(

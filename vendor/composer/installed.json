@@ -20,15 +20,15 @@
             "type": "component",
             "extra": {
                 "component": {
-                    "scripts": [
-                        "jquery.js"
-                    ],
                     "files": [
                         "jquery.min.js",
                         "jquery.min.map",
                         "jquery.slim.js",
                         "jquery.slim.min.js",
                         "jquery.slim.min.map"
+                    ],
+                    "scripts": [
+                        "jquery.js"
                     ]
                 }
             },
@@ -77,20 +77,20 @@
             "extra": {
                 "component": {
                     "name": "jquery-ui",
-                    "scripts": [
-                        "jquery-ui.js"
-                    ],
-                    "files": [
-                        "ui/**",
-                        "themes/**",
-                        "jquery-ui.min.js"
-                    ],
                     "shim": {
                         "deps": [
                             "jquery"
                         ],
                         "exports": "jQuery"
-                    }
+                    },
+                    "files": [
+                        "ui/**",
+                        "themes/**",
+                        "jquery-ui.min.js"
+                    ],
+                    "scripts": [
+                        "jquery-ui.js"
+                    ]
                 }
             },
             "installation-source": "dist",
@@ -289,6 +289,47 @@
                 "source": "https://github.com/danielmarschall/oidconverter/tree/master"
             },
             "install-path": "../danielmarschall/oidconverter"
+        },
+        {
+            "name": "danielmarschall/oidinfo_api",
+            "version": "dev-master",
+            "version_normalized": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/danielmarschall/oidinfo_api.git",
+                "reference": "9567d2a12a6e69d088ad1526fe7d53de87753f20"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/danielmarschall/oidinfo_api/zipball/9567d2a12a6e69d088ad1526fe7d53de87753f20",
+                "reference": "9567d2a12a6e69d088ad1526fe7d53de87753f20",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.4"
+            },
+            "time": "2024-12-27T23:23:41+00:00",
+            "default-branch": true,
+            "type": "library",
+            "installation-source": "dist",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Daniel Marschall",
+                    "email": "info@daniel-marschall.de",
+                    "homepage": "https://www.daniel-marschall.de/"
+                }
+            ],
+            "description": "OID-Info.com API for PHP",
+            "homepage": "https://www.viathinksoft.com/projects/oidinfo_api",
+            "support": {
+                "issues": "https://github.com/danielmarschall/oidinfo_api/issues",
+                "source": "https://github.com/danielmarschall/oidinfo_api/tree/master"
+            },
+            "install-path": "../danielmarschall/oidinfo_api"
         },
         {
             "name": "danielmarschall/php_utils",
@@ -791,12 +832,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "ad709d815fdada7ec4e488ecd480c450099cf1d6"
+                "reference": "709ec107af3cb2f385b9617be72af8cf62441d02"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/ad709d815fdada7ec4e488ecd480c450099cf1d6",
-                "reference": "ad709d815fdada7ec4e488ecd480c450099cf1d6",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/709ec107af3cb2f385b9617be72af8cf62441d02",
+                "reference": "709ec107af3cb2f385b9617be72af8cf62441d02",
                 "shasum": ""
             },
             "require": {
@@ -814,7 +855,7 @@
                 "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
                 "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
             },
-            "time": "2024-11-29T06:44:25+00:00",
+            "time": "2024-12-14T21:12:59+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -997,15 +1038,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "2369cb908b33d7b7518cce042615de430142497f"
+                "reference": "6d857f4d76bd4b343eac26d6b539585d2bc56493"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/2369cb908b33d7b7518cce042615de430142497f",
-                "reference": "2369cb908b33d7b7518cce042615de430142497f",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/6d857f4d76bd4b343eac26d6b539585d2bc56493",
+                "reference": "6d857f4d76bd4b343eac26d6b539585d2bc56493",
                 "shasum": ""
             },
             "require": {
+                "ext-iconv": "*",
                 "php": ">=7.2"
             },
             "provide": {
@@ -1014,13 +1056,13 @@
             "suggest": {
                 "ext-mbstring": "For best performance"
             },
-            "time": "2024-09-10T14:38:51+00:00",
+            "time": "2024-12-23T08:48:59+00:00",
             "default-branch": true,
             "type": "library",
             "extra": {
                 "thanks": {
-                    "name": "symfony/polyfill",
-                    "url": "https://github.com/symfony/polyfill"
+                    "url": "https://github.com/symfony/polyfill",
+                    "name": "symfony/polyfill"
                 }
             },
             "installation-source": "dist",
@@ -1081,26 +1123,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "3ba28fd6a4037849dbdaf7f6341493b23db9e13c"
+                "reference": "0c4bc43d572ea9673468bf12cc30e8fb556550f4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/3ba28fd6a4037849dbdaf7f6341493b23db9e13c",
-                "reference": "3ba28fd6a4037849dbdaf7f6341493b23db9e13c",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/0c4bc43d572ea9673468bf12cc30e8fb556550f4",
+                "reference": "0c4bc43d572ea9673468bf12cc30e8fb556550f4",
                 "shasum": ""
             },
-            "time": "2024-11-13T03:16:27+00:00",
+            "time": "2024-12-11T04:56:37+00:00",
             "default-branch": true,
             "type": "component",
             "extra": {
                 "component": {
-                    "scripts": [
-                        "tinymce.js",
-                        "plugins/*/plugin.js",
-                        "themes/*/theme.js",
-                        "models/*/model.js",
-                        "icons/*/icons.js"
-                    ],
                     "files": [
                         "tinymce.min.js",
                         "plugins/*/plugin.min.js",
@@ -1108,6 +1143,13 @@
                         "models/*/model.min.js",
                         "skins/**",
                         "icons/*/icons.min.js"
+                    ],
+                    "scripts": [
+                        "tinymce.js",
+                        "plugins/*/plugin.js",
+                        "themes/*/theme.js",
+                        "models/*/model.js",
+                        "icons/*/icons.js"
                     ]
                 }
             },
@@ -1133,7 +1175,7 @@
                 "wysiwyg"
             ],
             "support": {
-                "source": "https://github.com/tinymce/tinymce-dist/tree/7.5.1"
+                "source": "https://github.com/tinymce/tinymce-dist/tree/7.6.0"
             },
             "install-path": "../tinymce/tinymce"
         },
@@ -1144,18 +1186,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "ec96eacd0e6f297a64ee058b22ce9f567c0860e3"
+                "reference": "0cbfe13adf669ad39ae9d8e873c2ad59befd3a3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/ec96eacd0e6f297a64ee058b22ce9f567c0860e3",
-                "reference": "ec96eacd0e6f297a64ee058b22ce9f567c0860e3",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/0cbfe13adf669ad39ae9d8e873c2ad59befd3a3a",
+                "reference": "0cbfe13adf669ad39ae9d8e873c2ad59befd3a3a",
                 "shasum": ""
             },
             "replace": {
                 "twitter/bootstrap": "self.version"
             },
-            "time": "2024-11-22T09:54:10+00:00",
+            "time": "2024-12-19T07:23:57+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -1257,23 +1299,23 @@
             "type": "component",
             "extra": {
                 "component": {
-                    "scripts": [
-                        "dist/jstree.js"
-                    ],
-                    "styles": [
-                        "dist/themes/default/style.css"
-                    ],
-                    "images": [
-                        "dist/themes/default/32px.png",
-                        "dist/themes/default/40px.png",
-                        "dist/themes/default/throbber.gif"
-                    ],
                     "files": [
                         "dist/jstree.min.js",
                         "dist/themes/default/style.min.css",
                         "dist/themes/default/32px.png",
                         "dist/themes/default/40px.png",
                         "dist/themes/default/throbber.gif"
+                    ],
+                    "images": [
+                        "dist/themes/default/32px.png",
+                        "dist/themes/default/40px.png",
+                        "dist/themes/default/throbber.gif"
+                    ],
+                    "styles": [
+                        "dist/themes/default/style.css"
+                    ],
+                    "scripts": [
+                        "dist/jstree.js"
                     ]
                 }
             },
