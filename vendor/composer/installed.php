@@ -68,7 +68,7 @@
         'danielmarschall/oidinfo_api' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '9567d2a12a6e69d088ad1526fe7d53de87753f20',
+            'reference' => '7fa7df1606d256cdd43805d93962497911169015',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/oidinfo_api',
             'aliases' => array(

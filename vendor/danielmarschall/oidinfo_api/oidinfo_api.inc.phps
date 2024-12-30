@@ -2,8 +2,8 @@
 
 /*
  * OID-Info.com API for PHP
- * Copyright 2019-2024 Daniel Marschall, ViaThinkSoft
- * Version 2024-12-27
+ * Copyright 2019 - 2024 Daniel Marschall, ViaThinkSoft
+ * Version 2024-12-28
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -744,7 +744,7 @@ class OIDInfoAPI {
 
 		foreach ($lines as $line) {
 			// Remove comments
-			$ary  = explode('--', $line);
+			$ary  = explode('--', $line, 2);
 			$rule = trim($ary[0]);
 			$explanation = strip_tags(trim($ary[1]??''));
 

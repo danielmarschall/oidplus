@@ -297,18 +297,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/oidinfo_api.git",
-                "reference": "9567d2a12a6e69d088ad1526fe7d53de87753f20"
+                "reference": "7fa7df1606d256cdd43805d93962497911169015"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/oidinfo_api/zipball/9567d2a12a6e69d088ad1526fe7d53de87753f20",
-                "reference": "9567d2a12a6e69d088ad1526fe7d53de87753f20",
+                "url": "https://api.github.com/repos/danielmarschall/oidinfo_api/zipball/7fa7df1606d256cdd43805d93962497911169015",
+                "reference": "7fa7df1606d256cdd43805d93962497911169015",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.4"
             },
-            "time": "2024-12-27T23:23:41+00:00",
+            "time": "2024-12-28T14:58:58+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
