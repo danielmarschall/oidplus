@@ -1841,6 +1841,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 		$res->naturalSortByField('id');
 		if ($res->any()) {
 			$is_admin_logged_in = OIDplus::authUtils()->isAdminLoggedIn(); // run just once, for performance
+			$oa = new \OIDInfoAPI();
 			while ($row = $res->fetch_array()) {
 				if (empty($row['title'])) {
 					if ($user === 'admin') {
@@ -1853,12 +1854,28 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 							}
 						}
 					}
-
 					if ($accept) {
 						$notifications[] = new OIDplusNotification('WARN', _L('Object %1 has no title.', '<a '.OIDplus::gui()->link($row['id']).'>'.htmlentities($row['id']).'</a>'));
 					}
 				}
+				$tmp = explode(':',$row['id'],2);
+				if (($tmp[0] == 'oid') && $oa->illegalOid($tmp[1], $illegal_root, $explanation)) {
+					if ($user === 'admin') {
+						$accept = $is_admin_logged_in;
+					} else {
+						$accept = false;
+						if ($obj = OIDplusObject::parse($row['id'])) {
+							if ($obj->userHasWriteRights($user)) {
+								$accept = true;
+							}
+						}
+					}
+					if ($accept) {
+						$notifications[] = new OIDplusNotification('WARN', _L('Attention! This OID is probably illegal: %1', '<a '.OIDplus::gui()->link($row['id']).'>'.htmlentities($row['id']).'</a> ('.$explanation.')'));
+					}
+				}
 			}
+			$oa = null;
 		}
 		return $notifications;
 	}
