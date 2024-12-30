@@ -3,6 +3,17 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.2.13",
+		"date": "2024-12-30 23:15:00 +0100",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"PHP 8.4 Compatibility",
+			"Workaround for bug in OLEDB Generation 1 ODBC driver",
+			"When an OID is illegal, a warning message will be shown",
+			"Added OIDplusContext which ensures that multi-tenancy systems have strictly separated cron jobs"
+		]
+	},
+	{
 		"version": "2.0.2.12",
 		"date": "2024-11-03 19:00:00 +0100",
 		"author": "Daniel Marschall (ViaThinkSoft)",

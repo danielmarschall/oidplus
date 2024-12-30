@@ -718,6 +718,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Attention! This OID is probably illegal: %1
+		]]></source>
+		<target><![CDATA[
+		Achtung! Diese OID is möglicherweise unzulässig: %1
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!<br>It will cause various loss of information, e.g. because Non-OIDs like GUIDs are converted in OIDs and can't be converted back.
 		]]></source>
 		<target><![CDATA[
@@ -762,14 +770,6 @@
 		]]></source>
 		<target><![CDATA[
 		Achtung: Das folgende Verzeichnis ist nicht geschützt: %1 ! Sie müssen Ihren Webserver so konfigurieren, dass dieses Verzeichnis nicht mit dem Web-Browser geöffnet werden kann! (Für Apache, schauen Sie in <i>.htaccess</i>, für Microsoft IIS schauen Sie in <i>web.config</i>, für Nginx schauen Sie in <i>nginx.conf</i>).
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		Attention! This OID is probably illegal: %1
-		]]></source>
-		<target><![CDATA[
-		Achtung! Diese OID is möglicherweise unzulässig: %1
 		]]></target>
 	</message>
 	<message>
