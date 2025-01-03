@@ -1,7 +1,7 @@
 <?php
 
 /*
- * OID-Base.com API for PHP
+ * OID-Info.com API for PHP
  * Copyright 2019 Daniel Marschall, ViaThinkSoft
  * Version 2019-11-01
  *

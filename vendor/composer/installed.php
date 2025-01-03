@@ -68,7 +68,7 @@
         'danielmarschall/oidinfo_api' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '7fa7df1606d256cdd43805d93962497911169015',
+            'reference' => '32b9f0afe2908ac1cdb5d0d09eacbf3290f06ee4',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/oidinfo_api',
             'aliases' => array(
@@ -88,7 +88,7 @@
         'danielmarschall/php_utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '5dce3a6a2b2a6337b7b3806cdac71d53f88c5cad',
+            'reference' => 'ec1d6a44e2b1ad16bf179c2368ce3cfcba25eb79',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/php_utils',
             'aliases' => array(
@@ -253,7 +253,7 @@
         'twbs/bootstrap' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '0cbfe13adf669ad39ae9d8e873c2ad59befd3a3a',
+            'reference' => 'a5d430d526dcb330b3e0f12aa1321cf948d726f1',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twbs/bootstrap',
             'aliases' => array(

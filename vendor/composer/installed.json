@@ -297,18 +297,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/oidinfo_api.git",
-                "reference": "7fa7df1606d256cdd43805d93962497911169015"
+                "reference": "32b9f0afe2908ac1cdb5d0d09eacbf3290f06ee4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/oidinfo_api/zipball/7fa7df1606d256cdd43805d93962497911169015",
-                "reference": "7fa7df1606d256cdd43805d93962497911169015",
+                "url": "https://api.github.com/repos/danielmarschall/oidinfo_api/zipball/32b9f0afe2908ac1cdb5d0d09eacbf3290f06ee4",
+                "reference": "32b9f0afe2908ac1cdb5d0d09eacbf3290f06ee4",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.4"
             },
-            "time": "2024-12-28T14:58:58+00:00",
+            "time": "2025-01-03T15:03:04+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -338,19 +338,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/php_utils.git",
-                "reference": "5dce3a6a2b2a6337b7b3806cdac71d53f88c5cad"
+                "reference": "ec1d6a44e2b1ad16bf179c2368ce3cfcba25eb79"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/5dce3a6a2b2a6337b7b3806cdac71d53f88c5cad",
-                "reference": "5dce3a6a2b2a6337b7b3806cdac71d53f88c5cad",
+                "url": "https://api.github.com/repos/danielmarschall/php_utils/zipball/ec1d6a44e2b1ad16bf179c2368ce3cfcba25eb79",
+                "reference": "ec1d6a44e2b1ad16bf179c2368ce3cfcba25eb79",
                 "shasum": ""
             },
             "require": {
                 "ext-zlib": "*",
                 "php": ">=7.0"
             },
-            "time": "2024-09-04T19:42:48+00:00",
+            "time": "2025-01-03T11:49:12+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -1186,18 +1186,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "0cbfe13adf669ad39ae9d8e873c2ad59befd3a3a"
+                "reference": "a5d430d526dcb330b3e0f12aa1321cf948d726f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/0cbfe13adf669ad39ae9d8e873c2ad59befd3a3a",
-                "reference": "0cbfe13adf669ad39ae9d8e873c2ad59befd3a3a",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/a5d430d526dcb330b3e0f12aa1321cf948d726f1",
+                "reference": "a5d430d526dcb330b3e0f12aa1321cf948d726f1",
                 "shasum": ""
             },
             "replace": {
                 "twitter/bootstrap": "self.version"
             },
-            "time": "2024-12-19T07:23:57+00:00",
+            "time": "2024-12-31T08:08:59+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
