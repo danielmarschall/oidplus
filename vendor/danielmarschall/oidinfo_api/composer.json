@@ -1,6 +1,6 @@
 {
 	"name": "danielmarschall/oidinfo_api",
-	"description": "OID-Info.com API for PHP",
+	"description": "OID-Base.com API for PHP",
 	"version": "1.0",
 	"type": "library",
 	"homepage": "https://www.viathinksoft.com/projects/oidinfo_api",

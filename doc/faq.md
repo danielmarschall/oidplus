@@ -13,7 +13,7 @@ OID stands for Object Identifier, the main purpose of OIDplus. The "plus" stands
 
 ## Where can I find information about Object Identifiers?
 
-You can find a lot of information about OIDs here: www.oid-info.com
+You can find a lot of information about OIDs here: www.oid-base.com
 
 ## What are Information Objects?
 

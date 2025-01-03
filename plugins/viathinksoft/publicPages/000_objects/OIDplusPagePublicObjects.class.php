@@ -1444,7 +1444,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 */
 	private static $crudCounter = 0; // [NoOidplusContextOk] doesn't need to be in OIDplusContext, because there is no issue if it gets increased across context changes
 
-	// http://oid-info.com/cgi-bin/display?a=list-by-category&category=Not%20allocating%20identifiers (01 Dec 2024)
+	// https://www.oid-base.com/cgi-bin/display?a=list-by-category&category=Not%20allocating%20identifiers (01 Dec 2024)
 	private const NO_ASN1 = array(
 			'oid:0.2',
 			'oid:0.2.228',
@@ -1462,7 +1462,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			//'oid:1.3.6.1.4.1.54392.3', // Another UUID-to-OID method
 		);
 
-	// http://oid-info.com/cgi-bin/display?a=list-by-category&category=Not%20allocating%20Unicode%20labels (01 Dec 2024)
+	// https://www.oid-base.com/cgi-bin/display?a=list-by-category&category=Not%20allocating%20Unicode%20labels (01 Dec 2024)
 	private const NO_IRI = array(
 			'oid:0.2',
 			'oid:0.2.228',

@@ -126,7 +126,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 		);
 
 		if (OIDplus::getEditionInfo()['vendor'] != 'ViaThinkSoft') {
-			// The oid-info.com import functionality is a confidential API between ViaThinkSoft and oid-info.com and cannot be used in forks of OIDplus
+			// The oid-base.com import functionality is a confidential API between ViaThinkSoft and oid-base.com and cannot be used in forks of OIDplus
 			throw new OIDplusException(_L('This feature is only available in the ViaThinkSoft edition of OIDplus'));
 		}
 
@@ -219,7 +219,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 		}
 		if ($id === 'oidplus:oidinfo_compare_export') {
 			$handled = true;
-			$out['title'] = _L('List OIDs in your system which are missing at oid-info.com');
+			$out['title'] = _L('List OIDs in your system which are missing at oid-base.com');
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
@@ -249,7 +249,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 			);
 
 			if (OIDplus::getEditionInfo()['vendor'] != 'ViaThinkSoft') {
-				// The oid-info.com import functionality is a confidential API between ViaThinkSoft and oid-info.com and cannot be used in forks of OIDplus
+				// The oid-base.com import functionality is a confidential API between ViaThinkSoft and oid-base.com and cannot be used in forks of OIDplus
 				throw new OIDplusException(_L('This feature is only available in the ViaThinkSoft edition of OIDplus'));
 			}
 
@@ -343,11 +343,11 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 							if (!in_array($local_oid, $root['children'])) {
 								$count++;
 
-								// Start: Build oid-info.com create URL
+								// Start: Build oid-base.com create URL
 
 								$row = $row_lookup[$local_oid];
 
-								$url = "http://oid-info.com/cgi-bin/manage?f=".oid_up($local_oid)."&a=create";
+								$url = "https://www.oid-base.com/cgi-bin/manage?f=".oid_up($local_oid)."&a=create";
 
 								$tmp = explode('.',$local_oid);
 								$url .= "&nb=".urlencode(array_pop($tmp));
@@ -463,13 +463,13 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 								//$url .= "&submitter_first_name=".urlencode($xml->{'submitter'}->{'first-name'});
 								//$url .= "&submitter_email=".urlencode($xml->{'submitter'}->{'email'});
 
-								// End: Build oid-info.com create URL
+								// End: Build oid-base.com create URL
 
 								// Note: "Actions" is at the left, because it has a fixed width, so the user can continue clicking without the links moving if the OID length changes between lines
 								$out['text'] .= '<tr id="missing_oid_'.str_replace('.','_',$local_oid).'">'.
 								'<td><a '.OIDplus::gui()->link($lookup_nonoid[$local_oid] ?? 'oid:' . $local_oid, true).'>'._L('View local OID').'</a></td>'.
 								'<td><a href="javascript:OIDplusPageAdminOIDInfoExport.removeMissingOid(\''.$local_oid.'\');">'._L('Ignore for now').'</a></td>'.
-								'<td><a target="_blank" href="'.$url.'">'._L('Add to oid-info.com manually').'</a></td>'.
+								'<td><a target="_blank" href="'.$url.'">'._L('Add to oid-base.com manually').'</a></td>'.
 								'<td>'.$local_oid.'</td>'.
 								'</tr>';
 							}
@@ -490,7 +490,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 
 		if ($id === 'oidplus:oidinfo_compare_import') {
 			$handled = true;
-			$out['title'] = _L('List OIDs at oid-info.com which are missing in your system');
+			$out['title'] = _L('List OIDs at oid-base.com which are missing in your system');
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
@@ -520,7 +520,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 			);
 
 			if (OIDplus::getEditionInfo()['vendor'] != 'ViaThinkSoft') {
-				// The oid-info.com import functionality is a confidential API between ViaThinkSoft and oid-info.com and cannot be used in forks of OIDplus
+				// The oid-base.com import functionality is a confidential API between ViaThinkSoft and oid-base.com and cannot be used in forks of OIDplus
 				throw new OIDplusException(_L('This feature is only available in the ViaThinkSoft edition of OIDplus'));
 			}
 
@@ -602,9 +602,9 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 								$count++;
 								// Note: "Actions" is at the left, because it has a fixed width, so the user can continue clicking without the links moving if the OID length changes between lines
 								$out['text'] .= '<tr id="missing_oid_'.str_replace('.','_',$child_oid).'">'.
-								'<td><a target="_blank" href="http://oid-info.com/get/'.$child_oid.'">'._L('View OID at oid-info.com').'</a></td>'.
+								'<td><a target="_blank" href="https://www.oid-base.com/get/'.$child_oid.'">'._L('View OID at oid-base.com').'</a></td>'.
 								'<td><a href="javascript:OIDplusPageAdminOIDInfoExport.removeMissingOid(\''.$child_oid.'\');">'._L('Ignore for now').'</a></td>'.
-								'<td><a href="mailto:admin@oid-info.com">'._L('Report illegal OID').'</a></td>'.
+								'<td><a href="mailto:admin@oid-base.com">'._L('Report illegal OID').'</a></td>'.
 								(strpos($child_oid,'1.3.6.1.4.1.37476.30.9.') === 0 ? '<td>&nbsp;</td>' : '<td><a href="javascript:OIDplusPageAdminOIDInfoExport.importMissingOid(\''.$child_oid.'\');">'._L('Import OID').'</a></td>').
 								'<td>'.$child_oid.'</td>'.
 								'</tr>';
@@ -626,7 +626,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 
 		if ($id === 'oidplus:datatransfer') {
 			$handled = true;
-			$out['title'] = _L('Data Exchange (oid-info.com)');
+			$out['title'] = _L('Data Exchange (oid-base.com)');
 			$out['icon'] = file_exists(__DIR__.'/img/main_icon.png') ? OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'img/main_icon.png' : '';
 
 			if (!OIDplus::authUtils()->isAdminLoggedIn()) {
@@ -647,34 +647,34 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 			$out['text'] .= OIDplus::gui()->tabContentStart();
 			// ---------------- "Export" tab
 			$tabcont  = '<h2>'._L('Generate XML file containing all OIDs').'</h2>';
-			$tabcont .= '<p>'._L('These XML files are following the <a %1>XML schema</a> of <b>oid-info.com</b>. They can be used for various purposes though.','href="http://oid-info.com/oid.xsd" target="_blank"').'</p>';
+			$tabcont .= '<p>'._L('These XML files are following the <a %1>XML schema</a> of <b>oid-base.com</b>. They can be used for various purposes though.','href="https://www.oid-base.com/oid.xsd" target="_blank"').'</p>';
 			$tabcont .= '<p><input type="button" onclick="window.open(\''.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'oidinfo_export.php\',\'_blank\')" value="'._L('Generate XML (all OIDs)').'"></p>';
-			$tabcont .= '<p><input type="button" onclick="window.open(\''.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'oidinfo_export.php?online=1\',\'_blank\')" value="'._L('Generate XML (only OIDs which do not exist at oid-info.com)').'"></p>';
-			$tabcont .= '<p><a href="http://oid-info.com/submit.htm" target="_blank">'._L('Upload XML files manually to oid-info.com').'</a></p>';
+			$tabcont .= '<p><input type="button" onclick="window.open(\''.OIDplus::webpath(__DIR__,OIDplus::PATH_RELATIVE).'oidinfo_export.php?online=1\',\'_blank\')" value="'._L('Generate XML (only OIDs which do not exist at oid-base.com)').'"></p>';
+			$tabcont .= '<p><a href="https://www.oid-base.com/submit.htm" target="_blank">'._L('Upload XML files manually to oid-base.com').'</a></p>';
 			$tabcont .= '<br><p>'._L('Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!<br>It will cause various loss of information, e.g. because Non-OIDs like GUIDs are converted in OIDs and can\'t be converted back.').'</p>';
 			if (OIDplus::getEditionInfo()['vendor'] == 'ViaThinkSoft') {
-				$tabcont .= '<h2>'._L('Automatic export to oid-info.com').'</h2>';
+				$tabcont .= '<h2>'._L('Automatic export to oid-base.com').'</h2>';
 				$privacy_level = OIDplus::config()->getValue('reg_privacy');
 				if ($privacy_level == 0) {
-					$tabcont .= '<p>'._L('All your OIDs will automatically submitted to oid-info.com through the remote directory service in regular intervals.').' (<a '.OIDplus::gui()->link('oidplus:srv_registration').'>'._L('Change preference').'</a>)</p>';
+					$tabcont .= '<p>'._L('All your OIDs will automatically submitted to oid-base.com through the remote directory service in regular intervals.').' (<a '.OIDplus::gui()->link('oidplus:srv_registration').'>'._L('Change preference').'</a>)</p>';
 				} else {
-					$tabcont .= '<p>'._L('If you set the privacy option to "0" (your system is registered), then all your OIDs will be automatically exported to oid-info.com.').' (<a '.OIDplus::gui()->link('oidplus:srv_registration').'>'._L('Change preference').'</a>)</p>';
+					$tabcont .= '<p>'._L('If you set the privacy option to "0" (your system is registered), then all your OIDs will be automatically exported to oid-base.com.').' (<a '.OIDplus::gui()->link('oidplus:srv_registration').'>'._L('Change preference').'</a>)</p>';
 				}
 			}
-			$tabcont .= '<h2>'._L('Comparison with oid-info.com').'</h2>';
-			$tabcont .= '<p><a '.OIDplus::gui()->link('oidplus:oidinfo_compare_export').'>'._L('List OIDs in your system which are missing at oid-info.com').'</a></p>';
+			$tabcont .= '<h2>'._L('Comparison with oid-base.com').'</h2>';
+			$tabcont .= '<p><a '.OIDplus::gui()->link('oidplus:oidinfo_compare_export').'>'._L('List OIDs in your system which are missing at oid-base.com').'</a></p>';
 			$out['text'] .= OIDplus::gui()->tabContentPage('export', $tabcont, $tab === 'export');
 			// ---------------- "Import" tab
 			$tabcont  = '<h2>'._L('Import XML file').'</h2>';
-			$tabcont .= '<p>'._L('These XML files are following the <a %1>XML schema</a> of <b>oid-info.com</b>.','href="http://oid-info.com/oid.xsd" target="_blank"').'</p>';
+			$tabcont .= '<p>'._L('These XML files are following the <a %1>XML schema</a> of <b>oid-base.com</b>.','href="https://www.oid-base.com/oid.xsd" target="_blank"').'</p>';
 			// TODO: we need a waiting animation!
 			$tabcont .= '<form action="javascript:void(0);" onsubmit="return OIDplusPageAdminOIDInfoExport.uploadXmlFileOnSubmit(this);" enctype="multipart/form-data" id="uploadXmlFileForm">';
 			$tabcont .= '<div>'._L('Choose XML file here').':<br><input type="file" name="userfile" value="" id="userfile">';
 			$tabcont .= '<br><input type="submit" value="'._L('Import XML').'"></div>';
 			$tabcont .= '</form>';
 			$tabcont .= '<br><p>'._L('Attention: Do not use this XML Export/Import to exchange, backup or restore data between OIDplus systems!<br>It will cause various loss of information, e.g. because Non-OIDs like GUIDs are converted in OIDs and can\'t be converted back.').'</p>';
-			$tabcont .= '<h2>'._L('Comparison with oid-info.com').'</h2>';
-			$tabcont .= '<p><a '.OIDplus::gui()->link('oidplus:oidinfo_compare_import').'>'._L('List OIDs at oid-info.com which are missing in your system').'</a></p>';
+			$tabcont .= '<h2>'._L('Comparison with oid-base.com').'</h2>';
+			$tabcont .= '<p><a '.OIDplus::gui()->link('oidplus:oidinfo_compare_import').'>'._L('List OIDs at oid-base.com which are missing in your system').'</a></p>';
 			$out['text'] .= OIDplus::gui()->tabContentPage('import', $tabcont, $tab === 'import');
 			$out['text'] .= OIDplus::gui()->tabContentEnd();
 			// ---------------- Tab control END
@@ -703,7 +703,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 		$json[] = array(
 			'id' => 'oidplus:datatransfer',
 			'icon' => $tree_icon,
-			'text' => _L('Data Exchange (oid-info.com)')
+			'text' => _L('Data Exchange (oid-base.com)')
 		);
 
 		return true;
@@ -873,7 +873,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 				// Request from O.D. 20 May 2019: First registrant should not be empty (especially for cases where Creation and Modify Dates are the same)
 				// Actually, this is a problem because we don't know the first registrant.
 				// However, since oidinfo gets their XML very fast (if using registration), it is likely that the reported RA is still the same...
-				// ... and changes at the RA are not reported to oid-info.com anyways - the XML is only for creation
+				// ... and changes at the RA are not reported to oid-base.com anyways - the XML is only for creation
 
 				$elements['first-registrant']['first-name'] = $elements['current-registrant']['first-name'];
 				$elements['first-registrant']['last-name']  = $elements['current-registrant']['last-name'];
@@ -1077,7 +1077,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 				}
 			}
 
-			// TODO: we can probably get the created and modified timestamp from oid-info.com XML
+			// TODO: we can probably get the created and modified timestamp from oid-base.com XML
 			OIDplus::db()->query("insert into ###objects (id, parent, title, description, confidential, ra_email) values (?, ?, ?, ?, ?, ?)", array($id, $parent, $title, $info, false, $ra));
 
 			OIDplusObject::resetObjectInformationCache();
@@ -1172,7 +1172,7 @@ class OIDplusPageAdminOIDInfoExport extends OIDplusPagePluginAdmin
 		$notifications = array();
 		if ((!$user || ($user == 'admin')) && OIDplus::authUtils()->isAdminLoggedIn()) {
 			if (!url_post_contents_available(true, $reason)) {
-				$title = _L('OID-Info.com import/export');
+				$title = _L('OID-Base.com import/export');
 				$notifications[] = new OIDplusNotification('ERR', _L('OIDplus plugin "%1" is enabled, but OIDplus cannot connect to the Internet.', '<a '.OIDplus::gui()->link('oidplus:datatransfer').'>'.htmlentities($title).'</a>').' '.$reason);
 			}
 		}

@@ -176,15 +176,15 @@ class OIDplusOid extends OIDplusObject {
 		$tech_info = array();
 
 		$tmp = _L('Dot notation');
-		$tmp = str_replace(explode(' ', $tmp, 2)[0], '<a href="http://oid-info.com/faq.htm#14" target="_blank">'.explode(' ', $tmp, 2)[0].'</a>', $tmp);
+		$tmp = str_replace(explode(' ', $tmp, 2)[0], '<a href="https://www.oid-base.com/faq.htm#14" target="_blank">'.explode(' ', $tmp, 2)[0].'</a>', $tmp);
 		$tech_info[$tmp] = $this->getDotNotation();
 
 		$tmp = _L('ASN.1 notation');
-		$tmp = str_replace(explode(' ', $tmp, 2)[0], '<a href="http://oid-info.com/faq.htm#17" target="_blank">'.explode(' ', $tmp, 2)[0].'</a>', $tmp);
+		$tmp = str_replace(explode(' ', $tmp, 2)[0], '<a href="https://www.oid-base.com/faq.htm#17" target="_blank">'.explode(' ', $tmp, 2)[0].'</a>', $tmp);
 		$tech_info[$tmp] = $this->getAsn1Notation();
 
 		$tmp = _L('OID-IRI notation');
-		$tmp = str_replace(explode(' ', $tmp, 2)[0], '<a href="http://oid-info.com/faq.htm#iri" target="_blank">'.explode(' ', $tmp, 2)[0].'</a>', $tmp);
+		$tmp = str_replace(explode(' ', $tmp, 2)[0], '<a href="https://www.oid-base.com/faq.htm#iri" target="_blank">'.explode(' ', $tmp, 2)[0].'</a>', $tmp);
 		$tech_info[$tmp] = $this->getIriNotation();
 
 		$tmp = _L('WEID notation');

@@ -323,7 +323,7 @@
                     "homepage": "https://www.daniel-marschall.de/"
                 }
             ],
-            "description": "OID-Info.com API for PHP",
+            "description": "OID-Base.com API for PHP",
             "homepage": "https://www.viathinksoft.com/projects/oidinfo_api",
             "support": {
                 "issues": "https://github.com/danielmarschall/oidinfo_api/issues",

@@ -37,7 +37,7 @@ use ViaThinkSoft\OIDplus\Core\OIDplus;
   * 	255 digits (OIDs 251 digits)
   *
   * Which value is realistic?
-  * 	In the oid-info.com database (April 2020), the OID with the greatest size is 65 characters (dot notation)
+  * 	In the oid-base.com database (April 2020), the OID with the greatest size is 65 characters (dot notation)
   *
   * Maximum value:
   * 	OIDs may only have a size of max 251 characters in dot notation.

@@ -222,10 +222,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		0 = Register to directory service and automatically publish RA/OID data at oid-info.com
+		0 = Register to directory service and automatically publish RA/OID data at oid-base.com
 		]]></source>
 		<target><![CDATA[
-		0 = Beim OIDplus-Verzeichnisdienst registrieren und RA/OID-Daten automatisch auf oid-info.com veröffentlichen
+		0 = Beim OIDplus-Verzeichnisdienst registrieren und RA/OID-Daten automatisch auf oid-base.com veröffentlichen
 		]]></target>
 	</message>
 	<message>
@@ -270,10 +270,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		<i>Privacy information:</i> Please note that removing your system from the directory does not automatically delete information about OIDs which are already published at oid-info.com. To remove already submitted OIDs at oid-info.com, please contact the <a href="mailto:admin@oid-info.com">OID Repository Webmaster</a>.
+		<i>Privacy information:</i> Please note that removing your system from the directory does not automatically delete information about OIDs which are already published at oid-base.com. To remove already submitted OIDs at oid-base.com, please contact the <a href="mailto:admin@oid-base.com">OID Repository Webmaster</a>.
 		]]></source>
 		<target><![CDATA[
-		<i>Datenschutz-Hinweis:</i> Bitte beachten Sie, dass das Entfernen des Systems aus dem OIDplus-Verzeichnisdienst nicht automatisch OID/RA-Informationen löscht, die bereits bei oid-info.com veröffentlicht wurden. Um diese zu entfernen, kontaktieren Sie bitte den <a href="mailto:admin@oid-info.com">OID Repository Webmaster</a> (in Englisch oder auf Französisch).
+		<i>Datenschutz-Hinweis:</i> Bitte beachten Sie, dass das Entfernen des Systems aus dem OIDplus-Verzeichnisdienst nicht automatisch OID/RA-Informationen löscht, die bereits bei oid-base.com veröffentlicht wurden. Um diese zu entfernen, kontaktieren Sie bitte den <a href="mailto:admin@oid-base.com">OID Repository Webmaster</a> (in Englisch oder auf Französisch).
 		]]></target>
 	</message>
 	<message>
@@ -446,10 +446,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Add to oid-info.com manually
+		Add to oid-base.com manually
 		]]></source>
 		<target><![CDATA[
-		Zu oid-info.com manuell hinzufügen
+		Zu oid-base.com manuell hinzufügen
 		]]></target>
 	</message>
 	<message>
@@ -558,10 +558,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		All your OIDs will automatically submitted to oid-info.com through the remote directory service in regular intervals.
+		All your OIDs will automatically submitted to oid-base.com through the remote directory service in regular intervals.
 		]]></source>
 		<target><![CDATA[
-		Alle Ihre OIDs werden durch den OIDplus-Verzeichnisdienst in regelmäßigen Abständen an oid-info.com übertragen.
+		Alle Ihre OIDs werden durch den OIDplus-Verzeichnisdienst in regelmäßigen Abständen an oid-base.com übertragen.
 		]]></target>
 	</message>
 	<message>
@@ -926,10 +926,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Automatic export to oid-info.com
+		Automatic export to oid-base.com
 		]]></source>
 		<target><![CDATA[
-		Automatischer Export nach oid-info.com
+		Automatischer Export nach oid-base.com
 		]]></target>
 	</message>
 	<message>
@@ -1542,10 +1542,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Comparison with oid-info.com
+		Comparison with oid-base.com
 		]]></source>
 		<target><![CDATA[
-		Vergleich mit oid-info.com
+		Vergleich mit oid-base.com
 		]]></target>
 	</message>
 	<message>
@@ -1982,10 +1982,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Data Exchange (oid-info.com)
+		Data Exchange (oid-base.com)
 		]]></source>
 		<target><![CDATA[
-		Daten-Austausch (oid-info.com)
+		Daten-Austausch (oid-base.com)
 		]]></target>
 	</message>
 	<message>
@@ -3086,10 +3086,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Generate XML (only OIDs which do not exist at oid-info.com)
+		Generate XML (only OIDs which do not exist at oid-base.com)
 		]]></source>
 		<target><![CDATA[
-		XML generieren (Nur OIDs, die nicht auf oid-info.com existieren)
+		XML generieren (Nur OIDs, die nicht auf oid-base.com existieren)
 		]]></target>
 	</message>
 	<message>
@@ -3510,10 +3510,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		If you set the privacy option to "0" (your system is registered), then all your OIDs will be automatically exported to oid-info.com.
+		If you set the privacy option to "0" (your system is registered), then all your OIDs will be automatically exported to oid-base.com.
 		]]></source>
 		<target><![CDATA[
-		Wenn Sie die Datenschutz-Stufe auf "0" (System registriert) setzen, dann werden alle Ihre OIDs automatisch nach oid-info.com exportiert.
+		Wenn Sie die Datenschutz-Stufe auf "0" (System registriert) setzen, dann werden alle Ihre OIDs automatisch nach oid-base.com exportiert.
 		]]></target>
 	</message>
 	<message>
@@ -3662,10 +3662,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		In the automatic oid-info.com publishing, well-known OIDs will not be transmitted (because it is unlikely that RAs of well-known OIDs will be using OIDplus in combination with automatic publishing to oid-info.com). Instead, all children inside these well-known OIDs are most likely to be yours, so these will be reported to oid-info.com instead.
+		In the automatic oid-base.com publishing, well-known OIDs will not be transmitted (because it is unlikely that RAs of well-known OIDs will be using OIDplus in combination with automatic publishing to oid-base.com). Instead, all children inside these well-known OIDs are most likely to be yours, so these will be reported to oid-base.com instead.
 		]]></source>
 		<target><![CDATA[
-		Wenn OIDs automatisch nach oid-info.com veröffentlicht werden, werden wohlbekannte OIDs nicht zu Ihren Wurzel-OIDs mitgezählt (da es sehr unwahrscheinlich ist, dass Sie eine wohlbekannte OID besitzen), sodass stattdessen die darunterliegenden OIDs als Ihre eigenen Wurzel-OIDs anerkannt werden. Beispiel: Sie haben einen "2.25" UUID Wurzelknoten in OIDplus, und darunter liegen Ihre UUID OIDs. In diesem Fall sind Sie Besitzer der UUID OIDs, aber nicht Besitzer von "2.25".
+		Wenn OIDs automatisch nach oid-base.com veröffentlicht werden, werden wohlbekannte OIDs nicht zu Ihren Wurzel-OIDs mitgezählt (da es sehr unwahrscheinlich ist, dass Sie eine wohlbekannte OID besitzen), sodass stattdessen die darunterliegenden OIDs als Ihre eigenen Wurzel-OIDs anerkannt werden. Beispiel: Sie haben einen "2.25" UUID Wurzelknoten in OIDplus, und darunter liegen Ihre UUID OIDs. In diesem Fall sind Sie Besitzer der UUID OIDs, aber nicht Besitzer von "2.25".
 		]]></target>
 	</message>
 	<message>
@@ -4198,18 +4198,18 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		List OIDs at oid-info.com which are missing in your system
+		List OIDs at oid-base.com which are missing in your system
 		]]></source>
 		<target><![CDATA[
-		OIDs von oid-info.com auflisten, die in diesem System fehlen
+		OIDs von oid-base.com auflisten, die in diesem System fehlen
 		]]></target>
 	</message>
 	<message>
 		<source><![CDATA[
-		List OIDs in your system which are missing at oid-info.com
+		List OIDs in your system which are missing at oid-base.com
 		]]></source>
 		<target><![CDATA[
-		OIDs aus Ihrem System auflisten, die auf oid-info.com fehlen
+		OIDs aus Ihrem System auflisten, die auf oid-base.com fehlen
 		]]></target>
 	</message>
 	<message>
@@ -5078,10 +5078,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		OID-Info.com import/export
+		OID-Base.com import/export
 		]]></source>
 		<target><![CDATA[
-		OID-Info.com Import/Export
+		OID-Base.com Import/Export
 		]]></target>
 	</message>
 	<message>
@@ -8366,18 +8366,18 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		These XML files are following the <a %1>XML schema</a> of <b>oid-info.com</b>.
+		These XML files are following the <a %1>XML schema</a> of <b>oid-base.com</b>.
 		]]></source>
 		<target><![CDATA[
-		Diese XML-Dateien folgende dem <a %1>XML-Schema</a> von <b>oid-info.com</b>.
+		Diese XML-Dateien folgende dem <a %1>XML-Schema</a> von <b>oid-base.com</b>.
 		]]></target>
 	</message>
 	<message>
 		<source><![CDATA[
-		These XML files are following the <a %1>XML schema</a> of <b>oid-info.com</b>. They can be used for various purposes though.
+		These XML files are following the <a %1>XML schema</a> of <b>oid-base.com</b>. They can be used for various purposes though.
 		]]></source>
 		<target><![CDATA[
-		Diese XML-Dateien folgende dem <a %1>XML-Schema</a> von <b>oid-info.com</b>. Sie können jedoch auch für andere Zwecke verwendet werden.
+		Diese XML-Dateien folgende dem <a %1>XML-Schema</a> von <b>oid-base.com</b>. Sie können jedoch auch für andere Zwecke verwendet werden.
 		]]></target>
 	</message>
 	<message>
@@ -9062,10 +9062,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Upload XML files manually to oid-info.com
+		Upload XML files manually to oid-base.com
 		]]></source>
 		<target><![CDATA[
-		XML-Dateien manuell auf oid-info.com hochladen
+		XML-Dateien manuell auf oid-base.com hochladen
 		]]></target>
 	</message>
 	<message>
@@ -9158,10 +9158,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		View OID at oid-info.com
+		View OID at oid-base.com
 		]]></source>
 		<target><![CDATA[
-		OID auf oid-info.com anzeigen
+		OID auf oid-base.com anzeigen
 		]]></target>
 	</message>
 	<message>

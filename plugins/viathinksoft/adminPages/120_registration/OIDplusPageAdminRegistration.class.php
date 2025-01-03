@@ -159,7 +159,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 				} else {
 					$out['text'] .= '';
 				}
-				$out['text'] .= '>'._L('0 = Register to directory service and automatically publish RA/OID data at oid-info.com').'</option>';
+				$out['text'] .= '>'._L('0 = Register to directory service and automatically publish RA/OID data at oid-base.com').'</option>';
 
 				# ---
 
@@ -187,7 +187,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 
 				$out['text'] .= '<p>'._L('After clicking "change", your OIDplus system will contact the ViaThinkSoft server to adjust (add or remove information) your privacy setting. This may take a few minutes.').'</p>';
 
-				$out['text'] .= '<p>'._L('<i>Privacy information:</i> Please note that removing your system from the directory does not automatically delete information about OIDs which are already published at oid-info.com. To remove already submitted OIDs at oid-info.com, please contact the <a href="mailto:admin@oid-info.com">OID Repository Webmaster</a>.').'</p>';
+				$out['text'] .= '<p>'._L('<i>Privacy information:</i> Please note that removing your system from the directory does not automatically delete information about OIDs which are already published at oid-base.com. To remove already submitted OIDs at oid-base.com, please contact the <a href="mailto:admin@oid-base.com">OID Repository Webmaster</a>.').'</p>';
 			}
 		}
 		if ($id === 'oidplus:srvreg_status') {
@@ -479,7 +479,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 		}
 
 		// Note: It is important that the default value is '2', otherwise, systems which don't have CURL will fail
-		OIDplus::config()->prepareConfigKey('reg_privacy', '2=Hide your system, 1=Register your system to the ViaThinkSoft directory and oid-info.com, 0=Publish your system to ViaThinkSoft directory and all public contents (RA/OID) to oid-info.com', '2', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
+		OIDplus::config()->prepareConfigKey('reg_privacy', '2=Hide your system, 1=Register your system to the ViaThinkSoft directory and oid-base.com, 0=Publish your system to ViaThinkSoft directory and all public contents (RA/OID) to oid-base.com', '2', OIDplusConfig::PROTECTION_EDITABLE, function($value) {
 			if (($value != '0') && ($value != '1') && ($value != '2')) {
 				throw new OIDplusException(_L('Please enter either 0, 1 or 2.'));
 			}
@@ -640,7 +640,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 				echo '';
 			}
 		}
-		echo '>'._L('0 = Register to directory service and automatically publish RA/OID data at oid-info.com').'</option>';
+		echo '>'._L('0 = Register to directory service and automatically publish RA/OID data at oid-base.com').'</option>';
 
 		# ---
 

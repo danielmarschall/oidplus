@@ -208,19 +208,19 @@
 	<p>Currently, a Registration Authority cannot register themselves using the regular login method. (They can register themselves if they are using some alternative login methods as described below). Using the regular login method, they need an invitation from the system administrator or their superior Registration Authority to be able to register to the OIDplus system. (Note: To resend an invitation, the system administrator or superior Registration Authority needs to open your OID and click "Invite RA to join OIDplus" in order to send you an email).</p>
 	<p>In addition to the invitation system, the system administrator can create Registration Authority accounts without email address verification.</p>
 
-	<a id="oidinfo_publishing"></a><h2>Publishing RAs/OIDs to oid-info.com</h2>
-	<p>oid-info.com is a web page that collects and displays information about OIDs, like a Wiki. OIDplus contains features to submit data from its database to oid-info.com</p>
+	<a id="oidinfo_publishing"></a><h2>Publishing RAs/OIDs to oid-base.com</h2>
+	<p>oid-base.com is a web page that collects and displays information about OIDs, like a Wiki. OIDplus contains features to submit data from its database to oid-base.com</p>
 	<p>There are two possibilities:</p>
 	<ol>
-		<li>Manual transfer: The system administrator can create an XML file that contains OID and Registration Authority information (only the parts which can be seen by the public anyway) and can upload this XML file to oid-info.com</li>
-		<li>If the OIDplus system is registered to ViaThinkSoft and the OID-info.com transfer is enabled (see below), the OIDplus system will transmit XML data containing RA/OID information through an encrypted interface to ViaThinkSoft, and ViaThinkSoft after regular manual check submits the data to the oid-info.com administrator.</li>
+		<li>Manual transfer: The system administrator can create an XML file that contains OID and Registration Authority information (only the parts which can be seen by the public anyway) and can upload this XML file to oid-base.com</li>
+		<li>If the OIDplus system is registered to ViaThinkSoft and the OID-base.com transfer is enabled (see below), the OIDplus system will transmit XML data containing RA/OID information through an encrypted interface to ViaThinkSoft, and ViaThinkSoft after regular manual check submits the data to the oid-base.com administrator.</li>
 	</ol>
 
 	<a id="systemid"></a><h2>Unique system ID</h2>
 	<p>During the initial setup, a public/private-key-pair will be created which can be used for various purposes, e.g. to encrypt data between OIDplus and ViaThinkSoft if the "system registration" service is used (see below) or to sign OID-IP (previously OID-WHOIS) responses.</p>
 	<p>From this public key, a unique system ID will be derivated. The unique system ID and the public key can be seen on the setup screen.</p>
 
-	<a id="system_registration"></a><h2>System registration and automatic publishing to oid-info.com</h2>
+	<a id="system_registration"></a><h2>System registration and automatic publishing to oid-base.com</h2>
 	<p>During initial setup, the system administrator can choose between the following options:</p>
 	<table class="table">
 		<thead>
@@ -232,7 +232,7 @@
 		<tbody>
 			<tr>
 				<td valign="top">0</td>
-				<td valign="top">Register to directory service and automatically publish RA/OID data at oid-info.com</td>
+				<td valign="top">Register to directory service and automatically publish RA/OID data at oid-base.com</td>
 			</tr>
 			<tr>
 				<td valign="top">1</td>
@@ -252,8 +252,8 @@
 		<li>The public key of the OIDplus instance will be published to the ViaThinkSoft web directory so that users can check the integrity of the data (e.g. signed OID-IP/OID-WHOIS requests).</li>
 		<li>Since the 31-bit System ID can have hash conflicts, ViaThinkSoft will make sure that the System ID is only used by this OIDplus instance (it will force other OIDplus systems with the same system ID to change their IDs).</li>
 		<li>ViaThinkSoft can acknowledge the system name, administrator email address, and OID root arcs. Therefore, the OIDplus instance can be found using Referral WHOIS.</li>
-		<li>The administrator can optionally enable the automatic publishing of the public OID information to the repository oid-info.com.</li>
-		<li>If the root OID(s) are approved by ViaThinkSoft (it will be manually verified that the root OIDs belong to the system owner), a feature will be unlocked which can be used to compare and import OIDs from oid-info.com into this OIDplus instance.</li>
+		<li>The administrator can optionally enable the automatic publishing of the public OID information to the repository oid-base.com.</li>
+		<li>If the root OID(s) are approved by ViaThinkSoft (it will be manually verified that the root OIDs belong to the system owner), a feature will be unlocked which can be used to compare and import OIDs from oid-base.com into this OIDplus instance.</li>
 		<li>The OIDplus version will be reported to ViaThinkSoft. If a severe bug or security vulnerability is affecting this OIDplus instance, ViaThinkSoft can warn the administrator via email.</li>
 		<li>The directory service will automatically create an X.509 security certificate for this OIDplus instance (NOT an SSL certificate!) which can be used for various verifications.</li>
 	</ul>
@@ -278,14 +278,14 @@
 	</ul>
 	<p>The other information will stay on the ViaThinkSoft internal database and will not be shared with other parties.</p>
 	<p>If the system administrator enabled this option and wants to revoke the permission, the system administrator has to change the privacy level in the administrator login/control panel. The system will automatically contact the ViaThinkSoft server again and performs the deletion of all data.</p>
-	<p>Please note that the deletion of the record in the directory service does not delete RA/OID information that is already submitted at oid-info.com (if option 0 was chosen). To delete this data, the system administrator needs to contact the OID Repository Webmaster at <a class="spamspan" href="mailto:admin@oid-info.com">admin@oid-info.com</a></p>
+	<p>Please note that the deletion of the record in the directory service does not delete RA/OID information that is already submitted at oid-base.com (if option 0 was chosen). To delete this data, the system administrator needs to contact the OID Repository Webmaster at <a class="spamspan" href="mailto:admin@oid-base.com">admin@oid-base.com</a></p>
 
-	<h3>Publish RA/OID data at oid-info.com (option 0)</h3>
-	<p>If privacy level option 0 is chosen, the system regularly contacts the ViaThinkSoft server through a secure connection and sends the public RA/OID data. ViaThinkSoft will store this data and redirect it to the OID Repository Webmaster who will review the data and eventually submit it to the public repository oid-info.com</p>
-	<p>If the system administrator enabled this option and wants to revoke the permission, the system administrator has to change the privacy level in the administrator login/control panel to option 1 or 2 (to avoid that data being sent again). To remove already submitted OIDs, the system administrator needs to contact the OID Repository Webmaster at <a class="spamspan" href="mailto:admin@oid-info.com">admin@oid-info.com</a></p>
+	<h3>Publish RA/OID data at oid-base.com (option 0)</h3>
+	<p>If privacy level option 0 is chosen, the system regularly contacts the ViaThinkSoft server through a secure connection and sends the public RA/OID data. ViaThinkSoft will store this data and redirect it to the OID Repository Webmaster who will review the data and eventually submit it to the public repository oid-base.com</p>
+	<p>If the system administrator enabled this option and wants to revoke the permission, the system administrator has to change the privacy level in the administrator login/control panel to option 1 or 2 (to avoid that data being sent again). To remove already submitted OIDs, the system administrator needs to contact the OID Repository Webmaster at <a class="spamspan" href="mailto:admin@oid-base.com">admin@oid-base.com</a></p>
 
 	<h3>Hide system (option 2)</h3>
-	<p>If privacy level option 2 was chosen, the system will neither contact ViaThinkSoft, nor oid-info.com.</p>
+	<p>If privacy level option 2 was chosen, the system will neither contact ViaThinkSoft, nor oid-base.com.</p>
 
 	<a id="logfiles"></a><h2>Log files</h2>
 

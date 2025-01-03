@@ -283,8 +283,8 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 
 					if ($only_wellknown_ids_found) {
 						if (strtolower(substr($query,0,4)) === 'oid:') {
-							// Since it is well-known, oid-info.com will most likely have it described
-							$out[] = $this->_oidip_attr('url', 'http://oid-info.com/get/'.$obj->nodeId(false));
+							// Since it is well-known, oid-base.com will most likely have it described
+							$out[] = $this->_oidip_attr('url', 'https://www.oid-base.com/get/'.$obj->nodeId(false));
 						}
 					} else {
 						$out[] = $this->_oidip_attr('url', OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'?goto='.urlencode($obj->nodeId(true)));

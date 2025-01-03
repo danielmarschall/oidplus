@@ -3,7 +3,7 @@
 	"manifest": {
 		"type": "ViaThinkSoft\\OIDplus\\Core\\OIDplusPagePluginAdmin",
 		"info": {
-			"name": "OID-Info.com import/export",
+			"name": "OID-Base.com import/export",
 			"author": "ViaThinkSoft",
 			"license": "Apache 2.0",
 			"version": "",

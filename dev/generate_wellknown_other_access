@@ -175,7 +175,7 @@ $interesting_oids[] = '1'; // iso
 											$interesting_oids[] = '1.3.6.1.4.1.37553.8.9.17704'; // dns
 											$interesting_oids[] = '1.3.6.1.4.1.37553.8.9.1439221'; // uuid
 								$interesting_oids[] = '1.3.6.1.4.1.54392'; // Waterjuice
-# Is not on oid-info.com, but has no alphanum/unicode ID anyway
+# Is not on oid-base.com, but has no alphanum/unicode ID anyway
 #									$interesting_oids[] = '1.3.6.1.4.1.54392.1'; // Waterjuice "UUID-to-OID" (2x64 bits)
 #									$interesting_oids[] = '1.3.6.1.4.1.54392.2'; // Waterjuice "UUID-to-OID" (4x32 bits)
 #									$interesting_oids[] = '1.3.6.1.4.1.54392.3'; // Waterjuice "UUID-to-OID" (8x16 bits)

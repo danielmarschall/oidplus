@@ -254,7 +254,7 @@ so the overal length of the ID would be 17.
 
 Default value: 255 digits (OIDs 251 digits)
 
-Which value is realistic? In the oid-info.com database (April 2020), the OID with the greatest size is 65 characters (dot notation)
+Which value is realistic? In the oid-base.com database (April 2020), the OID with the greatest size is 65 characters (dot notation)
 
 Maximum value: OIDs may only have a size of max 251 characters in dot notation.
 Reason: The field defintion of *_objects.oid is defined as varchar(255),
@@ -295,7 +295,7 @@ no hCaptcha, no reCAPTCHA, no system updates, etc.
     OIDplus::baseConfig()->setValue('OIDINFO_API_URL', '<url>');
 
 Currently only internal use for development utilities (dev/).
-The API to oid-info.com is currently not public.
+The API to oid-base.com is currently not public.
 
 ### REGISTRATION_HIDE_SYSTEM
 

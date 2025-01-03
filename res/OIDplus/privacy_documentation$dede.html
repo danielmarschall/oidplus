@@ -208,19 +208,19 @@
 	<p>Derzeit kann sich eine Registrierungsstelle mittels der regulären Anmeldemethode nicht selbstständig registrieren. (Mit einigen alternativen Anmeldemethoden kann ein Benutzer sich selbstständig registrieren. Mehr Infos zu den alternativen Anmeldemethoden finden Sie weiter unten.) Mit der regulären Anmeldemethode benötigen Sie eine Einladung des Systemadministrators oder ihrer übergeordneten Registrierungsstelle, um sich beim OIDplus-System registrieren zu können. (Hinweis: Um eine Einladung erneut zu senden, muss der Systemadministrator oder die übergeordnete Registrierungsstelle Ihre OID aufrufen und dann "RA zu OIDplus einladen" klicken, um Ihnen eine Einladung zu senden)</p>
 	<p>Zusätzlich zum Einladungssystem kann der Systemadministrator Registrierungsstellen-Konten ohne Überprüfung der E-Mail-Adresse erstellen.</p>
 
-	<a id="oidinfo_publishing"></a><h2>Veröffentlichen von Registrierungsstellen / OIDs auf oid-info.com</h2>
-	<p>oid-info.com ist eine Webseite, auf der Informationen zu OIDs wie in einem Wiki gesammelt und angezeigt werden. OIDplus enthält Funktionen zum Übermitteln von Daten seiner Datenbank an oid-info.com</p>
+	<a id="oidinfo_publishing"></a><h2>Veröffentlichen von Registrierungsstellen / OIDs auf oid-base.com</h2>
+	<p>oid-base.com ist eine Webseite, auf der Informationen zu OIDs wie in einem Wiki gesammelt und angezeigt werden. OIDplus enthält Funktionen zum Übermitteln von Daten seiner Datenbank an oid-base.com</p>
 	<p>Es gibt zwei Möglichkeiten:</p>
 	<ol>
-		<li>Manuelle Übertragung: Der Systemadministrator kann eine XML-Datei erstellen, die OID- und Registrierungsstellen-Informationen enthält (nur die Teile, die ohnehin für die Öffentlichkeit sichtbar sind) und diese XML-Datei auf oid-info.com hochladen</li>
-		<li>Wenn das OIDplus-System bei ViaThinkSoft registriert ist und die Übertragung von oid-info.com aktiviert ist (siehe unten), kontaktiert OIDplus den ViaThinkSoft-Server in regelmäßigen Abständen automatisch über eine sichere Verbindung und sendet die öffentlichen Registrierungsstelle / OID-Daten als XML-Datei. ViaThinkSoft speichert diese Daten und leitet sie an den OID-Repository-Webmaster weiter, der die Daten überprüft und schließlich an das öffentliche Repository oid-info.com übermittelt.</li>
+		<li>Manuelle Übertragung: Der Systemadministrator kann eine XML-Datei erstellen, die OID- und Registrierungsstellen-Informationen enthält (nur die Teile, die ohnehin für die Öffentlichkeit sichtbar sind) und diese XML-Datei auf oid-base.com hochladen</li>
+		<li>Wenn das OIDplus-System bei ViaThinkSoft registriert ist und die Übertragung von oid-base.com aktiviert ist (siehe unten), kontaktiert OIDplus den ViaThinkSoft-Server in regelmäßigen Abständen automatisch über eine sichere Verbindung und sendet die öffentlichen Registrierungsstelle / OID-Daten als XML-Datei. ViaThinkSoft speichert diese Daten und leitet sie an den OID-Repository-Webmaster weiter, der die Daten überprüft und schließlich an das öffentliche Repository oid-base.com übermittelt.</li>
 	</ol>
 
 	<a id="systemid"></a><h2>Eindeutige System-ID</h2>
 	<p>Während der Ersteinrichtung wird ein "Schlüsselpaar", bestehend aus einem öffentlichen und einem privaten Schlüssel erstellt. Dieses Schlüsselpaar kann für verschiedene Zwecke verwendet werden, z.B. um Daten zwischen OIDplus und ViaThinkSoft zu verschlüsseln, wenn der Dienst "Systemregistrierung" verwendet wird (siehe unten) oder um Ausgaben von OID-IP (ehem. OID-WHOIS) zu signieren.</p>
 	<p>Aus diesem öffentlichen Schlüssel wird eine eindeutige System-ID abgeleitet. Die eindeutige System-ID und der öffentliche Schlüssel werden im Setup-Bildschirm angezeigt.</p>
 
-	<a id="system_registration"></a><h2>Systemregistrierung und automatische Veröffentlichung auf oid-info.com</h2>
+	<a id="system_registration"></a><h2>Systemregistrierung und automatische Veröffentlichung auf oid-base.com</h2>
 	<p>Während der Ersteinrichtung kann der Systemadministrator zwischen folgenden Optionen wählen:</p>
 	<table class="table">
 		<thead>
@@ -232,7 +232,7 @@
 		<tbody>
 			<tr>
 				<td valign="top">0</td>
-				<td valign="top">Beim OIDplus-Verzeichnisdienst registrieren und RA/OID-Daten automatisch auf oid-info.com veröffentlichen</td>
+				<td valign="top">Beim OIDplus-Verzeichnisdienst registrieren und RA/OID-Daten automatisch auf oid-base.com veröffentlichen</td>
 			</tr>
 			<tr>
 				<td valign="top">1</td>
@@ -252,8 +252,8 @@
 		<li>Der öffentliche Schlüssel der OIDplus-Installation wird im ViaThinkSoft OIDplus-Verzeichnis veröffentlicht, sodass Benutzer die Integrität der Daten (z.B. Daten aus einer OID-IP/OID-WHOIS-Abfrage) bestätigen können.</li>
 		<li>Da die 31-bit System-ID theoretisch mit anderen Systemen theoretisch kollidieren könnte, kann ViaThinkSoft durch die Registrierung sicherstellen, dass die System-ID nur von diesem System verwendet wird. (Andere Systeme, die dieselbe System-ID melden, werden aufgefordert, ihre ID zu verwerfen und eine neue zu generieren).</li>
 		<li>ViaThinkSoft kann den System-Namen, die Administrator E-Mail-Adresse und die Wurzel-Objekte anerkennen, und somit kann das System per "Referral WHOIS" gefunden werden.</li>
-		<li>Der Administrator kann optional erlauben, dass öffentlich freigegebene Objekte im System automatisch an oid-info.com übermittelt werden.</li>
-		<li>Wenn die Wurzel-OID(s) von ViaThinkSoft bestätigt wurde (es wird geprüft, ob der System-Administrator der rechtmäßige Eigentümer der OID sind), wird eine Funktion freigeschaltet, mit der der Administrator bestehende OIDs von oid-info.com nach OIDplus importieren oder abgleichen können.</li>
+		<li>Der Administrator kann optional erlauben, dass öffentlich freigegebene Objekte im System automatisch an oid-base.com übermittelt werden.</li>
+		<li>Wenn die Wurzel-OID(s) von ViaThinkSoft bestätigt wurde (es wird geprüft, ob der System-Administrator der rechtmäßige Eigentümer der OID sind), wird eine Funktion freigeschaltet, mit der der Administrator bestehende OIDs von oid-base.com nach OIDplus importieren oder abgleichen können.</li>
 		<li>Die OIDplus-Version wird an ViaThinkSoft übermittelt. Im Falle eines schweren Programmfehlers oder Sicherheitslücke wird der Administrator von einem ViaThinkSoft Mitarbeiter per E-Mail informiert.</li>
 		<li>Das ViaThinkSoft OIDplus-Verzeichnis wird automatisch ein X.509-Sicherheitszertifikat für das System erzeugen (dieses ist jedoch nicht als SSL-Zertifikat verwendbar).</li>
 	</ul>
@@ -278,14 +278,14 @@
 	</ul>
 	<p>Die anderen Informationen verbleiben in der internen Datenbank von ViaThinkSoft und werden nicht an andere Personen weitergegeben.</p>
 	<p>Wenn der Systemadministrator diese Option aktiviert hat und die Berechtigung widerrufen möchte, muss der Systemadministrator die Datenschutzstufe in der Administrator-Anmeldebereich ändern. OIDplus verbindet sich dann automatisch erneut mit dem ViaThinkSoft-Server, um die Löschung der Daten zu veranlassen.</p>
-	<p>Bitte beachten Sie, dass durch das Löschen des Datensatzes im Verzeichnisdienst keine OID / Registrierungsstellen-Informationen gelöscht werden, die bereits bei oid-info.com übermittelt wurden (wenn Option 0 ausgewählt wurde). Um diese Daten zu löschen, muss sich der Systemadministrator an den OID-Repository-Webmaster wenden (<a class="spamspan" href="mailto:admin@oid-info.com">admin@oid-info.com</a>), in Englisch oder Französischer Sprache.</p>
+	<p>Bitte beachten Sie, dass durch das Löschen des Datensatzes im Verzeichnisdienst keine OID / Registrierungsstellen-Informationen gelöscht werden, die bereits bei oid-base.com übermittelt wurden (wenn Option 0 ausgewählt wurde). Um diese Daten zu löschen, muss sich der Systemadministrator an den OID-Repository-Webmaster wenden (<a class="spamspan" href="mailto:admin@oid-base.com">admin@oid-base.com</a>), in Englisch oder Französischer Sprache.</p>
 
-	<h3>RA / OID-Daten unter oid-info.com veröffentlichen (Option 0)</h3>
-	<p>Wenn die Datenschutzstufe Option 0 ausgewählt ist, kontaktiert OIDplus den ViaThinkSoft-Server in regelmäßigen Abständen automatisch über eine sichere Verbindung und sendet die öffentlichen RA / OID-Daten. ViaThinkSoft speichert diese Daten und leitet sie an den OID-Repository-Webmaster weiter, der die Daten überprüft und schließlich an das öffentliche Repository oid-info.com übermittelt.</p>
-	<p>Wenn der Systemadministrator diese Option aktiviert hat und die Berechtigung widerrufen möchte, muss der Systemadministrator die Datenschutzstufe im Administrator-Anmeldebereich auf Option 1 oder 2 ändern (um zu vermeiden, dass Daten erneut gesendet werden). Um bereits übermittelte OIDs zu entfernen, muss sich der Systemadministrator an den OID-Repository-Webmaster wenden (<a class="spamspan" href="mailto:admin@oid-info.com">admin@oid-info.com</a>), in Englisch oder Französischer Sprache.</p>
+	<h3>RA / OID-Daten unter oid-base.com veröffentlichen (Option 0)</h3>
+	<p>Wenn die Datenschutzstufe Option 0 ausgewählt ist, kontaktiert OIDplus den ViaThinkSoft-Server in regelmäßigen Abständen automatisch über eine sichere Verbindung und sendet die öffentlichen RA / OID-Daten. ViaThinkSoft speichert diese Daten und leitet sie an den OID-Repository-Webmaster weiter, der die Daten überprüft und schließlich an das öffentliche Repository oid-base.com übermittelt.</p>
+	<p>Wenn der Systemadministrator diese Option aktiviert hat und die Berechtigung widerrufen möchte, muss der Systemadministrator die Datenschutzstufe im Administrator-Anmeldebereich auf Option 1 oder 2 ändern (um zu vermeiden, dass Daten erneut gesendet werden). Um bereits übermittelte OIDs zu entfernen, muss sich der Systemadministrator an den OID-Repository-Webmaster wenden (<a class="spamspan" href="mailto:admin@oid-base.com">admin@oid-base.com</a>), in Englisch oder Französischer Sprache.</p>
 
 	<h3>System ausblenden (Option 2)</h3>
-	<p>Wenn Option 2 für die Datenschutzstufe ausgewählt wurde, kontaktiert das System weder ViaThinkSoft noch oid-info.com.</p>
+	<p>Wenn Option 2 für die Datenschutzstufe ausgewählt wurde, kontaktiert das System weder ViaThinkSoft noch oid-base.com.</p>
 
 	<a id="logfiles"></a><h2>Protokolldateien</h2>
 

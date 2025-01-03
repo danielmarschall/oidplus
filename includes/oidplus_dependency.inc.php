@@ -111,7 +111,7 @@ function oidplus_get_missing_dependencies(): array {
 	if (!function_exists('simplexml_load_file')) {
 		// Required for includes/classes/OIDplusPluginManifest.class.php (Plugins)
 		//              includes/classes/OIDplus.class.php (Translation)
-		//              plugins/viathinksoft/adminPages/400_oidinfo_export/OIDplusPageAdminOIDInfoExport.class.php (Import OID from oid-info.com)
+		//              plugins/viathinksoft/adminPages/400_oidinfo_export/OIDplusPageAdminOIDInfoExport.class.php (Import OID from oid-base.com)
 		//              dev/translation/*.phps (only for developers)
 		// Note: This should not happen because of vendor/danielmarschall/php_utils/simplexml_supplement.inc.php
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {

@@ -745,13 +745,13 @@ function asn1_path_valid($asn1) {
  * The array has the form '0.0.a' -> '0.0.1'
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2019-03-25
- * @see http://www.oid-info.com/name-forms.htm
+ * @see https://www.oid-base.com/name-forms.htm
  * @return  array<string,string> Associative array of standardized ASN.1 alphanumeric identifiers
  **/
 function asn1_get_standardized_array() {
 
-	// Taken from oid-info.com
-	// http://www.oid-info.com/name-forms.htm
+	// Taken from oid-base.com
+	// https://www.oid-base.com/name-forms.htm
 	$standardized = array();
 	$standardized['itu-t'] = '0';
 	$standardized['ccitt'] = '0';
