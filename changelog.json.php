@@ -3,6 +3,16 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.2.14",
+		"date": "2025-01-05 23:45:00 +0100",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"oid-info.com is now oid-base.com",
+			"Implemented WEID Spec Change 13 (UUID WEID)",
+			"Notice about illegal OID is now also in the notifications plugin"
+		]
+	},
+	{
 		"version": "2.0.2.13",
 		"date": "2024-12-30 23:15:00 +0100",
 		"author": "Daniel Marschall (ViaThinkSoft)",

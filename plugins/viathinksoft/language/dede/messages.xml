@@ -5038,6 +5038,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		OID-Base.com import/export
+		]]></source>
+		<target><![CDATA[
+		OID-Base.com Import/Export
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		OID-IP
 		]]></source>
 		<target><![CDATA[
@@ -5074,14 +5082,6 @@
 		]]></source>
 		<target><![CDATA[
 		OID-IRI-Notation
-		]]></target>
-	</message>
-	<message>
-		<source><![CDATA[
-		OID-Base.com import/export
-		]]></source>
-		<target><![CDATA[
-		OID-Base.com Import/Export
 		]]></target>
 	</message>
 	<message>
