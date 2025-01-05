@@ -3,7 +3,7 @@
 /**
  * WEID<=>OID Converter
  * (c) Webfan.de, ViaThinkSoft
- * Revision 2024-11-22
+ * Revision 2025-01-05
  **/
 
 // What is a WEID?
@@ -12,25 +12,28 @@
 //     In OIDs, arcs are in decimal base 10. In WEIDs, the arcs are in base 36.
 //     Also, each WEID has a check digit at the end (called WeLuhn Check Digit).
 //
-// The full specification can be found here: https://weid.info/spec.html
+// The full specification can be found here: https://co.weid.info/spec.html
 //
-// This converter supports WEID as of Spec Change #12
+// This converter supports WEID as of Spec Change #13
 //
 // A few short notes:
 //     - There are several classes of WEIDs which have different OID bases:
-//           "Class A" WEID:  weid:root:2-RR-?
-//                            oid:2.999
-//                            WEID class base OID: (OID Root)
-//           "Class B" WEID:  weid:pen:SX0-7PR-?
-//                            oid:1.3.6.1.4.1.37476.9999
-//                            WEID class base OID: 1.3.6.1.4.1
-//           "Class C" WEID:  weid:EXAMPLE-?
-//                            oid:1.3.6.1.4.1.37553.8.32488192274
-//                            WEID class base OID: 1.3.6.1.4.1.37553.8
-//           "Class D" WEID:  weid:example.com:TEST-? is equal to weid:9-DNS-COM-EXAMPLE-TEST-?
-//                            Since the check digit is based on the OID, the check digit is equal for both notations.
-//                            oid:1.3.6.1.4.1.37553.8.9.17704.32488192274.16438.1372205
-//                            WEID class base OID: 1.3.6.1.4.1.37553.8.9.17704
+//           "Class A" WEID:          weid:root:2-RR-?
+//                                    oid:2.999
+//                                    WEID class base OID: (OID Root)
+//           "Class B" PEN WEID:      weid:pen:SX0-7PR-?
+//                                    oid:1.3.6.1.4.1.37476.9999
+//                                    WEID class base OID: 1.3.6.1.4.1
+//           "Class B" UUID WEID:     weid:uuid:019433d5-535f-7098-9e0b-f7b84cf74da3:SX0-?
+//                                    oid:2.25.2098739235139107623796528785225371043.37476
+//                                    WEID class base OID: 2.25.<uuid>
+//           "Class C" WEID:          weid:EXAMPLE-?
+//                                    oid:1.3.6.1.4.1.37553.8.32488192274
+//                                    WEID class base OID: 1.3.6.1.4.1.37553.8
+//           "Class D" Domain WEID:   weid:example.com:TEST-? is equal to weid:9-DNS-COM-EXAMPLE-TEST-?
+//                                    Since the check digit is based on the OID, the check digit is equal for both notations.
+//                                    oid:1.3.6.1.4.1.37553.8.9.17704.32488192274.16438.1372205
+//                                    WEID class base OID: 1.3.6.1.4.1.37553.8.9.17704
 //     - The last arc in a WEID is the check digit. A question mark is the wildcard for an unknown check digit.
 //       In this case, the converter will return the correct expected check digit for the input.
 //     - The namespace (weid:, weid:pen:, weid:root:) is case insensitive.
@@ -127,23 +130,38 @@ class WeidOidConverter {
 	public static function weid2oid(string &$weid) {
 		$weid = trim($weid);
 
+		$weid = preg_replace('@^urn:x-weid:@', 'weid:', $weid) ?? $weid;
+
 		$p = strrpos($weid,':');
 		$namespace = substr($weid, 0, $p+1);
 		$rest = substr($weid, $p+1);
 		if ($rest === false) $rest = '';
 
-		$weid = preg_replace('@^urn:x-weid:@', 'weid:', $weid) ?? $weid;
-
 		$namespace = strtolower($namespace); // namespace is case insensitive
 
+		if (str_starts_with($namespace, 'weid:uuid:')) {
+			// Spec Change 13: Class B UUID WEID ( https://github.com/WEID-Consortium/weid.info/issues/1 )
+			if (count(explode(':',$weid)) != 4) return false;
+			$uuid = explode(':', $weid)[2];
+			$uuidrest = explode('-', explode(':', $weid)[3]);
+			$alt_weid = 'weid:root:2-P-'.self::base_convert_bigint(str_replace('-','',$uuid), 16, 36) . "-" . implode('-',$uuidrest);
+			$oid = self::weid2oid($alt_weid);
+			if (!$oid) return false;
+			$weid = substr($weid, 0, -1) . substr($alt_weid, -1); // fix wildcard checksum if required (transfer checksum from $alt_weid to $weid)
+			return $oid;
+		}
+		
 		if (str_starts_with($namespace, 'weid:')) {
 			$domainpart = explode('.', explode(':',$weid)[1]);
 			if (count($domainpart) > 1) {
 				// Spec Change 10: Class D / Domain-WEID ( https://github.com/frdl/weid/issues/3 )
 				if (count(explode(':',$weid)) != 3) return false;
 				$domainrest = explode('-',explode(':',$weid)[2]);
-				$weid = "weid:9-DNS-" . strtoupper(implode('-',array_reverse($domainpart))) . "-" . implode('-',$domainrest);
-				return self::weid2oid($weid);
+				$alt_weid = "weid:9-DNS-" . strtoupper(implode('-',array_reverse($domainpart))) . "-" . implode('-',$domainrest);
+				$oid = self::weid2oid($alt_weid);
+				if (!$oid) return false;
+				$weid = substr($weid, 0, -1) . substr($alt_weid, -1); // fix wildcard checksum if required (transfer checksum from $alt_weid to $weid)
+				return $oid;
 			}
 		}
 
@@ -154,7 +172,7 @@ class WeidOidConverter {
 			// Class C
 			$base = '1-3-6-1-4-1-SZ5-8';
 		} else if ($namespace == 'weid:pen:') {
-			// Class B
+			// Class B (PEN)
 			$base = '1-3-6-1-4-1';
 		} else if ($namespace == 'weid:root:') {
 			// Class A
@@ -220,21 +238,24 @@ class WeidOidConverter {
 			$weidstr = '';
 		}
 
-		$is_class_c = (strpos($weidstr, '1-3-6-1-4-1-SZ5-8-') === 0) ||
-		              ($weidstr === '1-3-6-1-4-1-SZ5-8');
-		$is_class_b = ((strpos($weidstr, '1-3-6-1-4-1-') === 0) ||
-		              ($weidstr === '1-3-6-1-4-1'))
-		              && !$is_class_c;
-		$is_class_a = !$is_class_b && !$is_class_c;
+		$is_class_c = (strpos($weidstr, '1-3-6-1-4-1-SZ5-8-') === 0) || ($weidstr === '1-3-6-1-4-1-SZ5-8');
+		$is_class_b_pen = ((strpos($weidstr, '1-3-6-1-4-1-') === 0) || ($weidstr === '1-3-6-1-4-1')) && !$is_class_c;
+		$is_class_b_uuid = (strpos($weidstr, '2-P-') === 0); // do NOT check for == '2-P', as this must be class A
+		$is_class_a = !$is_class_b_pen && !$is_class_b_uuid && !$is_class_c;
 
 		$checksum = self::weLuhnGetCheckDigit($weidstr);
 
 		if ($is_class_c) {
 			$weidstr = substr($weidstr, strlen('1-3-6-1-4-1-SZ5-8-'));
 			$namespace = 'weid:';
-		} else if ($is_class_b) {
+		} else if ($is_class_b_pen) {
 			$weidstr = substr($weidstr, strlen('1-3-6-1-4-1-'));
 			$namespace = 'weid:pen:';
+		} else if ($is_class_b_uuid) {
+			// Spec Change 13: UUID WEID
+			$uuid_base36 = explode('-', $weidstr)[2];
+			$weidstr = substr($weidstr, strlen('2-P-') + strlen($uuid_base36) + strlen('-'));
+			$namespace = 'weid:uuid:' . self::formatAsUUID(self::base_convert_bigint($uuid_base36, 36, 16)) . ':';
 		} else if ($is_class_a) {
 			// $weidstr stays
 			$namespace = 'weid:root:';
@@ -244,6 +265,28 @@ class WeidOidConverter {
 		}
 
 		return $namespace . ($weidstr == '' ? $checksum : $weidstr . '-' . $checksum);
+	}
+
+	/**
+	 * Format a given string as a UUID.
+	 *
+	 * This function ensures the input string is 32 characters long by padding it with leading zeros.
+	 * Then it applies the UUID format (8-4-4-4-12) and returns it in lowercase.
+	 *
+	 * @param string $input The input string to format as a UUID.
+	 * @return string The formatted UUID in lowercase.
+	 */
+	static function formatAsUUID($input) {
+		$paddedInput = str_pad($input, 32, '0', STR_PAD_LEFT);
+		$uuid = sprintf(
+			'%s-%s-%s-%s-%s',
+			substr($paddedInput, 0, 8),
+			substr($paddedInput, 8, 4),
+			substr($paddedInput, 12, 4),
+			substr($paddedInput, 16, 4),
+			substr($paddedInput, 20)
+		);
+		return strtolower($uuid);
 	}
 
 	/**
@@ -310,6 +353,14 @@ class WeidOidConverter {
 # --- Usage Example ---
 
 /*
+echo "Class B UUID tests\n\n";
+$weid = 'weid:uuid:019433d5-535f-7098-9e0b-f7b84cf74da3:SX0-?';
+echo $weid."\n";
+echo WeidOidConverter::weid2oid($weid)."\n";
+echo $weid."\n";
+echo WeidOidConverter::oid2weid('2.25.2098739235139107623796528785225371043.37476')."\n";
+echo "\n";
+
 echo "Class D tests\n\n";
 $weid = 'weid:welt.example.com:ABC-EXAMPLE-?';
 echo $weid."\n";
