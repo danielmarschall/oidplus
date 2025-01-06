@@ -4,7 +4,7 @@
 /**
 * WEID<=>OID Converter
 * (c) Webfan.de, ViaThinkSoft
-* Revision 2025-01-05
+* Revision 2025-01-06
 **/
 
 // What is a WEID?
@@ -15,7 +15,7 @@
 //
 // The full specification can be found here: https://co.weid.info/spec.html
 //
-// This converter supports WEID as of Spec Change #13
+// This converter supports WEID as of Spec Change #14
 //
 // A few short notes:
 //     - There are several classes of WEIDs which have different OID bases:
@@ -136,7 +136,14 @@ var WeidOidConverter = {
 
 		namespace = namespace.toLowerCase(); // namespace is case insensitive
 
-		if (namespace.startsWith("weid:uuid:")) {
+		if (namespace == "weid:uuid:") {
+			if ((rest == '?') || (rest == '3')) {
+				// Spec Change 14: Special case: OID 2.25 is weid:uuid:?
+				return { "weid": "weid:uuid:3", "oid" : "2.25" };
+			} else {
+				return false;
+			}
+		} else if (namespace.startsWith("weid:uuid:")) {
 			// Spec Change 13: Class B UUID WEID ( https://github.com/WEID-Consortium/weid.info/issues/1 )
 			if (weid.split(":").length != 4) return false;
 			var uuid = weid.split(":")[2];
@@ -238,7 +245,7 @@ var WeidOidConverter = {
 
 		var is_class_c      = (weidstr.startsWith('1-3-6-1-4-1-SZ5-8-') || (weidstr == '1-3-6-1-4-1-SZ5-8'));
 		var is_class_b_pen  = (weidstr.startsWith('1-3-6-1-4-1-') || (weidstr == '1-3-6-1-4-1')) && !is_class_c;
-		var is_class_b_uuid = weidstr.startsWith('2-P-'); // do NOT check for == '2-P', as this must be class A
+		var is_class_b_uuid = (weidstr.startsWith('2-P-') || (weidstr == '2-P'));
 		var is_class_a      = !is_class_b_pen && !is_class_b_uuid && !is_class_c;
 
 		var checksum = WeidOidConverter.weLuhnCheckDigit(weidstr);
@@ -251,10 +258,16 @@ var WeidOidConverter = {
 			weidstr = weidstr.substr('1-3-6-1-4-1-'.length);
 			namespace = 'weid:pen:';
 		} else if (is_class_b_uuid) {
-			// Spec Change 13: UUID WEID
-			var uuid_base36 = weidstr.split('-')[2];
-			weidstr = weidstr.substr('2-P-'.length + uuid_base36.length + '-'.length);
-			namespace = 'weid:uuid:' + WeidOidConverter.formatAsUUID(WeidOidConverter.base_convert_bigint(uuid_base36, 36, 16)) + ':';
+			if (weidstr == '2-P') {
+				// Spec Change 14: Special case: OID 2.25 is weid:uuid:?
+				weidstr = '';
+				namespace = 'weid:uuid:';
+			} else {
+				// Spec Change 13: UUID WEID
+				var uuid_base36 = weidstr.split('-')[2];
+				weidstr = weidstr.substr('2-P-'.length + uuid_base36.length + '-'.length);
+				namespace = 'weid:uuid:' + WeidOidConverter.formatAsUUID(WeidOidConverter.base_convert_bigint(uuid_base36, 36, 16)) + ':';
+			}
 		} else if (is_class_a) {
 			// weidstr stays
 			namespace = 'weid:root:';

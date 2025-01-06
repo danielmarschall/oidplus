@@ -169,7 +169,13 @@ class OIDplusMenuUtils extends OIDplusBaseClass {
 				} else {
 					$bry = explode('.', $row['id']);
 					$last_arc = $bry[count($bry)-1];
-					$child['text'] = WeidOidConverter::encodeSingleArc($last_arc);
+					if (strtolower($parent) == 'oid:2.25') {
+						$uuid = oid_to_uuid('2.25.'.$last_arc);
+						if ($uuid === false) $uuid = _L('Invalid UUID');
+						$child['text'] = $uuid;
+					} else {
+						$child['text'] = WeidOidConverter::encodeSingleArc($last_arc);
+					}
 				}
 			} else {
 				$child['text'] = $obj->jsTreeNodeName($parentObj);
