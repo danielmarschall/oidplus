@@ -15,7 +15,7 @@
 //
 // The full specification can be found here: https://co.weid.info/spec.html
 //
-// This converter supports WEID as of Spec Change #14
+// This converter supports WEID as of Spec Change #15
 //
 // A few short notes:
 //     - There are several classes of WEIDs which have different OID bases:
@@ -137,18 +137,23 @@ var WeidOidConverter = {
 		namespace = namespace.toLowerCase(); // namespace is case insensitive
 
 		if (namespace == "weid:uuid:") {
-			if ((rest == '?') || (rest == '3')) {
-				// Spec Change 14: Special case: OID 2.25 is weid:uuid:?
-				return { "weid": "weid:uuid:3", "oid" : "2.25" };
-			} else {
-				return false;
-			}
+			// Spec Change 15: Class B UUID WEID ( https://github.com/WEID-Consortium/weid.info/issues/3 )
+			if (weid.split(":").length != 3) return false;
+			var uuidrest = weid.split(":")[2].split("-");
+			var alt_weid = 'weid:root:2-P-' + uuidrest.join("-");
+			var tmp = WeidOidConverter.weid2oid(alt_weid);
+
+			if (!tmp) return false;
+			var checksum = tmp["weid"].split("-").reverse()[0];
+			var weid = weid.substr(0,weid.length-1) + checksum; // fix wildcard checksum if required
+			return { "weid": weid, "oid" : tmp["oid"] };
 		} else if (namespace.startsWith("weid:uuid:")) {
 			// Spec Change 13: Class B UUID WEID ( https://github.com/WEID-Consortium/weid.info/issues/1 )
 			if (weid.split(":").length != 4) return false;
 			var uuid = weid.split(":")[2];
 			var uuidrest = weid.split(":")[3].split("-");
-			var alt_weid = 'weid:root:2-P-'+WeidOidConverter.base_convert_bigint(uuid.replaceAll('-',''), 16, 36) + "-" + uuidrest.join("-");
+			if (!uuid.match("^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$")) return false;
+			var alt_weid = 'weid:root:2-P-' + WeidOidConverter.base_convert_bigint(uuid.replaceAll('-',''), 16, 36) + "-" + uuidrest.join("-");
 			var tmp = WeidOidConverter.weid2oid(alt_weid);
 
 			if (!tmp) return false;
@@ -182,6 +187,18 @@ var WeidOidConverter = {
 		} else if (namespace == 'weid:pen:') {
 			// Class B (PEN)
 			base = '1-3-6-1-4-1';
+		} else if (namespace.startsWith("weid:pen:")) {
+			// Spec Change 15: "weid:pen:<pen-base10>:?" as alias of "weid:pen:<pen-base36>-?"
+			if (weid.split(":").length != 4) return false;
+			var pen = weid.split(":")[2];
+			var penrest = weid.split(":")[3].split("-");
+			var alt_weid = 'weid:root:1-3-6-1-4-1-' + WeidOidConverter.base_convert_bigint(pen, 10, 36) + "-" + penrest.join("-");
+			var tmp = WeidOidConverter.weid2oid(alt_weid);
+
+			if (!tmp) return false;
+			var checksum = tmp["weid"].split("-").reverse()[0];
+			var weid = weid.substr(0,weid.length-1) + checksum; // fix wildcard checksum if required
+			return { "weid": weid, "oid" : tmp["oid"] };
 		} else if (namespace == 'weid:root:') {
 			// Class A
 			base = '';

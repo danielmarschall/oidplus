@@ -2,8 +2,8 @@
 
 /*
  * OID-Utilities for PHP
- * Copyright 2011 - 2024 Daniel Marschall, ViaThinkSoft
- * Version 2024-05-26
+ * Copyright 2011 - 2025 Daniel Marschall, ViaThinkSoft
+ * Version 2025-01-09
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -745,13 +745,13 @@ function asn1_path_valid($asn1) {
  * The array has the form '0.0.a' -> '0.0.1'
  * @author  Daniel Marschall, ViaThinkSoft
  * @version 2019-03-25
- * @see https://www.oid-base.com/name-forms.htm
+ * @see https://oid-base.com/name-forms.htm
  * @return  array<string,string> Associative array of standardized ASN.1 alphanumeric identifiers
  **/
 function asn1_get_standardized_array() {
 
 	// Taken from oid-base.com
-	// https://www.oid-base.com/name-forms.htm
+	// https://oid-base.com/name-forms.htm
 	$standardized = array();
 	$standardized['itu-t'] = '0';
 	$standardized['ccitt'] = '0';

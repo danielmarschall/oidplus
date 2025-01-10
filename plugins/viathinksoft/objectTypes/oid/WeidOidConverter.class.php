@@ -14,7 +14,7 @@
 //
 // The full specification can be found here: https://co.weid.info/spec.html
 //
-// This converter supports WEID as of Spec Change #14
+// This converter supports WEID as of Spec Change #15
 //
 // A few short notes:
 //     - There are several classes of WEIDs which have different OID bases:
@@ -140,40 +140,42 @@ class WeidOidConverter {
 		$namespace = strtolower($namespace); // namespace is case insensitive
 
 		if ($namespace == 'weid:uuid:') {
-			// Spec Change 14: Special case: OID 2.25 is weid:uuid:?
-			if (($rest == '?') || ($rest == '3')) {
-				$weid = 'weid:uuid:3';
-				return '2.25';
-			} else {
-				return false;
-			}
-		} else if (str_starts_with($namespace, 'weid:uuid:')) {
+			// Spec Change 15: Class B UUID WEID ( https://github.com/WEID-Consortium/weid.info/issues/3 )
+			if (count(explode(':',$weid)) != 3) return false;
+			$uuidrest = explode(':', $weid)[2];
+			$alt_weid = 'weid:root:2-P-'.$uuidrest;
+			$oid = self::weid2oid($alt_weid);
+			if ($oid === false) return false;
+			$weid = substr($weid, 0, -1) . substr($alt_weid, -1); // fix wildcard checksum if required (transfer checksum from $alt_weid to $weid)
+			return $oid;
+		} else if (strpos($namespace, 'weid:uuid:') === 0) {
 			// Spec Change 13: Class B UUID WEID ( https://github.com/WEID-Consortium/weid.info/issues/1 )
 			if (count(explode(':',$weid)) != 4) return false;
 			$uuid = explode(':', $weid)[2];
-			$uuidrest = explode('-', explode(':', $weid)[3]);
-			$alt_weid = 'weid:root:2-P-'.self::base_convert_bigint(str_replace('-','',$uuid), 16, 36) . "-" . implode('-',$uuidrest);
+			$uuidrest = explode(':', $weid)[3];
+			if (!preg_match('@^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$@', $uuid, $m)) return false;
+			$alt_weid = 'weid:root:2-P-'.self::base_convert_bigint(str_replace('-','',$uuid), 16, 36).'-'.$uuidrest;
 			$oid = self::weid2oid($alt_weid);
-			if (!$oid) return false;
+			if ($oid === false) return false;
 			$weid = substr($weid, 0, -1) . substr($alt_weid, -1); // fix wildcard checksum if required (transfer checksum from $alt_weid to $weid)
 			return $oid;
 		}
 
-		if (str_starts_with($namespace, 'weid:')) {
+		if (strpos($namespace, 'weid:') === 0) {
 			$domainpart = explode('.', explode(':',$weid)[1]);
 			if (count($domainpart) > 1) {
 				// Spec Change 10: Class D / Domain-WEID ( https://github.com/frdl/weid/issues/3 )
 				if (count(explode(':',$weid)) != 3) return false;
-				$domainrest = explode('-',explode(':',$weid)[2]);
-				$alt_weid = "weid:9-DNS-" . strtoupper(implode('-',array_reverse($domainpart))) . "-" . implode('-',$domainrest);
+				$domainrest = explode(':',$weid)[2];
+				$alt_weid = "weid:9-DNS-" . strtoupper(implode('-',array_reverse($domainpart))) . "-" . $domainrest;
 				$oid = self::weid2oid($alt_weid);
-				if (!$oid) return false;
+				if ($oid === false) return false;
 				$weid = substr($weid, 0, -1) . substr($alt_weid, -1); // fix wildcard checksum if required (transfer checksum from $alt_weid to $weid)
 				return $oid;
 			}
 		}
 
-		if (str_starts_with($namespace, 'weid:x-')) {
+		if (strpos($namespace, 'weid:x-') === 0) {
 			// Spec Change 11: Proprietary Namespaces ( https://github.com/frdl/weid/issues/4 )
 			return "[Proprietary WEID Namespace]";
 		} else if ($namespace == 'weid:') {
@@ -182,6 +184,16 @@ class WeidOidConverter {
 		} else if ($namespace == 'weid:pen:') {
 			// Class B (PEN)
 			$base = '1-3-6-1-4-1';
+		} else if (strpos($namespace, 'weid:pen:') === 0) {
+			// Spec Change 15: "weid:pen:<pen-base10>:?" as alias of "weid:pen:<pen-base36>-?"
+			if (count(explode(':',$weid)) != 4) return false;
+			$pen = explode(':', $weid)[2];
+			$penrest = explode(':', $weid)[3];
+			$alt_weid = 'weid:root:1-3-6-1-4-1-'.self::base_convert_bigint($pen, 10, 36) . "-" . $penrest;
+			$oid = self::weid2oid($alt_weid);
+			if ($oid === false) return false;
+			$weid = substr($weid, 0, -1) . substr($alt_weid, -1); // fix wildcard checksum if required (transfer checksum from $alt_weid to $weid)
+			return $oid;
 		} else if ($namespace == 'weid:root:') {
 			// Class A
 			$base = '';
