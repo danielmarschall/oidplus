@@ -1,6 +1,6 @@
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2025 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-var OIDplusPageAdminOIDInfoExport = {
+var OIDplusPageAdminOidBaseExport = {
 
 	oid: "1.3.6.1.4.1.37476.2.5.2.4.3.400",
 
@@ -36,15 +36,15 @@ var OIDplusPageAdminOIDInfoExport = {
 			},
 			data: {
 				csrf_token: csrf_token,
-				plugin: OIDplusPageAdminOIDInfoExport.oid,
-				action: "import_oidinfo_oid",
+				plugin: OIDplusPageAdminOidBaseExport.oid,
+				action: "import_oidbase_oid",
 				oid: oid
 			},
 			error: oidplus_ajax_error,
 			success: function (data) {
 				oidplus_ajax_success(data, function (data) {
 					console.log(_L("Imported OID %1", oid));
-					OIDplusPageAdminOIDInfoExport.removeMissingOid(oid);
+					OIDplusPageAdminOidBaseExport.removeMissingOid(oid);
 				});
 			}
 		});
@@ -55,7 +55,7 @@ var OIDplusPageAdminOIDInfoExport = {
 
 		var form_data = new FormData();
 		form_data.append('userfile', file_data);
-		form_data.append('plugin', OIDplusPageAdminOIDInfoExport.oid),
+		form_data.append('plugin', OIDplusPageAdminOidBaseExport.oid),
 		form_data.append('action', "import_xml_file");
 		form_data.append('csrf_token', csrf_token);
 
@@ -120,7 +120,7 @@ var OIDplusPageAdminOIDInfoExport = {
 
 	uploadXmlFileOnSubmit: function() {
 		try {
-			OIDplusPageAdminOIDInfoExport.uploadXmlFile($("#userfile")[0].value);
+			OIDplusPageAdminOidBaseExport.uploadXmlFile($("#userfile")[0].value);
 		} finally {
 			return false;
 		}

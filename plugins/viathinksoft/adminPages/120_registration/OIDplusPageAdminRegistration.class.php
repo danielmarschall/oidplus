@@ -28,7 +28,7 @@ use ViaThinkSoft\OIDplus\Core\OIDplusPagePluginAdmin;
 use ViaThinkSoft\OIDplus\Plugins\AdminPages\Notifications\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8;
 use ViaThinkSoft\OIDplus\Plugins\AdminPages\Notifications\OIDplusNotification;
 use ViaThinkSoft\OIDplus\Plugins\AdminPages\OOBE\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_1;
-use ViaThinkSoft\OIDplus\Plugins\AdminPages\OidInfoExport\OIDplusPageAdminOIDInfoExport;
+use ViaThinkSoft\OIDplus\Plugins\AdminPages\OidBaseExport\OIDplusPageAdminOidBaseExport;
 
 // phpcs:disable PSR1.Files.SideEffects
 \defined('INSIDE_OIDPLUS') or die;
@@ -357,14 +357,14 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 			}
 		} else {
 			if ($privacy_level == 0) {
-				$adminExportPlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.3.400'); // OIDplusPageAdminOIDInfoExport
+				$adminExportPlugin = OIDplus::getPluginByOid('1.3.6.1.4.1.37476.2.5.2.4.3.400'); // OIDplusPageAdminOidBaseExport
 				if (!is_null($adminExportPlugin)) {
-					list($oidinfo_xml, $dummy_content_type) = OIDplusPageAdminOIDInfoExport::outputXML(false); // no online check, because the query should be short (since the query is done while a visitor waits for the response)
+					list($oidbase_xml, $dummy_content_type) = OIDplusPageAdminOidBaseExport::outputXML(false); // no online check, because the query should be short (since the query is done while a visitor waits for the response)
 				} else {
-					$oidinfo_xml = false;
+					$oidbase_xml = false;
 				}
 			} else {
-				$oidinfo_xml = false;
+				$oidbase_xml = false;
 			}
 
 			$query = self::QUERY_REGISTER_V1;
@@ -396,7 +396,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 				"hide_public_key" => 0,
 				"admin_email" => OIDplus::config()->getValue('admin_email'),
 				"system_title" => OIDplus::config()->getValue('system_title'),
-				"oidinfo_xml" => @base64_encode($oidinfo_xml),
+				"oidbase_xml" => @base64_encode($oidbase_xml),
 				"root_oids" => $root_oids,
 				"system_version" => OIDplus::getVersion(),
 				"system_install_type" => OIDplus::getInstallType()
@@ -515,7 +515,7 @@ class OIDplusPageAdminRegistration extends OIDplusPagePluginAdmin
 			if (!OIDplus::baseConfig()->getValue('REGISTRATION_HIDE_SYSTEM', false)) {
 				$privacy_level = OIDplus::config()->getValue('reg_privacy');
 
-				if (PHP_SAPI !== 'cli') { // don't register when called from CLI, otherwise the oidinfo XML can't convert relative links into absolute links
+				if (PHP_SAPI !== 'cli') { // don't register when called from CLI, otherwise the oidbase XML can't convert relative links into absolute links
 					$last_ping = OIDplus::config()->getValue('reg_last_ping');
 					if (!is_numeric($last_ping)) $last_ping = 0;
 					$last_ping_interval = OIDplus::config()->getValue('reg_ping_interval');

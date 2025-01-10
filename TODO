@@ -1,5 +1,6 @@
 Planned 2025:
 - REST API: config (#40), attachments (#41), log events (#42)
+- Rename every "WHOIS" to "OID-IP" (also folder names)
 
 Sep 2024 in discussion:
 - WTF wordpress like plugin test bundle (#67)
@@ -80,7 +81,7 @@ Admin Auth:
 Feb 2023 entries:
 - Create oid => immediately after creating an OID, show the title/description edit dialog in a popup?? we must be sure that people don't add OIDs without title
 - OID Description textarea: add link to oid-base.com faq to show how descriptions should be done
-- Oidinfo blacklist object types (set by the user in the system config)
+- oid-base.com blacklist object types (set by the user in the system config)
 - Db Config: datatypes/enums for the settings
 - Db Config: default setting button
 - improved PHP class loader, see frdlweb github discussion https://github.com/frdl/frdl-oidplus-plugin-type-pen/issues/1
@@ -190,7 +191,7 @@ DATA TRANSFER PLUGIN
 - XML import: Let the user decide if "created=now" should be set
 - XML import: Waiting animation
 - XML import: If output (errors) is too long, show them in a page rather than an alert() box
-- oidplus:oidinfo_compare_import : It would be nice to have an "import all" button
+- oidplus:oidbase_compare_import : It would be nice to have an "import all" button
 
 SMALL THINGS
 - when you copy something into the clipboard, please show a toast message
@@ -210,7 +211,7 @@ SMALL THINGS
         $("#gotoedit").val(id);
 - Add show_waiting_anim() and hide_waiting_anim() to all AJAX queries, like it is done in plugin "Software update"
 - #gotobutton should have the same top and height as #gotoedit
-- RA address data: Country selection box like in OIDInfo
+- RA address data: Country selection box like in oid-base.com
 	Possible data source: https://datahub.io/core/country-list#resource-data
 - minimum menu expansion level: make it configurable for all objects and plugins, e.g. so that when you open OIDplus, all OIDs till level 2 are expanded
 - There can be an extra table which contains "key - value" fields for each object

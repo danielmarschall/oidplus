@@ -66,7 +66,7 @@ function oidplus_get_missing_dependencies(): array {
 	if (!function_exists('gmp_init')) {
 		// GMP Required for includes/uuid_functions.inc.php
 		//                  includes/ipv6_functions.inc.php
-		//                  plugins/viathinksoft/adminPages/400_oidinfo_export/oidinfo_api.inc.php (if GMP is not available, BC will be used)
+		//                  plugins/viathinksoft/adminPages/400_oidbase_sync/oidinfo_api.inc.php (if GMP is not available, BC will be used)
 		// Note that vendor/danielmarschall/php_utils/gmp_supplement.inc.php will implement the GMP functions if BCMath is present.
 		// This is the reason why we use function_exists('gmp_init') instead of extension_loaded('gmp')
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {
@@ -111,7 +111,7 @@ function oidplus_get_missing_dependencies(): array {
 	if (!function_exists('simplexml_load_file')) {
 		// Required for includes/classes/OIDplusPluginManifest.class.php (Plugins)
 		//              includes/classes/OIDplus.class.php (Translation)
-		//              plugins/viathinksoft/adminPages/400_oidinfo_export/OIDplusPageAdminOIDInfoExport.class.php (Import OID from oid-base.com)
+		//              plugins/viathinksoft/adminPages/400_oidbase_sync/OIDplusPageAdminOidBaseExport.class.php (Import OID from oid-base.com)
 		//              dev/translation/*.phps (only for developers)
 		// Note: This should not happen because of vendor/danielmarschall/php_utils/simplexml_supplement.inc.php
 		if (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN') {

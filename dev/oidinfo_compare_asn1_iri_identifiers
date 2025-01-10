@@ -56,9 +56,9 @@ function check_oid(string $oid, string $root=DESIRED_ROOT) {
 	if (!isset($data['oid']['identifier'])) $data['oid']['identifier'] = array();
 	if (is_array($data['oid']['identifier'])) {
 		asort($data['oid']['identifier']);
-		$oidinfo = implode('|',$data['oid']['identifier']);
+		$oidbase = implode('|',$data['oid']['identifier']);
 	} else {
-		$oidinfo = $data['oid']['identifier'];
+		$oidbase = $data['oid']['identifier'];
 	}
 	$oidplus = array();
 	$resx = OIDplus::db()->query("select name from ###asn1id where oid = ?", array("oid:$oid"));
@@ -68,8 +68,8 @@ function check_oid(string $oid, string $root=DESIRED_ROOT) {
 	asort($oidplus);
 	$oidplus = implode('|',$oidplus);
 
-	if ($oidinfo != $oidplus) {
-		echo "ASN.1 : $oid (oidinfo '$oidinfo' vs oidplus '$oidplus')\n";
+	if ($oidbase != $oidplus) {
+		echo "ASN.1 : $oid (oidbase '$oidbase' vs oidplus '$oidplus')\n";
 	}
 
 	// Unicode Labels
@@ -77,9 +77,9 @@ function check_oid(string $oid, string $root=DESIRED_ROOT) {
 	if (!isset($data['oid']['unicode-label'])) $data['oid']['unicode-label'] = array();
 	if (is_array($data['oid']['unicode-label'])) {
 		asort($data['oid']['unicode-label']);
-		$oidinfo = implode('|',$data['oid']['unicode-label']);
+		$oidbase = implode('|',$data['oid']['unicode-label']);
 	} else {
-		$oidinfo = $data['oid']['unicode-label'];
+		$oidbase = $data['oid']['unicode-label'];
 	}
 	$oidplus = array();
 	$resx = OIDplus::db()->query("select name from ###iri where oid = ?", array("oid:$oid"));
@@ -89,8 +89,8 @@ function check_oid(string $oid, string $root=DESIRED_ROOT) {
 	asort($oidplus);
 	$oidplus = implode('|',$oidplus);
 
-	if ($oidinfo != $oidplus) {
-		echo "IRI : $oid (oidinfo '$oidinfo' vs oidplus '$oidplus')\n";
+	if ($oidbase != $oidplus) {
+		echo "IRI : $oid (oidbase '$oidbase' vs oidplus '$oidplus')\n";
 	}
 }
 

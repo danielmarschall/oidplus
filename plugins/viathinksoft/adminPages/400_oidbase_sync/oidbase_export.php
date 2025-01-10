@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2021 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2025 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;
 use ViaThinkSoft\OIDplus\Core\OIDplusGui;
 use ViaThinkSoft\OIDplus\Core\OIDplusHtmlException;
-use ViaThinkSoft\OIDplus\Plugins\AdminPages\OidInfoExport\OIDplusPageAdminOIDInfoExport;
+use ViaThinkSoft\OIDplus\Plugins\AdminPages\OidBaseExport\OIDplusPageAdminOidBaseExport;
 
 for ($sysdir_depth=4; $sysdir_depth<=7; $sysdir_depth++) {
 	// The plugin directory can be in plugins (i=4), userdata_pub/plugins (i=5), or userdata_pub/tenant/.../plugins/ (i=7)
@@ -53,7 +53,7 @@ if (!OIDplus::authUtils()->isAdminLoggedIn()) {
 	}
 }
 
-list($out_content, $out_type) = OIDplusPageAdminOIDInfoExport::outputXML(isset($_REQUEST['online']) && $_REQUEST['online']);
+list($out_content, $out_type) = OIDplusPageAdminOidBaseExport::outputXML(isset($_REQUEST['online']) && $_REQUEST['online']);
 
 OIDplus::invoke_shutdown();
 
