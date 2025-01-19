@@ -778,24 +778,25 @@ class OIDplusPageAdminOidBaseExport extends OIDplusPagePluginAdmin
 				$description = $obj->getDescription();
 				$comment = $obj->getComment();
 				if (!empty($title)) {
-					$elements['description'] = $title;
+					$elements['description'] = htmlentities($title);
 					$elements['information'] = $description;
 					if (trim($title) == trim(strip_tags($description))) {
 						$elements['information'] = '';
 					}
 				} else if (isset($elements['identifier'][0])) {
-					$elements['description'] = '"'.$elements['identifier'][0].'"';
+					$elements['description'] = '"'.htmlentities($elements['identifier'][0]).'"';
 					$elements['information'] = $description;
 				} else if (isset($elements['unicode-label'][0])) {
-					$elements['description'] = '"'.$elements['unicode-label'][0].'"';
+					$elements['description'] = '"'.htmlentities($elements['unicode-label'][0]).'"';
 					$elements['information'] = $description;
 				} else if (!empty($description)) {
 					$elements['description'] = $description;
 					$elements['information'] = '';
 				} else if (!empty($comment)) {
-					$elements['description'] = $comment;
+					$elements['description'] = htmlentities($comment);
 					$elements['information'] = '';
 				} else {
+					// TODO: Actually, in this case the OID should be rejected
 					$elements['description'] = '<i>No description available</i>'; // do not translate
 					$elements['information'] = '';
 				}
@@ -807,11 +808,16 @@ class OIDplusPageAdminOidBaseExport extends OIDplusPagePluginAdmin
 				$elements['information'] .= 'See <a href="'.OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL).'?goto='.urlencode($id).'">more information</a>.'; // do not translate
 
 				if (explode(':',$id,2)[0] != 'oid') {
-					$elements['information'] = "Object: $id\n\n" . $elements['information']; // do not translate
+					$elements['information'] = "Object: ".htmlentities($id)."\n\n" . $elements['information']; // do not translate
 				}
 
 				$elements['description'] = self::repair_relative_links($elements['description']);
 				$elements['information'] = self::repair_relative_links($elements['information']);
+
+				// Function to escape only invalid ampersands
+				// Match "&" not followed by a valid entity (e.g., &amp;, &lt;, etc.)
+				// TODO: include that into the OIDInfo API?
+				$elements['information'] = preg_replace('/&(?![a-zA-Z0-9#]+;)/', '&amp;', $elements['information']);
 
 				$elements['first-registrant']['first-name'] = '';
 				$elements['first-registrant']['last-name'] = '';
