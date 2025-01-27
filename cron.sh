@@ -24,11 +24,13 @@
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 
+@set_time_limit(-1);
+
 $errors = 0;
 
 try {
 	require_once __DIR__ . '/includes/oidplus.inc.php';
-} catch (Exception $e) {
+} catch (\Exception $e) {
 	fwrite(STDERR, "Core init: ".$e->getMessage());
 	exit(1);
 }
@@ -40,7 +42,7 @@ try {
 	assert(!OIDplus::isTenant());
 	OIDplus::invoke_shutdown();
 	ob_end_clean();
-} catch (Exception $e) {
+} catch (\Exception $e) {
 	fwrite(STDERR, "Base system: ".$e->getMessage()."\n");
 	$errors++;
 }
@@ -57,7 +59,7 @@ foreach ($tenants as $tenant) {
 		assert(OIDplus::isTenant());
 		OIDplus::invoke_shutdown();
 		ob_end_clean();
-	} catch (Exception $e) {
+	} catch (\Exception $e) {
 		fwrite(STDERR, "Tenant $tenant: ".$e->getMessage()."\n");
 		$errors++;
 	}

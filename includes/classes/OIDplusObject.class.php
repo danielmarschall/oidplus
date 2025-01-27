@@ -812,19 +812,38 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 
 		if ($obj->nodeId(false) == '') return false; // speed optimization. "oid:" is not equal to any object in the database
 
+		if ($obj->ns() == 'oid') {
+			$oidA = sanitizeOID($obj->nodeId(false), false);
+			if ($oidA === false) return false; // should not happen
+		} else {
+			$oidA = null;
+		}
+
 		if (!OIDplus::baseConfig()->getValue('OBJECT_CACHING', true)) {
 			$res = OIDplus::db()->query("select id from ###objects where id like ?", array($obj->ns().':%'));
 			while ($row = $res->fetch_object()) {
-				$test = OIDplusObject::parse($row->id);
-				if ($test && $obj->equals($test)) return $test;
+				if (!is_null($oidA)) {
+					// This approach is MUCH MUCH MUCH faster than parse() and equals(). Test it on a system with 100k+ OIDs! (TODO: why?!)
+					$oidB = sanitizeOID(explode(':',$row->id,2)[1], false);
+					if ($oidA === $oidB) return OIDplusObject::parse($row->id);
+				} else {
+					$test = OIDplusObject::parse($row->id);
+					if ($test && $obj->equals($test)) return $test;
+				}
 			}
 			return false;
 		} else {
 			self::buildObjectInformationCache();
 			foreach (OIDplus::getCurrentContext()->object_info_cache as $id => $cacheitem) {
-				if (strpos($id, $obj->ns().':') === 0) {
-					$test = OIDplusObject::parse($id);
-					if ($test && $obj->equals($test)) return $test;
+				if (!is_null($oidA)) {
+					// This approach is MUCH MUCH MUCH faster than parse() and equals(). Test it on a system with 100k+ OIDs! (TODO: why?!)
+					$oidB = sanitizeOID(explode(':',$id,2)[1], false);
+					if ($oidA === $oidB) return OIDplusObject::parse($id);
+				} else {
+					if (strpos($id, $obj->ns().':') === 0) {
+						$test = OIDplusObject::parse($id);
+						if ($test && $obj->equals($test)) return $test;
+					}
 				}
 			}
 			return false;
@@ -862,11 +881,12 @@ abstract class OIDplusObject extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	private static function buildObjectInformationCache(): void {
-		if (is_null(OIDplus::getCurrentContext()->object_info_cache)) {
-			OIDplus::getCurrentContext()->object_info_cache = array();
+		$context = OIDplus::getCurrentContext();
+		if (is_null($context->object_info_cache)) {
+			$context->object_info_cache = array();
 			$res = OIDplus::db()->query("select * from ###objects");
 			while ($row = $res->fetch_array()) {
-				OIDplus::getCurrentContext()->object_info_cache[$row['id']] = $row;
+				$context->object_info_cache[$row['id']] = $row;
 			}
 		}
 	}

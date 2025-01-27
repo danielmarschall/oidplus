@@ -924,6 +924,13 @@ class OIDplusPageAdminOidBaseExport extends OIDplusPagePluginAdmin
 		$out_content .= $oa->xmlAddFooter();
 		$oa = null;
 
+		// TODO: this should actually be done by oidinfo_api.inc.php, not by us!
+		$out_content = str_replace(']]>', ']]&gt;', $out_content);
+		$out_content = str_replace('<information>', '<information><![CDATA[', $out_content);
+		$out_content = str_replace('</information>', ']]></information>', $out_content);
+		$out_content = str_replace('<description>', '<description><![CDATA[', $out_content);
+		$out_content = str_replace('</description>', ']]></description>', $out_content);
+
 		$out_type = 'text/xml';
 		return array($out_content, $out_type);
 	}
@@ -1003,9 +1010,13 @@ class OIDplusPageAdminOidBaseExport extends OIDplusPagePluginAdmin
 		// TODO: Let the user decide about $replaceExistingOIDs
 		// TODO: Let the user decide if "created=now" should be set (this is good when the XML files is created by the user itself to do bulk-inserts)
 
+		$xml_contents = str_replace('<description><![CDATA[', '<description>', $xml_contents);
+		$xml_contents = str_replace(']]></description>', '</description>', $xml_contents);
 		$xml_contents = str_replace('<description>', '<description><![CDATA[', $xml_contents);
 		$xml_contents = str_replace('</description>', ']]></description>', $xml_contents);
 
+		$xml_contents = str_replace('<information><![CDATA[', '<information>', $xml_contents);
+		$xml_contents = str_replace(']]></information>', '</information>', $xml_contents);
 		$xml_contents = str_replace('<information>', '<information><![CDATA[', $xml_contents);
 		$xml_contents = str_replace('</information>', ']]></information>', $xml_contents);
 

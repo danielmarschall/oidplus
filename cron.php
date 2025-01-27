@@ -27,6 +27,8 @@
 use ViaThinkSoft\OIDplus\Core\OIDplus;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;
 
+@set_time_limit(-1);
+
 try {
 	require_once __DIR__ . '/includes/oidplus.inc.php';
 
