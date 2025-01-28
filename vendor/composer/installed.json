@@ -832,12 +832,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "ec5b843c254a9ec675c12e8d03dfec42a3c0bd8b"
+                "reference": "3bb297621f5c78a1e01bb34ce2308344457f45f1"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/ec5b843c254a9ec675c12e8d03dfec42a3c0bd8b",
-                "reference": "ec5b843c254a9ec675c12e8d03dfec42a3c0bd8b",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/3bb297621f5c78a1e01bb34ce2308344457f45f1",
+                "reference": "3bb297621f5c78a1e01bb34ce2308344457f45f1",
                 "shasum": ""
             },
             "require": {
@@ -855,7 +855,7 @@
                 "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
                 "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
             },
-            "time": "2025-01-03T19:56:49+00:00",
+            "time": "2025-01-25T04:27:41+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -1123,15 +1123,15 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "0c4bc43d572ea9673468bf12cc30e8fb556550f4"
+                "reference": "f0b12677418f3cbb2aeffc2216bd36b0590dd418"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/0c4bc43d572ea9673468bf12cc30e8fb556550f4",
-                "reference": "0c4bc43d572ea9673468bf12cc30e8fb556550f4",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/f0b12677418f3cbb2aeffc2216bd36b0590dd418",
+                "reference": "f0b12677418f3cbb2aeffc2216bd36b0590dd418",
                 "shasum": ""
             },
-            "time": "2024-12-11T04:56:37+00:00",
+            "time": "2025-01-22T03:57:00+00:00",
             "default-branch": true,
             "type": "component",
             "extra": {
@@ -1175,7 +1175,7 @@
                 "wysiwyg"
             ],
             "support": {
-                "source": "https://github.com/tinymce/tinymce-dist/tree/7.6.0"
+                "source": "https://github.com/tinymce/tinymce-dist/tree/7.6.1"
             },
             "install-path": "../tinymce/tinymce"
         },
@@ -1186,18 +1186,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "a5d430d526dcb330b3e0f12aa1321cf948d726f1"
+                "reference": "5708adc816b9a6b07fb2b4f07c3b562935bd0a54"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/a5d430d526dcb330b3e0f12aa1321cf948d726f1",
-                "reference": "a5d430d526dcb330b3e0f12aa1321cf948d726f1",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/5708adc816b9a6b07fb2b4f07c3b562935bd0a54",
+                "reference": "5708adc816b9a6b07fb2b4f07c3b562935bd0a54",
                 "shasum": ""
             },
             "replace": {
                 "twitter/bootstrap": "self.version"
             },
-            "time": "2024-12-31T08:08:59+00:00",
+            "time": "2025-01-23T06:57:39+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",

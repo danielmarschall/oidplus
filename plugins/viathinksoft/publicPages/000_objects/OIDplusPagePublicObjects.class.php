@@ -1444,7 +1444,8 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 	 */
 	private static $crudCounter = 0; // [NoOidplusContextOk] doesn't need to be in OIDplusContext, because there is no issue if it gets increased across context changes
 
-	// https://www.oid-base.com/cgi-bin/display?a=list-by-category&category=Not%20allocating%20identifiers (01 Dec 2024)
+	// https://www.oid-base.com/cgi-bin/display?a=list-by-category&category=Not%20allocating%20identifiers
+	// Last checked: 28 Jan 2025
 	private const NO_ASN1 = array(
 			'oid:0.2',
 			'oid:0.2.228',
@@ -1455,14 +1456,15 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			'oid:2.16.756',
 			'oid:2.16.756.1',
 			'oid:2.16.756.5'
-			//'oid:2.25', // according to Olivier, it is OK that UUID owners define their own ASN.1 ID, since the ASN.1 ID is not required to be unique
+			//'oid:2.25', // according to the OID Repository Administrator, it is OK that UUID owners define their own ASN.1 ID, since the ASN.1 ID is not required to be unique
 			//'oid:1.2.840.113556.1.8000.2554', // Adhoc (GUID/UUID-based) customer use. It is probably the same case as the UUID OIDs, after all, these are UUIDs, too.
 			//'oid:1.3.6.1.4.1.54392.1', // Another UUID-to-OID method
 			//'oid:1.3.6.1.4.1.54392.2', // Another UUID-to-OID method
 			//'oid:1.3.6.1.4.1.54392.3', // Another UUID-to-OID method
 		);
 
-	// https://www.oid-base.com/cgi-bin/display?a=list-by-category&category=Not%20allocating%20Unicode%20labels (01 Dec 2024)
+	// https://www.oid-base.com/cgi-bin/display?a=list-by-category&category=Not%20allocating%20Unicode%20labels
+	// Last checked: 28 Jan 2025
 	private const NO_IRI = array(
 			'oid:0.2',
 			'oid:0.2.228',
@@ -1476,6 +1478,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			'oid:2.16.756',
 			'oid:2.16.756.1',
 			'oid:2.16.756.5',
+			'oid:2.16.840.1.113883.3',
 			'oid:2.25'
 		);
 

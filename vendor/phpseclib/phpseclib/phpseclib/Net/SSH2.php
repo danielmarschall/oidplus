@@ -2977,7 +2977,7 @@ class SSH2
      */
     protected function open_channel($channel, $skip_extended = false)
     {
-        if (isset($this->channel_status[$channel]) && $this->channel_status[$channel] != NET_SSH2_MSG_CHANNEL_CLOSE) {
+        if (isset($this->channel_status[$channel])) {
             throw new \RuntimeException('Please close the channel (' . $channel . ') before trying to open it again');
         }
 
@@ -3343,6 +3343,27 @@ class SSH2
         }
         if ($this->isInteractiveChannelOpen($channel)) {
             $this->close_channel($channel);
+        }
+    }
+
+    /**
+     * Send EOF on a channel
+     *
+     * Sends an EOF to the stream; this is typically used to close standard
+     * input, while keeping output and error alive.
+     *
+     * @param int|null $channel Channel id returned by self::getInteractiveChannelId()
+     * @return void
+     */
+    public function sendEOF($channel = null)
+    {
+        if ($channel === null) {
+            $channel = $this->get_interactive_channel();
+        }
+
+        $excludeStatuses = [NET_SSH2_MSG_CHANNEL_EOF, NET_SSH2_MSG_CHANNEL_CLOSE];
+        if (isset($this->channel_status[$channel]) && !in_array($this->channel_status[$channel], $excludeStatuses)) {
+            $this->send_binary_packet(pack('CN', NET_SSH2_MSG_CHANNEL_EOF, $this->server_channels[$channel]));
         }
     }
 
@@ -4096,7 +4117,8 @@ class SSH2
     protected function get_channel_packet($client_channel, $skip_extended = false)
     {
         if (!empty($this->channel_buffers[$client_channel])) {
-            switch ($this->channel_status[$client_channel]) {
+            // in phpseclib 4.0 this should be changed to $this->channel_status[$client_channel] ?? null
+            switch (isset($this->channel_status[$client_channel]) ? $this->channel_status[$client_channel] : null) {
                 case NET_SSH2_MSG_CHANNEL_REQUEST:
                     foreach ($this->channel_buffers[$client_channel] as $i => $packet) {
                         switch (ord($packet[0])) {
@@ -4164,7 +4186,7 @@ class SSH2
 
                         continue 2;
                     case NET_SSH2_MSG_CHANNEL_REQUEST:
-                        if ($this->channel_status[$channel] == NET_SSH2_MSG_CHANNEL_CLOSE) {
+                        if (!isset($this->channel_status[$channel])) {
                             continue 2;
                         }
                         list($value) = Strings::unpackSSH2('s', $response);
@@ -4182,10 +4204,14 @@ class SSH2
                                     $this->errors[count($this->errors) - 1] .= "\r\n$error_message";
                                 }
 
-                                $this->send_binary_packet(pack('CN', NET_SSH2_MSG_CHANNEL_EOF, $this->server_channels[$client_channel]));
-                                $this->send_binary_packet(pack('CN', NET_SSH2_MSG_CHANNEL_CLOSE, $this->server_channels[$channel]));
+                                if (isset($this->channel_status[$channel]) && $this->channel_status[$channel] != NET_SSH2_MSG_CHANNEL_CLOSE) {
+                                    if ($this->channel_status[$channel] != NET_SSH2_MSG_CHANNEL_EOF) {
+                                        $this->send_binary_packet(pack('CN', NET_SSH2_MSG_CHANNEL_EOF, $this->server_channels[$channel]));
+                                    }
+                                    $this->send_binary_packet(pack('CN', NET_SSH2_MSG_CHANNEL_CLOSE, $this->server_channels[$channel]));
 
-                                $this->channel_status[$channel] = NET_SSH2_MSG_CHANNEL_EOF;
+                                    $this->channel_status[$channel] = NET_SSH2_MSG_CHANNEL_CLOSE;
+                                }
 
                                 continue 3;
                             case 'exit-status':
@@ -4286,11 +4312,11 @@ class SSH2
 
                     $this->close_channel_bitmap($channel);
 
-                    if ($this->channel_status[$channel] != NET_SSH2_MSG_CHANNEL_EOF) {
+                    if ($this->channel_status[$channel] != NET_SSH2_MSG_CHANNEL_CLOSE) {
                         $this->send_binary_packet(pack('CN', NET_SSH2_MSG_CHANNEL_CLOSE, $this->server_channels[$channel]));
                     }
 
-                    $this->channel_status[$channel] = NET_SSH2_MSG_CHANNEL_CLOSE;
+                    unset($this->channel_status[$channel]);
                     $this->channelCount--;
 
                     if ($client_channel == $channel) {
@@ -4655,27 +4681,24 @@ class SSH2
      * @param bool $want_reply
      * @return void
      */
-    private function close_channel($client_channel, $want_reply = false)
+    private function close_channel($client_channel)
     {
         // see http://tools.ietf.org/html/rfc4254#section-5.3
 
-        $this->send_binary_packet(pack('CN', NET_SSH2_MSG_CHANNEL_EOF, $this->server_channels[$client_channel]));
-
-        if (!$want_reply) {
-            $this->send_binary_packet(pack('CN', NET_SSH2_MSG_CHANNEL_CLOSE, $this->server_channels[$client_channel]));
+        if ($this->channel_status[$client_channel] != NET_SSH2_MSG_CHANNEL_EOF) {
+            $this->send_binary_packet(pack('CN', NET_SSH2_MSG_CHANNEL_EOF, $this->server_channels[$client_channel]));
         }
+        $this->send_binary_packet(pack('CN', NET_SSH2_MSG_CHANNEL_CLOSE, $this->server_channels[$client_channel]));
 
         $this->channel_status[$client_channel] = NET_SSH2_MSG_CHANNEL_CLOSE;
+
         $this->channelCount--;
 
         $this->curTimeout = 5;
-
         while (!is_bool($this->get_channel_packet($client_channel))) {
         }
 
-        if ($want_reply) {
-            $this->send_binary_packet(pack('CN', NET_SSH2_MSG_CHANNEL_CLOSE, $this->server_channels[$client_channel]));
-        }
+        unset($this->channel_status[$client_channel]);
 
         $this->close_channel_bitmap($client_channel);
     }
