@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2025 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -143,6 +143,21 @@ abstract class OIDplusSqlSlangPlugin extends OIDplusPlugin {
 	 */
 	public function fetchableRowsExpected(string $sql): bool {
 		return str_starts_with(trim(strtolower($sql)),'select');
+	}
+
+	/**
+	 * @param OIDplusDatabaseConnection $db
+	 * @param string $tableName
+	 * @return bool
+	 */
+	public function tableExists(OIDplusDatabaseConnection $db, string $tableName): bool {
+		try {
+			// Attention: This query could interrupt transactions if Rollback-On-Error is enabled
+			$db->query("select 0 from ".$tableName." where 1=0");
+			return true;
+		} catch (\Exception $e) {
+			return false;
+		}
 	}
 
 }

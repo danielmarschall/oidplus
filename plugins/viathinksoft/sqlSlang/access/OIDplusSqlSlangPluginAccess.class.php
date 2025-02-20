@@ -198,4 +198,13 @@ class OIDplusSqlSlangPluginAccess extends OIDplusSqlSlangPlugin {
 	public function upperCase(string $sql): string {
 		return "UCase($sql)";
 	}
+
+	/**
+	 * @param OIDplusDatabaseConnection $db
+	 * @param string $tableName
+	 * @return bool
+	 */
+	public function tableExists(OIDplusDatabaseConnection $db, string $tableName): bool {
+		return $db->getScalar("SELECT COUNT(*) FROM MSysObjects WHERE Type = 1 AND Name = '".$tableName."';") >= 1;
+	}
 }

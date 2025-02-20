@@ -215,11 +215,10 @@ class OIDplusDatabaseConnectionOci extends OIDplusDatabaseConnection {
 	}
 
 	/**
-	 * @param bool $mustExist
-	 * @return OIDplusSqlSlangPlugin|null
+	 * @return OIDplusSqlSlangPlugin
 	 * @throws OIDplusConfigInitializationException
 	 */
-	protected function doGetSlang(bool $mustExist=true): ?OIDplusSqlSlangPlugin {
+	protected function doGetSlang(): OIDplusSqlSlangPlugin {
 		$slang = OIDplus::getSqlSlangPlugin('oracle');
 		if (is_null($slang)) {
 			throw new OIDplusConfigInitializationException(_L('SQL-Slang plugin "%1" is missing. Please check if it exists in the directory "plugin/sqlSlang". If it is not existing, please recover it from an GIT/SVN snapshot or OIDplus archive file.','oracle'));

@@ -164,4 +164,13 @@ class OIDplusSqlSlangPluginPgSQL extends OIDplusSqlSlangPlugin {
 	public function upperCase(string $sql): string {
 		return "upper($sql)";
 	}
+
+	/**
+	 * @param OIDplusDatabaseConnection $db
+	 * @param string $tableName
+	 * @return bool
+	 */
+	public function tableExists(OIDplusDatabaseConnection $db, string $tableName): bool {
+		return $db->getScalar("SELECT COUNT(*) FROM pg_catalog.pg_tables WHERE schemaname = 'public' AND tablename = '".$tableName."';") >= 1;
+	}
 }

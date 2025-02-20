@@ -170,4 +170,14 @@ class OIDplusSqlSlangPluginMsSQL extends OIDplusSqlSlangPlugin {
 	public function upperCase(string $sql): string {
 		return "upper($sql)";
 	}
+
+	/**
+	 * @param OIDplusDatabaseConnection $db
+	 * @param string $tableName
+	 * @return bool
+	 */
+	public function tableExists(OIDplusDatabaseConnection $db, string $tableName): bool {
+		// The INFORMATION_SCHEMA.TABLES view in SQL Server (and other database systems) reflects the tables in the database you are currently connected to.
+		return $db->getScalar("SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_NAME = '".$tableName."';") >= 1;
+	}
 }

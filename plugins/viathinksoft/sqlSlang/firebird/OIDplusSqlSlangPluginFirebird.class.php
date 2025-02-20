@@ -209,4 +209,13 @@ class OIDplusSqlSlangPluginFirebird extends OIDplusSqlSlangPlugin {
 	public function upperCase(string $sql): string {
 		return "upper($sql)";
 	}
+
+	/**
+	 * @param OIDplusDatabaseConnection $db
+	 * @param string $tableName
+	 * @return bool
+	 */
+	public function tableExists(OIDplusDatabaseConnection $db, string $tableName): bool {
+		return $db->getScalar("SELECT COUNT(*) FROM RDB\$RELATIONS WHERE RDB\$RELATION_NAME = '".$tableName."';") >= 1;
+	}
 }

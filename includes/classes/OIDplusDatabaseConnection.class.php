@@ -2,7 +2,7 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2019 - 2023 Daniel Marschall, ViaThinkSoft
+ * Copyright 2019 - 2025 Daniel Marschall, ViaThinkSoft
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -133,7 +133,7 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 		// Note that the INSERT could be hidden inside a Stored Procedure; we don't support (or need) that yet.
 		if (!str_starts_with(trim(strtolower($this->last_query)),'insert')) return 0;
 
-		return $this->doInsertId();
+		return $this->doInsertId(); // doInsertId() can be overridden, but insert_id() must not be overridden
 	}
 
 	/**
@@ -186,14 +186,14 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 		$sql = str_replace('###', OIDplus::baseConfig()->getValue('TABLENAME_PREFIX', ''), $sql);
 
 		if ($this->slangDetectionDone) {
-			$slang = $this->getSlang();
-			if ($slang) {
-				$sql = $slang->filterQuery($sql);
-			}
+			$sql = $this->getSlang()->filterQuery($sql);
 		}
 
 		$res = $this->doQuery($sql, $prepared_args);
-		if ($this->slangDetectionDone) $this->getSlang()->reviewResult($res, $sql, $prepared_args);
+
+		if ($this->slangDetectionDone) {
+			$this->getSlang()->reviewResult($res, $sql, $prepared_args);
+		}
 
 		if (!empty($query_logfile)) {
 			$end = microtime(true);
@@ -321,13 +321,7 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	 * @return bool
 	 */
 	public function tableExists(string $tableName): bool {
-		try {
-			// Attention: This query could interrupt transactions if Rollback-On-Error is enabled
-			$this->query("select 0 from ".$tableName." where 1=0");
-			return true;
-		} catch (\Exception $e) {
-			return false;
-		}
+		return $this->getSlang()->tableExists($this, $tableName);
 	}
 
 	/**
@@ -350,28 +344,21 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	 * @throws OIDplusException
 	 */
 	public function sqlDate(): string {
-		$slang = $this->getSlang();
-		if (!is_null($slang)) {
-			return $slang->sqlDate();
-		} else {
-			// Fallback: Take the server date
-			return "'" . date('Y-m-d H:i:s') . "'";
-		}
+		return $this->getSlang()->sqlDate();
 	}
 
 	/**
-	 * @param bool $mustExist
-	 * @return OIDplusSqlSlangPlugin|null
+	 * @return OIDplusSqlSlangPlugin
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	protected function doGetSlang(bool $mustExist=true): ?OIDplusSqlSlangPlugin {
+	protected function doGetSlang(): OIDplusSqlSlangPlugin {
 		$res = null;
 
 		if (OIDplus::baseConfig()->exists('FORCE_DBMS_SLANG')) {
 			$name = OIDplus::baseConfig()->getValue('FORCE_DBMS_SLANG', '');
 			$res = OIDplus::getSqlSlangPlugin($name);
-			if ($mustExist && is_null($res)) {
+			if (is_null($res)) {
 				throw new OIDplusConfigInitializationException(_L('Enforced SQL slang (via setting FORCE_DBMS_SLANG) "%1" does not exist.',$name));
 			}
 		} else {
@@ -396,7 +383,7 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 					}
 				}
 			}
-			if ($mustExist && is_null($res)) {
+			if (is_null($res)) {
 				throw new OIDplusException(_L('Cannot determine the SQL slang of your DBMS. Your DBMS is probably not supported.'));
 			}
 		}
@@ -405,12 +392,11 @@ abstract class OIDplusDatabaseConnection extends OIDplusBaseClass {
 	}
 
 	/**
-	 * @param bool $mustExist
-	 * @return OIDplusSqlSlangPlugin|null
+	 * @return OIDplusSqlSlangPlugin
 	 * @throws OIDplusConfigInitializationException
 	 * @throws OIDplusException
 	 */
-	public final function getSlang(bool $mustExist=true): ?OIDplusSqlSlangPlugin {
+	public final function getSlang(): OIDplusSqlSlangPlugin {
 		if ($this->slangDetectionDone) {
 			return $this->slangCache;
 		}
