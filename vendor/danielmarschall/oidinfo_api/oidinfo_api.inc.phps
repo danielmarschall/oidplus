@@ -2,8 +2,8 @@
 
 /*
  * OID-base.com API for PHP
- * Copyright 2019 - 2024 Daniel Marschall, ViaThinkSoft
- * Version 2024-12-28
+ * Copyright 2019 - 2025 Daniel Marschall, ViaThinkSoft
+ * Version 2025-01-28
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,6 +17,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+// TODO: should description and information be CDATA or not?
 
 // error_reporting(E_ALL | E_NOTICE | E_STRICT | E_DEPRECATED);
 
@@ -237,7 +239,7 @@ class OIDInfoAPI {
 		return preg_replace_callback(
 			'@<(\s*/{0,1}\d*)([^\s/>]+)(\s*[^>]*)>@i',
 			function ($treffer) {
-				// see https://www.oid-base.com/xhtml-light.xsd
+				// see https://oid-base.com/xhtml-light.xsd
 				$whitelist = array('a', 'br', 'code', 'em', 'font', 'img', 'li', 'strong', 'sub', 'sup', 'ul');
 
 				$pre = $treffer[1];
@@ -293,18 +295,19 @@ class OIDInfoAPI {
 			$desc = str_replace('</p>', '', $desc);
 		}
 
+		// DM 28.01.2025, since Unicode chars are not allowed by the parser
+		$desc = htmlentities_numeric($desc, $params['allow_html']);
+
 		// Escape unicode characters as numeric &#...;
 		// The XML 1.0 standard does only has a few entities, but nothing like e.g. &euro; , so we prefer numeric
-
-		//$desc = htmlentities_numeric($desc, $params['allow_html']);
 		if (!$params['allow_html']) $desc = htmlentities($desc);
 		$desc = html_named_to_numeric_entities($desc);
 
 		// Remove HTML tags which are not allowed
 		if ($params['allow_html'] && (!$params['ignore_xhtml_light']) && $enforce_xhtml_light) {
 			// oid-base.com does only allow a few HTML tags
-			// see https://www.oid-base.com/xhtml-light.xsd
-			$desc = self::strip_to_xhtml_light($desc);
+			// see https://oid-base.com/xhtml-light.xsd
+			$desc = self::strip_to_xhtml_light($desc, true);
 		}
 
 		// Solve some XML problems...
@@ -426,10 +429,10 @@ class OIDInfoAPI {
 
 //		$out  = "<!DOCTYPE oid-database>\n\n";
 		$out  = '<?xml version="1.0" encoding="UTF-8" ?>'."\n";
-		$out .= '<oid-database xmlns="https://www.oid-base.com"'."\n";
+		$out .= '<oid-database xmlns="https://oid-base.com"'."\n";
 		$out .= '              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"'."\n";
-		$out .= '              xsi:schemaLocation="https://www.oid-base.com '."\n";
-		$out .= '                                  https://www.oid-base.com/oid.xsd">'."\n";
+		$out .= '              xsi:schemaLocation="https://oid-base.com '."\n";
+		$out .= '                                  https://oid-base.com/oid.xsd">'."\n";
 		$out .= "\t<submitter>\n";
 		$out .= "\t\t<first-name>$firstName</first-name>\n";
 		$out .= "\t\t<last-name>$lastName</last-name>\n";
@@ -689,13 +692,13 @@ class OIDInfoAPI {
 				}
 			} else {
 				// if (is_null($val)) continue;
-				if (empty($val) && ($name != 'description')) continue; // description is mandatory, according to https://www.oid-base.com/oid.xsd
+				if (empty($val) && ($name != 'description')) continue; // description is mandatory, according to https://oid-base.com/oid.xsd
 
 				if (!is_array($val)) $val = array($val);
 
 				foreach ($val as $val2) {
 					// if (is_null($val2)) continue;
-					if (empty($val2) && ($name != 'description')) continue; // description is mandatory, according to https://www.oid-base.com/oid.xsd
+					if (empty($val2) && ($name != 'description')) continue; // description is mandatory, according to https://oid-base.com/oid.xsd
 
 					if (($name != 'description') && ($name != 'information')) { // don't correctDesc description/information, because we already did it above.
 						// $val2 = htmlentities_numeric($val2);
@@ -868,7 +871,7 @@ class OIDInfoAPI {
 	}
 
 	public static function getPublicURL($oid) {
-		return "https://www.oid-base.com/get/$oid";
+		return "https://oid-base.com/get/$oid";
 	}
 
 	public function oidExisting($oid, $onlineCheck=true, $useSimplePingProvider=true) {

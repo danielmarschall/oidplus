@@ -68,7 +68,7 @@
         'danielmarschall/oidinfo_api' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '32b9f0afe2908ac1cdb5d0d09eacbf3290f06ee4',
+            'reference' => '4dbbf4bbbc20ca7a5ce2f67abae6e7cbfe5c6a0d',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/oidinfo_api',
             'aliases' => array(
@@ -119,9 +119,9 @@
             'dev_requirement' => false,
         ),
         'dcodeio/bcrypt.js' => array(
-            'pretty_version' => 'master',
-            'version' => 'dev-master',
-            'reference' => 'master',
+            'pretty_version' => '2.4.3',
+            'version' => '2.4.3.0',
+            'reference' => '2.4.3',
             'type' => 'library',
             'install_path' => __DIR__ . '/../dcodeio/bcrypt.js',
             'aliases' => array(),
@@ -242,7 +242,7 @@
         'tinymce/tinymce' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'f0b12677418f3cbb2aeffc2216bd36b0590dd418',
+            'reference' => '4b04481b24137029525f6dc372706fa9d3168f14',
             'type' => 'component',
             'install_path' => __DIR__ . '/../tinymce/tinymce',
             'aliases' => array(
@@ -253,7 +253,7 @@
         'twbs/bootstrap' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '5708adc816b9a6b07fb2b4f07c3b562935bd0a54',
+            'reference' => '90acd33350e1356194a364595cb07b65f24bd611',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twbs/bootstrap',
             'aliases' => array(

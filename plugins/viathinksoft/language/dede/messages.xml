@@ -3862,6 +3862,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Invalid UUID
+		]]></source>
+		<target><![CDATA[
+		Ungültige UUID
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Invalid WEID
 		]]></source>
 		<target><![CDATA[
@@ -7174,7 +7182,7 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Save following contents into the file <b>%1</b>
+		Save the following contents into the file <b>%1</b>
 		]]></source>
 		<target><![CDATA[
 		Speichern Sie die folgenden Inhalte in eine Datei mit dem Namen <b>%1</b>
@@ -9558,7 +9566,7 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		You must at least provide following fields:
+		You must at least provide the following fields:
 		]]></source>
 		<target><![CDATA[
 		Sie müssen die folgenden Felder ausfüllen:

@@ -55,7 +55,7 @@
 			"packagist.org": false,
 			"package": {
 				"name": "dcodeio/bcrypt.js",
-				"version": "master",
+				"version": "2.4.3",
 				"license": [
 					"BSD-3-Clause",
 					"MIT"
@@ -63,7 +63,7 @@
 				"source": {
 					"url": "https://github.com/dcodeIO/bcrypt.js",
 					"type": "git",
-					"reference": "master"
+					"reference": "2.4.3"
 				}
 			}
 		},

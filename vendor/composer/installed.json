@@ -297,18 +297,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/oidinfo_api.git",
-                "reference": "32b9f0afe2908ac1cdb5d0d09eacbf3290f06ee4"
+                "reference": "4dbbf4bbbc20ca7a5ce2f67abae6e7cbfe5c6a0d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/oidinfo_api/zipball/32b9f0afe2908ac1cdb5d0d09eacbf3290f06ee4",
-                "reference": "32b9f0afe2908ac1cdb5d0d09eacbf3290f06ee4",
+                "url": "https://api.github.com/repos/danielmarschall/oidinfo_api/zipball/4dbbf4bbbc20ca7a5ce2f67abae6e7cbfe5c6a0d",
+                "reference": "4dbbf4bbbc20ca7a5ce2f67abae6e7cbfe5c6a0d",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.4"
             },
-            "time": "2025-01-03T15:03:04+00:00",
+            "time": "2025-02-10T14:32:51+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -457,12 +457,12 @@
         },
         {
             "name": "dcodeio/bcrypt.js",
-            "version": "master",
-            "version_normalized": "dev-master",
+            "version": "2.4.3",
+            "version_normalized": "2.4.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dcodeIO/bcrypt.js",
-                "reference": "master"
+                "reference": "2.4.3"
             },
             "type": "library",
             "installation-source": "source",
@@ -1123,15 +1123,15 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "f0b12677418f3cbb2aeffc2216bd36b0590dd418"
+                "reference": "4b04481b24137029525f6dc372706fa9d3168f14"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/f0b12677418f3cbb2aeffc2216bd36b0590dd418",
-                "reference": "f0b12677418f3cbb2aeffc2216bd36b0590dd418",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/4b04481b24137029525f6dc372706fa9d3168f14",
+                "reference": "4b04481b24137029525f6dc372706fa9d3168f14",
                 "shasum": ""
             },
-            "time": "2025-01-22T03:57:00+00:00",
+            "time": "2025-02-20T08:31:02+00:00",
             "default-branch": true,
             "type": "component",
             "extra": {
@@ -1175,7 +1175,7 @@
                 "wysiwyg"
             ],
             "support": {
-                "source": "https://github.com/tinymce/tinymce-dist/tree/7.6.1"
+                "source": "https://github.com/tinymce/tinymce-dist/tree/7.7.0"
             },
             "install-path": "../tinymce/tinymce"
         },
@@ -1186,18 +1186,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "5708adc816b9a6b07fb2b4f07c3b562935bd0a54"
+                "reference": "90acd33350e1356194a364595cb07b65f24bd611"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/5708adc816b9a6b07fb2b4f07c3b562935bd0a54",
-                "reference": "5708adc816b9a6b07fb2b4f07c3b562935bd0a54",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/90acd33350e1356194a364595cb07b65f24bd611",
+                "reference": "90acd33350e1356194a364595cb07b65f24bd611",
                 "shasum": ""
             },
             "replace": {
                 "twitter/bootstrap": "self.version"
             },
-            "time": "2025-01-23T06:57:39+00:00",
+            "time": "2025-02-18T14:35:57+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",

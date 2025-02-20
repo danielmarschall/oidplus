@@ -4,4 +4,3 @@ debug.log
 doco/
 tests/bench.js
 *.png
-externs

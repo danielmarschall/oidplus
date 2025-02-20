@@ -66,6 +66,7 @@ bcrypt.setRandomFallback = function(random) {
  * @param {number=} seed_length Not supported.
  * @returns {string} Resulting salt
  * @throws {Error} If a random fallback is required but not set
+ * @expose
  */
 bcrypt.genSaltSync = function(rounds, seed_length) {
     rounds = rounds || GENSALT_DEFAULT_LOG2_ROUNDS;
@@ -92,6 +93,7 @@ bcrypt.genSaltSync = function(rounds, seed_length) {
  * @param {function(Error, string=)=} callback Callback receiving the error, if any, and the resulting salt
  * @returns {!Promise} If `callback` has been omitted
  * @throws {Error} If `callback` is present but not a function
+ * @expose
  */
 bcrypt.genSalt = function(rounds, seed_length, callback) {
     if (typeof seed_length === 'function')
@@ -136,6 +138,7 @@ bcrypt.genSalt = function(rounds, seed_length, callback) {
  * @param {string} s String to hash
  * @param {(number|string)=} salt Salt length to generate or salt to use, default to 10
  * @returns {string} Resulting hash
+ * @expose
  */
 bcrypt.hashSync = function(s, salt) {
     if (typeof salt === 'undefined')
@@ -156,6 +159,7 @@ bcrypt.hashSync = function(s, salt) {
  *  (0.0 - 1.0), maximally once per `MAX_EXECUTION_TIME = 100` ms.
  * @returns {!Promise} If `callback` has been omitted
  * @throws {Error} If `callback` is present but not a function
+ * @expose
  */
 bcrypt.hash = function(s, salt, callback, progressCallback) {
 
@@ -194,11 +198,18 @@ bcrypt.hash = function(s, salt, callback, progressCallback) {
  * @inner
  */
 function safeStringCompare(known, unknown) {
-    var diff = known.length ^ unknown.length;
-    for (var i = 0; i < known.length; ++i) {
-        diff |= known.charCodeAt(i) ^ unknown.charCodeAt(i);
+    var right = 0,
+        wrong = 0;
+    for (var i=0, k=known.length; i<k; ++i) {
+        if (known.charCodeAt(i) === unknown.charCodeAt(i))
+            ++right;
+        else
+            ++wrong;
     }
-    return diff === 0;
+    // Prevent removal of unused variables (never true, actually)
+    if (right < 0)
+        return false;
+    return wrong === 0;
 }
 
 /**
@@ -207,6 +218,7 @@ function safeStringCompare(known, unknown) {
  * @param {string} hash Hash to test against
  * @returns {boolean} true if matching, otherwise false
  * @throws {Error} If an argument is illegal
+ * @expose
  */
 bcrypt.compareSync = function(s, hash) {
     if (typeof s !== "string" || typeof hash !== "string")
@@ -225,6 +237,7 @@ bcrypt.compareSync = function(s, hash) {
  *  (0.0 - 1.0), maximally once per `MAX_EXECUTION_TIME = 100` ms.
  * @returns {!Promise} If `callback` has been omitted
  * @throws {Error} If `callback` is present but not a function
+ * @expose
  */
 bcrypt.compare = function(s, hash, callback, progressCallback) {
 
@@ -266,6 +279,7 @@ bcrypt.compare = function(s, hash, callback, progressCallback) {
  * @param {string} hash Hash to extract the used number of rounds from
  * @returns {number} Number of rounds used
  * @throws {Error} If `hash` is not a string
+ * @expose
  */
 bcrypt.getRounds = function(hash) {
     if (typeof hash !== "string")
@@ -278,6 +292,7 @@ bcrypt.getRounds = function(hash) {
  * @param {string} hash Hash to extract the salt from
  * @returns {string} Extracted salt part
  * @throws {Error} If `hash` is not a string or otherwise invalid
+ * @expose
  */
 bcrypt.getSalt = function(hash) {
     if (typeof hash !== 'string')
@@ -297,6 +312,7 @@ bcrypt.getSalt = function(hash) {
  * @param {!Array.<number>} b Byte array
  * @param {number} len Maximum input length
  * @returns {string}
+ * @expose
  */
 bcrypt.encodeBase64 = base64_encode;
 
@@ -306,5 +322,6 @@ bcrypt.encodeBase64 = base64_encode;
  * @param {string} s String to decode
  * @param {number} len Maximum output length
  * @returns {!Array.<number>}
+ * @expose
  */
 bcrypt.decodeBase64 = base64_decode;

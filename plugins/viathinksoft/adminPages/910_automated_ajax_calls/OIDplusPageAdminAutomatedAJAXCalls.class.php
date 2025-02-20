@@ -102,7 +102,7 @@ class OIDplusPageAdminAutomatedAJAXCalls extends OIDplusPagePluginAdmin {
 			$out['text'] .= '<p><b>'.(OIDplus::webpath(null,OIDplus::PATH_ABSOLUTE_CANONICAL)?:'.../').'ajax.php</b></p>';
 
 			$out['text'] .= '<h2>'._L('Authentication for %1', $sub).'</h2>';
-			$out['text'] .= '<p>'._L('You must at least provide following fields:').'</p>';
+			$out['text'] .= '<p>'._L('You must at least provide the following fields:').'</p>';
 			$out['text'] .= '<p><pre id="oidplus_auth_jwt">';
 			$out['text'] .= htmlentities(OIDplusAuthContentStoreJWT::COOKIE_NAME).' = "'.htmlentities($token).'"'."\n";
 			$out['text'] .= '</pre></p>';
