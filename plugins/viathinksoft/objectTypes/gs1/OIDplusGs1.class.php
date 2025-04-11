@@ -207,7 +207,9 @@ class OIDplusGs1 extends OIDplusObject {
 				$chunked = $this->chunkedNotation(true);
 				$checkDigit = $this->checkDigit();
 				$content  = '<h2>'._L('Barcode').' '.$chunked.' - <abbr title="'._L('check digit').'">'.$checkDigit.'</abbr></h2>';
-				$content .= '<p><a target="_blank" href="https://www.ean-search.org/?q='.htmlentities($this->fullNumber()).'">'._L('Lookup at ean-search.org').'</a></p>';
+				$content .= '<p><a target="_blank" href="https://www.gs1.org/services/verified-by-gs1/results?gtin='.htmlentities($this->fullNumber()).'">'._L('Lookup GTIN at %1', 'gs1.org').'</a></p>';
+				$content .= '<p><a target="_blank" href="https://www.ean-search.org/?q='.htmlentities($this->fullNumber()).'">'._L('Lookup GTIN at %1', 'ean-search.org').'</a></p>';
+				$content .= '<p><a target="_blank" href="https://opengtindb.org/index.php?cmd=ean1&ean='.htmlentities($this->fullNumber()).'">'._L('Lookup GTIN at %1', 'opengtindb.org').'</a></p>';
 				if (url_get_contents_available(true, $reason)) {
 					$content .= '<p><img alt="'._L('Barcode').'" src="' . OIDplus::webpath(__DIR__, OIDplus::PATH_RELATIVE) . 'barcode.php?number=' . urlencode($this->fullNumber()) . '"></p>';
 				}

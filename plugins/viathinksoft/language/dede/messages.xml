@@ -4390,10 +4390,10 @@
 	</message>
 	<message>
 		<source><![CDATA[
-		Lookup at ean-search.org
+		Lookup GTIN at %1
 		]]></source>
 		<target><![CDATA[
-		Auf ean-search.org nachschlagen
+		GTIN bei %1 nachschlagen
 		]]></target>
 	</message>
 	<message>
