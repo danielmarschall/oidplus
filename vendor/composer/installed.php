@@ -68,7 +68,7 @@
         'danielmarschall/oidinfo_api' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '4dbbf4bbbc20ca7a5ce2f67abae6e7cbfe5c6a0d',
+            'reference' => 'f41d80c37f6ceeb3c7538e0985da97e42f22fb8b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/oidinfo_api',
             'aliases' => array(
@@ -157,7 +157,7 @@
         'matthiasmullie/minify' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'cb7a9297b4ab070909cefade30ee95054d4ae87a',
+            'reference' => '4c4eceeaa2f66eeb8de87ae9329b4cc2845073c3',
             'type' => 'library',
             'install_path' => __DIR__ . '/../matthiasmullie/minify',
             'aliases' => array(
@@ -195,7 +195,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => '3bb297621f5c78a1e01bb34ce2308344457f45f1',
+            'reference' => '914583d4a633b9508b7b115cbdbde90e5a28967b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),
@@ -242,7 +242,7 @@
         'tinymce/tinymce' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '4b04481b24137029525f6dc372706fa9d3168f14',
+            'reference' => '88d1b2874256895338034dba28bf6e920aa4ba17',
             'type' => 'component',
             'install_path' => __DIR__ . '/../tinymce/tinymce',
             'aliases' => array(
@@ -253,7 +253,7 @@
         'twbs/bootstrap' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '90acd33350e1356194a364595cb07b65f24bd611',
+            'reference' => '99a0dc628adc2fbe6ab1a60b0a4241073a4b5e4d',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twbs/bootstrap',
             'aliases' => array(

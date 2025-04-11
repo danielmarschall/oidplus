@@ -2,7 +2,7 @@
 
 -- Standard OID Illegality Rule Definition File
 -- by Daniel Marschall and Olivier Dubuisson
--- Revision: 2025-02-10 14:57:43
+-- Revision: 2025-03-26 00:16:59
 
 -- SYNTAX:
 -- -- comment    : comments are also allowed after a rule definition
@@ -97,9 +97,11 @@
 1.0.24753.0.5.3.(5+)                                   -- OID 1.0.24753.0.5.3 is frozen. OIDs can no more be added to it.
 1.0.24753.0.5.4.(0-)                                   -- OID 1.0.24753.0.5.4 is frozen. OIDs can no more be added to it.
 1.0.24753.0.5.4.(5+)                                   -- OID 1.0.24753.0.5.4 is frozen. OIDs can no more be added to it.
-1.0.24753.0.126.(14+)                                  -- A simple sensor command is identified by a number between 1 and 13 (see ISO/IEC 24753, clause 9.1).
+1.0.24753.0.126.(0-0)                                  -- A simple sensor command under <a href="https://oid-base.com/get/1.0.24753.0.126"><code>{iso(1) standard(0) 24753 0 126}</code></a> is identified by a number between 1 and 13 (see ISO/IEC 24753, clause 9.1).
+1.0.24753.0.126.(14+)                                  -- A simple sensor command under <a href="https://oid-base.com/get/1.0.24753.0.126"><code>{iso(1) standard(0) 24753 0 126}</code></a> is identified by a number between 1 and 13 (see ISO/IEC 24753, clause 9.1).
 1.0.24753.0.126.0                                      -- A simple sensor command command is identified by a number between 1 and 21 (see ISO/IEC 24753, clause 9.1).
-1.0.24753.0.127.(14+)                                  -- A simple sensor response is identified by a number between 1 and 13 (see ISO/IEC 24753, clause 9.1).
+1.0.24753.0.127.(0-0)                                  -- A simple sensor response under OID <a href="https://oid-base.com/get/1.0.24753.0.127"><code>{iso(1) standard(0) 24753 0 127}</code></a> is identified by a number between 1 and 13 (see ISO/IEC 24753, clause 9.1).
+1.0.24753.0.127.(14+)                                  -- A simple sensor response under OID <a href="https://oid-base.com/get/1.0.24753.0.127"><code>{iso(1) standard(0) 24753 0 127}</code></a> is identified by a number between 1 and 13 (see ISO/IEC 24753, clause 9.1).
 1.0.24753.0.127.0                                      -- A simple sensor response command is identified by a number between 1 and 21 (see ISO/IEC 24753, clause 9.1).
 1.0.24753.7.5.10.(2048+)                               -- Child OIDs have a value lower than 2047 (see ISO/IEC 24753, clause 10.6.14).
 1.0.24753.7.5.11.1.(8+)                                -- Child OIDs have a value lower than <code>7</code> (see ISO/IEC 24753, clause 10.6.15).
@@ -107,9 +109,11 @@
 1.0.24753.7.5.12.1.(8+)                                -- Child OIDs have a value lower than <code>2047</code> (see ISO/IEC 24753, clause 10.6.16).
 1.0.24753.7.5.12.2.(8+)                                -- Child OIDs have a value lower than <code>7</code> (see ISO/IEC 24753, clause 10.6.16).
 1.0.24753.7.5.13.(2048+)                               -- Child OIDs have a value lower than <code>2047</code> (see ISO/IEC 24753, clause 10.6.17).
-1.0.24753.7.126.(22+)                                  -- An IEEE 1451.7 command is identified by a number between 1 and 21 (see ISO/IEC 24753, clause 9.1).
+1.0.24753.7.126.(0-0)                                  -- An IEEE 1451.7 command under OID <a href="https://oid-base.com/get/1.0.24753.7.126"><code>{iso(1) standard(0) 24753 7 126}</code></a> is identified by a number between 1 and 21 (see ISO/IEC 24753, clause 9.1).
+1.0.24753.7.126.(22+)                                  -- An IEEE 1451.7 command under OID <a href="https://oid-base.com/get/1.0.24753.7.126"><code>{iso(1) standard(0) 24753 7 126}</code></a> is identified by a number between 1 and 21 (see ISO/IEC 24753, clause 9.1).
 1.0.24753.7.126.0                                      -- An IEEE 1451.7 command is identified by a number between 1 and 21 (see ISO/IEC 24753, clause 9.1).
-1.0.24753.7.127.(22+)                                  -- An IEEE 1451.7 response is identified by a number between 1 and 21 (see ISO/IEC 24753, clause 9.1).
+1.0.24753.7.127.(0-0)                                  -- An IEEE 1451.7 response under OID <a href="https://oid-base.com/get/1.0.24753.7.127"><code>{iso(1) standard(0) 24753 7 127}</code></a> is identified by a number between 1 and 21 (see ISO/IEC 24753, clause 9.1).
+1.0.24753.7.127.(22+)                                  -- An IEEE 1451.7 response under OID <a href="https://oid-base.com/get/1.0.24753.7.127"><code>{iso(1) standard(0) 24753 7 127}</code></a> is identified by a number between 1 and 21 (see ISO/IEC 24753, clause 9.1).
 1.0.24753.7.127.0                                      -- An IEEE 1451.7 response is identified by a number between 1 and 21 (see ISO/IEC 24753, clause 9.1).
 1.0.29192.2.2.3                                        -- This OID was allocated to the Speck family of block ciphers in ISO/IEC 29192-2 PDAM1 in 2017 but this proposed amendment has been cancelled.
 1.1.0                                                  -- According to IETF <a href="https://www.rfc-editor.org/rfc/rfc2251.html">RFC 2251</a>, section 4.5.1, "If the client does not want any attributes returned, it can specify a list containing only the attribute with OID 1.1. This OID was chosen arbitrarily and does not correspond to any attribute in use"; OID 1.1 is also commonly used in LDAPv3 for examples.
@@ -119,9 +123,11 @@
 1.1.7.*                                                -- OID 1.1.7 is a leaf OID. It cannot have subordinate OIDs.
 1.1.8.*                                                -- OID 1.1.8 is a leaf OID. It cannot have subordinate OIDs.
 1.1.9.*                                                -- OID 1.1.9 is a leaf OID. It cannot have subordinate OIDs.
-1.1.10036.1.(4294967296+)                              -- OIDs are of the form <code>{iso(1) registration-authority(1) iso10036(10036) 1 <em>m</em>}</code> where '<code><em>m</em></code>' is the glyph registration number in the range between 1 and 4,294,967,295 inclusive.
+1.1.10036.1.(0-0)                                      -- Child OIDs of <a href="https://oid-base.com/get/1.1.10036.1"><code>{iso(1) registration-authority(1) iso10036(10036) glyphs(1)}</code></a> have a number between 1 and 4,294,967,295 inclusive.
+1.1.10036.1.(4294967296+)                              -- Child OIDs of <a href="https://oid-base.com/get/1.1.10036.1"><code>{iso(1) registration-authority(1) iso10036(10036) glyphs(1)}</code></a> have a number between 1 and 4,294,967,295 inclusive.
 1.1.10036.1.0                                          -- OIDs are of the form <code>{iso(1) registration-authority(1) iso10036(10036) 1 <em>m</em>}</code> where '<code><em>m</em></code>' is the glyph registration number in the range between 1 and 4,294,967,295 inclusive.
-1.1.10036.2.(4294967296+)                              -- OIDs are of the form <code>{iso(1) registration-authority(1) iso10036(10036) 2 <em>m</em>}</code> where '<code><em>m</em></code>' is the registration number in the range between <code>1</code> and <code>4294967295</code> inclusive.
+1.1.10036.2.(0-0)                                      -- Child OIDs of <a href="https://oid-base.com/get/1.1.10036.2"><code>{iso(1) registration-authority(1) iso10036(10036) glyphCollections(2)}</code></a> have a number between <code>1</code> and <code>4294967295</code> inclusive.
+1.1.10036.2.(4294967296+)                              -- Child OIDs of <a href="https://oid-base.com/get/1.1.10036.2"><code>{iso(1) registration-authority(1) iso10036(10036) glyphCollections(2)}</code></a> have a number between <code>1</code> and <code>4294967295</code> inclusive.
 1.1.10036.2.0                                          -- OIDs are of the form <code>{iso(1) registration-authority(1) iso10036(10036) 2 <em>m</em>}</code> where '<code><em>m</em></code>' is the registration number in the range between <code>1</code> and <code>4294967295</code> inclusive.
 1.1.19785.0.0.*                                        -- OID 1.1.19785.0.0 is a leaf OID. It cannot have subordinate OIDs.
 1.2.(895+)                                             -- The highest country code <a href="https://unstats.un.org/unsd/methodology/m49/">assigned by the  Statistics Division of the United Nations Secretariat</a> is <code>894</code> under OID <code>{iso(1) member-body(2)}</code>.
@@ -130,7 +136,7 @@
 1.2.6                                                  -- Country code <code>6</code> has not been assigned (consider using <a href="https://oid-base.com/get/1.3.6"><code>{iso(1) identified-organization(3) dod(6)}</code></a>, in particular for the <a href="https://oid-base.com/get/1.3.6.1.5.5.7.0.49">ASN.1 module named <code>AttributeCertificateVersion1-2009</code></a> in IETF <a href="https://tools.ietf.org/html/rfc6210">RFC 5912</a> as mended by <a href="https://www.rfc-editor.org/errata/eid2649">RFC Errata 2649</a>).
 1.2.10                                                 -- Not an assigned country code.
 1.2.16                                                 -- Not a country code.
-1.2.36.(100000000000+)                                 -- According to Standards Australia <a href="http://www.saiglobal.com/PDFTemp/Previews/OSH/As/misc/miscpub/MP75.pdf">document MP-75:1996</a>, child OIDs cannot be larger than 11-digit Australian Company Numbers (<a href="https://asic.gov.au/for-business/registering-a-company/steps-to-register-a-company/australian-company-numbers/">ACN</a>) or 9-digit Australian Business Numbers (<a href="https://asic.gov.au/for-business/registering-a-company/steps-to-register-a-company/australian-business-number/">ABN</a>).
+1.2.36.(100000000000+)                                 -- According to Standards Australia <a href="http://www.saiglobal.com/PDFTemp/Previews/OSH/As/misc/miscpub/MP75.pdf">document MP-75:1996</a>, child OIDs of <a href="https://oid-base.com/get/1.2.36"><code>{iso(1) member-body(2) au(36)}</code></a> cannot be larger than 11-digit Australian Company Numbers (<a href="https://asic.gov.au/for-business/registering-a-company/steps-to-register-a-company/australian-company-numbers/">ACN</a>) or 9-digit Australian Business Numbers (<a href="https://asic.gov.au/for-business/registering-a-company/steps-to-register-a-company/australian-business-number/">ABN</a>).
 1.2.36.1.2001.1005.17.*                                -- OID 1.2.36.1.2001.1005.17 is a leaf OID. It cannot have subordinate OIDs.
 1.2.36.1.2001.1005.21.*                                -- OID 1.2.36.1.2001.1005.21 is a leaf OID. It cannot have subordinate OIDs.
 1.2.36.1.2001.1005.22.*                                -- OID 1.2.36.1.2001.1005.22 is a leaf OID. It cannot have subordinate OIDs.
@@ -150,13 +156,14 @@
 1.2.250.1.16.9.(7+)                                    -- OID 1.2.250.1.16.9 is frozen. OIDs can no more be added to it.
 1.2.250.1.53.*                                         -- OID 1.2.250.1.53 is a leaf OID. It cannot have subordinate OIDs.
 1.2.250.1.165.(16777216+)                              -- Child OIDs of OID {iso(1) member-body(2) fr(250) type-org(1) csoec(165)} have a numeric value between 1 and 16,777,215.
+1.2.276.0.(1-9)                                        -- <a href="https://www.dincertco.tuv.com/search?locale=en&amp;q=1+2+276+">Child OIDs</a> are assigned from <code>10</code> onwards (except <code>0</code>)to organizations registered by <a href="http://www.dincertco.de">Deutsches Institut f&uuml;r Normung (DIN) "CERTCO"</a>.
 1.2.280.*                                              -- OID 1.2.280 is a leaf OID. It cannot have subordinate OIDs.
 1.2.392.200036.9102                                    -- This OID was withdrawn on 31 Dec 2001 by the  \t Japan medical Imaging and Radiological systems industries Association (JIRA).
 1.2.392.200036.9127.*                                  -- OID 1.2.392.200036.9127 is a leaf OID. It cannot have subordinate OIDs.
 1.2.392.200036.9129.*                                  -- OID 1.2.392.200036.9129 is a leaf OID. It cannot have subordinate OIDs.
 1.2.392.200036.9150.*                                  -- OID 1.2.392.200036.9150 is a leaf OID. It cannot have subordinate OIDs.
 1.2.392.200036.9151.*                                  -- OID 1.2.392.200036.9151 is a leaf OID. It cannot have subordinate OIDs.
-1.2.410.(16100000+)                                    -- According to Korean industrial Standard <a href="https://kssn.net/en/search/stddetail.do?itemNo=K001010126237">KS X 4105</a>, child OIDs have a number less or equal to 16,099,999.
+1.2.410.(16100000+)                                    -- According to Korean industrial Standard <a href="https://kssn.net/en/search/stddetail.do?itemNo=K001010126237">KS X 4105</a>, child OIDs of <a href="https://oid-base.com/get/1.2.410"><code>{iso(1) member-body(2) kr(410)}</code></a> have a number less or equal to 16,099,999.
 1.2.410.20004                                          -- The correct OID for KISA is <a href="https://oid-base.com/get/1.2.410.200004"><code>{iso(1) member-body(2) kr(410) kisa(200004)}</code></a>.
 1.2.410.200007.0.0.2.*                                 -- OID 1.2.410.200007.0.0.2 is a leaf OID. It cannot have subordinate OIDs.
 1.2.528.1.1015.*                                       -- OID 1.2.528.1.1015 is a leaf OID. It cannot have subordinate OIDs.
@@ -167,14 +174,18 @@
 1.2.752.16.1.1.*                                       -- OID 1.2.752.16.1.1 is a leaf OID. It cannot have subordinate OIDs.
 1.2.752.194.10.2.4.(100000000+)                        -- Child OIDs are the eight digit code that Skolverket has given to the school unit.
 1.2.788                                                -- Tunisia is using country OID <a href="https://oid-base.com/get/2.16.788"><code>{joint-iso-itu-t(2) country(16) tn(788)}</code></a>.
-1.2.826.0.(16777216+)                                  -- According to clause 4.2.1 of British Standard (BS) 7453 Part 1: "UK registration for Open System Standards - Procedures for the UK Name Registration Authority", the number is strictly less than 16,777,216.
-1.2.826.0.0                                            -- According to clause 4.2.1 of British Standard (BS) 7453 Part 1: "UK registration for Open System Standards - Procedures for the UK Name Registration Authority", the number is strictly greater than 0.
+1.2.826.0.(0-0)                                        -- According to clause 4.2.1 of British Standard (BS) 7453 Part 1 "UK registration for Open System Standards - Procedures for the UK Name Registration Authority", child OIDs of <a href="https://oid-base.com/get/1.2.826.0"><code>{iso(1) member-body(2) gb(826) national(0)}</code></a> have a number strictly less than <code>16,777,216</code> (and strictly greater than <code>0</code>).
+1.2.826.0.(16777216+)                                  -- According to clause 4.2.1 of British Standard (BS) 7453 Part 1 "UK registration for Open System Standards - Procedures for the UK Name Registration Authority", child OIDs of <a href="https://oid-base.com/get/1.2.826.0"><code>{iso(1) member-body(2) gb(826) national(0)}</code></a> have a number strictly less than <code>16,777,216</code> (and strictly greater than <code>0</code>).
 1.2.826.1004                                           -- The correct OID is <code>1.2.826.0.1004</code>.
 1.2.826.1147                                           -- The correct OID is <code>1.2.826.0.1147</code>.
 1.2.826.1296                                           -- The correct OID is <code>1.2.826.0.1296</code>.
 1.2.840.(0-)                                           -- OID 1.2.840 is frozen. OIDs can no more be added to it.
+1.2.840.(0-0)                                          -- Under OID <a href="https://oid-base.com/get/1.2.840"><code>{iso(1) member-body(2) us(840)}</code></a>, organizations are assigned a number greater than or equal to 113,527 and less than 16 million.
 1.2.840.(2-100)                                        -- OID 1.2.840 is frozen. OIDs can no more be added to it.
+1.2.840.(2-100)                                        -- Under OID <a href="https://oid-base.com/get/1.2.840"><code>{iso(1) member-body(2) us(840)}</code></a>, organizations are assigned a number greater than or equal to 113,527 and less than 16 million.
+1.2.840.(102-801)                                      -- Under OID <a href="https://oid-base.com/get/1.2.840"><code>{iso(1) member-body(2) us(840)}</code></a>, organizations are assigned a number greater than or equal to 113,527 and less than 16 million.
 1.2.840.(102-10002)                                    -- OID 1.2.840 is frozen. OIDs can no more be added to it.
+1.2.840.(803-9999)                                     -- Under OID <a href="https://oid-base.com/get/1.2.840"><code>{iso(1) member-body(2) us(840)}</code></a>, organizations are assigned a number greater than or equal to 113,527 and less than 16 million.
 1.2.840.(10005-10005)                                  -- OID 1.2.840 is frozen. OIDs can no more be added to it.
 1.2.840.(10009-10009)                                  -- OID 1.2.840 is frozen. OIDs can no more be added to it.
 1.2.840.(10012-10012)                                  -- OID 1.2.840 is frozen. OIDs can no more be added to it.
@@ -188,6 +199,8 @@
 1.2.840.(10061-10064)                                  -- OID 1.2.840 is frozen. OIDs can no more be added to it.
 1.2.840.(10067-10069)                                  -- OID 1.2.840 is frozen. OIDs can no more be added to it.
 1.2.840.(10071-113526)                                 -- OID 1.2.840 is frozen. OIDs can no more be added to it.
+1.2.840.(20000-48017)                                  -- Under OID <a href="https://oid-base.com/get/1.2.840"><code>{iso(1) member-body(2) us(840)}</code></a>, organizations are assigned a number greater than or equal to 113,527 and less than 16 million.
+1.2.840.(48019-113526)                                 -- Under OID <a href="https://oid-base.com/get/1.2.840"><code>{iso(1) member-body(2) us(840)}</code></a>, organizations are assigned a number greater than or equal to 113,527 and less than 16 million.
 1.2.840.(113528-113532)                                -- OID 1.2.840 is frozen. OIDs can no more be added to it.
 1.2.840.(113534-113535)                                -- OID 1.2.840 is frozen. OIDs can no more be added to it.
 1.2.840.(113537-113548)                                -- OID 1.2.840 is frozen. OIDs can no more be added to it.
@@ -221,11 +234,11 @@
 1.2.840.(114399-114401)                                -- OID 1.2.840 is frozen. OIDs can no more be added to it.
 1.2.840.(114403-912005)                                -- OID 1.2.840 is frozen. OIDs can no more be added to it.
 1.2.840.(912007+)                                      -- OID 1.2.840 is frozen. OIDs can no more be added to it.
+1.2.840.(16000000+)                                    -- Under OID <a href="https://oid-base.com/get/1.2.840"><code>{iso(1) member-body(2) us(840)}</code></a>, organizations are assigned a number greater than or equal to 113,527 and less than 16 million.
 1.2.840.1.(113693-)                                    -- OID 1.2.840.1 is frozen. OIDs can no more be added to it.
 1.2.840.1.(113695-114333)                              -- OID 1.2.840.1 is frozen. OIDs can no more be added to it.
 1.2.840.1.(114335-114349)                              -- OID 1.2.840.1 is frozen. OIDs can no more be added to it.
 1.2.840.1.(114351+)                                    -- OID 1.2.840.1 is frozen. OIDs can no more be added to it.
-1.2.840.63                                             -- Not assigned.
 1.2.840.802                                            -- The correct OID for IEEE 802.3ad is <a href="https://oid-base.com/get/1.2.840.10006"><code>1.2.840.10006</code></a>.
 1.2.840.1006                                           -- Not assigned.
 1.2.840.10008.5.1.4.1.1.12.77                          -- This OID is retired.
@@ -367,6 +380,8 @@
 1.3.6.1.2.1.10.30.5.1.(19+)                            -- OID 1.3.6.1.2.1.10.30.5.1 is frozen. OIDs can no more be added to it.
 1.3.6.1.2.1.10.32.(5-5)                                -- OID 1.3.6.1.2.1.10.32 is frozen. OIDs can no more be added to it.
 1.3.6.1.2.1.10.32.(7+)                                 -- OID 1.3.6.1.2.1.10.32 is frozen. OIDs can no more be added to it.
+1.3.6.1.2.1.10.32.1.1.(0-)                             -- OID 1.3.6.1.2.1.10.32.1.1 is frozen. OIDs can no more be added to it.
+1.3.6.1.2.1.10.32.1.1.(13+)                            -- OID 1.3.6.1.2.1.10.32.1.1 is frozen. OIDs can no more be added to it.
 1.3.6.1.2.1.10.32.7                                    -- This OID is not defined in IETF <a href="https://tools.ietf.org/html/rfc2115.html">RFC 2115</a>.
 1.3.6.1.2.1.10.40                                      -- OID not allocated in the <a href="https://www.iana.org/assignments/smi-numbers/smi-numbers.xhtml#smi-numbers-7">transmission group</a>.
 1.3.6.1.2.1.10.41                                      -- OID not allocated in the <a href="https://www.iana.org/assignments/smi-numbers/smi-numbers.xhtml#smi-numbers-7">transmission group</a>.
@@ -624,6 +639,7 @@
 1.3.6.1.2.1.106.*                                      -- OID 1.3.6.1.2.1.106 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.2.1.109.*                                      -- OID 1.3.6.1.2.1.109 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.2.1.110.*                                      -- OID 1.3.6.1.2.1.110 is a leaf OID. It cannot have subordinate OIDs.
+1.3.6.1.2.1.112.3                                      -- The correct OID is <a href="https://oid-base.com/get/1.3.6.1.2.1.114"><code>{iso(1) identified-organization(3) dod(6) internet(1) mgmt(2) mib-2(1) rohcRtpMIB(114)}</code></a>.
 1.3.6.1.2.1.119.*                                      -- OID 1.3.6.1.2.1.119 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.2.1.123.2.(0-)                                 -- OID 1.3.6.1.2.1.123.2 is frozen. OIDs can no more be added to it.
 1.3.6.1.2.1.123.2.(3+)                                 -- OID 1.3.6.1.2.1.123.2 is frozen. OIDs can no more be added to it.
@@ -689,8 +705,9 @@
 1.3.6.1.3.97.1.3.*                                     -- OID 1.3.6.1.3.97.1.3 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.3.124.1.(!1)                                   -- OID 1.3.6.1.3.124.1 is frozen. OIDs can no more be added to it.
 1.3.6.1.4.(2+)                                         -- OID 1.3.6.1.4 is frozen. OIDs can no more be added to it.
-1.3.6.1.4.1.(65000+)                                   -- Private Enterprise Numbers (PENs) are not expected (at this point in time) to have a number greater than <code>64999</code>; if you think this constraint is wrong, please contact the <a href="https://oid-base.com/helper">OID repository administrator</a>; note also that, according to IETF <a href="https://www.rfc-editor.org/rfc/rfc9371.html">RFC 9371</a>, PENs are less than <code>4 294 967 295</code> (= <code>2<sup>32</sup> - 1</code>) .
+1.3.6.1.4.1.(65000+)                                   -- Child OIDs of <code>1.3.6.1.4.1</code> are Private Enterprise Numbers (PENs) which are not expected (at this point in time) to have a number greater than <code>64999</code>; if you think this constraint is wrong, please contact the <a href="https://oid-base.com/helper">OID repository administrator</a>; note also that, according to IETF <a href="https://www.rfc-editor.org/rfc/rfc9371.html">RFC 9371</a>, PENs are less than <code>4 294 967 295</code> (= <code>2<sup>32</sup> - 1</code>) .
 1.3.6.1.4.1.0.*                                        -- OID 1.3.6.1.4.1.0 is a leaf OID. It cannot have subordinate OIDs.
+1.3.6.1.4.1.1.2.826                                    -- The correct OID is <a href="https://oid-base.com/get/1.2.826"><code>{iso(1) member-body(2) gb(826)}</code></a>.
 1.3.6.1.4.1.2.2.12                                     -- The correct OID is <a href="https://oid-base.com/get/1.3.6.1.4.1.2.4.12"><code>{iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 2 ibmResearch(4) saMIB(12)}</code></a>.
 1.3.6.1.4.1.9.6.1.101.(1001+)                          -- Child OIDs of <code>1.3.6.1.4.1.9.6.1.101</code> cannot have a number <a href="https://oid-base.com/get/1.3.6.1.4.1.9.6.1.101.1000">greater than <code>1000</code></a>.
 1.3.6.1.4.1.9.6.1.101.228.(0-)                         -- OID 1.3.6.1.4.1.9.6.1.101.228 is frozen. OIDs can no more be added to it.
@@ -913,6 +930,7 @@
 1.3.6.1.4.1.14432.*                                    -- OID 1.3.6.1.4.1.14432 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.14827.*                                    -- OID 1.3.6.1.4.1.14827 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.15236.*                                    -- OID 1.3.6.1.4.1.15236 is a leaf OID. It cannot have subordinate OIDs.
+1.3.6.1.4.1.15455.*                                    -- OID 1.3.6.1.4.1.15455 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.16739.*                                    -- OID 1.3.6.1.4.1.16739 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.17095.2.(!1)                               -- OID 1.3.6.1.4.1.17095.2 is frozen. OIDs can no more be added to it.
 1.3.6.1.4.1.17095.2.1.(!1)                             -- OID 1.3.6.1.4.1.17095.2.1 is frozen. OIDs can no more be added to it.
@@ -936,6 +954,7 @@
 1.3.6.1.4.1.21111.1                                    -- This OID appears in a Management Information Base (MIB) module named <code>NEXT-UPS-MIB</code> (NextUPSSystems) but enterprise number <code>21111<code> is asigned to Datalogic S.p.A.
 1.3.6.1.4.1.21239.5.2.30.1.3.1.36                      -- The correct OID is <a href="https://oid-base.com/get/1.3.6.1.4.1.21239.5.2.30.1.3.1.35"><code>{iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 21239 v5(5) imd(2) cooling(30) vrc(1) vrcMainCfgTable(3) vrcMainCfgEntry(1) vrcMainCfgEevCommFailAlarmCtrl(35)}</code></a>.
 1.3.6.1.4.1.22812.4.1055053049057056.12.0              -- The correct OID is <a href="https://oid-base.com/get/2.16.840.1.113883.3.2296">{joint-iso-itu-t(2) country(16) us(840) organization(1) hl7(113883) externalUseRoots(3) thpg-hfa(2296)}</a>.
+1.3.6.1.4.1.23096.*                                    -- OID 1.3.6.1.4.1.23096 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.23434.1.*                                  -- OID 1.3.6.1.4.1.23434.1 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.23520.*                                    -- OID 1.3.6.1.4.1.23520 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.24750.*                                    -- OID 1.3.6.1.4.1.24750 is a leaf OID. It cannot have subordinate OIDs.
@@ -943,9 +962,14 @@
 1.3.6.1.4.1.25049.10.10.11                             -- The correct OID seems to be <a href="https://oid-base.com/get/1.3.6.1.4.1.25049.16"><code>{iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 25049 ogStatus(16)}</code></a>.
 1.3.6.1.4.1.25049.13                                   -- The correct OID is <a href="https://oid-base.com/get/1.3.6.1.4.1.25049.1"><code>{iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 25049 ogProducts(1)}</code></a>.
 1.3.6.1.4.1.26975.*                                    -- OID 1.3.6.1.4.1.26975 is a leaf OID. It cannot have subordinate OIDs.
+1.3.6.1.4.1.28255.*                                    -- OID 1.3.6.1.4.1.28255 is a leaf OID. It cannot have subordinate OIDs.
+1.3.6.1.4.1.28496.*                                    -- OID 1.3.6.1.4.1.28496 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.28507.62.0                                 -- The correct OID is <a href="https://oid-base.com/get/1.3.6.1.4.1.28507.62.3"><code>{iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 28507 gadsPDU8311(62) events(3)}</code></a>.
 1.3.6.1.4.1.29144.*                                    -- OID 1.3.6.1.4.1.29144 is a leaf OID. It cannot have subordinate OIDs.
+1.3.6.1.4.1.29374.*                                    -- OID 1.3.6.1.4.1.29374 is a leaf OID. It cannot have subordinate OIDs.
+1.3.6.1.4.1.29499.*                                    -- OID 1.3.6.1.4.1.29499 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.30114.*                                    -- OID 1.3.6.1.4.1.30114 is a leaf OID. It cannot have subordinate OIDs.
+1.3.6.1.4.1.30316.*                                    -- OID 1.3.6.1.4.1.30316 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.30932.1.1.2.1.*                            -- OID 1.3.6.1.4.1.30932.1.1.2.1 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.30932.1.1.2.2.*                            -- OID 1.3.6.1.4.1.30932.1.1.2.2 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.30932.1.1.2.3.*                            -- OID 1.3.6.1.4.1.30932.1.1.2.3 is a leaf OID. It cannot have subordinate OIDs.
@@ -958,9 +982,10 @@
 1.3.6.1.4.1.31370.*                                    -- OID 1.3.6.1.4.1.31370 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.32012.*                                    -- OID 1.3.6.1.4.1.32012 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.32082.*                                    -- OID 1.3.6.1.4.1.32082 is a leaf OID. It cannot have subordinate OIDs.
+1.3.6.1.4.1.32117.*                                    -- OID 1.3.6.1.4.1.32117 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.32473.*                                    -- OID 1.3.6.1.4.1.32473 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.33473.*                                    -- OID 1.3.6.1.4.1.33473 is a leaf OID. It cannot have subordinate OIDs.
-1.3.6.1.4.1.34300.(1+)                                 -- This OID appears in Management Information Base (MIB) files named <code>ELTEX-<i>XXX</i>.mib</code> but private enterprise number <code>34300</code> has not been allocated to Eltex Co. (Russia).
+1.3.6.1.4.1.34300.(1+)                                 -- OID <code>1.3.6.1.4.1.34300</code> appears in Management Information Base (MIB) files named <code>ELTEX-<i>XXX</i>.mib</code> but private enterprise number <code>34300</code> has not been allocated to Eltex Co. (Russia).
 1.3.6.1.4.1.34404.*                                    -- OID 1.3.6.1.4.1.34404 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.34535.1                                    -- A Management Information Base (MIB) file named <code>MQX-MIB</code> pertaining to "Freescale MQX" illegally uses entrerprise number <code>34535</code> assigned to <a href="https://jettekfix.com">JetTek LLC</a>.
 1.3.6.1.4.1.34537.1.7.*                                -- OID 1.3.6.1.4.1.34537.1.7 is a leaf OID. It cannot have subordinate OIDs.
@@ -985,6 +1010,7 @@
 1.3.6.1.4.1.34781.*                                    -- OID 1.3.6.1.4.1.34781 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.35709.*                                    -- OID 1.3.6.1.4.1.35709 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.35937.*                                    -- OID 1.3.6.1.4.1.35937 is a leaf OID. It cannot have subordinate OIDs.
+1.3.6.1.4.1.37460.*                                    -- OID 1.3.6.1.4.1.37460 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.37476.2.1.1.1.1.*                          -- OID 1.3.6.1.4.1.37476.2.1.1.1.1 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.37476.2.1.1.1.2.*                          -- OID 1.3.6.1.4.1.37476.2.1.1.1.2 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.37476.2.1.1.1.3.*                          -- OID 1.3.6.1.4.1.37476.2.1.1.1.3 is a leaf OID. It cannot have subordinate OIDs.
@@ -1017,6 +1043,7 @@
 1.3.6.1.4.1.38042.*                                    -- OID 1.3.6.1.4.1.38042 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.39988.*                                    -- OID 1.3.6.1.4.1.39988 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.40057.*                                    -- OID 1.3.6.1.4.1.40057 is a leaf OID. It cannot have subordinate OIDs.
+1.3.6.1.4.1.40152.*                                    -- OID 1.3.6.1.4.1.40152 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.40605.*                                    -- OID 1.3.6.1.4.1.40605 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.40778.*                                    -- OID 1.3.6.1.4.1.40778 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.40786.*                                    -- OID 1.3.6.1.4.1.40786 is a leaf OID. It cannot have subordinate OIDs.
@@ -1026,6 +1053,7 @@
 1.3.6.1.4.1.42375.*                                    -- OID 1.3.6.1.4.1.42375 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.44653.*                                    -- OID 1.3.6.1.4.1.44653 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.44723.*                                    -- OID 1.3.6.1.4.1.44723 is a leaf OID. It cannot have subordinate OIDs.
+1.3.6.1.4.1.47092.*                                    -- OID 1.3.6.1.4.1.47092 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.47146.*                                    -- OID 1.3.6.1.4.1.47146 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.49304.*                                    -- OID 1.3.6.1.4.1.49304 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.49612.*                                    -- OID 1.3.6.1.4.1.49612 is a leaf OID. It cannot have subordinate OIDs.
@@ -1078,6 +1106,7 @@
 1.3.6.1.4.1.59018.*                                    -- OID 1.3.6.1.4.1.59018 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.60000.301                                  -- This OID appears in a Management Information base (MIB) module from Ethernet Direct, Inc. but the OID of this company is <a href="https://oid-base.com/get/1.3.6.1.4.1.26556"><code>{iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 26556}</code></a>.
 1.3.6.1.4.1.60938.*                                    -- OID 1.3.6.1.4.1.60938 is a leaf OID. It cannot have subordinate OIDs.
+1.3.6.1.4.1.61034.*                                    -- OID 1.3.6.1.4.1.61034 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.61117.9999.*                               -- <a href="https://oid-base.com/get/1.3.6.1.4.1.61117.9999"><code>{iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 61117 example(9999)}</code></a> is an example OID, so its descendants are not expected to be described in the OID repository.
 1.3.6.1.4.1.62373.*                                    -- OID 1.3.6.1.4.1.62373 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.4.1.4294967295                                 -- According to IETF <a href="https://www.rfc-editor.org/rfc/rfc9371.html">RFC 9371</a>, private enterprise numbers (PENs) range from <code>0</code> to <code>4294967295</code> (= <code>2<sup>32</sup> - 1</code>) where values <code>0</code> and <code>4294967295</code> are reserved.
@@ -1092,7 +1121,7 @@
 1.3.6.1.5.3.0.*                                        -- OID 1.3.6.1.5.3.0 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.5.3.1.*                                        -- OID 1.3.6.1.5.3.1 is a leaf OID. It cannot have subordinate OIDs.
 1.3.6.1.5.3.2.*                                        -- OID 1.3.6.1.5.3.2 is a leaf OID. It cannot have subordinate OIDs.
-1.3.6.1.5.4.(1+)                                       -- The only child OID defined in the <a href="https://www.iana.org/assignments/smi-numbers/smi-numbers.xhtml#smi-numbers-28">SMI Security for Confidentiality Codes</a> is <code>reserved(0)</code>.
+1.3.6.1.5.4.(1+)                                       -- The only child OID of <a href="https://oid-base.com/get/1.3.6.1.5.4"><code>{iso(1) identified-organization(3) dod(6) internet(1) security(5) confide(4)}</code></a> defined in the <a href="https://www.iana.org/assignments/smi-numbers/smi-numbers.xhtml#smi-numbers-28">SMI Security for Confidentiality Codes</a> is <code>reserved(0)</code>.
 1.3.6.1.5.5.1.4                                        -- Not allocated at <a href="https://www.iana.org/assignments/smi-numbers/smi-numbers.xhtml#smi-numbers-30">https://www.iana.org/assignments/smi-numbers/smi-numbers.xhtml#smi-numbers-30</a>.
 1.3.6.1.5.5.1.5                                        -- Not allocated at <a href="https://www.iana.org/assignments/smi-numbers/smi-numbers.xhtml#smi-numbers-30">https://www.iana.org/assignments/smi-numbers/smi-numbers.xhtml#smi-numbers-30</a>.
 1.3.6.1.5.5.1.6                                        -- Not allocated at <a href="https://www.iana.org/assignments/smi-numbers/smi-numbers.xhtml#smi-numbers-30">https://www.iana.org/assignments/smi-numbers/smi-numbers.xhtml#smi-numbers-30</a>.
@@ -1121,7 +1150,8 @@
 1.3.6.1.6.3.(1136+)                                    -- OID 1.3.6.1.6.3 is frozen. OIDs can no more be added to it.
 1.3.6.1.6.3.1.2.2.6.1000                               -- Not defined in IETF RFC 3418.
 1.3.6.1.6.3.3.2.1.(!1)                                 -- OID 1.3.6.1.6.3.3.2.1 is frozen. OIDs can no more be added to it.
-1.3.12.2.(2000+)                                       -- All organisation codes issued by Ecma International have 4 digits of which the first is always '1'.
+1.3.12.2.(0-999)                                       -- Child OIDs of <a href="https://oid-base.com/get/1.3.12.2"><code>{iso(1) identified-organization(3) icd-ecma(12) member-company(2)}</code></a> are organization codes issued by Ecma International which have 4 digits, of which the first is always '<code>1</code>'.
+1.3.12.2.(2000+)                                       -- Child OIDs of <a href="https://oid-base.com/get/1.3.12.2"><code>{iso(1) identified-organization(3) icd-ecma(12) member-company(2)}</code></a> are organization codes issued by Ecma International which have 4 digits, of which the first is always '<code>1</code>'.
 1.3.12.999                                             -- Not assigned by Ecma International.
 1.3.40.*                                               -- OID 1.3.40 is a leaf OID. It cannot have subordinate OIDs.
 1.3.92                                                 -- This International Code Designator (ICD) is <a href="http://iso6523.info/icd_list.pdf">not assigned</a>: It was originally allocated to the Danish Chamber of Commerce but due to a conflict with the UN/ECE codes, they have been reallocated <a href="https://oid-base.com/get/1.3.96">ICD 96</a>.
@@ -1165,10 +1195,10 @@
 2.(29-39)                                              -- OID 2 is frozen. OIDs can no more be added to it.
 2.(43-47)                                              -- OID 2 is frozen. OIDs can no more be added to it.
 2.(53-998)                                             -- OID 2 is frozen. OIDs can no more be added to it.
+2.(1000+)                                              -- Child OIDs of <code>{joint-iso-itu-t(2)}</code> are not expected to have a number greater than <code>999</code>.
 2.(1000+)                                              -- OID 2 is frozen. OIDs can no more be added to it.
-2.(1000+)                                              -- OIDs underneath <code>{joint-iso-itu-t(2)}</code> are not expected to have a number greater than <code>999</code>.
 2.0.*                                                  -- OID 2.0 is a leaf OID. It cannot have subordinate OIDs.
-2.1.(124+)                                             -- OIDs underneath <code>{joint-iso-itu-t(2) asn1(1)}</code> cannot have a number greater than <code>123</code>.
+2.1.(124+)                                             -- Child OIDs of <code>{joint-iso-itu-t(2) asn1(1)}</code> cannot have a number greater than <code>123</code>.
 2.2.840                                                -- The correct OID is probably <a href="https://oid-base.com/get/1.2.840"><code>{iso(1) member-body(2) us(840)}</code></a>.
 2.5.1.5.55                                             -- The correct OID is <a href="https://oid-base.com/get/2.5.4.55/get/2.5.4.55"><code>{joint-iso-itu-t(2) ds(5) attributeType(4) clearance(55)}</code></a>.
 2.5.1.29.(0-)                                          -- OID 2.5.1.29 is frozen. OIDs can no more be added to it.
@@ -1180,7 +1210,7 @@
 2.5.10.*                                               -- OID 2.5.10 is a leaf OID. It cannot have subordinate OIDs.
 2.5.11.*                                               -- OID 2.5.11 is a leaf OID. It cannot have subordinate OIDs.
 2.5.22                                                 -- This OID is not used in the Recommendation ITU-T X.500 | ISO/IEC 9594 series.
-2.5.29.(81+)                                           -- OIDs underneath <code>{joint-iso-itu-t(2) ds(5) certificateExtension(29)}</code> have a number less or equal to 80 in the current edition of <a href="http://itu.int/ITU-T/X.509">Rec. ITU-T X.509</a> | ISO/IEC 9594-8.
+2.5.29.(81+)                                           -- Child OIDs of <code>{joint-iso-itu-t(2) ds(5) certificateExtension(29)}</code> have a number less or equal to 80 in the current edition of <a href="http://itu.int/ITU-T/X.509">Rec. ITU-T X.509</a> | ISO/IEC 9594-8.
 2.5.29.17.(0-)                                         -- OID 2.5.29.17 is frozen. OIDs can no more be added to it.
 2.5.29.17.(3+)                                         -- OID 2.5.29.17 is frozen. OIDs can no more be added to it.
 2.5.36.*                                               -- OID 2.5.36 is a leaf OID. It cannot have subordinate OIDs.
@@ -1379,7 +1409,7 @@
 2.16.(888-890)                                         -- OID 2.16 is frozen. OIDs can no more be added to it.
 2.16.(892-893)                                         -- OID 2.16 is frozen. OIDs can no more be added to it.
 2.16.(895+)                                            -- OID 2.16 is frozen. OIDs can no more be added to it.
-2.16.(895+)                                            -- The highest country code <a href="https://unstats.un.org/unsd/methodology/m49/">assigned by the  Statistics Division of the United Nations Secretariat</a> is <code>894</code> under OID <code>{joint-iso-itu-t(2) country(16)}</code>.
+2.16.(895+)                                            -- The highest country code <a href="https://unstats.un.org/unsd/methodology/m49/">assigned by the Statistics Division of the United Nations Secretariat</a> is <code>894</code> under OID <a href="https://oid-base.com/get/2.16"><code>{joint-iso-itu-t(2) country(16)}</code></a>.
 2.16.56.*                                              -- OID 2.16.56 is a leaf OID. It cannot have subordinate OIDs.
 2.16.60.(0-)                                           -- OID 2.16.60 is frozen. OIDs can no more be added to it.
 2.16.60.(4-6)                                          -- OID 2.16.60 is frozen. OIDs can no more be added to it.
@@ -1390,6 +1420,7 @@
 2.16.124.101.260                                       -- The correct OID is <a href="https://oid-base.com/get/2.16.124.101.1.260"><code>{joint-iso-itu-t(2) country(16) ca(124) gc(101) 1 260}</code></a>.
 2.16.124.101.261                                       -- The correct OID is <a href="https://oid-base.com/get/2.16.124.101.1.261"><code>{joint-iso-itu-t(2) country(16) ca(124) gc(101) 1 261}</code></a>.
 2.16.124.101.270                                       -- The correct OID is <a href="https://oid-base.com/get/2.16.124.101.1.270"><code>{joint-iso-itu-t(2) country(16) ca(124) gc(101) 1 270}</code></a>.
+2.16.158.1.(0-110000)                                  -- Child OIDs of <a href="https://oid-base.com/get/2.16.158.1"><code>{joint-iso-itu-t(2) country(16) tw(158) organization(1)}</code></a> are greater than <code>110000</code> because numeric values less than <code>110000</code> usually will conflict with country Network Service Access Point (NSAP) address space.
 2.16.158.3                                             -- Institute for Information Industry claims to have this OID but the Registration Authority for the superior OID confirmed that this OID was never assigned to III.
 2.16.158.5                                             -- Taiwan-CA.com, Inc. (TaiCA) claims to have this OID but the Registration Authority for the superior OID confirmed that this OID was never assigned to them.
 2.16.158.6                                             -- <a href="http://www.chief.com.tw">CHIEF Telecom Inc.</a> claims to use this OID but it is illegal because Taiwan non-government organizations are registered under <a href="https://oid-base.com/get/2.16.158.1"><code>{joint-iso-itu-t(2) country(16) tw(158) organization(1)}</code></a>.
@@ -1421,9 +1452,9 @@
 2.16.804.0.20001                                       -- The correct OID is <a href="https://oid-base.com/get/1.3.6.1.4.1.20001"><code>{iso(1) identified-organization(3) dod(6) internet(1) private(4) enterprise(1) 20001}</code></a>.
 2.16.826.*                                             -- OID 2.16.826 is a leaf OID. It cannot have subordinate OIDs.
 2.16.840.(!1)                                          -- OID 2.16.840 is frozen. OIDs can no more be added to it.
-2.16.840.1.(0-100)                                     -- Child OIDs of <a href="https://oid-base.com/get/2.16.840.1"><code>{joint-iso-itu-t(2) country(16) us(840) organization(1)}</code></a> have a number greater than or equal to <code>113,527</code> (except <code>gov(101)</code>).
-2.16.840.1.(102-113526)                                -- Child OIDs of <a href="https://oid-base.com/get/2.16.840.1"><code>{joint-iso-itu-t(2) country(16) us(840) organization(1)}</code></a> have a number greater than or equal to <code>113,527</code> (except <code>gov(101)</code>).
-2.16.840.1.(16000000+)                                 -- Child OIDs of <a href="https://oid-base.com/get/2.16.840.1"><code>{joint-iso-itu-t(2) country(16) us(840) organization(1)}</code></a> have a number greater than or equal to <code>113,527</code> (except <code>gov(101)</code>).
+2.16.840.1.(0-100)                                     -- Child OIDs of <a href="https://oid-base.com/get/2.16.840.1"><code>{joint-iso-itu-t(2) country(16) us(840) organization(1)}</code></a> have a number greater than or equal to <code>113,527</code> (except <code>gov(101)</code>) and less than 16 million.
+2.16.840.1.(102-113526)                                -- Child OIDs of <a href="https://oid-base.com/get/2.16.840.1"><code>{joint-iso-itu-t(2) country(16) us(840) organization(1)}</code></a> have a number greater than or equal to <code>113,527</code> (except <code>gov(101)</code>) and less than 16 million.
+2.16.840.1.(16000000+)                                 -- Child OIDs of <a href="https://oid-base.com/get/2.16.840.1"><code>{joint-iso-itu-t(2) country(16) us(840) organization(1)}</code></a> have a number greater than or equal to <code>113,527</code> (except <code>gov(101)</code>) and less than 16 million.
 2.16.840.1.113883.2.4.6.3.*                            -- OID 2.16.840.1.113883.2.4.6.3 is a leaf OID. It cannot have subordinate OIDs.
 2.16.840.1.113883.2.29.*                               -- OID 2.16.840.1.113883.2.29 is a leaf OID. It cannot have subordinate OIDs.
 2.16.840.1.113883.3.(20000+)                           -- OIDs allocated by HL7 underneath <a href="http://www.hl7.org/oid/index.cfm?Comp_OID=2.16.840.1.113883.3"><code>2.16.840.1.113883.3</code></a> are not expected (at this point in time) to have a number greater than <code>19999</code>; if you think this constraint is wrong, please contact the <a href="https://oid-base.com/helper">OID repository administrator</a>.
@@ -1529,7 +1560,7 @@
 2.17.3.*                                               -- OID 2.17.3 is a leaf OID. It cannot have subordinate OIDs.
 2.17.5.*                                               -- OID 2.17.5 is a leaf OID. It cannot have subordinate OIDs.
 2.17.6.*                                               -- OID 2.17.6 is a leaf OID. It cannot have subordinate OIDs.
-2.25.(340282366920938463463374607431768211456+)        -- a UUID in hexadecimal notation of the form <code>FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF</code> cannot have a decimal number greater than <code>340282366920938463463374607431768211455</code>.
+2.25.(340282366920938463463374607431768211456+)        -- Child OIDs of <a href="https://oid-base.com/get/2.25"><code>{joint-iso-itu-t(2) uuid(25)}</code></a> cannot have a decimal number (corresponding to a UUID hexadecimal notation of the form <code>FFFFFFFF-FFFF-FFFF-FFFF-FFFFFFFFFFFF</code>) greater than <code>340282366920938463463374607431768211455</code>.
 2.25.0.*                                               -- OID 2.25.0 is a leaf OID. It cannot have subordinate OIDs.
 2.25.144105640512485394834706790773261976859.(0-)      -- OID 2.25.144105640512485394834706790773261976859 is frozen. OIDs can no more be added to it.
 2.25.144105640512485394834706790773261976859.(2-9)     -- OID 2.25.144105640512485394834706790773261976859 is frozen. OIDs can no more be added to it.

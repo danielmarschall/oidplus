@@ -297,18 +297,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/oidinfo_api.git",
-                "reference": "4dbbf4bbbc20ca7a5ce2f67abae6e7cbfe5c6a0d"
+                "reference": "f41d80c37f6ceeb3c7538e0985da97e42f22fb8b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/oidinfo_api/zipball/4dbbf4bbbc20ca7a5ce2f67abae6e7cbfe5c6a0d",
-                "reference": "4dbbf4bbbc20ca7a5ce2f67abae6e7cbfe5c6a0d",
+                "url": "https://api.github.com/repos/danielmarschall/oidinfo_api/zipball/f41d80c37f6ceeb3c7538e0985da97e42f22fb8b",
+                "reference": "f41d80c37f6ceeb3c7538e0985da97e42f22fb8b",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.4"
             },
-            "time": "2025-02-10T14:32:51+00:00",
+            "time": "2025-03-26T19:03:30+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -578,12 +578,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/matthiasmullie/minify.git",
-                "reference": "cb7a9297b4ab070909cefade30ee95054d4ae87a"
+                "reference": "4c4eceeaa2f66eeb8de87ae9329b4cc2845073c3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/matthiasmullie/minify/zipball/cb7a9297b4ab070909cefade30ee95054d4ae87a",
-                "reference": "cb7a9297b4ab070909cefade30ee95054d4ae87a",
+                "url": "https://api.github.com/repos/matthiasmullie/minify/zipball/4c4eceeaa2f66eeb8de87ae9329b4cc2845073c3",
+                "reference": "4c4eceeaa2f66eeb8de87ae9329b4cc2845073c3",
                 "shasum": ""
             },
             "require": {
@@ -594,13 +594,12 @@
             "require-dev": {
                 "friendsofphp/php-cs-fixer": ">=2.0",
                 "matthiasmullie/scrapbook": ">=1.3",
-                "phpunit/phpunit": ">=4.8",
-                "squizlabs/php_codesniffer": ">=3.0"
+                "phpunit/phpunit": ">=4.8"
             },
             "suggest": {
                 "psr/cache-implementation": "Cache implementation to use with Minify::cache"
             },
-            "time": "2024-03-15T10:27:10+00:00",
+            "time": "2025-03-06T09:42:28+00:00",
             "default-branch": true,
             "bin": [
                 "bin/minifycss",
@@ -636,7 +635,7 @@
             ],
             "support": {
                 "issues": "https://github.com/matthiasmullie/minify/issues",
-                "source": "https://github.com/matthiasmullie/minify/tree/1.3.73"
+                "source": "https://github.com/matthiasmullie/minify/tree/master"
             },
             "funding": [
                 {
@@ -832,12 +831,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "3bb297621f5c78a1e01bb34ce2308344457f45f1"
+                "reference": "914583d4a633b9508b7b115cbdbde90e5a28967b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/3bb297621f5c78a1e01bb34ce2308344457f45f1",
-                "reference": "3bb297621f5c78a1e01bb34ce2308344457f45f1",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/914583d4a633b9508b7b115cbdbde90e5a28967b",
+                "reference": "914583d4a633b9508b7b115cbdbde90e5a28967b",
                 "shasum": ""
             },
             "require": {
@@ -855,7 +854,7 @@
                 "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
                 "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
             },
-            "time": "2025-01-25T04:27:41+00:00",
+            "time": "2025-03-09T03:15:23+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -1123,15 +1122,15 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "4b04481b24137029525f6dc372706fa9d3168f14"
+                "reference": "88d1b2874256895338034dba28bf6e920aa4ba17"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/4b04481b24137029525f6dc372706fa9d3168f14",
-                "reference": "4b04481b24137029525f6dc372706fa9d3168f14",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/88d1b2874256895338034dba28bf6e920aa4ba17",
+                "reference": "88d1b2874256895338034dba28bf6e920aa4ba17",
                 "shasum": ""
             },
-            "time": "2025-02-20T08:31:02+00:00",
+            "time": "2025-04-09T02:06:27+00:00",
             "default-branch": true,
             "type": "component",
             "extra": {
@@ -1175,7 +1174,7 @@
                 "wysiwyg"
             ],
             "support": {
-                "source": "https://github.com/tinymce/tinymce-dist/tree/7.7.0"
+                "source": "https://github.com/tinymce/tinymce-dist/tree/7.8.0"
             },
             "install-path": "../tinymce/tinymce"
         },
@@ -1186,18 +1185,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "90acd33350e1356194a364595cb07b65f24bd611"
+                "reference": "99a0dc628adc2fbe6ab1a60b0a4241073a4b5e4d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/90acd33350e1356194a364595cb07b65f24bd611",
-                "reference": "90acd33350e1356194a364595cb07b65f24bd611",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/99a0dc628adc2fbe6ab1a60b0a4241073a4b5e4d",
+                "reference": "99a0dc628adc2fbe6ab1a60b0a4241073a4b5e4d",
                 "shasum": ""
             },
             "replace": {
                 "twitter/bootstrap": "self.version"
             },
-            "time": "2025-02-18T14:35:57+00:00",
+            "time": "2025-04-11T04:43:59+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",

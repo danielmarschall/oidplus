@@ -3,7 +3,7 @@
 /*
  * OID-base.com API for PHP
  * Copyright 2019 - 2025 Daniel Marschall, ViaThinkSoft
- * Version 2025-01-28
+ * Version 2025-03-26
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -158,8 +158,7 @@ class OIDInfoAPI {
 		// Allow leading dots and leading zeroes, but remove then afterwards
 		$ok = oid_valid_dotnotation($oid, true, true, 1);
 		if ($ok === false) return false;
-
-		return sanitizeOID($oid, $oid[0] == '.');
+		return sanitizeOID($oid, substr($oid,0,1) == '.');
 	}
 
 	# --- PART 3: XML file creation
@@ -599,7 +598,7 @@ class OIDInfoAPI {
 				if ($behavior == self::SOFT_CORRECT_BEHAVIOR_NONE) {
 					if (!oid_id_is_valid($synid)) $synid = null;
 				} else if ($behavior == self::SOFT_CORRECT_BEHAVIOR_LOWERCASE_BEGINNING) {
-					$synid[0] = strtolower($synid[0]);
+					if ($synid!='') $synid[0] = strtolower(substr($synid,0,1));
 					if (!oid_id_is_valid($synid)) $synid = null;
 				} else if ($behavior == self::SOFT_CORRECT_BEHAVIOR_ALL_POSSIBLE) {
 					$synid = oid_soft_correct_id($synid);

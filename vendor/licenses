@@ -14,8 +14,8 @@ danielmarschall/glip             0.1.3.x-dev 681871b GPL-2.0-or-later
 danielmarschall/glip             dev-master 681871b  GPL-2.0-or-later      
 danielmarschall/oidconverter     9999999-dev cd036ff Apache-2.0            
 danielmarschall/oidconverter     dev-master cd036ff  Apache-2.0            
-danielmarschall/oidinfo_api      9999999-dev 4dbbf4b Apache-2.0            
-danielmarschall/oidinfo_api      dev-master 4dbbf4b  Apache-2.0            
+danielmarschall/oidinfo_api      9999999-dev f41d80c Apache-2.0            
+danielmarschall/oidinfo_api      dev-master f41d80c  Apache-2.0            
 danielmarschall/php_utils        9999999-dev a1c52a7 Apache-2.0            
 danielmarschall/php_utils        dev-master a1c52a7  Apache-2.0            
 danielmarschall/uuid_mac_utils   9999999-dev fce4654 Apache-2.0            
@@ -26,21 +26,21 @@ dcodeio/bcrypt.js                2.4.3               BSD-3-Clause, MIT
 emn178/js-sha3                   master master       MIT                   
 firebase/php-jwt                 v6.10.0             BSD-3-Clause          
 gedmarc/layout                   master master       GPL-3.0-or-later, MIT 
-matthiasmullie/minify            9999999-dev cb7a929 MIT                   
-matthiasmullie/minify            dev-master cb7a929  MIT                   
+matthiasmullie/minify            9999999-dev 4c4ecee MIT                   
+matthiasmullie/minify            dev-master 4c4ecee  MIT                   
 matthiasmullie/path-converter    1.1.3               MIT                   
 paragonie/constant_time_encoding v2.x-dev 52a0d99    MIT                   
 paragonie/random_compat          v9.99.100           MIT                   
-phpseclib/phpseclib              3.0.x-dev 3bb2976   MIT                   
+phpseclib/phpseclib              3.0.x-dev 914583d   MIT                   
 script47/bs5-utils               master master       MIT                   
 spamspan/spamspan                master              GPL-2.0-only          
 spomky-labs/php-punycode         dev-master d12fe5c  MIT                   
 spomky-labs/php-punycode         9999999-dev d12fe5c MIT                   
 symfony/polyfill-mbstring        1.x-dev 6d857f4     MIT                   
-tinymce/tinymce                  9999999-dev 4b04481 GPL-2.0-or-later      
-tinymce/tinymce                  dev-master 4b04481  GPL-2.0-or-later      
-twbs/bootstrap                   9999999-dev 90acd33 MIT                   
-twbs/bootstrap                   dev-main 90acd33    MIT                   
+tinymce/tinymce                  9999999-dev 88d1b28 GPL-2.0-or-later      
+tinymce/tinymce                  dev-master 88d1b28  GPL-2.0-or-later      
+twbs/bootstrap                   9999999-dev 99a0dc6 MIT                   
+twbs/bootstrap                   dev-main 99a0dc6    MIT                   
 tweeb/tinymce-i18n               9999999-dev 058da08 MIT                   
 tweeb/tinymce-i18n               dev-master 058da08  MIT                   
 vakata/jstree                    9999999-dev 6256df0 MIT                   
