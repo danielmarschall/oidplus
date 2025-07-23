@@ -545,11 +545,11 @@ class OIDplusAid extends OIDplusObject {
 			$isni_subtype = substr($aid,strlen('D276000186F701'),1);
 			$rest = substr($aid,strlen('D276000186F701')+1);
 			if (strlen($rest) >= 13) {
-				$isni_bin = substr($rest,0,13);
+				$isni_hex = substr($rest,0,13);
 				$pix = substr($rest,14);
-				if (($pix === '') && preg_match('/^[A-F0-9]+$/',$isni_bin,$m)) {
+				if ($pix === '') {
 					// Example: "38D7EA4C67FFF" => "999999999999999"
-					$isni_no_checksum = self::base_convert_bigint($isni_bin,16,10);
+					$isni_no_checksum = self::base_convert_bigint($isni_hex,16,10);
 					$isni_dec = $isni_no_checksum . self::generateIsniCheckdigit($isni_no_checksum);
 					// Now format to "9999-9999-9999-9999"
 					$isni = rtrim(chunk_split(str_pad($isni_dec,16,'0',STR_PAD_LEFT),4,'-'),'-');
@@ -563,7 +563,28 @@ class OIDplusAid extends OIDplusObject {
 				}
 			}
 		}
-
+		
+		// (VTS F8 xx xx) ISO 6523 ICD (International Code Designators) based AID
+		if (str_starts_with($aid,'D276000186F8')) {
+			$icd_subtype = hexdec(substr($aid,strlen('D276000186F8'),4));
+			$rest = substr($aid,strlen('D276000186F8')+4);
+			// (VTS F8 00 BD) European Business Identifier (EBID), e.g. "2 500474 872595" = D2 76 00 01 86 F8 00 BD 3A 37 FD DD 1B
+			if ($icd_subtype == 189) {
+				$pix = substr($rest,10);
+				if ($pix === '') {
+					$rest = hexdec($rest);
+					$s = 10;
+					for ($i = 0; $i < strlen($rest); $i++) {
+					    $c = (int)substr($rest,$i,1);
+					    $s = (2 * (($s + $c) % 10)) % 11;
+					}
+					$checkDigit = (11 - $s) % 10; // ISO 7064 Mod 11,10 algorithm
+					$rest .= $checkDigit;
+					$formatted_ebid = substr($rest,0,1) . ' ' . substr($rest,1,6) . ' ' . substr($rest,7);
+					$ids[] = new OIDplusAltId('ebid', $formatted_ebid, _L('European Business Identifier (EBID)'));
+				}
+			}
+		}
 
 		// The case E8... (Standard OID 1.0) doesn't need to be addressed here, because it is already shown in the AID decoder (and it is ambiguous since DER and PIX are mixed)
 		// TODO: If it has no pix, then resolve it !!! but how do we know if there is a PIX or a part ID ?

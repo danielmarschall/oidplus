@@ -2654,6 +2654,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		European Business Identifier (EBID)
+		]]></source>
+		<target><![CDATA[
+		European Business Identifier (EBID)
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Event
 		]]></source>
 		<target><![CDATA[
