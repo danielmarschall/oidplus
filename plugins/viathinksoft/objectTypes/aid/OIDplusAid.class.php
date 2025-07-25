@@ -572,15 +572,9 @@ class OIDplusAid extends OIDplusObject {
 			if ($icd_subtype == 189) {
 				$pix = substr($rest,10);
 				if ($pix === '') {
-					$rest = hexdec($rest);
-					$s = 10;
-					for ($i = 0; $i < strlen($rest); $i++) {
-					    $c = (int)substr($rest,$i,1);
-					    $s = (2 * (($s + $c) % 10)) % 11;
-					}
-					$checkDigit = (11 - $s) % 10; // ISO 7064 Mod 11,10 algorithm
-					$rest .= $checkDigit;
-					$formatted_ebid = substr($rest,0,1) . ' ' . substr($rest,1,6) . ' ' . substr($rest,7);
+					$ebid_no_checksum = hexdec($rest);
+					$ebid = $ebid_no_checksum . self::generateEbidCheckdigit($ebid_no_checksum);
+					$formatted_ebid = substr($ebid,0,1) . ' ' . substr($ebid,1,6) . ' ' . substr($ebid,7);
 					$ids[] = new OIDplusAltId('ebid', $formatted_ebid, _L('European Business Identifier (EBID)'));
 				}
 			}
@@ -593,13 +587,12 @@ class OIDplusAid extends OIDplusObject {
 	}
 
 	/**
-	  * Generates check digit as per ISO 7064 11,2.
-	  *
+	  * Generates check digit as per ISO 7064 Mod 11-2
 	  */
 	private static function generateIsniCheckdigit(string $baseDigits) {
 	    $total = 0;
 	    for ($i = 0; $i < strlen($baseDigits); $i++) {
-	        $digit = (int)$baseDigits[$i];
+	        $digit = (int)substr($baseDigits,$i,1);
 	        $total = ($total + $digit) * 2;
 	    }
 	    $remainder = $total % 11;
@@ -608,6 +601,20 @@ class OIDplusAid extends OIDplusObject {
 	}
 	//assert(generateIsniCheckdigit('000000010929605') == '3');
 	//asserr(generateIsniCheckdigit('000000012281955') == 'X');
+
+	/**
+	  * Generates check digit as per ISO 7064 Mod 11-10
+	  */
+	private static function generateEbidCheckdigit(string $baseDigits) {
+		$s = 10;
+		for ($i = 0; $i < strlen($baseDigits); $i++) {
+			$c = (int)substr($baseDigits,$i,1);
+			$s = (2 * (($s + $c) % 10)) % 11;
+		}
+		$checkDigit = (11 - $s) % 10;
+		return $checkDigit;
+	}
+	//assert(generateEbidCheckdigit('250047487259') == '5');
 
 	/**
 	 * @param string $numstring

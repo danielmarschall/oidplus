@@ -802,6 +802,75 @@ class OIDplusOid extends OIDplusObject {
 			}
 		}
 
+		if (str_starts_with($oid,'1.3.6.1.4.1.37476.9001.')) {
+			// TODO: Implement 9001 mac-based (and vice versa)
+		}
+
+		if (($oid_len == 11) && str_starts_with($oid,'1.3.6.1.4.1.37476.9002.1.16.') && ($oid_parts[10]<=0xFFFF)) {
+			$ids[] = new OIDplusAltId('device-vendor', "USB\\VID_".sprintf("%04X", $oid_parts[10]), _L('USB Vendor'), '', '');
+		}
+
+		if (($oid_len == 12) && str_starts_with($oid,'1.3.6.1.4.1.37476.9002.1.32.') && ($oid_parts[10]<=0xFFFF) && ($oid_parts[11]<=0xFFFF)) {
+			$ids[] = new OIDplusAltId('device-vendor', "USB\\VID_".sprintf("%04X", $oid_parts[10])."&PID_".sprintf("%04X", $oid_parts[11]), _L('USB Vendor and Product'), '', '');
+		}
+
+		if (($oid_len == 11) && str_starts_with($oid,'1.3.6.1.4.1.37476.9002.2.16.') && ($oid_parts[10]<=0xFFFF)) {
+			$ids[] = new OIDplusAltId('device-vendor', "PCI\\VID_".sprintf("%04X", $oid_parts[10]), _L('PCI Vendor'), '', '');
+		}
+
+		if (($oid_len == 12) && str_starts_with($oid,'1.3.6.1.4.1.37476.9002.2.32.') && ($oid_parts[10]<=0xFFFF) && ($oid_parts[11]<=0xFFFF)) {
+			$ids[] = new OIDplusAltId('device-vendor', "PCI\\VID_".sprintf("%04X", $oid_parts[10])."&PID_".sprintf("%04X", $oid_parts[11]), _L('PCI Vendor and Product'), '', '');
+		}
+
+		if (($oid_len == 12) && str_starts_with($oid,'1.3.6.1.4.1.37476.9003.1.')) {
+			$duns =
+				str_pad($oid_parts[9],2,'0',STR_PAD_LEFT).'-'.
+				str_pad($oid_parts[10],3,'0',STR_PAD_LEFT).'-'.
+				str_pad($oid_parts[11],4,'0',STR_PAD_LEFT);
+			$ids[] = new OIDplusAltId('duns', $duns, _L('Data Universal Numbering System (D-U-N-S)'), '', '');
+		}
+
+		if (($oid_len == 10) && str_starts_with($oid,'1.3.6.1.4.1.37476.9003.2.')) {
+			$rin = $oid_parts[9];
+			$ids[] = new OIDplusAltId('rin', $rin, _L('Ringgold ID'), '', '');
+		}
+
+		if (($oid_len == 11) && str_starts_with($oid,'1.3.6.1.4.1.37476.9003.3.')) {
+			// TODO: Implement vice versa for doi object type
+			$doi = $oid_parts[9].'.'.$oid_parts[10];
+			$ids[] = new OIDplusAltId('doi', $doi, _L('Digital Object Identifier (DOI)'), '', '');
+		}
+
+		if (str_starts_with($oid,'1.3.6.1.4.1.37476.9004.')) {
+			// TODO: Implement 9004 gs1 based (and vice versa)
+		}
+
+		if (($oid_len == 14) && str_starts_with($oid,'1.3.6.1.4.1.37476.9005.1.1.')) {
+			$isni =
+				str_pad($oid_parts[10],4,'0',STR_PAD_LEFT).'-'.
+				str_pad($oid_parts[11],4,'0',STR_PAD_LEFT).'-'.
+				str_pad($oid_parts[12],4,'0',STR_PAD_LEFT).'-'.
+				str_pad($oid_parts[13],4,'0',STR_PAD_LEFT);
+			$ids[] = new OIDplusAltId('isni', $isni, _L('International Standard Name Identifier (ISNI)'), '', '');
+		}
+
+		if (($oid_len == 14) && str_starts_with($oid,'1.3.6.1.4.1.37476.9005.1.2.')) {
+			$orcid =
+				str_pad($oid_parts[10],4,'0',STR_PAD_LEFT).'-'.
+				str_pad($oid_parts[11],4,'0',STR_PAD_LEFT).'-'.
+				str_pad($oid_parts[12],4,'0',STR_PAD_LEFT).'-'.
+				str_pad($oid_parts[13],4,'0',STR_PAD_LEFT);
+			$ids[] = new OIDplusAltId('orcid', $orcid, _L('Open Researcher and Contributor ID (ORCID)'), '', '');
+		}
+
+		if (($oid_len == 12) && str_starts_with($oid,'1.3.6.1.4.1.37476.9006.189.')) {
+			$ebid =
+				$oid_parts[9].' '.
+				str_pad($oid_parts[10],6,'0',STR_PAD_LEFT).' '.
+				str_pad($oid_parts[11],6,'0',STR_PAD_LEFT);
+			$ids[] = new OIDplusAltId('ebid', $ebid, _L('European Business Identifier (EBID)'), '', '');
+		}
+
 		return $ids;
 	}
 
