@@ -803,7 +803,32 @@ class OIDplusOid extends OIDplusObject {
 		}
 
 		if (str_starts_with($oid,'1.3.6.1.4.1.37476.9001.')) {
-			// TODO: Implement 9001 mac-based (and vice versa)
+			// TODO: For the mac objecttype plugin, implement the counter-part
+			$num_bits = $oid_parts[8];
+			if ($num_bits <= 48) {
+				$num_arcs = ceil($num_bits / 24);
+				if ($oid_len == 9 + $num_arcs) {
+					$decoded = '';
+					for ($i=0; $i<$num_arcs; $i++) {
+						for ($j=24; $j>=0; $j-=4) {
+							if ($num_bits >= $j) {
+								if ($oid_parts[9 + $i] >= pow(2,$j)) {
+									// last arc is too big. Not a valid identifier
+									$decoded = '';
+									break 2;
+								}
+								$decoded .= sprintf("%0".($j/4)."X", $oid_parts[9 + $i]);
+								$num_bits -= $j;
+								break;
+							}
+						}
+					}
+					if ($decoded <> '') {
+						$decoded = trim(chunk_split($decoded, 2, '-'),'-');
+						$ids[] = new OIDplusAltId('mac', $decoded, _L('MAC address'), '', '');
+					}
+				}
+			}
 		}
 
 		if (($oid_len == 11) && str_starts_with($oid,'1.3.6.1.4.1.37476.9002.1.16.') && ($oid_parts[10]<=0xFFFF)) {
@@ -814,12 +839,20 @@ class OIDplusOid extends OIDplusObject {
 			$ids[] = new OIDplusAltId('device-vendor', "USB\\VID_".sprintf("%04X", $oid_parts[10])."&PID_".sprintf("%04X", $oid_parts[11]), _L('USB Vendor and Product'), '', '');
 		}
 
+		if (($oid_len == 13) && str_starts_with($oid,'1.3.6.1.4.1.37476.9002.1.48.') && ($oid_parts[10]<=0xFFFF) && ($oid_parts[11]<=0xFFFF) && ($oid_parts[12]<=0xFFFF)) {
+			$ids[] = new OIDplusAltId('device-vendor', "USB\\VID_".sprintf("%04X", $oid_parts[10])."&PID_".sprintf("%04X", $oid_parts[11])."&REV_".sprintf("%04X", $oid_parts[12]), _L('USB Vendor and Product with Revision'), '', '');
+		}
+
 		if (($oid_len == 11) && str_starts_with($oid,'1.3.6.1.4.1.37476.9002.2.16.') && ($oid_parts[10]<=0xFFFF)) {
 			$ids[] = new OIDplusAltId('device-vendor', "PCI\\VID_".sprintf("%04X", $oid_parts[10]), _L('PCI Vendor'), '', '');
 		}
 
 		if (($oid_len == 12) && str_starts_with($oid,'1.3.6.1.4.1.37476.9002.2.32.') && ($oid_parts[10]<=0xFFFF) && ($oid_parts[11]<=0xFFFF)) {
 			$ids[] = new OIDplusAltId('device-vendor', "PCI\\VID_".sprintf("%04X", $oid_parts[10])."&PID_".sprintf("%04X", $oid_parts[11]), _L('PCI Vendor and Product'), '', '');
+		}
+
+		if (($oid_len == 13) && str_starts_with($oid,'1.3.6.1.4.1.37476.9002.2.40.') && ($oid_parts[10]<=0xFFFF) && ($oid_parts[11]<=0xFFFF) && ($oid_parts[12]<=0xFF)) {
+			$ids[] = new OIDplusAltId('device-vendor', "PCI\\VID_".sprintf("%04X", $oid_parts[10])."&PID_".sprintf("%04X", $oid_parts[11])."&REV_".sprintf("%02X", $oid_parts[12]), _L('PCI Vendor and Product with Revision'), '', '');
 		}
 
 		if (($oid_len == 12) && str_starts_with($oid,'1.3.6.1.4.1.37476.9003.1.')) {
@@ -836,13 +869,35 @@ class OIDplusOid extends OIDplusObject {
 		}
 
 		if (($oid_len == 11) && str_starts_with($oid,'1.3.6.1.4.1.37476.9003.3.')) {
-			// TODO: Implement vice versa for doi object type
+			// TODO: For the doi objecttype plugin, implement the counter-part
 			$doi = $oid_parts[9].'.'.$oid_parts[10];
 			$ids[] = new OIDplusAltId('doi', $doi, _L('Digital Object Identifier (DOI)'), '', '');
 		}
 
 		if (str_starts_with($oid,'1.3.6.1.4.1.37476.9004.')) {
-			// TODO: Implement 9004 gs1 based (and vice versa)
+			// TODO: For the gs1 objecttype plugin, implement the counter-part
+			$num_digits = $oid_parts[8];
+			$num_arcs = ceil($num_digits / 8);
+			if ($oid_len == 9 + $num_arcs) {
+				$decoded = '';
+				for ($i=0; $i<$num_arcs; $i++) {
+					for ($j=8; $j>=0; $j--) {
+						if ($num_digits >= $j) {
+							if ($oid_parts[9 + $i] >= pow(10,$j)) {
+								// last arc is too big. Not a valid identifier
+								$decoded = '';
+								break 2;
+							}
+							$decoded .= sprintf("%0".$j."d", $oid_parts[9 + $i]);
+							$num_digits -= $j;
+							break;
+						}
+					}
+				}
+				if ($decoded <> '') {
+					$ids[] = new OIDplusAltId('gs1', $decoded, _L('GS1 Based IDs (GLN/GTIN/SSCC/...)'), '', '');
+				}
+			}
 		}
 
 		if (($oid_len == 14) && str_starts_with($oid,'1.3.6.1.4.1.37476.9005.1.1.')) {
