@@ -372,12 +372,28 @@ class OIDplusGs1 extends OIDplusObject {
 		if ($this->isRoot()) return array();
 		$ids = parent::getAltIds();
 
-		// (VTS F5) GS1 to AID (PIX allowed)
 		$gs1 = $this->nodeId(false);
-		$aid = 'D276000186F5'.$gs1;
-		if (strlen($aid)%2 == 1) $aid .= 'F';
-		$aid_is_ok = aid_canonize($aid);
-		if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, with "FF" prefix').')', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186F5');
+		if ($gs1 == '') {
+			// (VTS F5) GS1 to AID (PIX allowed)
+			$aid = 'D276000186F5';
+			$ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' (' . _L('Optional PIX allowed, with "FF" prefix') . ')', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186F5');
+
+			// VTS FreeOID 9004
+			$oid = '1.3.6.1.4.1.37476.9004';
+			$ids[] = new OIDplusAltId('oid', $oid, _L('Object Identifier'), '', 'https://hosted.oidplus.com/viathinksoft/?goto=oid%3A1.3.6.1.4.1.37476.9004');
+		} else {
+			// (VTS F5) GS1 to AID (PIX allowed)
+			$aid = 'D276000186F5' . $gs1;
+			if (strlen($aid) % 2 == 1) $aid .= 'F';
+			$aid_is_ok = aid_canonize($aid);
+			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' (' . _L('Optional PIX allowed, with "FF" prefix') . ')', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186F5');
+
+			// VTS FreeOID 9004
+			$ary = str_split($gs1, 8);
+			$oid = '1.3.6.1.4.1.37476.9004.' . strlen($gs1);
+			foreach ($ary as $arc) $oid .= '.' . ltrim($arc, '0');
+			if (oid_valid_dotnotation($oid)) $ids[] = new OIDplusAltId('oid', $oid, _L('Object Identifier'), '', 'https://hosted.oidplus.com/viathinksoft/?goto=oid%3A1.3.6.1.4.1.37476.9004');
+		}
 
 		return $ids;
 	}

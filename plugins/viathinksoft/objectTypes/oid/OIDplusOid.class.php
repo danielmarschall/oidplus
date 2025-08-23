@@ -257,6 +257,8 @@ class OIDplusOid extends OIDplusObject {
 			$content = $tech_info_html;
 
 			$oa = new \OIDInfoAPI();
+			$illegal_root = null;
+			$explanation = null;
 			if ($oa->illegalOid($this->oid, $illegal_root, $explanation)) {
 				$content .= '<p><font color="red" size="+1">'._L('Attention! This OID is probably illegal: %1', $explanation).'</font></p>';
 			}
@@ -726,7 +728,11 @@ class OIDplusOid extends OIDplusObject {
 		}
 
 		// (VTS B2 00 05) OIDplus System AID / Information Object AID
-		if (($oid_len == 10) && str_starts_with($oid,'1.3.6.1.4.1.37476.30.9.')) {
+		if ($oid == '1.3.6.1.4.1.37476.30.9') {
+			$aid = 'D276000186B20005';
+			$aid_is_ok = aid_canonize($aid);
+			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('OIDplus System Application Identifier (ISO/IEC 7816)'), ' ('._L('No PIX allowed').')', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186B20005');
+		} else if (($oid_len == 10) && str_starts_with($oid,'1.3.6.1.4.1.37476.30.9.')) {
 			$sid = $oid_parts[9];
 			$sid_hex = strtoupper(str_pad(dechex((int)$sid),8,'0',STR_PAD_LEFT));
 			$aid = 'D276000186B20005'.$sid_hex;
@@ -744,7 +750,11 @@ class OIDplusOid extends OIDplusObject {
 		}
 
 		// (VTS F0) IANA PEN to AID Mapping (PIX allowed)
-		if (($oid_len == 7) && str_starts_with($oid,'1.3.6.1.4.1.')) {
+		if ($oid == '1.3.6.1.4.1') {
+			$aid = 'D276000186F0';
+			$aid_is_ok = aid_canonize($aid);
+			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, with "FF" prefix').')', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186F0');
+		} else if (($oid_len == 7) && str_starts_with($oid,'1.3.6.1.4.1.')) {
 			$pen = $oid_parts[6];
 			$aid = 'D276000186F0'.$pen;
 			if (strlen($aid)%2 == 1) $aid .= 'F';
@@ -754,7 +764,11 @@ class OIDplusOid extends OIDplusObject {
 		}
 
 		// (VTS F1) FreeOID to AID Mapping (PIX allowed)
-		if (($oid_len == 9) && str_starts_with($oid,'1.3.6.1.4.1.37476.9000.')) {
+		if ($oid == '1.3.6.1.4.1.37476.9000') {
+			$aid = 'D276000186F1';
+			$aid_is_ok = aid_canonize($aid);
+			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, with "FF" prefix').')', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186F1');
+		} else if (($oid_len == 9) && str_starts_with($oid,'1.3.6.1.4.1.37476.9000.')) {
 			$number = $oid_parts[8];
 			$aid = 'D276000186F1'.$number;
 			if (strlen($aid)%2 == 1) $aid .= 'F';
@@ -762,7 +776,7 @@ class OIDplusOid extends OIDplusObject {
 			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, with "FF" prefix').')', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186F1');
 		}
 
-		// (VTS F6) Mapping OID-to-AID if possible
+		// (VTS F6) Mapping OID-to-AID if possible (it needs to be short)
 		try {
 			$test_der = \OidDerConverter::hexarrayToStr(\OidDerConverter::oidToDER($oid));
 		} catch (\Exception $e) {
@@ -803,7 +817,6 @@ class OIDplusOid extends OIDplusObject {
 		}
 
 		if (str_starts_with($oid,'1.3.6.1.4.1.37476.9001.')) {
-			// TODO: For the mac objecttype plugin, implement the counter-part
 			$num_bits = $oid_parts[8];
 			if ($num_bits <= 48) {
 				$num_arcs = ceil($num_bits / 24);
@@ -869,13 +882,11 @@ class OIDplusOid extends OIDplusObject {
 		}
 
 		if (($oid_len == 11) && str_starts_with($oid,'1.3.6.1.4.1.37476.9003.3.')) {
-			// TODO: For the doi objecttype plugin, implement the counter-part
 			$doi = $oid_parts[9].'.'.$oid_parts[10];
 			$ids[] = new OIDplusAltId('doi', $doi, _L('Digital Object Identifier (DOI)'), '', '');
 		}
 
 		if (str_starts_with($oid,'1.3.6.1.4.1.37476.9004.')) {
-			// TODO: For the gs1 objecttype plugin, implement the counter-part
 			$num_digits = $oid_parts[8];
 			$num_arcs = ceil($num_digits / 8);
 			if ($oid_len == 9 + $num_arcs) {

@@ -393,17 +393,38 @@ class OIDplusMac extends OIDplusObject {
 		if ($this->isRoot()) return array();
 		$ids = parent::getAltIds();
 
-		// (VTS F2) MAC address (EUI/ELI/...) to AID (PIX allowed)
-		$size_nibble = strlen($this->number)-1;
-		if (($size_nibble >= 0) && ($size_nibble <= 0xF)) {
-			$aid = 'D276000186F2'.strtoupper(dechex($size_nibble)).$this->number;
-			if ((strlen($aid)%2) == 1) $aid .= 'F';
-			$aid_is_ok = aid_canonize($aid);
-			if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, without prefix').')', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186F2');
-		}
+		if ($this->number == '') {
+			// (VTS F2) MAC address (EUI/ELI/...) to AID (PIX allowed)
+			$aid = 'D276000186F2';
+			$ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, without prefix').')', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186F2');
 
-		if ((strlen($this->number)==12/*48 bit*/) || (strlen($this->number)==16/*64 bit*/)) {
-			$ids[] = new OIDplusAltId('urn', 'dev:mac:'.strtolower($this->number), _L('Uniform Resource Name (RFC 9039)'));
+			// VTS FreeOID 9001
+			$oid = '1.3.6.1.4.1.37476.9001';
+			$ids[] = new OIDplusAltId('oid', $oid, _L('Object Identifier'), '', 'https://hosted.oidplus.com/viathinksoft/?goto=oid%3A1.3.6.1.4.1.37476.9001');
+
+			// URN
+			$ids[] = new OIDplusAltId('urn', 'dev:mac:', _L('Uniform Resource Name (RFC 9039)'));
+		} else {
+			// (VTS F2) MAC address (EUI/ELI/...) to AID (PIX allowed)
+			$size_nibble = strlen($this->number)-1;
+			if (($size_nibble >= 0) && ($size_nibble <= 0xF)) {
+				$aid = 'D276000186F2'.strtoupper(dechex($size_nibble)).$this->number;
+				if ((strlen($aid)%2) == 1) $aid .= 'F';
+				$aid_is_ok = aid_canonize($aid);
+				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' ('._L('Optional PIX allowed, without prefix').')', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186F2');
+			}
+
+			// VTS FreeOID 9001
+			$size_bits = strlen($this->number)*8;
+			$oid = '1.3.6.1.4.1.37476.9001.' . $size_bits;
+			$ary = str_split($this->number, 6); // max 24 bits per arc
+			foreach ($ary as $arc) $oid .= '.' . hexdec($arc);
+			if (oid_valid_dotnotation($oid)) $ids[] = new OIDplusAltId('oid', $oid, _L('Object Identifier'), '', 'https://hosted.oidplus.com/viathinksoft/?goto=oid%3A1.3.6.1.4.1.37476.9001');
+
+			// URN
+			if ((strlen($this->number)==12/*48 bit*/) || (strlen($this->number)==16/*64 bit*/)) {
+				$ids[] = new OIDplusAltId('urn', 'dev:mac:'.strtolower($this->number), _L('Uniform Resource Name (RFC 9039)'));
+			}
 		}
 
 		return $ids;

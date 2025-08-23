@@ -20,6 +20,7 @@
 namespace ViaThinkSoft\OIDplus\Plugins\ObjectTypes\DOI;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusAltId;
 use ViaThinkSoft\OIDplus\Core\OIDplusException;
 use ViaThinkSoft\OIDplus\Core\OIDplusObject;
 
@@ -268,6 +269,42 @@ class OIDplusDoi extends OIDplusObject {
 		}
 
 		return count($ary) - count($bry);
+	}
+
+	/**
+	 * @return array|OIDplusAltId[]
+	 * @throws OIDplusException
+	 */
+	public function getAltIds(): array {
+		if ($this->isRoot()) return array();
+		$ids = parent::getAltIds();
+
+		if ($this->doi == '') {
+			// (VTS F4 03) DOI to AID (PIX allowed)
+			$aid = 'D276000186F403';
+			$ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), '', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186F403');
+
+			// VTS FreeOID 9003.3
+			$oid = '1.3.6.1.4.1.37476.9003.3';
+			$ids[] = new OIDplusAltId('oid', $oid, _L('Object Identifier'), '', 'https://hosted.oidplus.com/viathinksoft/?goto=oid%3A1.3.6.1.4.1.37476.9003.3');
+		} else {
+			$ary = explode('/', $this->doi, 2);
+			if (($ary[1] ?? '') == '') { // there must not be a payload to the DOI, otherwise we cannot map it to AID/OID
+				$base_doi = $ary[0]; // 10.1234
+
+				// (VTS F4 03) DOI to AID (PIX allowed)
+				$aid = 'D276000186F403' . $base_doi; // Base DOI BCD encoded
+				if (strlen($aid) % 2 == 1) $aid .= 'F';
+				$aid_is_ok = aid_canonize($aid);
+				if ($aid_is_ok) $ids[] = new OIDplusAltId('aid', $aid, _L('Application Identifier (ISO/IEC 7816)'), ' (' . _L('Optional PIX allowed, with "FF" prefix') . ')', 'https://hosted.oidplus.com/viathinksoft/?goto=aid%3AD276000186F403');
+
+				// VTS FreeOID 9003.3
+				$oid = '1.3.6.1.4.1.37476.9003.3.' . $base_doi;
+				if (oid_valid_dotnotation($oid)) $ids[] = new OIDplusAltId('oid', $oid, _L('Object Identifier'), '', 'https://hosted.oidplus.com/viathinksoft/?goto=oid%3A1.3.6.1.4.1.37476.9003.3');
+			}
+		}
+
+		return $ids;
 	}
 
 	/**

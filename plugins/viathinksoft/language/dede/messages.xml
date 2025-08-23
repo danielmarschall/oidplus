@@ -4414,6 +4414,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		MAC address
+		]]></source>
+		<target><![CDATA[
+		MAC-Adresse
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		MAC adresses (EUI/ELI/AAI/SAI)
 		]]></source>
 		<target><![CDATA[
@@ -5366,6 +5374,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		Object Identifier
+		]]></source>
+		<target><![CDATA[
+		Objektbezeichner
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		Object Identifier (OID)
 		]]></source>
 		<target><![CDATA[
@@ -5698,6 +5714,30 @@
 		]]></source>
 		<target><![CDATA[
 		Ausgabeformat
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		PCI Vendor
+		]]></source>
+		<target><![CDATA[
+		PCI-Hersteller
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		PCI Vendor and Product
+		]]></source>
+		<target><![CDATA[
+		PCI Hersteller und Produkt
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		PCI Vendor and Product with Revision
+		]]></source>
+		<target><![CDATA[
+		PCI Hersteller, Produkt und Revision
 		]]></target>
 	</message>
 	<message>
@@ -8754,6 +8794,30 @@
 		]]></source>
 		<target><![CDATA[
 		URN-Notation
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		USB Vendor
+		]]></source>
+		<target><![CDATA[
+		USB Hersteller
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		USB Vendor and Product
+		]]></source>
+		<target><![CDATA[
+		USB Hersteller und Produkt
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
+		USB Vendor and Product with Revision
+		]]></source>
+		<target><![CDATA[
+		USB Hersteller, Produkt und Revision
 		]]></target>
 	</message>
 	<message>
