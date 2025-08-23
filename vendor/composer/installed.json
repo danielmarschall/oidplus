@@ -380,18 +380,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/uuid_mac_utils.git",
-                "reference": "fce46545ffef689030e5800032fdfbe8b0eb1a64"
+                "reference": "8b35309889a0192f3a6065f11fd29ea54bf58c32"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/uuid_mac_utils/zipball/fce46545ffef689030e5800032fdfbe8b0eb1a64",
-                "reference": "fce46545ffef689030e5800032fdfbe8b0eb1a64",
+                "url": "https://api.github.com/repos/danielmarschall/uuid_mac_utils/zipball/8b35309889a0192f3a6065f11fd29ea54bf58c32",
+                "reference": "8b35309889a0192f3a6065f11fd29ea54bf58c32",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.4"
             },
-            "time": "2024-08-01T20:10:33+00:00",
+            "time": "2025-06-16T21:18:29+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -421,18 +421,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/danielmarschall/vnag.git",
-                "reference": "f688184a2b29fccb679a0d439b57877e11bb3484"
+                "reference": "d89912abc2b3ee512c63daccc7437ee962f0fd60"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/danielmarschall/vnag/zipball/f688184a2b29fccb679a0d439b57877e11bb3484",
-                "reference": "f688184a2b29fccb679a0d439b57877e11bb3484",
+                "url": "https://api.github.com/repos/danielmarschall/vnag/zipball/d89912abc2b3ee512c63daccc7437ee962f0fd60",
+                "reference": "d89912abc2b3ee512c63daccc7437ee962f0fd60",
                 "shasum": ""
             },
             "require": {
                 "php": ">=7.0"
             },
-            "time": "2024-11-27T23:15:24+00:00",
+            "time": "2025-04-25T21:23:01+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -578,12 +578,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/matthiasmullie/minify.git",
-                "reference": "4c4eceeaa2f66eeb8de87ae9329b4cc2845073c3"
+                "reference": "76ba4a5f555fd7bf4aa408af608e991569076671"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/matthiasmullie/minify/zipball/4c4eceeaa2f66eeb8de87ae9329b4cc2845073c3",
-                "reference": "4c4eceeaa2f66eeb8de87ae9329b4cc2845073c3",
+                "url": "https://api.github.com/repos/matthiasmullie/minify/zipball/76ba4a5f555fd7bf4aa408af608e991569076671",
+                "reference": "76ba4a5f555fd7bf4aa408af608e991569076671",
                 "shasum": ""
             },
             "require": {
@@ -599,7 +599,7 @@
             "suggest": {
                 "psr/cache-implementation": "Cache implementation to use with Minify::cache"
             },
-            "time": "2025-03-06T09:42:28+00:00",
+            "time": "2025-06-25T09:56:19+00:00",
             "default-branch": true,
             "bin": [
                 "bin/minifycss",
@@ -635,7 +635,7 @@
             ],
             "support": {
                 "issues": "https://github.com/matthiasmullie/minify/issues",
-                "source": "https://github.com/matthiasmullie/minify/tree/master"
+                "source": "https://github.com/matthiasmullie/minify/tree/1.3.75"
             },
             "funding": [
                 {
@@ -831,12 +831,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "914583d4a633b9508b7b115cbdbde90e5a28967b"
+                "reference": "56483a7de62a6c2a6635e42e93b8a9e25d4f0ec6"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/914583d4a633b9508b7b115cbdbde90e5a28967b",
-                "reference": "914583d4a633b9508b7b115cbdbde90e5a28967b",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/56483a7de62a6c2a6635e42e93b8a9e25d4f0ec6",
+                "reference": "56483a7de62a6c2a6635e42e93b8a9e25d4f0ec6",
                 "shasum": ""
             },
             "require": {
@@ -854,7 +854,7 @@
                 "ext-mcrypt": "Install the Mcrypt extension in order to speed up a few other cryptographic operations.",
                 "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
             },
-            "time": "2025-03-09T03:15:23+00:00",
+            "time": "2025-06-26T16:29:55+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -1097,7 +1097,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/1.x"
+                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.33.0"
             },
             "funding": [
                 {
@@ -1106,6 +1106,10 @@
                 },
                 {
                     "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://github.com/nicolas-grekas",
                     "type": "github"
                 },
                 {
@@ -1122,15 +1126,15 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "88d1b2874256895338034dba28bf6e920aa4ba17"
+                "reference": "1d90c814d8821567291bc1de2eb84f4da8d6abd4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/88d1b2874256895338034dba28bf6e920aa4ba17",
-                "reference": "88d1b2874256895338034dba28bf6e920aa4ba17",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/1d90c814d8821567291bc1de2eb84f4da8d6abd4",
+                "reference": "1d90c814d8821567291bc1de2eb84f4da8d6abd4",
                 "shasum": ""
             },
-            "time": "2025-04-09T02:06:27+00:00",
+            "time": "2025-08-14T02:39:07+00:00",
             "default-branch": true,
             "type": "component",
             "extra": {
@@ -1174,7 +1178,7 @@
                 "wysiwyg"
             ],
             "support": {
-                "source": "https://github.com/tinymce/tinymce-dist/tree/7.8.0"
+                "source": "https://github.com/tinymce/tinymce-dist/tree/8.0.2"
             },
             "install-path": "../tinymce/tinymce"
         },
@@ -1185,18 +1189,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "99a0dc628adc2fbe6ab1a60b0a4241073a4b5e4d"
+                "reference": "4bd8b6ca95b89dd351ac6023b9447a1a71d322b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/99a0dc628adc2fbe6ab1a60b0a4241073a4b5e4d",
-                "reference": "99a0dc628adc2fbe6ab1a60b0a4241073a4b5e4d",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/4bd8b6ca95b89dd351ac6023b9447a1a71d322b5",
+                "reference": "4bd8b6ca95b89dd351ac6023b9447a1a71d322b5",
                 "shasum": ""
             },
             "replace": {
                 "twitter/bootstrap": "self.version"
             },
-            "time": "2025-04-11T04:43:59+00:00",
+            "time": "2025-08-22T04:02:49+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",

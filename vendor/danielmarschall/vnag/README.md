@@ -1,5 +1,5 @@
 
-[![VNag](https://raw.githubusercontent.com/danielmarschall/vnag/master/logos/vnag_logo_400.png "VNag")](https://www.viathinksoft.com/projects/vnag "VNag")
+[![VNag logo](logos/vnag_logo_400.png "VNag")](https://www.viathinksoft.com/projects/vnag "VNag")
 
 **VNag** (**V**iaThinkSoft **Nag**ios) is a framework for PHP which allows developing plugins for Nagios-compatible systems (e.g. Icinga2), following the [development guidelines](https://nagios-plugins.org/doc/guidelines.html "development guidelines").
 
@@ -54,9 +54,9 @@ VNag comes with the following plugins pre-installed (in the bin directory):
 Use-case diagrams
 -----------------
 
-1. [Simple case](https://raw.githubusercontent.com/danielmarschall/vnag/master/doc/vnag_model_1.png "Simple case"): Nagios/CLI checks an object
-2. [Extended case](https://raw.githubusercontent.com/danielmarschall/vnag/master/doc/vnag_model_2.png "Extended case"): Nagios/CLI checks an object, and a user can additionally view the status in a web-browser
-3. [More extended case](https://raw.githubusercontent.com/danielmarschall/vnag/master/doc/vnag_model_3.png "More extended case"): Nagios/CLI checks an object, a user can additionally view the status in a web-browser, and another Nagios/CLI instance can remotely access the output of the primary Nagios/CLI
+1. [Simple case](doc/vnag_model_1.png "Simple case"): Nagios/CLI checks an object
+2. [Extended case](doc/vnag_model_2.png "Extended case"): Nagios/CLI checks an object, and a user can additionally view the status in a web-browser
+3. [More extended case](doc/vnag_model_3.png "More extended case"): Nagios/CLI checks an object, a user can additionally view the status in a web-browser, and another Nagios/CLI instance can remotely access the output of the primary Nagios/CLI
 
 Create your own plugins
 -----------------------

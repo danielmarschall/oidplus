@@ -1477,7 +1477,7 @@ class SSH2
         }
 
         if (defined('NET_SSH2_LOGGING')) {
-            $this->append_log('<- (network: ' . round($totalElapsed, 4) . ')', $line);
+            $this->append_log('<- (network: ' . round($totalElapsed, 4) . ')', $data);
         }
 
         if (feof($this->fsock)) {
@@ -1487,7 +1487,13 @@ class SSH2
 
         $extra = $matches[1];
 
-        $this->server_identifier = trim($data, "\r\n");
+        // earlier the SSH specs were quoted.
+        // "The server MAY send other lines of data before sending the version string." they said.
+        // the implication of this is that the lines of data before the server string are *not* a part of it
+        // getting this right is important because the correct server identifier needs to be fed into the
+        // exchange hash for the shared keys to be calculated correctly
+        $data = explode("\r\n", trim($data, "\r\n"));
+        $this->server_identifier = $data[count($data) - 1];
         if (strlen($extra)) {
             $this->errors[] = $data;
         }
@@ -1677,7 +1683,6 @@ class SSH2
                     case NET_SSH2_MSG_DISCONNECT:
                         return $this->handleDisconnect($kexinit_payload_server);
                 }
-
                 $this->kex_buffer[] = $kexinit_payload_server;
             }
 
@@ -3809,8 +3814,7 @@ class SSH2
             $this->key_exchange();
         }
 
-        // don't filter if we're in the middle of a key exchange (since _filter might send out packets)
-        return $this->keyExchangeInProgress ? $payload : $this->filter($payload);
+        return $this->filter($payload);
     }
 
     /**
@@ -3905,9 +3909,15 @@ class SSH2
      */
     private function filter($payload)
     {
+        if (ord($payload[0]) == NET_SSH2_MSG_DISCONNECT) {
+            return $this->handleDisconnect($payload);
+        }
+
+        if ($this->session_id === false && $this->keyExchangeInProgress) {
+            return $payload;
+        }
+
         switch (ord($payload[0])) {
-            case NET_SSH2_MSG_DISCONNECT:
-                return $this->handleDisconnect($payload);
             case NET_SSH2_MSG_IGNORE:
                 $payload = $this->get_binary_packet();
                 break;
@@ -3921,7 +3931,7 @@ class SSH2
                 break; // return payload
             case NET_SSH2_MSG_KEXINIT:
                 // this is here for server initiated key re-exchanges after the initial key exchange
-                if ($this->session_id !== false) {
+                if (!$this->keyExchangeInProgress && $this->session_id !== false) {
                     if (!$this->key_exchange($payload)) {
                         $this->disconnect_helper(NET_SSH2_DISCONNECT_KEY_EXCHANGE_FAILED);
                         throw new ConnectionClosedException('Key exchange failed');
@@ -3939,6 +3949,26 @@ class SSH2
                     }
                 }
                 $payload = $this->get_binary_packet();
+        }
+
+        /*
+           Once a party has sent a SSH_MSG_KEXINIT message for key exchange or
+           re-exchange, until it has sent a SSH_MSG_NEWKEYS message (Section
+           7.3), it MUST NOT send any messages other than:
+
+           o  Transport layer generic messages (1 to 19) (but
+              SSH_MSG_SERVICE_REQUEST and SSH_MSG_SERVICE_ACCEPT MUST NOT be
+              sent);
+
+           o  Algorithm negotiation messages (20 to 29) (but further
+              SSH_MSG_KEXINIT messages MUST NOT be sent);
+
+           o  Specific key exchange method messages (30 to 49).
+
+           -- https://www.rfc-editor.org/rfc/rfc4253#section-7.1
+        */
+        if ($this->keyExchangeInProgress) {
+            return $payload;
         }
 
         // see http://tools.ietf.org/html/rfc4252#section-5.4; only called when the encryption has been activated and when we haven't already logged in
@@ -4544,7 +4574,7 @@ class SSH2
     protected function append_log_helper($constant, $message_number, $message, array &$message_number_log, array &$message_log, &$log_size, &$realtime_log_file, &$realtime_log_wrap, &$realtime_log_size)
     {
         // remove the byte identifying the message type from all but the first two messages (ie. the identification strings)
-        if (strlen($message_number) > 2) {
+        if (!in_array(substr($message_number, 0, 4), ['<- (', '-> (']) && strlen($message_number) > 2) {
             Strings::shift($message);
         }
 

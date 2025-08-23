@@ -99,7 +99,7 @@
         'danielmarschall/uuid_mac_utils' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'fce46545ffef689030e5800032fdfbe8b0eb1a64',
+            'reference' => '8b35309889a0192f3a6065f11fd29ea54bf58c32',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/uuid_mac_utils',
             'aliases' => array(
@@ -110,7 +110,7 @@
         'danielmarschall/vnag' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'f688184a2b29fccb679a0d439b57877e11bb3484',
+            'reference' => 'd89912abc2b3ee512c63daccc7437ee962f0fd60',
             'type' => 'library',
             'install_path' => __DIR__ . '/../danielmarschall/vnag',
             'aliases' => array(
@@ -157,7 +157,7 @@
         'matthiasmullie/minify' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '4c4eceeaa2f66eeb8de87ae9329b4cc2845073c3',
+            'reference' => '76ba4a5f555fd7bf4aa408af608e991569076671',
             'type' => 'library',
             'install_path' => __DIR__ . '/../matthiasmullie/minify',
             'aliases' => array(
@@ -195,7 +195,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => '914583d4a633b9508b7b115cbdbde90e5a28967b',
+            'reference' => '56483a7de62a6c2a6635e42e93b8a9e25d4f0ec6',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),
@@ -242,7 +242,7 @@
         'tinymce/tinymce' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '88d1b2874256895338034dba28bf6e920aa4ba17',
+            'reference' => '1d90c814d8821567291bc1de2eb84f4da8d6abd4',
             'type' => 'component',
             'install_path' => __DIR__ . '/../tinymce/tinymce',
             'aliases' => array(
@@ -253,7 +253,7 @@
         'twbs/bootstrap' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '99a0dc628adc2fbe6ab1a60b0a4241073a4b5e4d',
+            'reference' => '4bd8b6ca95b89dd351ac6023b9447a1a71d322b5',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twbs/bootstrap',
             'aliases' => array(
