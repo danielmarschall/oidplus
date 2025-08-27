@@ -195,7 +195,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => '56483a7de62a6c2a6635e42e93b8a9e25d4f0ec6',
+            'reference' => 'b9d9b615549c59a7279bb9f63a716063157045a3',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),
@@ -253,7 +253,7 @@
         'twbs/bootstrap' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '4bd8b6ca95b89dd351ac6023b9447a1a71d322b5',
+            'reference' => 'a360960b8dfdb4bf48f87539c2243458fa0366f7',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twbs/bootstrap',
             'aliases' => array(
