@@ -220,6 +220,90 @@ INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.
 INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9000', 'FreeOID', '0', '1');
 INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9000', 'FreeSub', '0', '1');
 
+-- 1.3.6.1.4.1.37476.9001
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9001', 'mac-based', '0', '1');
+INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9001', 'MacBased', '0', '1');
+
+-- 1.3.6.1.4.1.37476.9002
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9002', 'device-vendor-based', '0', '1');
+INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9002', 'DeviceVendorBased', '0', '1');
+
+-- 1.3.6.1.4.1.37476.9002.1
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9002.1', 'usb-vendor-based', '0', '1');
+INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9002.1', 'UsbVendorBased', '0', '1');
+
+-- 1.3.6.1.4.1.37476.9002.1.16
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9002.1.16', 'vid', '0', '1');
+INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9002.1.16', 'VID', '0', '1');
+
+-- 1.3.6.1.4.1.37476.9002.1.32
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9002.1.32', 'vid-pid', '0', '1');
+INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9002.1.32', 'VID_PID', '0', '1');
+
+-- 1.3.6.1.4.1.37476.9002.1.48
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9002.1.48', 'vid-pid-rev', '0', '1');
+INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9002.1.48', 'VID_PID_REV', '0', '1');
+
+-- 1.3.6.1.4.1.37476.9002.2
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9002.2', 'pci-vendor-based', '0', '1');
+INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9002.2', 'PciVendorBased', '0', '1');
+
+-- 1.3.6.1.4.1.37476.9002.2.16
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9002.2.16', 'vid', '0', '1');
+INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9002.2.16', 'VID', '0', '1');
+
+-- 1.3.6.1.4.1.37476.9002.2.32
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9002.2.32', 'vid-pid', '0', '1');
+INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9002.2.32', 'VID_PID', '0', '1');
+
+-- 1.3.6.1.4.1.37476.9002.2.40
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9002.2.40', 'vid-pid-rev', '0', '1');
+INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9002.2.40', 'VID_PID_REV', '0', '1');
+
+-- 1.3.6.1.4.1.37476.9003
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9003', 'id-org-based', '0', '1');
+INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9003', 'IdentifiedOrganizationBased', '0', '1');
+
+-- 1.3.6.1.4.1.37476.9003.1
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9003.1', 'duns-based', '0', '1');
+INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9003.1', 'DunsBased', '0', '1');
+
+-- 1.3.6.1.4.1.37476.9003.2
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9003.2', 'ringgold-based', '0', '1');
+INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9003.2', 'RinggoldBased', '0', '1');
+
+-- 1.3.6.1.4.1.37476.9003.3
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9003.3', 'doi-based', '0', '1');
+INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9003.3', 'DoiBased', '0', '1');
+
+-- 1.3.6.1.4.1.37476.9004
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9004', 'gs1-based', '0', '1');
+INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9004', 'Gs1Based', '0', '1');
+
+-- 1.3.6.1.4.1.37476.9005
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9005', 'id-person-based', '0', '1');
+INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9005', 'IdentifiedPersonBased', '0', '1');
+
+-- 1.3.6.1.4.1.37476.9005.1
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9005.1', 'iso27729-based', '0', '1');
+INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9005.1', 'Iso27729Based', '0', '1');
+
+-- 1.3.6.1.4.1.37476.9005.1.1
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9005.1.1', 'isni-based', '0', '1');
+INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9005.1.1', 'IsniBased', '0', '1');
+
+-- 1.3.6.1.4.1.37476.9005.1.2
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9005.1.2', 'orcid-based', '0', '1');
+INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9005.1.2', 'OrcIdBased', '0', '1');
+
+-- 1.3.6.1.4.1.37476.9006
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9006', 'icd-based', '0', '1');
+INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9006', 'IcdBased', '0', '1');
+
+-- 1.3.6.1.4.1.37476.9006.189
+INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9006.189', 'ebid-based', '0', '1');
+INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37476.9006.189', 'EbidBased', '0', '1');
+
 -- 1.3.6.1.4.1.37553.8
 INSERT INTO `asn1id` (oid, name, standardized, well_known) VALUES ('oid:1.3.6.1.4.1.37553.8', 'weid', '0', '1');
 INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:1.3.6.1.4.1.37553.8', 'weid', '0', '1');
@@ -362,4 +446,4 @@ INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:2.999', char(506
 INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:2.999', char(20363), '1', '1');
 INSERT INTO `iri` (oid, name, longarc, well_known) VALUES ('oid:2.999', 'Beispiel', '1', '1');
 
--- Generator "generate_wellknown_other_sqlite" checksum 89073e54
+-- Generator "generate_wellknown_other_sqlite" checksum 4af5a90d

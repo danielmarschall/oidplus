@@ -31,11 +31,11 @@ OIDplus::init(true);
 
 $options = array('http' => array('user_agent' => 'Mozilla/5.0 (Windows NT 6.1; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/68.0.3440.84 Safari/537.36'));
 $context = stream_context_create($options);
-$cont = file_get_contents('https://www.oid-base.com/get/1.2', false, $context).
-     file_get_contents('https://www.oid-base.com/get/2.16', false, $context).
-     file_get_contents('https://www.oid-base.com/get/2.49.0.0', false, $context);
+$cont = file_get_contents('https://oid-base.com/get/1.2', false, $context).
+     file_get_contents('https://oid-base.com/get/2.16', false, $context).
+     file_get_contents('https://oid-base.com/get/2.49.0.0', false, $context);
 
-preg_match_all('@<option value="/get/([^"]+)">(..)\(.+\)</option>@ismU', $cont, $m, PREG_SET_ORDER);
+preg_match_all('@<option value="/get/([^"]+)"[^>]*>(..)\(.+\)</option>@ismU', $cont, $m, PREG_SET_ORDER);
 
 echo "-- Country OIDs\n";
 echo "-- Use the tool dev/generate_wellknown_country_mysql to generate this file\n";
