@@ -817,7 +817,7 @@ class OIDplusOid extends OIDplusObject {
 		}
 
 		if (str_starts_with($oid,'1.3.6.1.4.1.37476.9001.')) {
-			$num_bits = $oid_parts[8];
+			$num_bits = (int)$oid_parts[8];
 			if ($num_bits <= 48) {
 				$num_arcs = ceil($num_bits / 24);
 				if ($oid_len == 9 + $num_arcs) {
@@ -887,7 +887,7 @@ class OIDplusOid extends OIDplusObject {
 		}
 
 		if (str_starts_with($oid,'1.3.6.1.4.1.37476.9004.')) {
-			$num_digits = $oid_parts[8];
+			$num_digits = (int)$oid_parts[8];
 			$num_arcs = ceil($num_digits / 8);
 			if ($oid_len == 9 + $num_arcs) {
 				$decoded = '';

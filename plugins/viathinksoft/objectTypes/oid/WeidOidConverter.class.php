@@ -135,7 +135,7 @@ class WeidOidConverter {
 		$p = strrpos($weid,':');
 		$namespace = substr($weid, 0, $p+1);
 		$rest = substr($weid, $p+1);
-		if ($rest === false) $rest = '';
+		if ($rest === false) $rest = ''; // @phpstan-ignore-line
 
 		$namespace = strtolower($namespace); // namespace is case insensitive
 
