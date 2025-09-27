@@ -177,7 +177,7 @@
         'paragonie/constant_time_encoding' => array(
             'pretty_version' => 'v2.x-dev',
             'version' => '2.9999999.9999999.9999999-dev',
-            'reference' => '52a0d99e69f56b9ec27ace92ba56897fe6993105',
+            'reference' => 'e30811f7bc69e4b5b6d5783e712c06c8eabf0226',
             'type' => 'library',
             'install_path' => __DIR__ . '/../paragonie/constant_time_encoding',
             'aliases' => array(),
@@ -195,7 +195,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => '3.0.x-dev',
             'version' => '3.0.9999999.9999999-dev',
-            'reference' => 'b9d9b615549c59a7279bb9f63a716063157045a3',
+            'reference' => 'eab8db4359fb0334930b388fce1076aef8af9df5',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(),
@@ -242,7 +242,7 @@
         'tinymce/tinymce' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '1d90c814d8821567291bc1de2eb84f4da8d6abd4',
+            'reference' => 'd93b748fa069acc845901677a97fb701b0eec7ba',
             'type' => 'component',
             'install_path' => __DIR__ . '/../tinymce/tinymce',
             'aliases' => array(
@@ -253,7 +253,7 @@
         'twbs/bootstrap' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'a360960b8dfdb4bf48f87539c2243458fa0366f7',
+            'reference' => '380a1d738b221fecc964260add053997399be4d4',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twbs/bootstrap',
             'aliases' => array(
