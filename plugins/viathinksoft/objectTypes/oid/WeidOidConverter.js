@@ -9,7 +9,7 @@
 
 // What is a WEID?
 //     A WEID (WEhowski IDentifier) is an alternative representation of an
-//     OID (Object IDentifier) defined by Till Wehowski.
+//     OID (Object IDentifier) defined by Melanie Wehowski.
 //     In OIDs, arcs are in decimal base 10. In WEIDs, the arcs are in base 36.
 //     Also, each WEID has a check digit at the end (called WeLuhn Check Digit).
 //
