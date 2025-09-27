@@ -4,7 +4,7 @@
  * OIDplus 2.0 RDAP
  * Copyright 2019 - 2024 Daniel Marschall, ViaThinkSoft
  * Authors               Daniel Marschall, ViaThinkSoft
- *                       Till Wehowski, Frdlweb
+ *                       Melanie Wehowski, Frdlweb
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.

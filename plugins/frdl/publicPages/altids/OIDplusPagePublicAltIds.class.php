@@ -2,14 +2,16 @@
 
 /*
  * OIDplus 2.0
- * Copyright 2022 - 2024 Daniel Marschall, ViaThinkSoft / Till Wehowski, Frdlweb
+ * Copyright 2022 - 2025 Daniel Marschall, ViaThinkSoft / Melanie Wehowski, Frdlweb
  *
  * Licensed under the MIT License.
  */
 
-namespace Frdlweb\OIDplus\Plugins\AltIds;
+namespace Frdlweb\OIDplus\Plugins\PublicPages\AltIds;
 
 use ViaThinkSoft\OIDplus\Core\OIDplus;
+use ViaThinkSoft\OIDplus\Core\OIDplusConfigInitializationException;
+use ViaThinkSoft\OIDplus\Core\OIDplusException;
 use ViaThinkSoft\OIDplus\Core\OIDplusObject;
 use ViaThinkSoft\OIDplus\Core\OIDplusPagePluginPublic;
 use ViaThinkSoft\OIDplus\Plugins\AdminPages\Notifications\INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8;
@@ -119,10 +121,11 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 	 * Adds the required database table if DBMS is known
 	 * @param bool $html
 	 * @return void
-	 * @throws \ViaThinkSoft\OIDplus\Core\OIDplusConfigInitializationException
-	 * @throws \ViaThinkSoft\OIDplus\Core\OIDplusException
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
 	 */
 	public function init(bool $html=true): void {
+		
 		if (!OIDplus::db()->tableExists("###altids")) {
 			if (OIDplus::db()->getSlang()->id() == 'mysql') {
 				OIDplus::db()->query("CREATE TABLE ###altids ( `origin` varchar(255) NOT NULL, `alternative` varchar(255) NOT NULL, UNIQUE KEY (`origin`, `alternative`)   )");
@@ -249,8 +252,8 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 	 * @param string $id
 	 * @return array|string[]
 	 * @throws \ReflectionException
-	 * @throws \ViaThinkSoft\OIDplus\Core\OIDplusConfigInitializationException
-	 * @throws \ViaThinkSoft\OIDplus\Core\OIDplusException
+	 * @throws OIDplusConfigInitializationException
+	 * @throws OIDplusException
 	 */
 	public function getAlternativesForQuery(string $id): array {
 		if (!$this->db_table_exists) return [];
@@ -315,7 +318,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 	/**
 	 * @param string $id
 	 * @return false|mixed|string
-	 * @throws \ViaThinkSoft\OIDplus\Core\OIDplusException
+	 * @throws OIDplusException
 	 */
 	public function getCanonical(string $id){
 		foreach($this->getAlternativesForQuery($id) as $alt){
@@ -334,7 +337,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 	 * @param string $id
 	 * @param array $out
 	 * @return void
-	 * @throws \ViaThinkSoft\OIDplus\Core\OIDplusException
+	 * @throws OIDplusException
 	 */
 	public function whoisObjectAttributes(string $id, array &$out): void {
 		$xmlns = 'oidplus-frdlweb-altids-plugin';
@@ -420,7 +423,7 @@ class OIDplusPagePublicAltIds extends OIDplusPagePluginPublic
 	 * Implements interface INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_8
 	 * @param string|null $user
 	 * @return array
-	 * @throws \ViaThinkSoft\OIDplus\Core\OIDplusException
+	 * @throws OIDplusException
 	 */
 	public function getNotifications(?string $user=null): array {
 		$notifications = array();
