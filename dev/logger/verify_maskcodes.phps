@@ -38,8 +38,21 @@ $cntcodes = 0;
 $it = new RecursiveDirectoryIterator($dir);
 $it->setFlags(FilesystemIterator::SKIP_DOTS); // DOES NOT WORK! Folders with . prefix still get evaluated!
 foreach(new RecursiveIteratorIterator($it) as $file) {
-	if ((strpos(str_replace('\\','/',realpath($file)),'/vendor/') !== false) && (strpos(str_replace('\\','/',realpath($file)),'/vendor/danielmarschall/') === false)) continue; // ignore third-party-code
-	if (strpos(str_replace('\\','/',realpath($file)),'/dev/') !== false) continue; // ignore development utilities
+
+
+	$realpath_file = str_replace('\\','/',realpath($file));
+	$realpath_dir  = str_replace('\\','/',realpath($dir)).'/';
+	if (strpos($realpath_file, $realpath_dir) === 0) {
+		$rel_file = '/'.substr($realpath_file, strlen($realpath_dir));
+	} else {
+		$rel_file = $realpath_file;
+	}
+
+	if ((strpos($rel_file,'/vendor/') !== false) && (strpos($rel_file,'/vendor/danielmarschall/') === false)) continue; // ignore third-party-code
+	if (strpos($rel_file,'/dev/') !== false) continue; // ignore development utilities
+	if (strpos($rel_file,'/.svn/') !== false) continue;
+	if (strpos($rel_file,'/.git/') !== false) continue;
+	if (strpos($rel_file,'/userdata/') !== false) continue;
 
 	if (preg_match('@[/\\\\]\\.[^\\.]@',$file,$m)) continue; // Alternative to SKIP_DOTS
 
