@@ -3,6 +3,15 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.2.15",
+		"date": "2025-09-28 00:50:00 +0200",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"Various fixes and small improvements",
+			"Support for FreeOID v2"
+		]
+	},
+	{
 		"version": "2.0.2.14",
 		"date": "2025-01-05 23:45:00 +0100",
 		"author": "Daniel Marschall (ViaThinkSoft)",
