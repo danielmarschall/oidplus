@@ -124,7 +124,7 @@ function split_firstname_lastname(string $name): array {
  */
 function originHeaders() {
 	// CORS
-	// Author: Till Wehowski
+	// Author: Melanie Wehowski
 	// TODO: add to class OIDplus
 
 	header("Access-Control-Allow-Credentials: true");
