@@ -3,6 +3,14 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
 	},
 	{
+		"version": "2.0.2.16",
+		"date": "2025-10-01 23:55:00 +0200",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"Fixed MAC-to-OID (VTS 9001 FreeOID) having the wrong number of bits"
+		]
+	},
+	{
 		"version": "2.0.2.15",
 		"date": "2025-09-28 00:50:00 +0200",
 		"author": "Daniel Marschall (ViaThinkSoft)",

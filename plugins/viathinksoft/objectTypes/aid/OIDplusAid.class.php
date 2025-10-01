@@ -563,7 +563,7 @@ class OIDplusAid extends OIDplusObject {
 				}
 			}
 		}
-		
+
 		// (VTS F8 xx xx) ISO 6523 ICD (International Code Designators) based AID
 		if (str_starts_with($aid,'D276000186F8')) {
 			$icd_subtype = hexdec(substr($aid,strlen('D276000186F8'),4));
@@ -573,7 +573,7 @@ class OIDplusAid extends OIDplusObject {
 				$pix = substr($rest,10);
 				if ($pix === '') {
 					$ebid_no_checksum = hexdec($rest);
-					$ebid = $ebid_no_checksum . self::generateEbidCheckdigit($ebid_no_checksum);
+					$ebid = $ebid_no_checksum . self::generateEbidCheckdigit("$ebid_no_checksum");
 					$formatted_ebid = substr($ebid,0,1) . ' ' . substr($ebid,1,6) . ' ' . substr($ebid,7);
 					$ids[] = new OIDplusAltId('ebid', $formatted_ebid, _L('European Business Identifier (EBID)'));
 				}
