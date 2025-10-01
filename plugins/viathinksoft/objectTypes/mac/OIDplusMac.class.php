@@ -415,7 +415,7 @@ class OIDplusMac extends OIDplusObject {
 			}
 
 			// VTS FreeOID 9001
-			$size_bits = strlen($this->number)*8;
+			$size_bits = strlen($this->number)*4;
 			$oid = '1.3.6.1.4.1.37476.9001.' . $size_bits;
 			$ary = str_split($this->number, 6); // max 24 bits per arc
 			foreach ($ary as $arc) $oid .= '.' . hexdec($arc);
