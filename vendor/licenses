@@ -31,7 +31,7 @@ matthiasmullie/minify            dev-master 76ba4a5  MIT
 matthiasmullie/path-converter    1.1.3               MIT                   
 paragonie/constant_time_encoding v2.x-dev e30811f    MIT                   
 paragonie/random_compat          v9.99.100           MIT                   
-phpseclib/phpseclib              3.0.x-dev eab8db4   MIT                   
+phpseclib/phpseclib              3.0.x-dev 5805c0e   MIT                   
 script47/bs5-utils               master master       MIT                   
 spamspan/spamspan                master              GPL-2.0-only          
 spomky-labs/php-punycode         dev-master d12fe5c  MIT                   
@@ -39,8 +39,8 @@ spomky-labs/php-punycode         9999999-dev d12fe5c MIT
 symfony/polyfill-mbstring        1.x-dev 6d857f4     MIT                   
 tinymce/tinymce                  9999999-dev d93b748 GPL-2.0-or-later      
 tinymce/tinymce                  dev-master d93b748  GPL-2.0-or-later      
-twbs/bootstrap                   9999999-dev 380a1d7 MIT                   
-twbs/bootstrap                   dev-main 380a1d7    MIT                   
+twbs/bootstrap                   9999999-dev 4189b30 MIT                   
+twbs/bootstrap                   dev-main 4189b30    MIT                   
 tweeb/tinymce-i18n               9999999-dev 058da08 MIT                   
 tweeb/tinymce-i18n               dev-master 058da08  MIT                   
 vakata/jstree                    9999999-dev 6256df0 MIT                   
