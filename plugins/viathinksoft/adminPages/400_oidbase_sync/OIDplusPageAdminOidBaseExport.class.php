@@ -900,8 +900,10 @@ class OIDplusPageAdminOidBaseExport extends OIDplusPagePluginAdmin
 
 				list($ns,$id) = explode(':',$obj->nodeId());
 				if ($ns == 'oid') {
+					// Case: It is a manually created OID
 					$out_content .= $oa->createXMLEntry($id, $elements, $params, $comment=$obj->nodeId());
 				} else {
+					// Case: It is a non-OID, but it might have an OID AltID
 					$alt_ids = $obj->getAltIds(); // TODO: slow!
 					foreach ($alt_ids as $alt_id) {
 						$ns = $alt_id->getNamespace();
@@ -909,11 +911,14 @@ class OIDplusPageAdminOidBaseExport extends OIDplusPagePluginAdmin
 						$desc = $alt_id->getDescription();
 						if ($ns == 'oid') {
 							// TODO: Let Object Type plugins decide if they want that their OID representations get published or not (via a Feature OID implementation)
-							if (strpos($id, '2.25.') === 0) continue; // don't spam the uuid arc with GUID objects
-							if (strpos($id, '1.2.840.113556.1.8000.2554.') === 0) continue; // don't spam the uuid arc with GUID objects
-							if (strpos($id, '1.3.6.1.4.1.54392.1.') === 0) continue; // don't spam the uuid arc with GUID objects
-							if (strpos($id, '1.3.6.1.4.1.54392.2.') === 0) continue; // don't spam the uuid arc with GUID objects
-							if (strpos($id, '1.3.6.1.4.1.54392.3.') === 0) continue; // don't spam the uuid arc with GUID objects
+							if (str_starts_with($id, '2.25.')) continue; // don't spam the uuid arc with GUID objects
+							if (str_starts_with($id, '1.2.840.113556.1.8000.2554.')) continue; // don't spam the uuid arc with GUID objects
+							if (str_starts_with($id, '1.3.6.1.4.1.54392.1.')) continue; // don't spam the uuid arc with GUID objects
+							if (str_starts_with($id, '1.3.6.1.4.1.54392.2.')) continue; // don't spam the uuid arc with GUID objects
+							if (str_starts_with($id, '1.3.6.1.4.1.54392.3.')) continue; // don't spam the uuid arc with GUID objects
+							if (str_starts_with($id, '1.3.6.1.4.1.37476.9001.')) continue; // don't spam the uuid arc with MAC addresses
+							if (str_starts_with($id, '1.3.6.1.4.1.37476.9003.3.')) continue; // don't spam the uuid arc with DOIs
+							if (str_starts_with($id, '1.3.6.1.4.1.37476.9004.')) continue; // don't spam the uuid arc with GS1 numbers
 							$out_content .= $oa->createXMLEntry($id, $elements, $params, $comment=$obj->nodeId());
 						}
 					}
