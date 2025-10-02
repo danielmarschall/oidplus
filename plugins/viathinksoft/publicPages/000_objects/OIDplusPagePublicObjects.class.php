@@ -929,6 +929,12 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 
 			// --- Try to find the object or an alternative
 
+			if (str_starts_with(strtolower($id), 'weid:') && class_exists(WeidOidConverter::class)) {
+				// https://github.com/danielmarschall/oidplus/issues/84
+				$raw_weid = substr($id,strlen('weid:'));
+				$id = 'oid:'.WeidOidConverter::weid2oid($raw_weid);
+			}
+
 			$test = $this->tryObject($id, $out);
 			if ($test === false) {
 				// try to find an alternative
