@@ -1,147 +1,147 @@
 {
-	"name": "danielmarschall/oidplus",
-	"description": "OIDplus 2.0",
-	"version": "2.0",
-	"type": "project",
-	"homepage": "https://www.oidplus.com/",
-	"authors": [
-		{
-			"name": "Daniel Marschall",
-			"email": "info@daniel-marschall.de",
-			"homepage": "https://www.daniel-marschall.de/"
-		}
-	],
-	"license": [
-		"Apache-2.0"
-	],
-	"prefer-dist": true,
-	"minimum-stability": "dev",
-	"repositories": {
-		"emn178/js-sha3": {
-			"type": "package",
-			"packagist.org": false,
-			"package": {
-				"name": "emn178/js-sha3",
-				"version": "master",
-				"license": [
-					"MIT"
-				],
-				"source": {
-					"url": "https://github.com/emn178/js-sha3",
-					"type": "git",
-					"reference": "master"
-				}
-			}
-		},
-		"gedmarc/layout": {
-			"type": "package",
-			"packagist.org": false,
-			"package": {
-				"name": "gedmarc/layout",
-				"version": "master",
-				"license": [
-					"GPL-3.0-or-later",
-					"MIT"
-				],
-				"source": {
-					"url": "https://github.com/GedMarc/layout",
-					"type": "git",
-					"reference": "master"
-				}
-			}
-		},
-		"dcodeio/bcrypt.js": {
-			"type": "package",
-			"packagist.org": false,
-			"package": {
-				"name": "dcodeio/bcrypt.js",
-				"version": "2.4.3",
-				"license": [
-					"BSD-3-Clause",
-					"MIT"
-				],
-				"source": {
-					"url": "https://github.com/dcodeIO/bcrypt.js",
-					"type": "git",
-					"reference": "2.4.3"
-				}
-			}
-		},
-		"script47/bs5-utils": {
-			"type": "package",
-			"packagist.org": false,
-			"package": {
-				"name": "script47/bs5-utils",
-				"version": "master",
-				"license": [
-					"MIT"
-				],
-				"source": {
-					"url": "https://github.com/Script47/bs5-utils",
-					"type": "git",
-					"reference": "master"
-				}
-			}
-		},
-		"spamspan/spamspan": {
-			"type": "package",
-			"packagist.org": false,
-			"package": {
-				"name": "spamspan/spamspan",
-				"version": "master",
-				"license": "GPL-2.0-only",
-				"dist": {
-					"url": "https://www.spamspan.com/releases/spamspan-latest.zip",
-					"type": "zip",
-					"reference": "master"
-				}
-			}
-		}
-	},
-	"require": {
-		"php": ">=7.4",
-		"components/jquery": "*",
-		"components/jqueryui": "*",
-		"matthiasmullie/minify": "*",
-		"firebase/php-jwt": ">=6.0",
-		"tinymce/tinymce": "*",
-		"dcodeio/bcrypt.js": "*",
-		"danielmarschall/vnag": "*",
-		"danielmarschall/uuid_mac_utils": "*",
-		"danielmarschall/php_utils": "*",
-		"danielmarschall/fileformats": "*",
-		"danielmarschall/oidconverter": "*",
-		"spamspan/spamspan": "*",
-		"vakata/jstree": "*",
-		"twbs/bootstrap": "*",
-		"symfony/polyfill-mbstring": "*",
-		"gedmarc/layout": "*",
-		"emn178/js-sha3": "*",
-		"tweeb/tinymce-i18n": "*",
-		"phpseclib/phpseclib": "*",
-		"script47/bs5-utils": "*",
-		"danielmarschall/glip": "*",
-		"ext-json": "*",
-		"spomky-labs/php-punycode": "dev-master",
-		"danielmarschall/oidinfo_api": "dev-master"
-	},
-	"config": {
-		"secure-http": false,
-		"preferred-install": {
-			"*": "dist"
-		},
-		"autoloader-suffix": "OidPlusComposer"
-	},
-	"scripts": {
-		"post-update-cmd": [
-			"curl https://curl.se/ca/cacert.pem -L -sS -o vendor/cacert.pem",
-			"echo 'Options -Indexes' > vendor/.htaccess",
-			"touch vendor/index.html"
-		],
-		"post-install-cmd": [
-			"curl https://curl.se/ca/cacert.pem -L -sS -o vendor/cacert.pem",
-			"echo 'Options -Indexes' > vendor/.htaccess",
-			"touch vendor/index.html"
-		]
-	}
+    "name": "danielmarschall/oidplus",
+    "description": "OIDplus 2.0",
+    "version": "2.0.2.16",
+    "type": "project",
+    "homepage": "https://www.oidplus.com/",
+    "authors": [
+        {
+            "name": "Daniel Marschall",
+            "email": "info@daniel-marschall.de",
+            "homepage": "https://www.daniel-marschall.de/"
+        }
+    ],
+    "license": [
+        "Apache-2.0"
+    ],
+    "prefer-dist": true,
+    "minimum-stability": "dev",
+    "repositories": {
+        "emn178/js-sha3": {
+            "type": "package",
+            "packagist.org": false,
+            "package": {
+                "name": "emn178/js-sha3",
+                "version": "master",
+                "license": [
+                    "MIT"
+                ],
+                "source": {
+                    "url": "https://github.com/emn178/js-sha3",
+                    "type": "git",
+                    "reference": "master"
+                }
+            }
+        },
+        "gedmarc/layout": {
+            "type": "package",
+            "packagist.org": false,
+            "package": {
+                "name": "gedmarc/layout",
+                "version": "master",
+                "license": [
+                    "GPL-3.0-or-later",
+                    "MIT"
+                ],
+                "source": {
+                    "url": "https://github.com/GedMarc/layout",
+                    "type": "git",
+                    "reference": "master"
+                }
+            }
+        },
+        "dcodeio/bcrypt.js": {
+            "type": "package",
+            "packagist.org": false,
+            "package": {
+                "name": "dcodeio/bcrypt.js",
+                "version": "2.4.3",
+                "license": [
+                    "BSD-3-Clause",
+                    "MIT"
+                ],
+                "source": {
+                    "url": "https://github.com/dcodeIO/bcrypt.js",
+                    "type": "git",
+                    "reference": "2.4.3"
+                }
+            }
+        },
+        "script47/bs5-utils": {
+            "type": "package",
+            "packagist.org": false,
+            "package": {
+                "name": "script47/bs5-utils",
+                "version": "master",
+                "license": [
+                    "MIT"
+                ],
+                "source": {
+                    "url": "https://github.com/Script47/bs5-utils",
+                    "type": "git",
+                    "reference": "master"
+                }
+            }
+        },
+        "spamspan/spamspan": {
+            "type": "package",
+            "packagist.org": false,
+            "package": {
+                "name": "spamspan/spamspan",
+                "version": "master",
+                "license": "GPL-2.0-only",
+                "dist": {
+                    "url": "https://www.spamspan.com/releases/spamspan-latest.zip",
+                    "type": "zip",
+                    "reference": "master"
+                }
+            }
+        }
+    },
+    "require": {
+        "php": ">=7.4",
+        "components/jquery": "*",
+        "components/jqueryui": "*",
+        "matthiasmullie/minify": "*",
+        "firebase/php-jwt": ">=6.0",
+        "tinymce/tinymce": "*",
+        "dcodeio/bcrypt.js": "*",
+        "danielmarschall/vnag": "*",
+        "danielmarschall/uuid_mac_utils": "*",
+        "danielmarschall/php_utils": "*",
+        "danielmarschall/fileformats": "*",
+        "danielmarschall/oidconverter": "*",
+        "spamspan/spamspan": "*",
+        "vakata/jstree": "*",
+        "twbs/bootstrap": "*",
+        "symfony/polyfill-mbstring": "*",
+        "gedmarc/layout": "*",
+        "emn178/js-sha3": "*",
+        "tweeb/tinymce-i18n": "*",
+        "phpseclib/phpseclib": "*",
+        "script47/bs5-utils": "*",
+        "danielmarschall/glip": "*",
+        "ext-json": "*",
+        "spomky-labs/php-punycode": "dev-master",
+        "danielmarschall/oidinfo_api": "dev-master"
+    },
+    "config": {
+        "secure-http": true,
+        "preferred-install": {
+            "*": "dist"
+        },
+        "autoloader-suffix": "OidPlusComposer"
+    },
+    "scripts": {
+        "post-update-cmd": [
+            "curl https://curl.se/ca/cacert.pem -L -sS -o vendor/cacert.pem",
+            "echo 'Options -Indexes' > vendor/.htaccess",
+            "touch vendor/index.html"
+        ],
+        "post-install-cmd": [
+            "curl https://curl.se/ca/cacert.pem -L -sS -o vendor/cacert.pem",
+            "echo 'Options -Indexes' > vendor/.htaccess",
+            "touch vendor/index.html"
+        ]
+    }
 }

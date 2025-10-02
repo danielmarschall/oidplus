@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # OIDplus 2.0
-# Copyright 2019 - 2024 Daniel Marschall, ViaThinkSoft
+# Copyright 2019 - 2025 Daniel Marschall, ViaThinkSoft
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -116,11 +116,14 @@ while true; do
     fi
 done
 
-# 7. Run plugins/viathinksoft/adminPages/902_systemfile_check/private/gen_serverside_v3
+# 7. Transfer version from changelog.json.php to composer.json
+echo '<?php $ary = json_decode(file_get_contents("'$DIR'/../composer.json"),true); $ary["version"] =  json_decode(file_get_contents("'$DIR'/../changelog.json.php"),true)[1]["version"]; file_put_contents("'$DIR'/../composer.json", json_encode($ary, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));' | php
+
+# 8. Run plugins/viathinksoft/adminPages/902_systemfile_check/private/gen_serverside_v3
 echo "7. Generate system file check checksum file..."
 "$DIR"/../plugins/viathinksoft/adminPages/902_systemfile_check/private/gen_serverside_v3
 
-# 8. Commit to SVN or GIT
+# 9. Commit to SVN or GIT
 if [ -d "$DIR"/../.svn ]; then
 	echo "8. Committing to SVN"
 	svn commit
@@ -131,9 +134,9 @@ else
 fi
 exit 0
 
-# 9. (ViaThinkSoft internal / runs automatically) Sync SVN to GitHub
+# 10. (ViaThinkSoft internal / runs automatically) Sync SVN to GitHub
 
-# 10. (ViaThinkSoft internal / runs automatically) Run plugins/viathinksoft/adminPages/900_software_update/private/gen_serverside_git
+# 11. (ViaThinkSoft internal / runs automatically) Run plugins/viathinksoft/adminPages/900_software_update/private/gen_serverside_git
 #                                                  or  plugins/viathinksoft/adminPages/900_software_update/private/gen_serverside_svn
 #                                                  depending wheather you want to use GIT or SVN as your development base
 #                                                  (Repos are read from includes/edition.ini)
