@@ -8182,6 +8182,14 @@
 	</message>
 	<message>
 		<source><![CDATA[
+		The first 31 bits are reserved for OID-Tree-Mapping Hashes. Manually created OIDs may be >= %1.
+		]]></source>
+		<target><![CDATA[
+		Die ersten 31 Bits sind reserviert für Objekt-Hashes für den OID-Baum. Manuelle Unter-OIDs müssen >= %1 sein.
+		]]></target>
+	</message>
+	<message>
+		<source><![CDATA[
 		The first node must be at least 24 bits long, since this is the smallest assignment for OUI/CID from IEEE.
 		]]></source>
 		<target><![CDATA[
