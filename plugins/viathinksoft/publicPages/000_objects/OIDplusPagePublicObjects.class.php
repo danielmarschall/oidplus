@@ -616,7 +616,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			}
 		}
 
-		// TODO: Forbid shared ancestors, e.g. if root obejct "2.999" exists, then you shall not create a root object "2.999.1"
+		// TODO: Forbid shared ancestors, e.g. if root obejct "2.999" exists, then you shall not create a root object "2.999.1", as it should be a child of "2.999" instead.
 		//       Please note that it should be allowed where there is an orphan in between, e.g. it is OK if "2.999" is owned by us (as root), and "2.999.1.2.3" is also a root (because an ownership was transferred back to us)
 
 		// Determine absolute OID name
@@ -639,6 +639,18 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			throw new OIDplusException(_L('Object %1 already exists!',$id));
 		}
 
+		// The system OID is reserved for Information Object OIDs, at least for the first 31 bits
+		if ($objParent::ns() == 'oid') {
+			$oid = $obj->nodeId(false);
+			$arcs = explode('.', $oid);
+			if (str_starts_with($oid, '1.3.6.1.4.1.37476.30.9.') && (count($arcs)>10)) {
+				if (gmp_cmp($arcs[10], '2147483647'/*2^31-1*/) <= 0) {
+					throw new OIDplusException(_L("The first 31 bits are reserved for OID-Tree-Mapping Hashes. Manually created OIDs may be >= %1.", '2147483648'));
+				}
+			}
+		}
+
+		// Ask plugins if they want to do anything before inserting
 		foreach (OIDplus::getAllPlugins() as $plugin) {
 			if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
 				$plugin->beforeObjectInsert($id, $params);
@@ -736,6 +748,7 @@ class OIDplusPagePublicObjects extends OIDplusPagePluginPublic
 			$status += 8;
 		}
 
+		// Ask plugins if they want to do anything after inserting
 		foreach (OIDplus::getAllPlugins() as $plugin) {
 			if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_3) {
 				$plugin->afterObjectInsert($id, $params);
