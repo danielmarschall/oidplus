@@ -343,9 +343,13 @@ class OIDplusDatabaseConnectionADO extends OIDplusDatabaseConnection {
 			// https://learn.microsoft.com/en-us/sql/connect/oledb/oledb-driver-for-sql-server?view=sql-server-ver16
 			if (strtoupper($props['Provider Name']) == 'SQLOLEDB.DLL') {
 				$props['OLE DB for SQL Server Provider Generation'] = _L('Generation %1', 1);
+			} else if (strtoupper($props['Provider Name']) == 'SQLNCLI10.DLL') {
+				$props['OLE DB for SQL Server Provider Generation'] = _L('Generation %1', 2);
 			} else if (strtoupper($props['Provider Name']) == 'SQLNCLI11.DLL') {
 				$props['OLE DB for SQL Server Provider Generation'] = _L('Generation %1', 2);
 			} else if (strtoupper($props['Provider Name']) == 'MSOLEDBSQL.DLL') {
+				$props['OLE DB for SQL Server Provider Generation'] = _L('Generation %1', 3);
+			} else if (strtoupper($props['Provider Name']) == 'MSOLEDBSQL19.DLL') {
 				$props['OLE DB for SQL Server Provider Generation'] = _L('Generation %1', 3);
 			}
 		}
