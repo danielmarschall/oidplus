@@ -67,7 +67,7 @@ class OIDplusPageAdminLogEvents extends OIDplusPagePluginAdmin {
 			                            "where id >= ? and id <= ? ".
 			                            "order by unix_ts desc", [$min, $max]);
 
-			$out['text'] = '<h2>'._L('Page %1 (Log ID %2 till %3)', $page, $min, $max).'</h2>';
+			$out['text'] = '<h2>'._L('Page %1 (Log ID %2 till %3)', $page, $max, $min).'</h2>';
 
 			$out['text'] .= '<p>';
 			if (!is_null($parts[1] ?? null)) $out['text'] .= '<a '.OIDplus::gui()->link($parts[0].'$'.($page+1)).'>Newer log entries</a> -- ';
