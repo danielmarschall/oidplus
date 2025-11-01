@@ -37,7 +37,12 @@ rm -rf vendor
 rm composer.lock
 
 # Download everything again
+# Use PHP 7.4, since this is our current minimum version we want to release in the full-build
+# (Users who build the sources can use their own platform, of course)
+# see also below for 3 more occurrences of "composer update".
+composer config platform.php 7.4.0
 composer update --no-dev
+composer config --unset platform.php
 
 # Remove stuff we don't want to publish or PHP files which could be
 # executed (which would be a security risk, because the vendor/ directory
@@ -103,17 +108,23 @@ composer license > vendor/licenses
 # -------
 
 rm -rf plugins/viathinksoft/publicPages/100_whois/whois/xml/vendor/
+composer config platform.php 7.4.0
 composer update --no-dev -d plugins/viathinksoft/publicPages/100_whois/whois/xml/
+composer config --unset platform.php
 composer license -d plugins/viathinksoft/publicPages/100_whois/whois/xml/ > plugins/viathinksoft/publicPages/100_whois/whois/xml/vendor/licenses
 remove_vendor_rubbish plugins/viathinksoft/publicPages/100_whois/whois/xml/
 
 rm -rf plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/
+composer config platform.php 7.4.0
 composer update --no-dev -d plugins/viathinksoft/publicPages/100_whois/whois/json/
+composer config --unset platform.php
 composer license -d plugins/viathinksoft/publicPages/100_whois/whois/json/ > plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/licenses
 remove_vendor_rubbish plugins/viathinksoft/publicPages/100_whois/whois/json/
 
 rm -rf plugins/viathinksoft/publicPages/002_rest_api/vendor/
+composer config platform.php 7.4.0
 composer update --no-dev -d plugins/viathinksoft/publicPages/002_rest_api/
+composer config --unset platform.php
 composer license -d plugins/viathinksoft/publicPages/002_rest_api/ > plugins/viathinksoft/publicPages/002_rest_api/vendor/licenses
 rm -rf plugins/viathinksoft/publicPages/002_rest_api/swagger-ui
 mv plugins/viathinksoft/publicPages/002_rest_api/vendor/swagger-api/swagger-ui/dist plugins/viathinksoft/publicPages/002_rest_api/swagger-ui

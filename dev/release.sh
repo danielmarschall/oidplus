@@ -35,7 +35,7 @@ if [ $? -eq 0 ]; then
 fi
 
 # 1. Recommended: Run dev/vendor_update.sh and make sure new/deleted files are added/deleted from the SVN/Git working copy
-echo "1. Run composer vendor update? (Recommended to do regularly. RUN ON LOW PHP VERSION!)"
+echo "1. Run composer vendor update? (recommended to run regularly)"
 select yn in "Yes" "No"; do
     case $yn in
         Yes ) "$DIR"/vendor_update.sh; break;;

@@ -130,7 +130,10 @@
         "preferred-install": {
             "*": "dist"
         },
-        "autoloader-suffix": "OidPlusComposer"
+        "autoloader-suffix": "OidPlusComposer",
+        "platform": {
+
+        }
     },
     "scripts": {
         "post-update-cmd": [
