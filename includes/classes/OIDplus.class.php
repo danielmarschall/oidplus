@@ -1115,10 +1115,10 @@ class OIDplus extends OIDplusBaseClass {
 					if (!class_exists($fq_classname)) {
 						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Manifest declares PHP main class as "%1", but it could not be found', $fq_classname));
 					}
-					if (!is_subclass_of($fq_classname, $expectedPluginClass)) { /* @phpstan-ignore-line */ // Weird message which I don't understand: Call to function is_subclass_of() with class-string and string will always evaluate to true.
+					if (!is_subclass_of($fq_classname, $expectedPluginClass)) {
 						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Plugin main class "%1" is expected to be a subclass of "%2"', $fq_classname, $expectedPluginClass));
 					}
-					if (($fq_classname != $manifest->getTypeClass()) && (!is_subclass_of($fq_classname, $manifest->getTypeClass()))) { /* @phpstan-ignore-line */ // Weird message which I don't understand: Call to function is_subclass_of() with class-string and string will always evaluate to true.
+					if (($fq_classname != $manifest->getTypeClass()) && (!is_subclass_of($fq_classname, $manifest->getTypeClass()))) {
 						throw new OIDplusException(_L('Plugin "%1" is erroneous', $vendor_folder . '/' . $plugintype_folder . '/' . $pluginname_folder) . ': ' . _L('Plugin main class "%1" is expected to be a subclass of "%2", according to type declared in manifest', $fq_classname, $manifest->getTypeClass()));
 					}
 					if (($manifest->getTypeClass() != $expectedPluginClass) && (!is_subclass_of($manifest->getTypeClass(), $expectedPluginClass))) {
@@ -1438,10 +1438,10 @@ class OIDplus extends OIDplusBaseClass {
 					if ((strtolower($name) == 'cache-control') ||
 						(strtolower($name) == 'referrer-policy'))
 					{
-						if (count($val) == 0) continue;
+						if (count($val) == 0) continue; /* @phpstan-ignore-line */
 						$val = implode(', ', $val);
 					} else if (strtolower($name) == 'content-security-policy') {
-						if (count($val) == 0) continue;
+						if (count($val) == 0) continue; /* @phpstan-ignore-line */
 						foreach ($val as $tmp1 => &$tmp2) {
 							$tmp2 = array_unique($tmp2);
 							$tmp2 = $tmp1.' '.implode(' ', $tmp2);

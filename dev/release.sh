@@ -93,7 +93,9 @@ fi
 
 # 5. Run phpstan
 echo "5. Running PHPSTAN..."
-cd "$DIR"/.. && phpstan
+cd "$DIR"/.. && wget -q https://github.com/phpstan/phpstan/releases/latest/download/phpstan.phar -O phpstan.phar
+cd "$DIR"/.. && chmod +x phpstan.phar
+cd "$DIR"/.. && ./phpstan.phar
 echo "Is PHPSTAN output OK?"
 select yn in "Yes" "No"; do
     case $yn in

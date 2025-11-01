@@ -415,7 +415,7 @@ class OIDplusOIDIP extends OIDplusBaseClass {
 
 						if ($raEMail = $obj->getRaMail()) {
 							$raObj = new OIDplusRA($raEMail);
-							if ($raObj instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4) {
+							if ($raObj instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_4) { /** @phpstan-ignore-line */ // Instanceof between ... and ... will always evaluate to false.
 								$raObj->whoisRaAttributes($raEMail, $out);
 							}
 

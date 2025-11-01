@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # OIDplus 2.0
-# Copyright 2019 - 2024 Daniel Marschall, ViaThinkSoft
+# Copyright 2019 - 2025 Daniel Marschall, ViaThinkSoft
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -19,6 +19,13 @@ DIR=$( dirname "$0" )
 
 cd "$DIR/.."
 
+# Choose the latest version of composer
+if [ ! -f composer.phar ]; then
+	wget https://getcomposer.org/download/latest-stable/composer.phar
+	chmod +x composer.phar
+fi
+./composer.phar self-update
+
 # We temporarily move the .svn directory, otherwise
 # we cannot checkout fileformats and vnag in the vendor
 # directory
@@ -28,7 +35,7 @@ fi
 
 # For some reason, sometimes composer downgrades packages for now reason.
 # Clearing the cache helps!
-composer clear-cache
+./composer.phar clear-cache
 
 # Remove vendor and composer.lock, so we can download everything again
 # (We need to receive everything again, because we had to delete the .git
@@ -40,9 +47,9 @@ rm composer.lock
 # Use PHP 7.4, since this is our current minimum version we want to release in the full-build
 # (Users who build the sources can use their own platform, of course)
 # see also below for 3 more occurrences of "composer update".
-composer config platform.php 7.4.0
-composer update --no-dev
-composer config --unset platform.php
+./composer.phar config platform.php 7.4.0
+./composer.phar update --no-dev
+./composer.phar config --unset platform.php
 
 # Remove stuff we don't want to publish or PHP files which could be
 # executed (which would be a security risk, because the vendor/ directory
@@ -101,31 +108,31 @@ if [ -d "_svn" ]; then
 	mv _svn .svn
 fi
 
-composer license > vendor/licenses
+./composer.phar license > vendor/licenses
 
 # -------
 # Update composer dependencies of plugins
 # -------
 
 rm -rf plugins/viathinksoft/publicPages/100_whois/whois/xml/vendor/
-composer config platform.php 7.4.0
-composer update --no-dev -d plugins/viathinksoft/publicPages/100_whois/whois/xml/
-composer config --unset platform.php
-composer license -d plugins/viathinksoft/publicPages/100_whois/whois/xml/ > plugins/viathinksoft/publicPages/100_whois/whois/xml/vendor/licenses
+./composer.phar config platform.php 7.4.0
+./composer.phar update --no-dev -d plugins/viathinksoft/publicPages/100_whois/whois/xml/
+./composer.phar config --unset platform.php
+./composer.phar license -d plugins/viathinksoft/publicPages/100_whois/whois/xml/ > plugins/viathinksoft/publicPages/100_whois/whois/xml/vendor/licenses
 remove_vendor_rubbish plugins/viathinksoft/publicPages/100_whois/whois/xml/
 
 rm -rf plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/
-composer config platform.php 7.4.0
-composer update --no-dev -d plugins/viathinksoft/publicPages/100_whois/whois/json/
-composer config --unset platform.php
-composer license -d plugins/viathinksoft/publicPages/100_whois/whois/json/ > plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/licenses
+./composer.phar config platform.php 7.4.0
+./composer.phar update --no-dev -d plugins/viathinksoft/publicPages/100_whois/whois/json/
+./composer.phar config --unset platform.php
+./composer.phar license -d plugins/viathinksoft/publicPages/100_whois/whois/json/ > plugins/viathinksoft/publicPages/100_whois/whois/json/vendor/licenses
 remove_vendor_rubbish plugins/viathinksoft/publicPages/100_whois/whois/json/
 
 rm -rf plugins/viathinksoft/publicPages/002_rest_api/vendor/
-composer config platform.php 7.4.0
-composer update --no-dev -d plugins/viathinksoft/publicPages/002_rest_api/
-composer config --unset platform.php
-composer license -d plugins/viathinksoft/publicPages/002_rest_api/ > plugins/viathinksoft/publicPages/002_rest_api/vendor/licenses
+./composer.phar config platform.php 7.4.0
+./composer.phar update --no-dev -d plugins/viathinksoft/publicPages/002_rest_api/
+./composer.phar config --unset platform.php
+./composer.phar license -d plugins/viathinksoft/publicPages/002_rest_api/ > plugins/viathinksoft/publicPages/002_rest_api/vendor/licenses
 rm -rf plugins/viathinksoft/publicPages/002_rest_api/swagger-ui
 mv plugins/viathinksoft/publicPages/002_rest_api/vendor/swagger-api/swagger-ui/dist plugins/viathinksoft/publicPages/002_rest_api/swagger-ui
 mv plugins/viathinksoft/publicPages/002_rest_api/vendor/licenses plugins/viathinksoft/publicPages/002_rest_api/swagger-ui/

@@ -132,7 +132,6 @@
         },
         "autoloader-suffix": "OidPlusComposer",
         "platform": {
-
         }
     },
     "scripts": {

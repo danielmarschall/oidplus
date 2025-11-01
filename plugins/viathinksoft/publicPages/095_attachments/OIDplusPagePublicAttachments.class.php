@@ -441,7 +441,7 @@ class OIDplusPagePublicAttachments extends OIDplusPagePluginPublic
 	 */
 	private static function convert_filesize(int $bytes, int $decimals = 2): string {
 		$size = array(_L('Bytes'),_L('KiB'),_L('MiB'),_L('GiB'),_L('TiB'),_L('PiB'),_L('EiB'),_L('ZiB'),_L('YiB'));
-		$factor = floor((strlen("$bytes") - 1) / 3);
+		$factor = (int)floor((strlen("$bytes") - 1) / 3);
 		return sprintf("%.{$decimals}f", $bytes / pow(1024, $factor)) . ' ' . @$size[$factor];
 	}
 

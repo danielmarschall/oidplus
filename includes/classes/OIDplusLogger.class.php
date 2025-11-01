@@ -192,7 +192,7 @@ class OIDplusLogger extends OIDplusBaseClass {
 				$sev_fixed = $sevs[0];
 			} else if (count($sevs) == 2) {
 				$sev_online = $sevs[0];
-				$sev_offline = $sevs[1]; /* @phpstan-ignore-line */
+				$sev_offline = $sevs[1];
 				if (($sev_online == 'NONE') && ($sev_offline == 'NONE')) return false; // meaningless component
 				try { self::convertSeverity($sev_online); } catch (\Exception $e) { return false; } // just checking for valid value
 				try { self::convertSeverity($sev_offline); } catch (\Exception $e) { return false; } // just checking for valid value

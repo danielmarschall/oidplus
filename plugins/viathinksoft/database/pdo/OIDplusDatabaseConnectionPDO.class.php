@@ -203,9 +203,9 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 		if (str_starts_with($dsn,'odbc:')) {
 			// Workaround for SQLSRV32.dll driver bug, see https://github.com/php/php-src/issues/16901#issuecomment-2495423968
 			if (version_compare(PHP_VERSION, '8.4.0') >= 0) {
-				$this->conn->setAttribute(\Pdo\Odbc::ATTR_ASSUME_UTF8, true);
+				$this->conn->setAttribute(\Pdo\Odbc::ATTR_ASSUME_UTF8, true); /* @phpstan-ignore-line */
 			} else {
-				$this->conn->setAttribute(\PDO::ODBC_ATTR_ASSUME_UTF8, true);
+				$this->conn->setAttribute(\PDO::ODBC_ATTR_ASSUME_UTF8, true); /* @phpstan-ignore-line */
 			}
 		}
 

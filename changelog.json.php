@@ -1,6 +1,6 @@
 [
 	{
-		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); /* @phpstan-ignore-line */ ?>"
+		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); ?>"
 	},
 	{
 		"version": "2.0.2.16",
