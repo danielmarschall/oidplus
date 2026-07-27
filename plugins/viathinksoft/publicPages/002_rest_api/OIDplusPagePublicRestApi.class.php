@@ -62,7 +62,7 @@ class OIDplusPagePublicRestApi extends OIDplusPagePluginPublic {
 				foreach (OIDplus::getAllPlugins() as $plugin) {
 					if ($plugin instanceof INTF_OID_1_3_6_1_4_1_37476_2_5_2_3_9) {
 						$json_out = $plugin->restApiCall($requestMethod, $rel_url, $json_in);
-						if ($json_out !== false) break;
+						if (is_array($json_out)) break;
 					}
 				}
 				if ($json_out === false) {
