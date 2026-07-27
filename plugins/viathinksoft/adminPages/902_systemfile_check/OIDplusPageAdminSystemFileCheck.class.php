@@ -114,6 +114,7 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 #									) || (substr($filename_old, 0, strlen('plugins/')) !== 'plugins/')) &&
 
 								($filename_old !== 'composer.lock') &&
+								($filename_old !== 'composer.phar') &&
 								($filename_old !== 'phpstan.phar') &&
 								($filename_old !== 'phpstan.neon') &&
 								($filename_old !== 'phpstan.bat') &&
@@ -213,6 +214,7 @@ class OIDplusPageAdminSystemFileCheck extends OIDplusPagePluginAdmin {
 			if (in_array($path,$exclude)) continue;
 			if (empty($path)) $path = $dir . DIRECTORY_SEPARATOR . $file;
 			if ($file == 'composer.lock') continue;
+			if ($file == 'composer.phar') continue;
 			if ($file == 'phpstan.phar') continue;
 			if ($file == 'phpstan.neon') continue;
 			if ($file == 'phpstan.bat') continue;
