@@ -65,7 +65,7 @@ class OIDplusPagePublicRestApi extends OIDplusPagePluginPublic {
 						if (is_array($json_out)) break;
 					}
 				}
-				if ($json_out === false) {
+				if (!is_array($json_out)) {
 					throw new OIDplusException(_L('REST endpoint not found'), null, 404);
 				}
 				if (!isset($json_out['status'])) {
