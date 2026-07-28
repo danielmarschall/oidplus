@@ -16,5 +16,9 @@
 		},
 		"css": [],
 		"js": []
+	},
+	"custom_data": {
+		"binaries_url": "https://www.viathinksoft.de/download/273/oidplus_nostalgia_binaries.zip",
+		"binaries_url_alt": "https://github.com/danielmarschall/oidplus_nostalgia/releases/download/1.0/Binaries.zip"
 	}
 }

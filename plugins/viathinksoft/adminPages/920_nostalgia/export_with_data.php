@@ -51,7 +51,7 @@ if (!class_exists('ZipArchive')) {
 	throw new OIDplusException(_L('The PHP extension "ZipArchive" needs to be installed to create a ZIP archive with an included database. Otherwise, you can just download the plain program without data.'));
 }
 
-$tmp_file = OIDplus::getUserDataDir("cache").'oidplus_nostalgia_'.generateRandomString(10).'.zip';
+$tmp_file = OIDplus::getUserDataDir("cache").'oidplus_nostalgia_with_data_'.generateRandomString(10).'.zip';
 
 $zip = new ZipArchive();
 if ($zip->open($tmp_file, ZipArchive::CREATE)!== true) {
@@ -255,6 +255,7 @@ foreach ($dos_ids as $oid => $dos_id) {
 
 // ---------------------------- EXE
 
+/*
 $files_to_download = [
 	"https://github.com/danielmarschall/oidplus_nostalgia/raw/master/DOS/OIDPLUS.EXE" => "OIDDBDOS.EXE",
 	"https://github.com/danielmarschall/oidplus_nostalgia/raw/master/Win311/OIDPLUS.EXE" => "OIDDB_16.EXE",
@@ -265,10 +266,57 @@ $files_to_download = [
 foreach ($files_to_download as $exe_url => $new_name) {
 	$exe_cont = url_get_contents($exe_url);
 	if ($exe_cont === false) {
-		throw new OIDplusException(_L("Cannot download the binary file from GitHub (%1)", $exe_url));
+		throw new OIDplusException(_L("Error downloading file %1", $exe_url));
 	}
 	$zip->addFromString($new_name, $exe_cont);
 }
+*/
+
+$cache_dir = __DIR__;
+
+$binaries_url = json_decode(file_get_contents(__DIR__.'/manifest.json'),true)['custom_data']['binaries_url'];
+$binaries_url_alt = json_decode(file_get_contents(__DIR__.'/manifest.json'),true)['custom_data']['binaries_url_alt'];
+
+$binaries_file = OIDplus::getUserDataDir("cache").'oidplus_nostalgia_binaries.zip';
+$max_cache_time = 1*60*60;
+
+if (!file_exists($binaries_file) || (time()-filemtime($binaries_file) > $max_cache_time)) {
+	$cont = url_get_contents($binaries_url);
+	if ($cont) {
+		file_put_contents($binaries_file, $cont);
+	} else {
+		$cont = url_get_contents($binaries_url_alt);
+		if ($cont) {
+			file_put_contents($binaries_file, $cont);
+		}
+	}
+}
+
+if (!file_exists($binaries_file)) {
+	throw new OIDplusException(_L("Error downloading file %1", $binaries_url.' | '.$binaries_url_alt));
+}
+
+$sourceZip = new ZipArchive();
+
+if ($sourceZip->open($binaries_file) !== true) {
+	throw new OIDplusException(_L("Error opening file %1", $binaries_file));
+}
+
+for ($i = 0; $i < $sourceZip->numFiles; $i++) {
+    $stat = $sourceZip->statIndex($i);
+    $name = $stat['name'];
+
+	if      (strtoupper($name) == 'OIDPLUS_DOS.EXE')   $name = 'OIDDBDOS.EXE';
+	else if (strtoupper($name) == 'OIDPLUS_16BIT.EXE') $name = 'OIDDB_16.EXE';
+	else if (strtoupper($name) == 'OIDPLUS_32BIT.EXE') $name = 'OIDDB_32.EXE';
+	else if (strtoupper($name) == 'OIDPLUS_64BIT.EXE') $name = 'OIDDB_64.EXE';
+	else if (strtoupper($name) == 'LICENSE')           $name = 'OIDDBLIC.TXT';
+	else continue;
+
+    $zip->addFromString($name, $sourceZip->getFromIndex($i));
+}
+
+$sourceZip->close();
 
 // ---------------------------- Done
 
@@ -276,7 +324,7 @@ $zip->close();
 
 if (!headers_sent()) {
 	header('Content-Type: application/zip');
-	header('Content-Disposition: attachment; filename=oidplus_nostalgia.zip');
+	header('Content-Disposition: attachment; filename=oidplus_nostalgia_with_data.zip');
 	readfile($tmp_file);
 }
 
