@@ -1778,6 +1778,14 @@ class OIDplus extends OIDplusBaseClass {
 
 		if (basename($_SERVER['SCRIPT_NAME']) == 'test_database_plugins.php') return false; // database switching will destroy keys because of the secret file
 
+		// OpenSSL supplement had used RSA 1024 (see below), so the system ID is stuck to that key...
+		// Problem: PHP-JWT disables using RSA 1024, and requires at least 2048 bits
+		// This is a very dirty hack... we should rather re-generate the key, but this will take minutes to load a single page then...
+		$cont = file_get_contents(__DIR__.'/../../vendor/firebase/php-jwt/src/JWT.php');
+		$cont_bak = $cont;
+		$cont = str_replace('private const RSA_KEY_MIN_LENGTH = 2048;', 'private const RSA_KEY_MIN_LENGTH = 1024;', $cont);
+		if ($cont != $cont_bak) file_put_contents(__DIR__.'/../../vendor/firebase/php-jwt/src/JWT.php', $cont);
+
 		if ($try_generate) {
 			// For debug purposes: Invalidate current key once:
 			//self::config()->setValue('oidplus_private_key', '');
