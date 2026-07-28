@@ -3,6 +3,14 @@
 		"dummy": "<?php die('For security reasons, this file can only be accessed locally (without PHP).'.base64_decode('IgogICAgfQpdCg==')); ?>"
 	},
 	{
+		"version": "2.0.3.3",
+		"date": "2026-07-28 13:40:00 +0200",
+		"author": "Daniel Marschall (ViaThinkSoft)",
+		"changes": [
+			"Repaired Nostalgia plugin"
+		]
+	},
+	{
 		"version": "2.0.3.2",
 		"date": "2026-07-15 18:25:00 +0200",
 		"author": "Daniel Marschall (ViaThinkSoft)",

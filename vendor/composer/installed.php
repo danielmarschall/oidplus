@@ -1,8 +1,8 @@
 <?php return array(
     'root' => array(
         'name' => 'danielmarschall/oidplus',
-        'pretty_version' => '2.0.3.2',
-        'version' => '2.0.3.2',
+        'pretty_version' => '2.0.3.3',
+        'version' => '2.0.3.3',
         'reference' => null,
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
@@ -110,8 +110,8 @@
             'dev_requirement' => false,
         ),
         'danielmarschall/oidplus' => array(
-            'pretty_version' => '2.0.3.2',
-            'version' => '2.0.3.2',
+            'pretty_version' => '2.0.3.3',
+            'version' => '2.0.3.3',
             'reference' => null,
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
