@@ -200,14 +200,7 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 			throw new OIDplusConfigInitializationException(trim(_L('Connection to the database failed!').' '.$message));
 		}
 
-		if (str_starts_with($dsn,'odbc:')) {
-			// Workaround for SQLSRV32.dll driver bug, see https://github.com/php/php-src/issues/16901#issuecomment-2495423968
-			if (version_compare(PHP_VERSION, '8.4.0') >= 0) {
-				$this->conn->setAttribute(\Pdo\Odbc::ATTR_ASSUME_UTF8, true);
-			} else {
-				$this->conn->setAttribute(\PDO::ODBC_ATTR_ASSUME_UTF8, true);
-			}
-		}
+		$this->odbcWorkaround($dsn);
 
 		$this->last_error = null;
 
@@ -227,6 +220,64 @@ class OIDplusDatabaseConnectionPDO extends OIDplusDatabaseConnection {
 		}
 
 		$this->detectTransactionSupport();
+	}
+
+	private function odbcWorkaround(string $dsn): void {
+		if (str_starts_with($dsn,'odbc:') && (stripos($dsn, '{SQL Server}') !== false)) {
+		    // ODBC_ATTR_ASSUME_UTF8=true FIXES reading in ODBC Driver "SQL Server" (SQLSRV32.dll)
+			// (otherwise, a NULL byte is added to position 254, see php-src GitHub issue 16901)
+			// but also BREAKS writing in "ODBC Driver 17 for SQL Server" (MSODBCSQL17.DLL) and "ODBC Driver 18 for SQL Server" (MSODBCSQL18.DLL)
+			// (error 22026 "String data, length mismatch")
+			if (version_compare(PHP_VERSION, '8.4.0') >= 0) {
+				$this->conn->setAttribute(\Pdo\Odbc::ATTR_ASSUME_UTF8, true);
+			} else {
+				$this->conn->setAttribute(\PDO::ODBC_ATTR_ASSUME_UTF8, true);
+			}
+		}
+
+		// Here is a test script to reproduce the problem that we have now fixed:
+		/*
+		try {
+		    $dsn = 'odbc:DRIVER={SQL Server};SERVER=SHS\HS2017,49011;DATABASE=OIDDB';
+		    $dsn = 'odbc:DRIVER={ODBC Driver 17 for SQL Server};SERVER=SHS\HS2017,49011;DATABASE=OIDDB;Encrypt=No;TrustServerCertificate=Yes';
+		    $dsn = 'odbc:DRIVER={ODBC Driver 18 for SQL Server};SERVER=SHS\HS2017,49011;DATABASE=OIDDB;Encrypt=No;TrustServerCertificate=Yes';
+		    $pdo = new PDO($dsn, 'oidplus', 'oidplus');
+		    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+			if (stripos($dsn, '{SQL Server}') !== false) {
+			    $pdo->setAttribute(PDO::ODBC_ATTR_ASSUME_UTF8, true);
+			}
+
+		    echo "=== READ TEST ===\n";
+		    $stmt = $pdo->query(
+		        'SELECT name, description, protected, visible, value
+		         FROM oidplus_config'
+		    );
+		    $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		    foreach ($results as $row) {
+		        if (($p = strpos($row['value'], "\0")) !== false) {
+		            echo "PROBLEM: NULL BYTE FOUND AT {$row['name']} AT POSITION $p\n";
+		        }
+		    }
+		    echo "READ OK\n\n";
+
+		    echo "=== WRITE TEST ===\n";
+		    $name = 'oidplus_private_key';
+		    $stmt = $pdo->prepare(
+		        'UPDATE oidplus_config
+		         SET description = ?
+		         WHERE name = ?'
+		    );
+		    $stmt->execute([
+		        'PDO_ODBC UTF-8 test',
+		        $name
+		    ]);
+		    echo "WRITE OK\n";
+		} catch (PDOException $e) {
+		    echo "PDOException\n";
+		    echo "SQLSTATE : ".$e->getCode()."\n";
+		    echo "Message  : ".$e->getMessage()."\n";
+		}
+		*/
 	}
 
 	/**
