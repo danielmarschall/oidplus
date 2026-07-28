@@ -1,5 +1,5 @@
 Name: danielmarschall/oidplus
-Version: 2.0.3.1
+Version: 2.0.3.2
 Licenses: Apache-2.0
 Dependencies:
 
@@ -30,8 +30,8 @@ danielmarschall/vnag             9999999-dev 82e606b Apache-2.0
 danielmarschall/vnag             dev-master 82e606b  Apache-2.0                
 dcodeio/bcrypt.js                2.4.3               BSD-3-Clause, MIT         
 emn178/js-sha3                   master master       MIT                       
-firebase/php-jwt                 9999999-dev b374a5d BSD-3-Clause              
-firebase/php-jwt                 dev-main b374a5d    BSD-3-Clause              
+firebase/php-jwt                 9999999-dev 70c5221 BSD-3-Clause              
+firebase/php-jwt                 dev-main 70c5221    BSD-3-Clause              
 gedmarc/layout                   master master       GPL-3.0-or-later, MIT     
 matthiasmullie/minify            9999999-dev 76ba4a5 MIT                       
 matthiasmullie/minify            dev-master 76ba4a5  MIT                       
@@ -44,17 +44,17 @@ opis/uri                         1.x-dev e135d17     Apache-2.0
 opis/uri                         dev-master e135d17  Apache-2.0                
 package-url/packageurl-php       1.1.2               MIT                       
 paragonie/constant_time_encoding v3.1.3              MIT                       
-phpseclib/phpseclib              9999999-dev 6a5a0c6 MIT                       
-phpseclib/phpseclib              dev-master 6a5a0c6  MIT                       
+phpseclib/phpseclib              9999999-dev 81e5e79 MIT                       
+phpseclib/phpseclib              dev-master 81e5e79  MIT                       
 script47/bs5-utils               master master       MIT                       
 spamspan/spamspan                master master       GPL-2.0-only              
 spomky-labs/php-punycode         9999999-dev d12fe5c MIT                       
 spomky-labs/php-punycode         dev-master d12fe5c  MIT                       
 symfony/polyfill-mbstring        1.x-dev d3d318b     MIT                       
 symfony/polyfill-php82           1.x-dev 002dc0c     MIT                       
-tinymce/tinymce                  8.8.0               SEE LICENSE IN license.md 
-twbs/bootstrap                   9999999-dev e8c978d MIT                       
-twbs/bootstrap                   dev-main e8c978d    MIT                       
+tinymce/tinymce                  8.8.2               SEE LICENSE IN license.md 
+twbs/bootstrap                   9999999-dev c21a1c1 MIT                       
+twbs/bootstrap                   dev-main c21a1c1    MIT                       
 tweeb/tinymce-i18n               9999999-dev 058da08 MIT                       
 tweeb/tinymce-i18n               dev-master 058da08  MIT                       
 vakata/jstree                    9999999-dev 6256df0 MIT                       

@@ -1,5 +1,21 @@
 # Change Log
 
+## v0.12.0 / 2026-07-18
+### Added
+- KMACXOF128 and KMACXOF256 (NIST SP 800-185)
+
+## v0.11.0 / 2026-07-18
+### Added
+- TupleHash128, TupleHash256, TupleHashXOF128, and TupleHashXOF256 (NIST SP 800-185)
+
+### Fixed
+- KMAC repeated output reads after finalize
+
+## v0.10.0 / 2026-07-17
+### Added
+- support ESM #42, #38
+- types index.d.ts to package.json #32
+
 ## v0.9.3 / 2023-12-16
 ### Fixed
 - Fix error in arrayBuffer when there are extra bytes #37

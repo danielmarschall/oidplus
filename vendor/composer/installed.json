@@ -756,19 +756,19 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/php-jwt.git",
-                "reference": "b374a5d1a4f1f67fadc2165cdb284645945e2fc0"
+                "reference": "70c52215972ec6cf086c13d087fc68cdbb02e378"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/php-jwt/zipball/b374a5d1a4f1f67fadc2165cdb284645945e2fc0",
-                "reference": "b374a5d1a4f1f67fadc2165cdb284645945e2fc0",
+                "url": "https://api.github.com/repos/googleapis/php-jwt/zipball/70c52215972ec6cf086c13d087fc68cdbb02e378",
+                "reference": "70c52215972ec6cf086c13d087fc68cdbb02e378",
                 "shasum": ""
             },
             "require": {
                 "php": "^8.0"
             },
             "require-dev": {
-                "guzzlehttp/guzzle": "^7.4",
+                "guzzlehttp/guzzle": "^7.4||^8.0",
                 "phpfastcache/phpfastcache": "^9.2",
                 "phpseclib/phpseclib": "~3.0",
                 "phpspec/prophecy-phpunit": "^2.0",
@@ -782,7 +782,7 @@
                 "paragonie/sodium_compat": "Support EdDSA (Ed25519) signatures when libsodium is not present",
                 "phpseclib/phpseclib": "Support PS256 (RSASSA-PSS) signatures"
             },
-            "time": "2026-06-11T17:54:14+00:00",
+            "time": "2026-07-23T20:45:05+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -1316,12 +1316,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "6a5a0c64571dbd86a417ba342e1bdd6bc85171cb"
+                "reference": "81e5e7924a17739dbed6e3a58027eb6365a56967"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/6a5a0c64571dbd86a417ba342e1bdd6bc85171cb",
-                "reference": "6a5a0c64571dbd86a417ba342e1bdd6bc85171cb",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/81e5e7924a17739dbed6e3a58027eb6365a56967",
+                "reference": "81e5e7924a17739dbed6e3a58027eb6365a56967",
                 "shasum": ""
             },
             "require": {
@@ -1343,7 +1343,7 @@
                 "ext-libsodium": "SSH2/SFTP can make use of some algorithms provided by the libsodium-php extension.",
                 "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
             },
-            "time": "2026-07-15T13:11:16+00:00",
+            "time": "2026-07-20T19:15:59+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -1701,20 +1701,20 @@
         },
         {
             "name": "tinymce/tinymce",
-            "version": "8.8.0",
-            "version_normalized": "8.8.0.0",
+            "version": "8.8.2",
+            "version_normalized": "8.8.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "23137d1b2f95cdd68f304292685157ba090e7518"
+                "reference": "e985cd41c60ecda5b7f92cec73fe8f234a6f32ff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/23137d1b2f95cdd68f304292685157ba090e7518",
-                "reference": "23137d1b2f95cdd68f304292685157ba090e7518",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/e985cd41c60ecda5b7f92cec73fe8f234a6f32ff",
+                "reference": "e985cd41c60ecda5b7f92cec73fe8f234a6f32ff",
                 "shasum": ""
             },
-            "time": "2026-07-15T02:36:42+00:00",
+            "time": "2026-07-27T04:10:15+00:00",
             "type": "component",
             "extra": {
                 "component": {
@@ -1757,7 +1757,7 @@
                 "wysiwyg"
             ],
             "support": {
-                "source": "https://github.com/tinymce/tinymce-dist/tree/8.8.0"
+                "source": "https://github.com/tinymce/tinymce-dist/tree/8.8.2"
             },
             "install-path": "../tinymce/tinymce"
         },
@@ -1768,18 +1768,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "e8c978daefe39540c67a82fdd72dfc0c4a267ff1"
+                "reference": "c21a1c13ab72d9205e28a1bc56f3e78ad880b64b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/e8c978daefe39540c67a82fdd72dfc0c4a267ff1",
-                "reference": "e8c978daefe39540c67a82fdd72dfc0c4a267ff1",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/c21a1c13ab72d9205e28a1bc56f3e78ad880b64b",
+                "reference": "c21a1c13ab72d9205e28a1bc56f3e78ad880b64b",
                 "shasum": ""
             },
             "replace": {
                 "twitter/bootstrap": "self.version"
             },
-            "time": "2026-07-14T16:01:40+00:00",
+            "time": "2026-07-28T11:09:09+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",

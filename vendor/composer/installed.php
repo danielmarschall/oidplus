@@ -172,7 +172,7 @@
         'firebase/php-jwt' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'b374a5d1a4f1f67fadc2165cdb284645945e2fc0',
+            'reference' => '70c52215972ec6cf086c13d087fc68cdbb02e378',
             'type' => 'library',
             'install_path' => __DIR__ . '/../firebase/php-jwt',
             'aliases' => array(
@@ -263,7 +263,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '6a5a0c64571dbd86a417ba342e1bdd6bc85171cb',
+            'reference' => '81e5e7924a17739dbed6e3a58027eb6365a56967',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(
@@ -319,9 +319,9 @@
             'dev_requirement' => false,
         ),
         'tinymce/tinymce' => array(
-            'pretty_version' => '8.8.0',
-            'version' => '8.8.0.0',
-            'reference' => '23137d1b2f95cdd68f304292685157ba090e7518',
+            'pretty_version' => '8.8.2',
+            'version' => '8.8.2.0',
+            'reference' => 'e985cd41c60ecda5b7f92cec73fe8f234a6f32ff',
             'type' => 'component',
             'install_path' => __DIR__ . '/../tinymce/tinymce',
             'aliases' => array(),
@@ -330,7 +330,7 @@
         'twbs/bootstrap' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'e8c978daefe39540c67a82fdd72dfc0c4a267ff1',
+            'reference' => 'c21a1c13ab72d9205e28a1bc56f3e78ad880b64b',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twbs/bootstrap',
             'aliases' => array(
