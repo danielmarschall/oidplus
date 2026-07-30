@@ -130,7 +130,7 @@ cd "$DIR"/.. && ./composer.phar install --no-dev
 
 # 8. Generate SBOM
 echo "8. Generate SBOM..."
-cd "$DIR"/.. && ./composer.phar CycloneDX:make-sbom > sbom.json
+cd "$DIR"/.. && ./composer.phar CycloneDX:make-sbom --output-format=JSON --output-file=sbom.json
 
 # 9. Run plugins/viathinksoft/adminPages/902_systemfile_check/private/gen_serverside_v3
 echo "9. Generate system file check checksum file..."
