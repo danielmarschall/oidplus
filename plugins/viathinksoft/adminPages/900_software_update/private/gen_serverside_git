@@ -82,13 +82,15 @@ if (($force != '1') && ($force != '0')) {
 foreach (['a','b'] as $ab) {
 	$tmpdir = '/tmp/oidplus_git_'.$ab;
 	if (!is_dir($tmpdir)) {
-		exec('git clone '.escapeshellarg(OIDplus::getEditionInfo()['gitrepo']).' '.escapeshellarg($tmpdir).' --quiet', $out, $ec);
+		exec('git -c http.version=HTTP/1.1 clone '.escapeshellarg(OIDplus::getEditionInfo()['gitrepo']).' '.escapeshellarg($tmpdir).' --quiet', $out, $ec);
 		if ($ec != 0) {
 			fwrite(STDERR, "GIT Clone failed\n");
 			exit(1);
 		}
 	}
-	exec('cd '.escapeshellarg($tmpdir).' && git reset --hard --quiet && git checkout master --quiet && git pull --quiet', $out, $ec);
+	//exec('cd '.escapeshellarg($tmpdir).' && git -c http.version=HTTP/1.1 reset --hard --quiet && git -c http.version=HTTP/1.1 checkout master --quiet && git -c http.version=HTTP/1.1 pull --quiet', $out, $ec);
+	//exec('cd '.escapeshellarg($tmpdir).' && git -c http.version=HTTP/1.1 reset --hard --quiet && git -c http.version=HTTP/1.1 checkout master --quiet && git -c http.version=HTTP/1.1 fetch origin --quiet && git -c http.version=HTTP/1.1 reset --hard --quiet origin/master', $out, $ec);
+	exec('cd '.escapeshellarg($tmpdir).' && git -c http.version=HTTP/1.1 fetch origin --quiet && git -c http.version=HTTP/1.1 reset --hard --quiet origin/master', $out, $ec);
 	if ($ec != 0) {
 		fwrite(STDERR, "GIT Pull failed\n");
 		exit(1);
@@ -102,7 +104,7 @@ $git_version_cache = file_exists($git_version_cache_file) ? json_decode(file_get
 
 $ec = -1;
 $out = array();
-exec('cd /tmp/oidplus_git_a && git reset --hard --quiet && git checkout master --quiet && git log --reverse --quiet', $out, $ec);
+exec('cd /tmp/oidplus_git_a && git -c http.version=HTTP/1.1 reset --hard --quiet && git -c http.version=HTTP/1.1 checkout master --quiet && git -c http.version=HTTP/1.1 log --reverse --quiet', $out, $ec);
 if ($ec != 0) {
 	fwrite(STDERR, "GIT Log failed\n");
 	exit(1);
@@ -165,7 +167,7 @@ foreach ($git_version_cache["version-first-commit"] as $version => $version_firs
 			if (!is_dir($old_dir)) mkdir($old_dir);
 		} else {
 			$old_dir = '/tmp/oidplus_git_a';
-			exec('cd '.escapeshellarg($old_dir).' && git reset --hard --quiet && git checkout '.escapeshellarg($prev_commit).' --quiet >/dev/null 2>&1', $out, $ec);
+			exec('cd '.escapeshellarg($old_dir).' && git -c http.version=HTTP/1.1 reset --hard --quiet && git -c http.version=HTTP/1.1 checkout '.escapeshellarg($prev_commit).' --quiet >/dev/null 2>&1', $out, $ec);
 			if ($ec != 0) {
 				fwrite(STDERR, "GIT Checkout $prev_commit failed\n");
 				exit(1);
@@ -174,7 +176,7 @@ foreach ($git_version_cache["version-first-commit"] as $version => $version_firs
 		}
 
 		$new_dir = '/tmp/oidplus_git_b';
-		exec('cd '.escapeshellarg($new_dir).' && git reset --hard --quiet && git checkout '.escapeshellarg($version_first_commit).' --quiet >/dev/null 2>&1', $out, $ec);
+		exec('cd '.escapeshellarg($new_dir).' && git -c http.version=HTTP/1.1 reset --hard --quiet && git -c http.version=HTTP/1.1 checkout '.escapeshellarg($version_first_commit).' --quiet >/dev/null 2>&1', $out, $ec);
 		if ($ec != 0) {
 			fwrite(STDERR, "GIT Checkout $version_first_commit failed\n");
 			exit(1);
@@ -198,6 +200,6 @@ foreach ($git_version_cache["version-first-commit"] as $version => $version_firs
 // Step 3 (optional): Upload to GitHub (a different repository, just for deploying updates)
 // How to setup a GitHub deployment key? See https://dylancastillo.co/how-to-use-github-deploy-keys/
 
-shell_exec("cd ".escapeshellarg($output_dir)." && git add * 2>/dev/null");
-shell_exec("cd ".escapeshellarg($output_dir)." && git commit -m ".escapeshellarg("Update $latest_version")." 2>/dev/null");
-shell_exec("cd ".escapeshellarg($output_dir)." && git push 2>/dev/null");
+shell_exec("cd ".escapeshellarg($output_dir)." && git -c http.version=HTTP/1.1 add * 2>/dev/null");
+shell_exec("cd ".escapeshellarg($output_dir)." && git -c http.version=HTTP/1.1 commit -m ".escapeshellarg("Update $latest_version")." 2>/dev/null");
+shell_exec("cd ".escapeshellarg($output_dir)." && git -c http.version=HTTP/1.1 push 2>/dev/null");
