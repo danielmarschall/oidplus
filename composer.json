@@ -132,7 +132,8 @@
             "*": "dist"
         },
         "autoloader-suffix": "OidPlusComposer",
-        "platform": {},
+        "platform": {
+        },
         "allow-plugins": {
             "cyclonedx/cyclonedx-php-composer": true
         }

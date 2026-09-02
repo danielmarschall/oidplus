@@ -52,8 +52,6 @@ class Montgomery extends Base
 
     /**
      * Constant used for point doubling
-     *
-     * @psalm-suppress PossiblyUnusedProperty
      */
     protected PrimeInteger $a24;
 
@@ -114,10 +112,9 @@ class Montgomery extends Base
     /**
      * Set x and y coordinates for the base point
      *
-     * @return PrimeInteger[]
      * @psalm-suppress PossiblyUnusedMethod
      */
-    public function setBasePoint(BigInteger|PrimeInteger $x, BigInteger|PrimeInteger $y): array
+    public function setBasePoint(BigInteger|PrimeInteger $x, BigInteger|PrimeInteger $y): void
     {
         if (!isset($this->factory)) {
             throw new InvalidStateException('setModulo needs to be called before this method');
@@ -132,6 +129,7 @@ class Montgomery extends Base
      * Retrieve the base point as an array
      *
      * @return PrimeInteger[]
+     * @psalm-suppress PossiblyUnusedMethod
      */
     public function getBasePoint(): array
     {
@@ -208,6 +206,9 @@ class Montgomery extends Base
         $p2 = $this->convertToInternal($p);
         $x = $p[0];
 
+        $r = $this->randomInteger();
+        $p2 = [$p2[0]->multiply($r), $p2[1]->multiply($r)];
+
         $b = $d->toBits();
         $b = str_pad($b, 256, '0', STR_PAD_LEFT);
         for ($i = 0; $i < strlen($b); $i++) {
@@ -259,6 +260,9 @@ class Montgomery extends Base
             return $p;
         }
         [$x, $z] = $p;
+        if ($z->equals($this->zero)) {
+            return [clone $this->zero];
+        }
         return [$x->divide($z)];
     }
 }

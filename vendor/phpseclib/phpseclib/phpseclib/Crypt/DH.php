@@ -259,26 +259,9 @@ abstract class DH extends AsymmetricKey
      * Compute Shared Secret
      */
     public static function computeSecret(
-        #[\SensitiveParameter] PrivateKey|EC\PrivateKey|string $private,
+        #[\SensitiveParameter] PrivateKey|EC\PrivateKey $private,
         PublicKey|EC\PublicKey|BigInteger|string $public
     ): BigInteger|string {
-        if ($private instanceof PrivateKey) { // DH\PrivateKey
-            switch (true) {
-                case $public instanceof PublicKey:
-                    if (!$private->prime->equals($public->prime) || !$private->base->equals($public->base)) {
-                        throw new InvalidArgumentException('The public and private key do not share the same prime and / or base numbers');
-                    }
-                    return $public->publicKey->powMod($private->privateKey, $private->prime)->toBytes(true);
-                case is_string($public):
-                    $public = new BigInteger($public, -256);
-                    // no break
-                case $public instanceof BigInteger:
-                    return $public->powMod($private->privateKey, $private->prime)->toBytes(true);
-                default:
-                    throw new InvalidArgumentException('$public needs to be an instance of DH\PublicKey, a BigInteger or a string');
-            }
-        }
-
         if ($private instanceof EC\PrivateKey) {
             $privateCurve = $private->getCurve();
             switch (true) {
@@ -323,10 +306,21 @@ abstract class DH extends AsymmetricKey
                         $public = EC::convertPointToPublicKey($curveName, $public, false);
                     }
                     $point = $private->multiply($public);
-                    $secret = $isMontgomeryCurve ?
-                        $point :
-                        // according to https://www.secg.org/sec1-v2.pdf#page=33 only X is returned
-                        substr($point, 1, (strlen($point) - 1) >> 1);
+                    if ($isMontgomeryCurve) {
+                        /*
+                        "Both MAY check, without leaking extra information about the value of K,
+                         whether K is the all-zero value and abort if so"
+                        -- https://datatracker.ietf.org/doc/html/rfc7748#section-6.1 (and #section-6.2)
+                        */
+                        $size = $curveName == 'Curve25519' ? 32 : 56;
+                        // throw exception if hash_equals is false, otherwise, return $point
+                        if (hash_equals(str_repeat("\0", $size), $point)) {
+                            throw new \UnexpectedValueException('All-zero shared secret detected (points order is too small)');
+                        }
+                        return $point;
+                    }
+                    // according to https://www.secg.org/sec1-v2.pdf#page=33 only X is returned
+                    $secret = substr($point, 1, (strlen($point) - 1) >> 1);
                     /*
                     if (($secret[0] & "\x80") === "\x80") {
                         $secret = "\0$secret";
@@ -336,6 +330,23 @@ abstract class DH extends AsymmetricKey
                 default:
                     throw new InvalidArgumentException('$public needs to be an instance of EC\PublicKey or a string (an encoded coordinate)');
             }
+        }
+
+        // at this point $private is an instanceof DH\PrivateKey
+
+        switch (true) {
+            case $public instanceof PublicKey:
+                if (!$private->prime->equals($public->prime) || !$private->base->equals($public->base)) {
+                    throw new InvalidArgumentException('The public and private key do not share the same prime and / or base numbers');
+                }
+                return $public->publicKey->powMod($private->privateKey, $private->prime)->toBytes(true);
+            case is_string($public):
+                $public = new BigInteger($public, -256);
+            // no break
+            case $public instanceof BigInteger:
+                return $public->powMod($private->privateKey, $private->prime)->toBytes(true);
+            default:
+                throw new InvalidArgumentException('$public needs to be an instance of DH\PublicKey, a BigInteger or a string');
         }
     }
 
@@ -356,25 +367,21 @@ abstract class DH extends AsymmetricKey
 
     /**
      * OnLoad Handler
-     *
-     * @psalm-suppress PossiblyUnusedMethod
      */
     protected static function onLoad(array $components): Parameters|PrivateKey|PublicKey
     {
         if (!isset($components['privateKey']) && !isset($components['publicKey'])) {
             $new = new Parameters();
+        } elseif (isset($components['privateKey'])) {
+            $new = new PrivateKey();
+            $new->privateKey = $components['privateKey'];
         } else {
-            $new = isset($components['privateKey']) ?
-                new PrivateKey() :
-                new PublicKey();
+            $new = new PublicKey();
         }
 
         $new->prime = $components['prime'];
         $new->base = $components['base'];
 
-        if (isset($components['privateKey'])) {
-            $new->privateKey = $components['privateKey'];
-        }
         if (isset($components['publicKey'])) {
             $new->publicKey = $components['publicKey'];
         }

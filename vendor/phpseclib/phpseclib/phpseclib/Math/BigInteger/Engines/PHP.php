@@ -74,6 +74,11 @@ abstract class PHP extends Engine
     public const ENGINE_DIR = 'PHP';
 
     /**
+     * Holds the BigInteger's value
+     */
+    protected string|array $value;
+
+    /**
      * Default constructor
      *
      * @param mixed $x integer Base-10 number or base-$base number if $base set.
@@ -153,7 +158,7 @@ abstract class PHP extends Engine
         while (count($temp->value)) {
             [$temp, $mod] = $temp->divide($divisor);
             $result = str_pad(
-                (string) $mod->value[0] ?? '',
+                (string) ($mod->value[0] ?? ''),
                 static::MAX10LEN,
                 '0',
                 STR_PAD_LEFT
@@ -279,7 +284,7 @@ abstract class PHP extends Engine
     /**
      * Performs subtraction.
      */
-    public static function subtractHelper(array $x_value, bool $x_negative, array $y_value, bool $y_negative): array
+    protected static function subtractHelper(array $x_value, bool $x_negative, array $y_value, bool $y_negative): array
     {
         $x_size = count($x_value);
         $y_size = count($y_value);
@@ -494,7 +499,11 @@ abstract class PHP extends Engine
             $quotient = new static();
             $remainder = new static();
             $quotient->value = $q;
-            if ($this->is_negative) {
+            // The common residue is the first positive modulo, so it is only the
+            // negative remainders that need the divisor added. A remainder of 0 is
+            // already the residue; adding the divisor would return the modulus
+            // itself, which is never a valid residue.
+            if ($this->is_negative && $r) {
                 $r = $y->value[0] - $r;
             }
             $remainder->value = [$r];
@@ -628,8 +637,9 @@ abstract class PHP extends Engine
 
         $quotient->is_negative = $x_sign != $y_sign;
 
-        // calculate the "common residue", if appropriate
-        if ($x_sign) {
+        // calculate the "common residue", if appropriate. A remainder of 0 is
+        // already the residue -- see divideHelper's single-digit branch.
+        if ($x_sign && count($x->value)) {
             $y->rshift($shift);
             $x = $y->subtract($x);
         }
@@ -1226,6 +1236,14 @@ abstract class PHP extends Engine
             $vals[] = $digit;
         }
 
+        if (!count($vals)) {
+            return [];
+        }
+
+        // $vals is never all-zeros here: callers normalize first, and trim() strips
+        // trailing zero-limbs, so the top limb is always non-zero. The count()-1 read
+        // therefore can't underflow, but Psalm can't track that across the unset loop.
+        /** @psalm-suppress InvalidArrayOffset */
         while ($vals[count($vals) - 1] == 0) {
             unset($vals[count($vals) - 1]);
         }

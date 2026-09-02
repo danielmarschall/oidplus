@@ -203,6 +203,11 @@ abstract class RSA extends AsymmetricKey
     protected static bool $enableBlinding = true;
 
     /**
+     * Enable automatic salt length determination
+     */
+    protected static bool $autoSaltLength = true;
+
+    /**
      * Smallest Prime
      *
      * Per <http://cseweb.ucsd.edu/~hovav/dist/survey.pdf#page=5>, this number ought not result in primes smaller
@@ -365,8 +370,11 @@ abstract class RSA extends AsymmetricKey
         $privatekey->k = $bits >> 3;
         $privatekey->publicExponent = $e;
         $privatekey->exponent = $d;
+        /** @psalm-suppress InvalidPropertyAssignmentValue */
         $privatekey->primes = $primes;
+        /** @psalm-suppress InvalidPropertyAssignmentValue */
         $privatekey->exponents = $exponents;
+        /** @psalm-suppress InvalidPropertyAssignmentValue */
         $privatekey->coefficients = $coefficients;
 
         /*
@@ -383,8 +391,6 @@ abstract class RSA extends AsymmetricKey
 
     /**
      * OnLoad Handler
-     *
-     * @psalm-suppress PossiblyUnusedMethod
      */
     protected static function onLoad(array $components): static
     {
@@ -396,7 +402,7 @@ abstract class RSA extends AsymmetricKey
         $key->publicExponent = $components['publicExponent'];
         $key->k = $key->modulus->getLengthInBytes();
 
-        if ($components['isPublicKey'] || !isset($components['privateExponent'])) {
+        if ($key instanceof PublicKey || !isset($components['privateExponent'])) {
             $key->exponent = $key->publicExponent;
         } else {
             $key->privateExponent = $components['privateExponent'];
@@ -803,8 +809,22 @@ abstract class RSA extends AsymmetricKey
         static::$enableBlinding = false;
     }
 
+    public static function enableSaltLengthDiscovery(): void
+    {
+        static::$autoSaltLength = true;
+    }
+
+    public static function disableSaltLengthDiscovery(): void
+    {
+        static::$autoSaltLength = false;
+    }
+
     /**
      * Handles OpenSSL encryption / decryption / signature creation / verification
+     *
+     * @template T of string
+     * @param T $func
+     * @return (T is 'openssl_verify' ? bool|null : string|null)
      */
     protected function handleOpenSSL(
         #[\SensitiveParameter] string $func,
@@ -826,6 +846,7 @@ abstract class RSA extends AsymmetricKey
                 throw new BadConfigurationException('Engine OpenSSL is forced but unavailable for RSA');
             }
             if ($this->$paddingType === self::SIGNATURE_PSS) {
+                $create = $func === 'openssl_sign';
                 $error = match (true) {
                     !defined('OPENSSL_PKCS1_PSS_PADDING') =>
                         'Engine OpenSSL is forced but PSS encryption requires PHP >= 8.5.0',
@@ -833,9 +854,11 @@ abstract class RSA extends AsymmetricKey
                         'Engine OpenSSL is forced but can\'t be used because the Hash and MGF Hash do not match',
                     $this->getSaltLength() !== $this->hLen =>
                         'Engine OpenSSL is forced but can\'t be used because the salt length doesn\'t match the hash length',
-                    'openssl_sign' && $this->getLength() < 8 * (2 * $this->getSaltLength() + 2) =>
+                    !$create && !static::$autoSaltLength =>
+                        'Engine OpenSSL is forced but auto calculation of the salt length is disabled',
+                    $create && $this->getLength() < 8 * (2 * $this->getSaltLength() + 2) =>
                         'Engine OpenSSL is forced but can\'t be used for PSS signing because the key is too small for OpenSSL to use the configured salt length',
-                    'openssl_sign' && OPENSSL_VERSION_NUMBER < 0x30100000 =>
+                    $create && OPENSSL_VERSION_NUMBER < 0x30100000 =>
                         'Engine OpenSSL is forced but can\'t be used for PSS signing because OpenSSL < 3.1.0 defaults to the maximum salt length instead of the hash length',
                     default => null
                 };
@@ -911,7 +934,10 @@ abstract class RSA extends AsymmetricKey
                             $func($message, $signature, $key, $hash, OPENSSL_PKCS1_PSS_PADDING) :
                             $func($message, $signature, $key, $hash);
 
-                        if ($func === 'openssl_verify' && $result !== -1 && $result !== false) {
+                        if ($func === 'openssl_verify') {
+                            if ($result === -1 || $result === false) {
+                                throw new BadConfigurationException('Engine OpenSSL is forced but was unable to verify signature because of ' . openssl_error_string());
+                            }
                             return (bool) $result;
                         }
                         if ($result) {
@@ -1005,14 +1031,14 @@ abstract class RSA extends AsymmetricKey
             }
         }
 
-        if (!isset($this->primes) || empty($this->primes)) {
-            return $type::savePublicKey($this->modulus, $this->exponent, $options);
+        if ($this instanceof PrivateKey && count($this->primes ?? [])) {
+            return $type::savePrivateKey($this->modulus, $this->publicExponent, $this->exponent, $this->primes, $this->exponents, $this->coefficients, $this->password, $options);
         }
 
-        return $type::savePrivateKey($this->modulus, $this->publicExponent, $this->exponent, $this->primes, $this->exponents, $this->coefficients, $this->password, $options);
+        return $type::savePublicKey($this->modulus, $this->exponent, $options);
 
         /*
-        $key = $type::savePrivateKey($this->modulus, $this->publicExponent, $this->exponent, $this->primes, $this->exponents, $this->coefficients, $this->password, $options);
+        $key = $type::savePrivateKey($this->modulus, $th is->publicExponent, $this->exponent, $this->primes, $this->exponents, $this->coefficients, $this->password, $options);
         if ($key !== false || count($this->primes) == 2) {
             return $key;
         }
@@ -1042,19 +1068,19 @@ abstract class RSA extends AsymmetricKey
 
     public function toArray(): array
     {
-        if (!isset($this->primes) || empty($this->primes)) {
+        if ($this instanceof PrivateKey && count($this->primes ?? [])) {
             return [
                 'e' => clone $this->publicExponent,
                 'n' => clone $this->modulus,
+                'd' => clone $this->exponent,
+                'primes' => array_map(fn (BigInteger $var): BigInteger => clone $var, $this->primes),
+                'exponents' => array_map(fn (BigInteger $var): BigInteger => clone $var, $this->exponents),
+                'coefficients' => array_map(fn (BigInteger $var): BigInteger => clone $var, $this->coefficients),
             ];
         }
         return [
             'e' => clone $this->publicExponent,
             'n' => clone $this->modulus,
-            'd' => clone $this->exponent,
-            'primes' => array_map(fn (BigInteger $var): BigInteger => clone $var, $this->primes),
-            'exponents' => array_map(fn (BigInteger $var): BigInteger => clone $var, $this->exponents),
-            'coefficients' => array_map(fn (BigInteger $var): BigInteger => clone $var, $this->coefficients),
         ];
     }
 }

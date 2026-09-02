@@ -35,7 +35,7 @@
         'composer/spdx-licenses' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'f0599ceb3b99c72aab10027bd500a8a1c7c2b93f',
+            'reference' => '420cadb71c8d06a9d5ea230fced5743da8e10e9a',
             'type' => 'library',
             'install_path' => __DIR__ . '/./spdx-licenses',
             'aliases' => array(
@@ -46,7 +46,7 @@
         'cyclonedx/cyclonedx-library' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '0e09e555e60bdf35e17f5e18b42a2db03022cc5d',
+            'reference' => '15231432fca661b19f02bfb93131d8391f120723',
             'type' => 'library',
             'install_path' => __DIR__ . '/../cyclonedx/cyclonedx-library',
             'aliases' => array(
@@ -57,7 +57,7 @@
         'cyclonedx/cyclonedx-php-composer' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '9b7b25b938a3484bae52a8dd6c8240919365ed2e',
+            'reference' => 'c77ccdf849fc011f7dcfbaacb630259d45902e92',
             'type' => 'composer-plugin',
             'install_path' => __DIR__ . '/../cyclonedx/cyclonedx-php-composer',
             'aliases' => array(
@@ -263,7 +263,7 @@
         'phpseclib/phpseclib' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => '81e5e7924a17739dbed6e3a58027eb6365a56967',
+            'reference' => '9ed2f646634a456f631db61ad40474b3a6ead506',
             'type' => 'library',
             'install_path' => __DIR__ . '/../phpseclib/phpseclib',
             'aliases' => array(
@@ -319,9 +319,9 @@
             'dev_requirement' => false,
         ),
         'tinymce/tinymce' => array(
-            'pretty_version' => '8.8.2',
-            'version' => '8.8.2.0',
-            'reference' => 'e985cd41c60ecda5b7f92cec73fe8f234a6f32ff',
+            'pretty_version' => '8.9.0',
+            'version' => '8.9.0.0',
+            'reference' => '091dfa397f303c8330a970f52946d9a4b89ac87e',
             'type' => 'component',
             'install_path' => __DIR__ . '/../tinymce/tinymce',
             'aliases' => array(),
@@ -330,7 +330,7 @@
         'twbs/bootstrap' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => 'c21a1c13ab72d9205e28a1bc56f3e78ad880b64b',
+            'reference' => '12cb8b902d175a0d612f1280f58b386a09921a16',
             'type' => 'library',
             'install_path' => __DIR__ . '/../twbs/bootstrap',
             'aliases' => array(

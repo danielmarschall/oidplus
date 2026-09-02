@@ -1,7 +1,7 @@
 {
   "name": "js-sha3",
-  "version": "0.12.0",
-  "description": "A simple SHA-3 / Keccak / SHAKE / cSHAKE / KMAC / TupleHash hash function for JavaScript supports UTF-8 encoding.",
+  "version": "0.13.0",
+  "description": "A simple SHA-3 / Keccak / SHAKE / cSHAKE / KMAC / TupleHash / ParallelHash hash function for JavaScript supports UTF-8 encoding.",
   "main": "src/sha3.js",
   "module": "build/sha3.mjs",
   "exports": {
@@ -22,17 +22,20 @@
     "@rollup/plugin-commonjs": "^28.0.5",
     "@rollup/plugin-terser": "^1.0.0",
     "expect.js": "~0.3.1",
-    "mocha": "^11.7.6",
-    "nyc": "^15.1.0",
+    "mocha": "^11.8.0",
+    "nyc": "^18.0.0",
     "rollup": "^4.43.0",
     "tiny-worker": "^2.3.0",
     "uglify-js": "^3.1.9"
   },
   "scripts": {
-    "test": "nyc mocha tests/node-test.js",
+    "test": "npm run build && npm run test:coverage",
+    "test:runtime": "mocha tests/node-test.js",
+    "test:coverage": "nyc --reporter=text --reporter=html --reporter=lcov mocha tests/node-test.js",
     "report": "nyc --reporter=html --reporter=text mocha tests/node-test.js",
     "coveralls": "nyc report --reporter=text-lcov | coveralls",
-    "build": "rollup -c && uglifyjs src/sha3.js -c -m --comments --output build/sha3.min.js"
+    "build": "rollup -c && uglifyjs src/sha3.js -c -m --comments --output build/sha3.min.js",
+    "prepack": "npm run build"
   },
   "repository": {
     "type": "git",
@@ -45,6 +48,7 @@
     "cshake",
     "kmac",
     "tuplehash",
+    "parallelhash",
     "hash",
     "encryption",
     "cryptography",
@@ -60,5 +64,9 @@
     "exclude": [
       "tests"
     ]
+  },
+  "overrides": {
+    "diff": "^8.0.3",
+    "serialize-javascript": "^7.0.7"
   }
 }

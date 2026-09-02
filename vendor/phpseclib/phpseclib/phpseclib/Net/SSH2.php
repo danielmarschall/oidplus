@@ -673,9 +673,12 @@ class SSH2
     /**
      * Timeout
      *
+     * Is overwritten by the constructor BUT if you're mocking the object
+     * the constructor may be bypassed, hence our setting it to -1 initially
+     *
      * @see SSH2::setTimeout()
      */
-    protected ?int $timeout = null;
+    protected int $timeout = -1;
 
     /**
      * Current Timeout
@@ -842,7 +845,7 @@ class SSH2
      * @see self::setCryptoEngine()
      * @see self::_key_exchange()
      */
-    private static ?int $crypto_engine = null;
+    private static ?string $crypto_engine = null;
 
     /**
      * A System_SSH_Agent for use in the SSH2 Agent Forwarding scenario
@@ -850,7 +853,7 @@ class SSH2
     private Agent $agent;
 
     /**
-     * Connection storage to replicates ssh2 extension functionality:
+     * Connection storage to replicate ssh2 extension functionality:
      * {@link http://php.net/manual/en/wrappers.ssh2.php#refsect1-wrappers.ssh2-examples}
      *
      * @var array<string, \WeakReference<SSH2>>
@@ -1020,7 +1023,7 @@ class SSH2
      *
      * @psalm-suppress PossiblyUnusedMethod
      */
-    public static function setCryptoEngine(int $engine): void
+    public static function setCryptoEngine(string $engine): void
     {
         self::$crypto_engine = $engine;
     }
@@ -2136,7 +2139,8 @@ class SSH2
                 [$message] = Strings::unpackSSH2('s', $response);
                 $this->errors[] = 'SSH_MSG_USERAUTH_PASSWD_CHANGEREQ: ' . $message;
 
-                return $this->disconnect_helper(DisconnectReason::AUTH_CANCELLED_BY_USER);
+                $this->disconnect_helper(DisconnectReason::AUTH_CANCELLED_BY_USER);
+                return false;
             case MessageType::USERAUTH_FAILURE:
                 // can we use keyboard-interactive authentication?  if not then either the login is bad or the server employees
                 // multi-factor authentication
@@ -2412,14 +2416,15 @@ class SSH2
 
         [$type] = Strings::unpackSSH2('C', $response);
         switch ($type) {
-            case MessageType::USERAUTH_FAILURE:
+            case MessageType::USERAUTH_SUCCESS:
+                $this->bitmap |= self::MASK_LOGIN;
+                return true;
+            //case MessageType::USERAUTH_FAILURE:
+            default:
                 // either the login is bad or the server employs multi-factor authentication
                 [$auth_methods] = Strings::unpackSSH2('L', $response);
                 $this->auth_methods_to_continue = $auth_methods;
                 return false;
-            case MessageType::USERAUTH_SUCCESS:
-                $this->bitmap |= self::MASK_LOGIN;
-                return true;
         }
     }
 
@@ -2534,7 +2539,7 @@ class SSH2
      * If $callback is set to false then \phpseclib4\Net\SSH2::get_channel_packet(self::CHANNEL_EXEC) will need to be called manually.
      * In all likelihood, this is not a feature you want to be taking advantage of (SCP.php uses it)
      *
-     * @psalm-return ($callback is callable ? bool : string|bool)
+     * @psalm-return ($callback is callable ? null : string)
      */
     public function exec(string $command, ?\Closure $callback = null): ?string
     {
@@ -2552,18 +2557,16 @@ class SSH2
         $output = '';
         while (true) {
             $temp = $this->get_channel_packet(self::CHANNEL_EXEC);
-            switch (true) {
-                case $temp === true:
-                    return $callback ? null : $output;
-                default:
-                    if ($callback) {
-                        if ($callback($temp) === true) {
-                            $this->close_channel(self::CHANNEL_EXEC);
-                            return null;
-                        }
-                    } else {
-                        $output .= $temp;
-                    }
+            if ($temp === true) {
+                return $callback ? null : $output;
+            }
+            if ($callback) {
+                if ($callback($temp) === true) {
+                    $this->close_channel(self::CHANNEL_EXEC);
+                    return null;
+                }
+            } else {
+                $output .= $temp;
             }
         }
     }
@@ -2578,6 +2581,8 @@ class SSH2
 
     /**
      * Opens a channel
+     *
+     * @psalm-suppress InvalidReturnType
      */
     protected function open_channel(int $channel, bool $skip_extended = false): bool
     {
@@ -2613,6 +2618,7 @@ class SSH2
 
         $this->channel_status[$channel] = MessageType::CHANNEL_OPEN;
 
+        /** @psalm-suppress InvalidReturnStatement */
         return $this->get_channel_packet($channel, $skip_extended);
     }
 
@@ -3352,6 +3358,7 @@ class SSH2
 
         if (defined('NET_SSH2_LOGGING')) {
             $current = microtime(true);
+            /** @psalm-suppress InvalidArrayAccess */
             $message_number = sprintf(
                 '<- %s (since last: %s, network: %ss)',
                 ($constantName = MessageType::findConstantNameByValue($value = ord($payload[0])))
@@ -3443,7 +3450,10 @@ class SSH2
     {
         Strings::shift($payload, 1);
         [$reason_code, $message] = Strings::unpackSSH2('Ns', $payload);
-        $this->errors[] = 'SSH_MSG_DISCONNECT: ' . self::$disconnect_reasons[$reason_code] . "\r\n$message";
+
+        $this->errors[] = 'SSH_MSG_DISCONNECT: ' .
+            DisconnectReason::findConstantNameByValue($reason_code) .
+            "\r\n$message";
         $this->disconnect_helper(DisconnectReason::CONNECTION_LOST);
         throw new ConnectionClosedException('Connection closed by server');
     }
@@ -3967,6 +3977,10 @@ class SSH2
                 $packet_length += 4;
         }
 
+        // SSH binary packet padding is always 4-255 bytes; the block-rounding above
+        // guarantees $padding_length >= 4. Psalm can't track that through the modular
+        // arithmetic, so it sees int<min,max>.
+        /** @psalm-suppress InvalidArgument */
         $padding = random_bytes($padding_length);
 
         // we subtract 4 from packet_length because the packet_length field isn't supposed to include itself
@@ -4882,7 +4896,8 @@ class SSH2
         }
 
         if (!$key->verify($this->exchange_hash, $signature)) {
-            return $this->disconnect_helper(DisconnectReason::HOST_KEY_NOT_VERIFIABLE);
+            $this->disconnect_helper(DisconnectReason::HOST_KEY_NOT_VERIFIABLE);
+            return null;
         };
 
         return $this->signature_format . ' ' . $server_public_host_key;
@@ -4991,13 +5006,12 @@ class SSH2
      */
     public static function getConnections(): array
     {
-        if (!class_exists('WeakReference')) {
-            /** @var array<string, SSH2> */
-            return self::$connections;
-        }
         $temp = [];
         foreach (self::$connections as $key => $ref) {
-            $temp[$key] = $ref->get();
+            $conn = $ref->get();
+            if (isset($conn)) {
+                $temp[$key] = $conn;
+            }
         }
         return $temp;
     }

@@ -20,7 +20,7 @@ declare(strict_types=1);
 namespace phpseclib4\File;
 
 use phpseclib4\Crypt\Common\PrivateKey;
-use phpseclib4\Crypt\{Hash, PublicKeyLoader};
+use phpseclib4\Crypt\{Common\AsymmetricKey, Hash, PublicKeyLoader};
 use phpseclib4\Exception\{
     InvalidArgumentException,
     PasswordNeededException,
@@ -28,15 +28,15 @@ use phpseclib4\Exception\{
     UnsupportedAlgorithmException
 };
 use phpseclib4\File\ASN1\{Constructed, Element, Maps};
-use phpseclib4\File\ASN1\Types\{BaseString, BaseType, OctetString};
+use phpseclib4\File\ASN1\Types\{BaseString, OctetString};
 use phpseclib4\File\Common\Signable;
 
 /**
  * Pure-PHP PFX (PKCS#12) Parser
  *
  * @author  Jim Wigginton <terrafrost@php.net>
- * @implements \ArrayAccess<string, BaseType>
- * @implements \Iterator<string, Basetype>
+ * @implements \ArrayAccess<string, mixed>
+ * @implements \Iterator<string, mixed>
  */
 class PFX implements \ArrayAccess, \Countable, \Iterator
 {
@@ -75,7 +75,14 @@ class PFX implements \ArrayAccess, \Countable, \Iterator
         #[\SensitiveParameter] ?string $password = null
     ): self {
         $temp = new self();
-        $temp->pfx = is_string($pfx) ? self::loadString($pfx, $password) : $pfx;
+        try {
+            $temp->pfx = is_string($pfx) ? self::loadString($pfx, $password) : $pfx;
+        } catch (PasswordNeededException $e) {
+            if (isset($password)) {
+                throw $e;
+            }
+            $temp->pfx = self::loadString($pfx, $password = '');
+        }
         $temp->password = $password;
         return $temp;
     }
@@ -97,6 +104,7 @@ class PFX implements \ArrayAccess, \Countable, \Iterator
                 case 'id-data': // id-data from CMS specs
                     $decoded = ASN1::decodeBER((string) $content['content']);
                     $cms[$key]['content'] = ASN1::map($decoded, ASN1\Maps\SafeContents::MAP);
+                    /** @psalm-suppress UndefinedPropertyAssignment */
                     $cms[$key]['content']->parent = $cms[$key];
                     foreach ($cms[$key]['content'] as $subkey => $value) {
                         try {
@@ -131,6 +139,7 @@ class PFX implements \ArrayAccess, \Countable, \Iterator
         }
 
         $pfx['authSafe']['content'] = $cms;
+        /** @psalm-suppress UndefinedPropertyAssignment */
         $pfx['authSafe']['content']->parent = $pfx['authSafe'];
 
         ASN1::enableCacheInvalidation();
@@ -440,7 +449,7 @@ class PFX implements \ArrayAccess, \Countable, \Iterator
         $hashAlgorithm = $options['hashAlgorithm'] ?? self::$defaultHashAlgorithm;
         $saltLength = $options['saltLength'] ?? self::$defaultSaltLength;
         $iterationCount = $options['iterationCount'] ?? self::$defaultIterationCount;
-        if ($hashAlgorithm && $this->password) {
+        if ($hashAlgorithm && isset($this->password)) {
             $salt = random_bytes($saltLength);
             $hash = new Hash($hashAlgorithm);
             $hash->setPassword($this->password, $salt, $iterationCount);
@@ -739,7 +748,7 @@ class PFX implements \ArrayAccess, \Countable, \Iterator
                     throw new InvalidArgumentException("$message - x3");
             }
             $publicKey = (string) $public->getPublicKey();
-            $privateKey = (string) $private->getPublicKey();
+            $privateKey = $private->getPublicKey()->toString('PKCS8');
             if ($publicKey != $privateKey) {
                 throw new InvalidArgumentException("$message - x4");
             }
@@ -748,6 +757,7 @@ class PFX implements \ArrayAccess, \Countable, \Iterator
         if (isset($public)) {
             $source->copySigningX509Attributes($public);
         }
+        /** @var string $signature */
         $signature = $private->sign($source);
 
         return $signature;

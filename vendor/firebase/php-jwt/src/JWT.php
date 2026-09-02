@@ -31,7 +31,7 @@ class JWT
     private const ASN1_SEQUENCE = 0x10;
     private const ASN1_BIT_STRING = 0x03;
 
-    private const RSA_KEY_MIN_LENGTH = 2048;
+    private const RSA_KEY_MIN_LENGTH = 1024;
 
     /**
      * When checking nbf, iat or expiration times,

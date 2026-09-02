@@ -1,10 +1,10 @@
 # js-sha3
+[![CI](https://github.com/emn178/js-sha3/actions/workflows/ci.yml/badge.svg)](https://github.com/emn178/js-sha3/actions/workflows/ci.yml)
+[![Coverage Status](https://coveralls.io/repos/emn178/js-sha3/badge.svg?branch=master)](https://coveralls.io/r/emn178/js-sha3?branch=master)
+[![NPM](https://img.shields.io/npm/v/js-sha3)](https://www.npmjs.com/package/js-sha3)
+[![CDNJS](https://img.shields.io/jsdelivr/npm/hm/js-sha3)](https://www.jsdelivr.com/package/npm/js-sha3)
 
-[![Build Status](https://travis-ci.org/emn178/js-sha3.svg?branch=master)](https://travis-ci.org/emn178/js-sha3)
-[![Coverage Status](https://coveralls.io/repos/emn178/js-sha3/badge.svg?branch=master)](https://coveralls.io/r/emn178/js-sha3?branch=master)  
-[![NPM](https://nodei.co/npm/js-sha3.png?stars&downloads)](https://nodei.co/npm/js-sha3/)
-
-A simple SHA-3 / Keccak / SHAKE / cSHAKE / KMAC / TupleHash hash function for JavaScript supports UTF-8 encoding.
+A simple SHA-3 / Keccak / SHAKE / cSHAKE / KMAC / TupleHash / ParallelHash hash function for JavaScript supports UTF-8 encoding.
 
 ## Notice
 * v0.8.0+ will throw an error if try to update hash after finalize.
@@ -20,8 +20,22 @@ A simple SHA-3 / Keccak / SHAKE / cSHAKE / KMAC / TupleHash hash function for Ja
 [Keccak-384 Online](http://emn178.github.io/online-tools/keccak_384.html)  
 [Keccak-256 Online](http://emn178.github.io/online-tools/keccak_256.html)  
 [Keccak-224 Online](http://emn178.github.io/online-tools/keccak_224.html)  
-[Shake128 Online](http://emn178.github.io/online-tools/shake_128.html)  
-[Shake256 Online](http://emn178.github.io/online-tools/shake_256.html)  
+[Shake128 Online](http://emn178.github.io/online-tools/shake128/)  
+[Shake256 Online](http://emn178.github.io/online-tools/shake256/)  
+[cShake128 Online](http://emn178.github.io/online-tools/cshake128/)  
+[cShake256 Online](http://emn178.github.io/online-tools/cshake256/)  
+[KMAC128 Online](http://emn178.github.io/online-tools/kmac128/)  
+[KMAC256 Online](http://emn178.github.io/online-tools/kmac256/)  
+[KMACXOF128 Online](http://emn178.github.io/online-tools/kmacxof128/)  
+[KMACXOF256 Online](http://emn178.github.io/online-tools/kmacxof256/)  
+[TupleHash128 Online](http://emn178.github.io/online-tools/tuplehash128/)  
+[TupleHash256 Online](http://emn178.github.io/online-tools/tuplehash256/)  
+[TupleHashXOF128 Online](http://emn178.github.io/online-tools/tuplehashxof128/)  
+[TupleHashXOF256 Online](http://emn178.github.io/online-tools/tuplehashxof256/)  
+[ParallelHash128 Online](http://emn178.github.io/online-tools/parallelhash128/)  
+[ParallelHash256 Online](http://emn178.github.io/online-tools/parallelhash256/)  
+[ParallelHashXOF128 Online](http://emn178.github.io/online-tools/parallelhashxof128/)  
+[ParallelHashXOF256 Online](http://emn178.github.io/online-tools/parallelhashxof256/)  
 
 ## Download
 [Compress](https://raw.github.com/emn178/js-sha3/master/build/sha3.min.js)  
@@ -59,6 +73,10 @@ tuplehash128(['abc', 'd'], 256, 'customization');
 tuplehash256(['abc', 'd'], 512, 'customization');
 tuplehashxof128(['abc', 'd'], 256, 'customization');
 tuplehashxof256(['abc', 'd'], 512, 'customization');
+parallelhash128('Message to hash', 8, 256, 'customization');
+parallelhash256('Message to hash', 8, 512, 'customization');
+parallelhashxof128('Message to hash', 8, 256, 'customization');
+parallelhashxof256('Message to hash', 8, 512, 'customization');
 
 // Support ArrayBuffer output
 var arrayBuffer = keccak224.arrayBuffer('Message to hash');
@@ -112,6 +130,13 @@ tupleHash.updateChunk([0x63]);
 tupleHash.beginInput(1);
 tupleHash.updateChunk([0x64]);
 tupleHash.hex();
+
+// ParallelHash: hash one large input in fixed-size blocks.
+parallelhash128('Message to hash', 8, 256, '');
+parallelhash128.create(8, 256, '')
+  .update('Message ')
+  .update('to hash')
+  .hex();
 ```
 ### Node.js
 If you use node.js, you should require the module first:
@@ -136,7 +161,11 @@ const {
   tuplehash128,
   tuplehash256,
   tuplehashxof128,
-  tuplehashxof256
+  tuplehashxof256,
+  parallelhash128,
+  parallelhash256,
+  parallelhashxof128,
+  parallelhashxof256
 } = require('js-sha3');
 ```
 
@@ -163,7 +192,11 @@ import {
   tuplehash128,
   tuplehash256,
   tuplehashxof128,
-  tuplehashxof256
+  tuplehashxof256,
+  parallelhash128,
+  parallelhash256,
+  parallelhashxof128,
+  parallelhashxof256
 } from 'js-sha3';
 ```
 

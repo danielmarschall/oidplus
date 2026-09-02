@@ -153,12 +153,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/composer/spdx-licenses.git",
-                "reference": "f0599ceb3b99c72aab10027bd500a8a1c7c2b93f"
+                "reference": "420cadb71c8d06a9d5ea230fced5743da8e10e9a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/composer/spdx-licenses/zipball/f0599ceb3b99c72aab10027bd500a8a1c7c2b93f",
-                "reference": "f0599ceb3b99c72aab10027bd500a8a1c7c2b93f",
+                "url": "https://api.github.com/repos/composer/spdx-licenses/zipball/420cadb71c8d06a9d5ea230fced5743da8e10e9a",
+                "reference": "420cadb71c8d06a9d5ea230fced5743da8e10e9a",
                 "shasum": ""
             },
             "require": {
@@ -168,7 +168,7 @@
                 "phpstan/phpstan": "^1.11",
                 "symfony/phpunit-bridge": "^6.4.25 || ^7.3.3 || ^8.0"
             },
-            "time": "2026-07-02T08:17:10+00:00",
+            "time": "2026-09-01T11:19:14+00:00",
             "default-branch": true,
             "type": "library",
             "extra": {
@@ -233,12 +233,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/CycloneDX/cyclonedx-php-library.git",
-                "reference": "0e09e555e60bdf35e17f5e18b42a2db03022cc5d"
+                "reference": "15231432fca661b19f02bfb93131d8391f120723"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CycloneDX/cyclonedx-php-library/zipball/0e09e555e60bdf35e17f5e18b42a2db03022cc5d",
-                "reference": "0e09e555e60bdf35e17f5e18b42a2db03022cc5d",
+                "url": "https://api.github.com/repos/CycloneDX/cyclonedx-php-library/zipball/15231432fca661b19f02bfb93131d8391f120723",
+                "reference": "15231432fca661b19f02bfb93131d8391f120723",
                 "shasum": ""
             },
             "require": {
@@ -260,7 +260,7 @@
                 "composer/spdx-licenses": "used in license factory",
                 "package-url/packageurl-php": "for parsing and crafting PackageURL strings"
             },
-            "time": "2026-07-08T11:15:19+00:00",
+            "time": "2026-08-12T12:27:16+00:00",
             "default-branch": true,
             "type": "library",
             "extra": {
@@ -332,12 +332,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/CycloneDX/cyclonedx-php-composer.git",
-                "reference": "9b7b25b938a3484bae52a8dd6c8240919365ed2e"
+                "reference": "c77ccdf849fc011f7dcfbaacb630259d45902e92"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/CycloneDX/cyclonedx-php-composer/zipball/9b7b25b938a3484bae52a8dd6c8240919365ed2e",
-                "reference": "9b7b25b938a3484bae52a8dd6c8240919365ed2e",
+                "url": "https://api.github.com/repos/CycloneDX/cyclonedx-php-composer/zipball/c77ccdf849fc011f7dcfbaacb630259d45902e92",
+                "reference": "c77ccdf849fc011f7dcfbaacb630259d45902e92",
                 "shasum": ""
             },
             "require": {
@@ -352,7 +352,7 @@
                 "marc-mabe/php-enum": "^4.6",
                 "roave/security-advisories": "dev-latest"
             },
-            "time": "2026-07-08T10:39:39+00:00",
+            "time": "2026-07-29T14:36:48+00:00",
             "default-branch": true,
             "type": "composer-plugin",
             "extra": {
@@ -1316,12 +1316,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/phpseclib/phpseclib.git",
-                "reference": "81e5e7924a17739dbed6e3a58027eb6365a56967"
+                "reference": "9ed2f646634a456f631db61ad40474b3a6ead506"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/81e5e7924a17739dbed6e3a58027eb6365a56967",
-                "reference": "81e5e7924a17739dbed6e3a58027eb6365a56967",
+                "url": "https://api.github.com/repos/phpseclib/phpseclib/zipball/9ed2f646634a456f631db61ad40474b3a6ead506",
+                "reference": "9ed2f646634a456f631db61ad40474b3a6ead506",
                 "shasum": ""
             },
             "require": {
@@ -1343,7 +1343,7 @@
                 "ext-libsodium": "SSH2/SFTP can make use of some algorithms provided by the libsodium-php extension.",
                 "ext-openssl": "Install the OpenSSL extension in order to speed up a wide variety of cryptographic operations."
             },
-            "time": "2026-07-20T19:15:59+00:00",
+            "time": "2026-09-02T04:20:03+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",
@@ -1701,20 +1701,20 @@
         },
         {
             "name": "tinymce/tinymce",
-            "version": "8.8.2",
-            "version_normalized": "8.8.2.0",
+            "version": "8.9.0",
+            "version_normalized": "8.9.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/tinymce/tinymce-dist.git",
-                "reference": "e985cd41c60ecda5b7f92cec73fe8f234a6f32ff"
+                "reference": "091dfa397f303c8330a970f52946d9a4b89ac87e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/e985cd41c60ecda5b7f92cec73fe8f234a6f32ff",
-                "reference": "e985cd41c60ecda5b7f92cec73fe8f234a6f32ff",
+                "url": "https://api.github.com/repos/tinymce/tinymce-dist/zipball/091dfa397f303c8330a970f52946d9a4b89ac87e",
+                "reference": "091dfa397f303c8330a970f52946d9a4b89ac87e",
                 "shasum": ""
             },
-            "time": "2026-07-27T04:10:15+00:00",
+            "time": "2026-08-31T03:52:44+00:00",
             "type": "component",
             "extra": {
                 "component": {
@@ -1757,7 +1757,7 @@
                 "wysiwyg"
             ],
             "support": {
-                "source": "https://github.com/tinymce/tinymce-dist/tree/8.8.2"
+                "source": "https://github.com/tinymce/tinymce-dist/tree/8.9.0"
             },
             "install-path": "../tinymce/tinymce"
         },
@@ -1768,18 +1768,18 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/twbs/bootstrap.git",
-                "reference": "c21a1c13ab72d9205e28a1bc56f3e78ad880b64b"
+                "reference": "12cb8b902d175a0d612f1280f58b386a09921a16"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/c21a1c13ab72d9205e28a1bc56f3e78ad880b64b",
-                "reference": "c21a1c13ab72d9205e28a1bc56f3e78ad880b64b",
+                "url": "https://api.github.com/repos/twbs/bootstrap/zipball/12cb8b902d175a0d612f1280f58b386a09921a16",
+                "reference": "12cb8b902d175a0d612f1280f58b386a09921a16",
                 "shasum": ""
             },
             "replace": {
                 "twitter/bootstrap": "self.version"
             },
-            "time": "2026-07-28T11:09:09+00:00",
+            "time": "2026-09-01T18:07:12+00:00",
             "default-branch": true,
             "type": "library",
             "installation-source": "dist",

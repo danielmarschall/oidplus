@@ -57,13 +57,15 @@ trait Extension
             'id-ce-subjectDirectoryAttributes' => Maps\SubjectDirectoryAttributes::MAP,
             'id-pe-qcStatements' => Maps\QCStatements::MAP,
 
+            // from https://datatracker.ietf.org/doc/html/rfc9399
+            'id-pe-logotype' => Maps\LogotypeExtn::MAP,
+
             'netscape-cert-type' => Maps\netscape_cert_type::MAP,
             'netscape-comment' => Maps\netscape_comment::MAP,
             'netscape-ca-policy-url' => Maps\netscape_ca_policy_url::MAP,
 
             // the following OIDs are unsupported but we don't want them to give notices when calling saveX509().
 
-            'id-pe-logotype' => true, // http://www.ietf.org/rfc/rfc3709.txt
             'entrustVersInfo' => true,
             // http://support.microsoft.com/kb/287547
             '1.3.6.1.4.1.311.20.2' => true, // szOID_ENROLL_CERTTYPE_EXTENSION
@@ -186,8 +188,11 @@ trait Extension
         ASN1::enableCacheInvalidation();
     }
 
-    private static function mapOutExtensionsHelper(array|Constructed &$extensions): void
+    private static function mapOutExtensionsHelper(array|Constructed|Element &$extensions): void
     {
+        if ($extensions instanceof Element) {
+            return;
+        }
         $keys = is_array($extensions) ? array_keys($extensions) : $extensions->keys();
         foreach ($keys as $i) {
             switch (true) {
@@ -255,8 +260,10 @@ trait Extension
                 case 'id-pe-qcStatements':
                     $oldValue = $value instanceof Constructed ? $value->toArray() : $value;
                     $path = '*';
+                    /** @psalm-suppress InvalidReturnType */
                     Arrays::subArrayMapWithWildcards($value, $path, function (Choice|Element|array $val): Constructed|Element|array {
                         if ($val instanceof Element || "$val[statementId]" != 'id-etsi-qcs-QcLimitValue') {
+                            /** @psalm-suppress InvalidReturnStatement */
                             return $val;
                         }
                         if ($val instanceof BaseType) {
@@ -266,6 +273,7 @@ trait Extension
                             $val['statementInfo'] = ASN1::map(ASN1::decodeBER($temp), Maps\QcEuLimitValue::MAP);
                         }
                         $val['statementInfo']->enableForcedCache();
+                        /** @psalm-suppress InvalidReturnStatement */
                         return $val;
                     });
             }
@@ -324,6 +332,8 @@ trait Extension
             'id-ce-policyMappings' => false,
             'id-ce-issuerAltName' => false,
             'id-ce-subjectDirectoryAttributes' => false,
+            // "This extension MUST NOT be marked critical" - RFC 9399, section 4.1
+            'id-pe-logotype' => false,
             'id-ce-cRLDistributionPoints' => false,
             'id-ce-freshestCRL' => false,
             'id-pe-authorityInfoAccess' => false,

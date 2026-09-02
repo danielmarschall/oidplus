@@ -31,6 +31,7 @@ abstract class X509
         //'id-qt' => '1.3.6.1.5.5.7.2',
         //'id-kp' => '1.3.6.1.5.5.7.3',
         //'id-ad' => '1.3.6.1.5.5.7.48',
+        //'id-logo' => '1.3.6.1.5.5.7.20',
         'id-qt-cps' => '1.3.6.1.5.5.7.2.1',
         'id-qt-unotice' => '1.3.6.1.5.5.7.2.2',
         'id-ad-ocsp' => '1.3.6.1.5.5.7.48.1',
@@ -63,6 +64,26 @@ abstract class X509
         'jurisdictionOfIncorporationCountryName' => '1.3.6.1.4.1.311.60.2.1.3',
         'jurisdictionOfIncorporationStateOrProvinceName' => '1.3.6.1.4.1.311.60.2.1.2',
         'jurisdictionLocalityName' => '1.3.6.1.4.1.311.60.2.1.1',
+        // Mark Certificate attributes, from the BIMI Group's Verified Mark Certificate
+        // Requirements. the trademark attributes below succeed 1.3.6.1.4.1.311.60.2.1.4
+        // through .7 of the arc above.
+        // https://bimigroup.org/resources/VMC_Requirements_v1_4.pdf
+        'trademarkOfficeName' => '1.3.6.1.4.1.53087.1.2',
+        'trademarkCountryOrRegionName' => '1.3.6.1.4.1.53087.1.3',
+        'trademarkRegistration' => '1.3.6.1.4.1.53087.1.4',
+        'legalEntityIdentifier' => '1.3.6.1.4.1.53087.1.5',
+        'wordMark' => '1.3.6.1.4.1.53087.1.6',
+        'markType' => '1.3.6.1.4.1.53087.1.13',
+        // used in place of the trademark attributes when the mark is established by
+        // statute rather than by registration
+        'statuteCountryName' => '1.3.6.1.4.1.53087.3.2',
+        'statuteStateOrProvinceName' => '1.3.6.1.4.1.53087.3.3',
+        'statuteLocalityName' => '1.3.6.1.4.1.53087.3.4',
+        'statuteCitation' => '1.3.6.1.4.1.53087.3.5',
+        'statuteURL' => '1.3.6.1.4.1.53087.3.6',
+        // not a DN attribute but a certificate policy, asserted by every VMC in
+        // certificatePolicies alongside the issuing CA's own policy
+        'certificateGeneralPolicyIdentifier' => '1.3.6.1.4.1.53087.1.1',
         'id-at-businessCategory' => '2.5.4.15',
         'id-domainComponent' => '0.9.2342.19200300.100.1.25',
         // from RFC3039
@@ -172,8 +193,12 @@ abstract class X509
         'netscape-cert-type' => '2.16.840.1.113730.1.1',
         'netscape-comment' => '2.16.840.1.113730.1.13',
         'netscape-ca-policy-url' => '2.16.840.1.113730.1.8',
-        // the following are X.509 extensions not supported by phpseclib
+        // Logotypes, from https://datatracker.ietf.org/doc/html/rfc9399
         'id-pe-logotype' => '1.3.6.1.5.5.7.1.12',
+        'id-logo-loyalty' => '1.3.6.1.5.5.7.20.1',
+        'id-logo-background' => '1.3.6.1.5.5.7.20.2',
+        'id-logo-certImage' => '1.3.6.1.5.5.7.20.3',
+        // the following are X.509 extensions not supported by phpseclib
         'entrustVersInfo' => '1.2.840.113533.7.65.0',
         'verisignPrivate' => '2.16.840.1.113733.1.6.9',
         // for Certificate Signing Requests

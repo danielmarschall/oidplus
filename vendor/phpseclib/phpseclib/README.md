@@ -31,14 +31,13 @@ SSH-2, SFTP, X.509, an arbitrary-precision integer arithmetic library, Ed25519 /
 
 ### 4.0
 
-* Expected Release Date: September 2026
 * Long term support (LTS) release
 * X509 split into separate X509, CRL, CSR and SPKAC classes
 * PFX and CMS classes added
 * All ASN1 classes are lazy loaded by default
 * Minimum PHP version: 8.1.0
 * PSR-4 autoloading with namespace rooted at `\phpseclib4`
-* Install via Composer: `composer require phpseclib/phpseclib:4.0.x-dev`
+* Install via Composer: `composer require phpseclib/phpseclib:~4.0`
 
 ### 3.0
 
@@ -85,6 +84,7 @@ Need Support?
 
 ## Additional Thanks
 
+- [HeroDevs](https://www.herodevs.com/sustainability-fund)
 - Allan Simon
 - [Anna Filina](https://afilina.com/)
 - delovelady
